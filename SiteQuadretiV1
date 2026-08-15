@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadreti — Support créatif modulaire</title>
+<meta name="description" content="Quadreti, support créatif modulaire : composez, clipsez, recomposez vos tesselles sans colle. Découvrez le premier support du genre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif; }
+  #qd-marquee-bar {
+    background: #556b2f;
+    color: #F4EFE6;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    padding: 8px 0;
+    position: relative;
+    z-index: 9999;
+  }
+  #qd-marquee-track {
+    display: inline-flex;
+    animation: qd-scroll 28s linear infinite;
+  }
+  #qd-marquee-bar:hover #qd-marquee-track {
+    animation-play-state: paused;
+  }
+  .qd-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 28px;
+    white-space: nowrap;
+  }
+  .qd-marquee-sep {
+    color: #E2725B;
+    margin-right: 28px;
+  }
+  @keyframes qd-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #qd-marquee-track { animation: none; }
+  }
+  #qd-hero2 {
+    --qd-olive: #556B2F;
+    --qd-cream: #FFFBEF;
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding-bottom: 70px;
+  }
+  #qd-hero2-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+    background: linear-gradient(to bottom, rgba(11,20,10,0.45) 0%, rgba(11,20,10,0) 100%);
+  }
+  #qd-hero2-nav img.qd-logo {
+    height: 48px;
+    width: auto;
+    display: block;
+  }
+  #qd-hero2-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  #qd-hero2-links a {
+    display: inline-block;
+    background: transparent;
+    border: 1.5px solid var(--qd-cream);
+    color: var(--qd-cream) !important;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 6px 18px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #qd-hero2-links a:hover {
+    background: var(--qd-cream);
+    color: #2b3320 !important;
+  }
+  #qd-hero2-links a.qd-nav-pro {
+    background: #E2725B;
+    border-color: #E2725B;
+    color: #FFFBEF !important;
+  }
+  #qd-hero2-links a.qd-nav-pro:hover {
+    background: #c85f4c;
+    border-color: #c85f4c;
+    color: #FFFBEF !important;
+  }
+  #qd-hero2-toggle {
+    display: none;
+    background: transparent;
+    border: 1.5px solid var(--qd-cream);
+    color: var(--qd-cream);
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .qd-frame-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .qd-frame-crop {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #F5F5F5;
+  }
+  .qd-frame-crop video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #qd-hero2-baseline {
+    position: absolute;
+    left: 50%;
+    bottom: 90px;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--qd-cream);
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    width: 90%;
+  }
+  #qd-hero2-cta {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+    z-index: 3;
+    display: inline-block;
+    background: var(--qd-olive);
+    color: var(--qd-cream) !important;
+    text-decoration: none;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 34px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    #qd-hero2-links {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 10px;
+      gap: 10px;
+    }
+    #qd-hero2-links.qd-open {
+      display: flex;
+    }
+    #qd-hero2-toggle {
+      display: inline-block;
+    }
+    #qd-hero2-baseline {
+      font-size: 16px;
+      bottom: 78px;
+    }
+    #qd-hero2-cta {
+      font-size: 14px;
+      padding: 10px 22px;
+      white-space: nowrap;
+    }
+  }
+
+  /* ============================================
+     SECTION 0 — Présentation / Storytelling
+     Police : Quicksand
+     Accroche (mosaïque pixel réinventée) : 30px / 700 / couleur dark #2b353e
+     Nom/étymologie : 22px / 600 / couleur olive #556B2F
+     Paragraphe histoire : 16px / 500 / couleur dark #2b353e (opacité 0.85)
+     Fond section : gris clair #F5F5F5
+     ============================================ */
+  .qd-presentation {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 80px 20px;
+    text-align: center;
+  }
+  .qd-presentation-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .qd-presentation-hook {
+    font-size: 30px;
+    font-weight: 700;
+    color: #2b353e;
+    line-height: 1.35;
+    margin: 0 0 28px 0;
+  }
+  .qd-presentation-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #556B2F;
+    margin: 0 0 24px 0;
+  }
+  .qd-presentation-story {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2b353e;
+    opacity: 0.85;
+    line-height: 1.7;
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .qd-presentation-hook { font-size: 22px; }
+    .qd-presentation-name { font-size: 18px; }
+    .qd-presentation-story { font-size: 15px; }
+  }
+
+  /* ============================================
+     SECTION 4 — Galerie d'exemples
+     Police : Quicksand
+     Titre section : 28px / 700 / couleur dark #2b353e
+     Légende exemple : 15px / 600 / couleur dark #2b353e
+     Sous-légende (technique) : 13px / 500 / couleur olive #556B2F
+     Fond section : gris clair #F5F5F5
+     Cadre image : ratio 1:1, fond olive clair en attente d'image
+     ============================================ */
+  .qd-gallery {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 70px 20px;
+  }
+  .qd-gallery-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 40px 0;
+  }
+  .qd-gallery-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .qd-gallery-item {
+    width: 220px;
+    text-align: center;
+  }
+  .qd-gallery-photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    background: rgba(85,107,47,0.08);
+    margin-bottom: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qd-gallery-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .qd-gallery-caption {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2b353e;
+    margin: 0 0 4px 0;
+  }
+  .qd-gallery-sub {
+    font-size: 13px;
+    font-weight: 500;
+    color: #556B2F;
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .qd-gallery-title { font-size: 22px; }
+    .qd-gallery-item { width: 150px; }
+  }
+
+  /* ============================================
+     SECTION 5 — Inspiration (lien externe Pinterest)
+     Police : Quicksand
+     Titre : 26px / 700 / dark #2b353e
+     Texte : 15px / 500 / dark #2b353e (opacité 0.8)
+     Fond section : gris clair #F5F5F5
+     Bouton : contour terracotta #E2725B, texte terracotta
+     ============================================ */
+  .qd-inspiration {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 70px 20px;
+    text-align: center;
+  }
+  .qd-inspiration h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 16px 0;
+  }
+  .qd-inspiration p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #2b353e;
+    opacity: 0.8;
+    max-width: 520px;
+    margin: 0 auto 28px auto;
+    line-height: 1.6;
+  }
+  .qd-inspiration a {
+    display: inline-block;
+    background: transparent;
+    border: 1.5px solid #E2725B;
+    color: #E2725B;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 30px;
+    border-radius: 999px;
+  }
+  .qd-inspiration a:hover {
+    background: #E2725B;
+    color: #FFFBEF;
+  }
+
+  /* ============================================
+     SECTION 4 — Votre mur grandit avec vous (scalabilité)
+     Police : Quicksand
+     Titre : 28px / 700 / dark #2b353e
+     Texte : 16px / 500 / dark #2b353e (opacité 0.85)
+     Fond section : gris clair #F5F5F5
+     Visuel : progression de carreaux en CSS grid, olive/terracotta
+     ============================================ */
+  .qd-scale {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 70px 20px;
+    text-align: center;
+  }
+  .qd-scale h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 16px 0;
+  }
+  .qd-scale p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2b353e;
+    opacity: 0.85;
+    max-width: 560px;
+    margin: 0 auto 44px auto;
+    line-height: 1.6;
+  }
+  .qd-scale-progression {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .qd-scale-block {
+    display: grid;
+    gap: 2px;
+    background: #2b353e;
+    padding: 2px;
+    border-radius: 4px;
+  }
+  .qd-scale-block div {
+    width: 12px;
+    height: 12px;
+    background: #E2725B;
+  }
+  .qd-scale-block.b1 { grid-template-columns: repeat(1, 1fr); }
+  .qd-scale-block.b2 { grid-template-columns: repeat(2, 1fr); }
+  .qd-scale-block.b3 { grid-template-columns: repeat(3, 1fr); }
+  .qd-scale-block.b4 { grid-template-columns: repeat(4, 1fr); }
+  .qd-scale-block.b5 { grid-template-columns: repeat(5, 1fr); }
+  .qd-scale-arrow {
+    font-size: 22px;
+    color: #556B2F;
+  }
+  @media (max-width: 640px) {
+    .qd-scale h2 { font-size: 22px; }
+    .qd-scale-block div { width: 10px; height: 10px; }
+  }
+
+  .qd-howitworks *, .qd-bridge *, .qd-gamme *, .qd-presentation *, .qd-gallery *, .qd-inspiration *, .qd-scale * {
+    box-sizing: border-box;
+  }
+  /* ============================================
+     SECTION 1 — "Comment ça marche"
+     Police : Quicksand
+     Titre section : 32px / 700 / couleur dark #2b353e
+     Titre étape : 20px / 700 / couleur dark #2b353e
+     Texte étape : 15px / 500 / couleur dark #2b353e (opacité 0.8)
+     Fond section : gris clair #F5F5F5
+     Cartes étape : fond blanc, bordure olive légère
+     Accent (flèches, numéros) : terracotta #E2725B
+     ============================================ */
+  .qd-howitworks {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 70px 20px;
+  }
+  .qd-howitworks-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 50px 0;
+  }
+  .qd-hiw-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .qd-hiw-step {
+    background: #ffffff;
+    border: 1.5px solid rgba(85,107,47,0.25);
+    border-radius: 20px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(43,53,62,0.06);
+  }
+  .qd-hiw-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    background: rgba(85,107,47,0.08);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .qd-hiw-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .qd-hiw-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: #E2725B;
+    color: #FFFBEF;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .qd-hiw-step h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 8px 0;
+  }
+  .qd-hiw-step p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #2b353e;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .qd-hiw-arrow {
+    font-size: 24px;
+    color: #E2725B;
+    margin: 10px 0;
+    line-height: 1;
+  }
+  .qd-hiw-branches {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .qd-hiw-branches .qd-hiw-step {
+    max-width: 380px;
+  }
+  .qd-hiw-branch-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #556B2F;
+    margin-bottom: 10px;
+    display: block;
+  }
+  @media (max-width: 640px) {
+    .qd-howitworks-title { font-size: 24px; }
+    .qd-hiw-branches { flex-direction: column; align-items: center; }
+  }
+
+  /* ============================================
+     SECTION 2 — Pont app/produit
+     Police : Quicksand
+     Texte : 26px / 600 / couleur cream #FFFBEF
+     Fond section : olive #556B2F
+     Bouton CTA : fond terracotta #E2725B, texte dark #2b353e, 17px / 700
+     ============================================ */
+  .qd-bridge {
+    background: #556B2F;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .qd-bridge p {
+    color: #FFFBEF;
+    font-size: 26px;
+    font-weight: 600;
+    max-width: 700px;
+    margin: 0 auto 28px auto;
+    line-height: 1.4;
+  }
+  .qd-bridge-cta {
+    display: inline-block;
+    background: #E2725B;
+    color: #2b353e;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 17px;
+    padding: 14px 36px;
+    border-radius: 999px;
+  }
+  @media (max-width: 640px) {
+    .qd-bridge p { font-size: 19px; }
+  }
+
+  /* ============================================
+     SECTION 3 — Aperçu gamme matière (optionnelle)
+     Police : Quicksand
+     Titre section : 28px / 700 / couleur dark #2b353e
+     Titre carte : 17px / 700 / couleur dark #2b353e
+     Texte carte : 14px / 500 / couleur dark #2b353e (opacité 0.75)
+     Fond section : gris clair #F5F5F5
+     Cartes : fond blanc
+     ============================================ */
+  .qd-gamme {
+    background: #F5F5F5;
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    padding: 70px 20px;
+  }
+  .qd-gamme-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 40px 0;
+  }
+  .qd-gamme-grid {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .qd-gamme-card {
+    background: #F5F5F5;
+    border: 1.5px solid #2b353e;
+    border-radius: 16px;
+    padding: 20px;
+    width: 260px;
+    text-align: center;
+  }
+  .qd-gamme-card-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    background: rgba(85,107,47,0.08);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .qd-gamme-card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .qd-gamme-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #2b353e;
+    margin: 0 0 8px 0;
+  }
+  .qd-gamme-card p {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2b353e;
+    opacity: 0.75;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION 0 : PRÉSENTATION ============ -->
+<section class="qd-presentation">
+  <div class="qd-presentation-wrap">
+    <p class="qd-presentation-hook">La mosaïque pixel, revisitée — recomposez à l'infini. Elle ne se colle pas, elle se clipse.</p>
+    <p class="qd-presentation-name">Quadreti — du carré, au cadre, mais sans sa limite.</p>
+    <p class="qd-presentation-story">Il y a plus de deux mille ans, des artisans romains composaient déjà des motifs avec de petites pièces carrées, posées une à une, à la main, et fixées définitivement, pour durer toute une vie. Ils appelaient chaque pièce une <em>tessera</em>. Nous, on l'appelle une tesselle — le mot n'est pas de notre invention, seulement la façon dont on l'utilise aujourd'hui.</p>
+    <p class="qd-presentation-story" style="margin-top: 18px;">Nous n'avons rien changé à la matière : une tesselle reste une tesselle. Ce que nous avons réinventé, c'est la façon de la poser — sans colle, pour pouvoir faire, défaire, et refaire, autant de fois que vous le voulez.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 1 : COMMENT ÇA MARCHE ============ -->
+<section class="qd-howitworks">
+  <h2 class="qd-howitworks-title">Comment ça marche</h2>
+  <div class="qd-hiw-wrap">
+
+    <div class="qd-hiw-step">
+      <div class="qd-hiw-photo"><!-- photo étape 1 : composition dans l'app --></div>
+      <span class="qd-hiw-num">1</span>
+      <h3>Composez dans l'app</h3>
+      <p>Choisissez vos couleurs, vos photos, ou laissez l'app transformer une image en mosaïque pixel.</p>
+    </div>
+
+    <div class="qd-hiw-arrow">↓</div>
+
+    <div class="qd-hiw-branches">
+      <div class="qd-hiw-step">
+        <span class="qd-hiw-branch-label">Tesselle brute</span>
+        <div class="qd-hiw-photo"><!-- photo étape 2a : peindre/graver une tesselle MDF --></div>
+        <span class="qd-hiw-num">2a</span>
+        <h3>Peignez ou gravez</h3>
+        <p>MDF disponible aujourd'hui — bois, verre et PMMA à venir.</p>
+      </div>
+      <div class="qd-hiw-step">
+        <span class="qd-hiw-branch-label">Tesselle + étui</span>
+        <div class="qd-hiw-photo"><!-- photo étape 2b : glisser le visuel dans l'étui --></div>
+        <span class="qd-hiw-num">2b</span>
+        <h3>Glissez votre visuel</h3>
+        <p>À la perforatrice, au cutter, aux ciseaux, au massicot ou au plotter — découpez une photo ou une couleur imprimée chez vous, ou un papier déjà prêt à l'emploi.</p>
+      </div>
+    </div>
+
+    <div class="qd-hiw-arrow">↓</div>
+
+    <div class="qd-hiw-step">
+      <div class="qd-hiw-photo"><!-- photo étape 3 : clipsage sur la grille --></div>
+      <span class="qd-hiw-num">3</span>
+      <h3>Clipsez</h3>
+      <p>Posez vos tesselles sur la grille. Aucune colle. Changez d'avis quand vous voulez.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SECTION 2 : PONT APP / PRODUIT ============ -->
+<section class="qd-bridge">
+  <p>Passez de l'écran au support — concevez, composez, assemblez de vos mains.</p>
+  <a href="https://quadreti.github.io/quadreti-designer/" class="qd-bridge-cta">Ouvrir le Designer</a>
+</section>
+
+<!-- ============ SECTION 3 : APERÇU GAMME (optionnelle) ============ -->
+<section class="qd-gamme">
+  <h2 class="qd-gamme-title">La gamme aujourd'hui</h2>
+  <div class="qd-gamme-grid">
+    <div class="qd-gamme-card">
+      <div class="qd-gamme-card-photo"><!-- photo : résultat papier/photo + app sur téléphone, exemple exploitable par ux --></div>
+      <h4>Papier & photo</h4>
+      <p>Découpez vous-même (perforatrice, cutter, ciseaux, massicot, plotter), ou choisissez vos couleurs déjà prédécoupées aux dimensions de la tesselle — en gamme prête, ou sur demande personnalisée.</p>
+    </div>
+    <div class="qd-gamme-card">
+      <div class="qd-gamme-card-photo"><!-- photo : résultat tesselle MDF peinte/gravée --></div>
+      <h4>Tesselle MDF</h4>
+      <p>Une tesselle brute, prête à peindre ou graver — produite en petite série.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4 : VOTRE MUR GRANDIT AVEC VOUS ============ -->
+<section class="qd-scale">
+  <h2>Agrandissez votre mur à votre rythme</h2>
+  <p>Un carreau aujourd'hui, autant que vous voulez demain — le motif et la grille s'accolent sans rupture visible. Et parce que vous imprimez vous-même vos visuels, agrandir votre mur ne fait pas exploser le budget — que vous composiez en pixel ou en photo, à petite ou grande échelle.</p>
+  <div class="qd-scale-progression">
+    <div class="qd-scale-block b1"><div></div></div>
+    <span class="qd-scale-arrow">→</span>
+    <div class="qd-scale-block b2"><div></div><div></div><div></div><div></div></div>
+    <span class="qd-scale-arrow">→</span>
+    <div class="qd-scale-block b3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <span class="qd-scale-arrow">→</span>
+    <div class="qd-scale-block b4">
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <span class="qd-scale-arrow">→</span>
+    <div class="qd-scale-block b5">
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5 : GALERIE D'EXEMPLES ============ -->
+<section class="qd-gallery">
+  <h2 class="qd-gallery-title">Ce que le geste permet</h2>
+  <div class="qd-gallery-grid">
+
+    <div class="qd-gallery-item">
+      <div class="qd-gallery-photo"><!-- photo exemple 1 : portrait Van Gogh en pixel --></div>
+      <p class="qd-gallery-caption">Autoportrait Van Gogh</p>
+      <p class="qd-gallery-sub">Mode Pixel Photo</p>
+    </div>
+
+    <div class="qd-gallery-item">
+      <div class="qd-gallery-photo"><!-- photo exemple 2 : mur photo personnelle --></div>
+      <p class="qd-gallery-caption">Souvenir de famille</p>
+      <p class="qd-gallery-sub">Mode Photo</p>
+    </div>
+
+    <div class="qd-gallery-item">
+      <div class="qd-gallery-photo"><!-- photo exemple 3 : composition couleur pixel art --></div>
+      <p class="qd-gallery-caption">Motif géométrique</p>
+      <p class="qd-gallery-sub">Mode Couleur</p>
+    </div>
+
+    <div class="qd-gallery-item">
+      <div class="qd-gallery-photo"><!-- photo exemple 4 : tesselle MDF gravée --></div>
+      <p class="qd-gallery-caption">Gravure sur bois</p>
+      <p class="qd-gallery-sub">Tesselle brute MDF</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SECTION 6 : INSPIRATION (lien Pinterest) ============ -->
+<section class="qd-inspiration">
+  <h2>Besoin d'idées ?</h2>
+  <p>Le pixel art et la mosaïque inspirent une vraie communauté de créateurs. Piochez des idées sur Pinterest, puis composez la vôtre — à votre façon, dans le Designer Quadreti.</p>
+  <a href="https://www.pinterest.com/search/pins/?q=pixel%20art%20mosaic" target="_blank" rel="noopener">Explorer sur Pinterest</a>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var LOGO_URL = "https://www.quadreti.fr/wp-content/uploads/go-x/u/237d76ab-caa1-4b0e-a57e-6debba4e4e63/l19,t8,w1961,h488/image-683x170.png";
+    var VIDEO_URL = "https://videobandeauquadretiv3.netlify.app/videobandeauquadreti.mp4";
+    var NAV_LINKS = [
+      { label: "Accueil",  url: "https://quadreti.fr/" },
+      { label: "À propos", url: "https://quadreti.fr/a-propos/" },
+      { label: "Designer", url: "https://quadreti.github.io/quadreti-designer/" },
+      { label: "Boutique", url: "https://quadreti.fr/boutique" },
+      { label: "Contact",  url: "https://quadreti.fr/contact" }
+    ];
+    var PRO_LINK = { label: "Pro", url: "https://www.quadreti.fr/pro/" };
+    var BASELINE_TEXT = "Clipsez, recomposez à volonté.";
+    var CTA_TEXT = "Devenez l'artiste";
+    var CTA_URL = "https://quadreti.github.io/quadreti-designer/";
+    var MARQUEE_MESSAGES = [
+      "Tesselles amovibles, sans colle",
+      "100% personnalisable",
+      "Personnalisez vos tesselles en couleur, en photo ou gravées",
+      "Composez, exposez, recommencez"
+    ];
+
+    var hero = document.createElement("div");
+    hero.id = "qd-hero2";
+    var frameWrap = document.createElement("div");
+    frameWrap.className = "qd-frame-wrap";
+
+    // Nav
+    var nav = document.createElement("div");
+    nav.id = "qd-hero2-nav";
+    var logo = document.createElement("img");
+    logo.className = "qd-logo";
+    logo.src = LOGO_URL;
+    logo.alt = "Quadreti";
+    var links = document.createElement("div");
+    links.id = "qd-hero2-links";
+    NAV_LINKS.forEach(function (item) {
+      var a = document.createElement("a");
+      a.href = item.url;
+      a.textContent = item.label;
+      links.appendChild(a);
+    });
+    var proLink = document.createElement("a");
+    proLink.href = PRO_LINK.url;
+    proLink.textContent = PRO_LINK.label;
+    proLink.className = "qd-nav-pro";
+    links.appendChild(proLink);
+    var toggle = document.createElement("button");
+    toggle.id = "qd-hero2-toggle";
+    toggle.setAttribute("aria-label", "Ouvrir le menu");
+    toggle.innerHTML = "&#9776;";
+    toggle.addEventListener("click", function () {
+      links.classList.toggle("qd-open");
+    });
+    nav.appendChild(logo);
+    nav.appendChild(toggle);
+    nav.appendChild(links);
+
+    // Vidéo
+    var crop = document.createElement("div");
+    crop.className = "qd-frame-crop";
+    var video = document.createElement("video");
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.setAttribute("playsinline", "");
+    var source = document.createElement("source");
+    source.src = VIDEO_URL;
+    source.type = "video/mp4";
+    video.appendChild(source);
+    crop.appendChild(video);
+
+    // Baseline
+    var baseline = document.createElement("div");
+    baseline.id = "qd-hero2-baseline";
+    baseline.textContent = BASELINE_TEXT;
+    crop.appendChild(baseline);
+
+    // CTA
+    var cta = document.createElement("a");
+    cta.id = "qd-hero2-cta";
+    cta.href = CTA_URL;
+    cta.textContent = CTA_TEXT;
+
+    frameWrap.appendChild(nav);
+    frameWrap.appendChild(crop);
+    frameWrap.appendChild(cta);
+    hero.appendChild(frameWrap);
+
+    // Bandeau défilant
+    var marqueeBar = document.createElement("div");
+    marqueeBar.id = "qd-marquee-bar";
+    var marqueeTrack = document.createElement("div");
+    marqueeTrack.id = "qd-marquee-track";
+    function buildMarqueeItems() {
+      var frag = document.createDocumentFragment();
+      MARQUEE_MESSAGES.forEach(function (msg) {
+        var item = document.createElement("span");
+        item.className = "qd-marquee-item";
+        item.innerHTML = msg + '<span class="qd-marquee-sep">&nbsp;•</span>';
+        frag.appendChild(item);
+      });
+      return frag;
+    }
+    marqueeTrack.appendChild(buildMarqueeItems());
+    marqueeTrack.appendChild(buildMarqueeItems());
+    marqueeBar.appendChild(marqueeTrack);
+
+    document.body.insertBefore(marqueeBar, document.body.firstChild);
+    document.body.insertBefore(hero, marqueeBar.nextSibling);
+  });
+</script>
+</body>
+</html>
