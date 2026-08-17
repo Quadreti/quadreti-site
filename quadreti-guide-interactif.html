@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadreti — Découvrez l'app en la survolant</title>
+<meta name="description" content="Le guide interactif Quadreti : survolez chaque zone de l'app pour comprendre, puis suivez la visite guidée jusqu'au mur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --terracotta:#E2725B;
+    --terracotta-soft:#F6DED8;
+    --olive:#556B2F;
+    --olive-soft:#E9EDDD;
+    --kraft:#CBBD93;
+    --kraft-soft:#F1ECDD;
+    --charbon:#2b353e;
+    --fond:#F5F5F5;
+    --blanc:#FFFFFF;
+    --border:#E3E0DA;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Quicksand', sans-serif;
+    background:var(--fond); color:var(--charbon);
+    font-size:15px; line-height:1.55;
+  }
+  button{ font-family:inherit; cursor:pointer; }
+
+  /* ===== En-tête ===== */
+  header{ text-align:center; padding:30px 16px 18px; }
+  .brand-logo{
+    position:relative; margin:0 auto 14px; width:44px; height:58px;
+    display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(4,1fr); gap:6%;
+  }
+  .brand-logo i{ border-radius:22%; background:var(--charbon); opacity:0; transform:scale(.3); animation:brandTileIn .5s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .brand-logo i.empty{ background:transparent; animation:none; }
+  .brand-logo .tail{
+    position:absolute; bottom:0; right:calc(-1 * ((100% - 12%) / 3) - 6%);
+    width:calc((100% - 12%) / 3); height:calc((100% - 18%) / 4);
+    border-radius:22%; background:var(--terracotta);
+    opacity:0; transform:scale(.3); animation:brandTileIn .5s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:.34s;
+  }
+  @keyframes brandTileIn{ 0%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.18); } 100%{ opacity:1; transform:scale(1); } }
+  header h1{ font-size:clamp(21px,4.5vw,30px); font-weight:700; margin:8px 0 6px; }
+  header p{ color:#5a636b; max-width:520px; margin:0 auto; font-size:15px; }
+  @media (prefers-reduced-motion: reduce){ .brand-logo i{ animation:none !important; opacity:1 !important; transform:none !important; } }
+
+  /* ---------- Footer permanent (distinct de la finale, affichée uniquement en fin de visite guidée) ---------- */
+  footer.guide-foot{ text-align:center; padding:34px 16px 40px; }
+  footer.guide-foot .sig{ font-weight:700; font-size:15px; color:var(--charbon); margin:0; }
+  footer.guide-foot .sig span{ color:var(--terracotta); }
+  header p b{ color:var(--charbon); }
+
+  /* ===== Barre de contrôle ===== */
+  .ctrl{
+    display:flex; gap:10px; justify-content:center; align-items:center;
+    flex-wrap:wrap; padding:14px 16px 8px;
+  }
+  .tour-btn{
+    background:var(--terracotta); color:#fff; border:none;
+    font-weight:700; font-size:15px; border-radius:99px;
+    padding:10px 22px;
+    box-shadow:0 4px 14px rgba(226,114,91,.35);
+    transition:transform .15s;
+  }
+  .tour-btn:hover{ transform:translateY(-2px); }
+  .scene-tabs{ display:flex; gap:6px; background:var(--blanc); border:1px solid var(--border); border-radius:99px; padding:4px; }
+  .scene-tabs button{
+    border:none; background:transparent; font-weight:700; font-size:13.5px;
+    color:#6a727b; border-radius:99px; padding:7px 16px;
+  }
+  .scene-tabs button.on{ background:var(--charbon); color:#fff; }
+
+  /* ===== Scènes ===== */
+  .stage{ max-width:960px; margin:10px auto 0; padding:0 14px 130px; position:relative; }
+  .scene{ display:none; position:relative; }
+  .scene.on{ display:block; }
+
+  /* ===== Maquette app ===== */
+  .mock{
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:16px; padding:14px;
+    display:grid; gap:12px;
+    grid-template-columns:200px 1fr 200px;
+    grid-template-areas:"outils atelier actions";
+  }
+  @media (max-width:760px){
+    .mock{ grid-template-columns:1fr; grid-template-areas:"outils" "atelier" "actions"; }
+  }
+  .panel{
+    background:var(--fond); border:1px solid var(--border);
+    border-radius:12px; padding:12px; position:relative;
+  }
+  .panel h2{
+    font-size:11px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.12em; color:#8a9099; margin-bottom:9px;
+  }
+  .p-outils{ grid-area:outils; display:flex; flex-direction:column; gap:12px; }
+  .p-atelier{ grid-area:atelier; }
+  .p-actions{ grid-area:actions; display:flex; flex-direction:column; gap:12px; }
+
+  .mockbtn{
+    display:block; width:100%;
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:8px; font-weight:600; font-size:12.5px;
+    color:var(--charbon); padding:7px 8px; margin:4px 0;
+    text-align:center; pointer-events:none;
+  }
+  .mockbtn.primary{ background:var(--terracotta); color:#fff; border-color:var(--terracotta); }
+  .mockbtn.mode-on{ background:var(--olive); color:#fff; border-color:var(--olive); }
+
+  .swatches{ display:grid; grid-template-columns:repeat(5,1fr); gap:5px; }
+  .swatches i{ display:block; aspect-ratio:1; border-radius:5px; border:1px solid rgba(0,0,0,.08); }
+
+  /* Navigateur de carreaux */
+  .tilenav{
+    display:flex; gap:6px; align-items:center; justify-content:center; margin-bottom:10px;
+    font-weight:700; font-size:12.5px;
+  }
+  .tilenav .cell{
+    width:30px; height:24px; border-radius:5px;
+    background:var(--blanc); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#8a9099;
+  }
+  .tilenav .cell.on{ background:var(--charbon); color:#fff; border-color:var(--charbon); }
+
+  /* Grille 7×7 */
+  .grid7{
+    display:grid; grid-template-columns:repeat(7,1fr); gap:4px;
+    background:var(--charbon); padding:8px; border-radius:10px;
+    max-width:330px; margin:0 auto;
+  }
+  .grid7 i{ display:block; aspect-ratio:1; border-radius:4px; background:var(--fond); }
+  .grid7 i.t{ background:var(--terracotta); }
+  .grid7 i.k{ background:var(--kraft); }
+  .atelier-tools{ display:flex; gap:6px; justify-content:center; margin-top:10px; flex-wrap:wrap; }
+  .atelier-tools .mockbtn{ width:auto; padding:6px 10px; margin:0; }
+
+  /* ===== Scène maison ===== */
+  .maison{
+    background:var(--blanc); border:1px solid var(--border); border-radius:16px;
+    padding:26px 14px 30px;
+    display:grid; gap:26px;
+    grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+    justify-items:center;
+  }
+  .step-visu{ text-align:center; position:relative; width:100%; max-width:220px; }
+  .step-visu .cap{ font-weight:700; font-size:13.5px; margin-top:10px; }
+  .step-visu .sub{ font-size:12.5px; color:#7a828b; }
+
+  /* feuille prédécoupée */
+  .feuille{
+    width:120px; height:150px; margin:0 auto;
+    background:var(--blanc); border:2px solid var(--charbon); border-radius:6px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:10px;
+  }
+  .feuille i{ border:1.6px dashed var(--terracotta); border-radius:3px; aspect-ratio:1; }
+  /* étui */
+  .etui{
+    width:130px; height:110px; margin:20px auto 0;
+    background:linear-gradient(160deg, #eef3f5, #dde7ea);
+    border:2px solid var(--charbon); border-radius:8px; position:relative;
+  }
+  .etui::before{ /* visuel qui glisse */
+    content:""; position:absolute; inset:12px 14px 26px;
+    background:var(--terracotta); border-radius:4px; opacity:.85;
+  }
+  .etui::after{ /* volets rabattus */
+    content:"volets"; position:absolute; left:50%; bottom:-12px; transform:translateX(-50%);
+    background:var(--kraft); color:#5c5133; border-radius:0 0 8px 8px;
+    font-size:10px; font-weight:700; padding:3px 14px; letter-spacing:.06em;
+  }
+  /* grille murale */
+  .murgrille{
+    width:150px; height:150px; margin:0 auto;
+    background:var(--charbon); border-radius:10px; padding:8px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:5px; position:relative;
+  }
+  .murgrille i{ background:var(--fond); border-radius:4px; }
+  .murgrille i.pin{ position:relative; }
+  .murgrille i.pin::after{
+    content:""; position:absolute; inset:30%;
+    border-radius:50%; background:var(--kraft); border:2px solid #9d8f63;
+  }
+  .murgrille i.done{ background:var(--terracotta); }
+  /* main qui change */
+  .swap{
+    width:150px; height:150px; margin:0 auto; position:relative;
+    background:var(--olive-soft); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .swap i{ width:44px; height:44px; border-radius:6px; }
+  .swap i:first-child{ background:var(--terracotta); }
+  .swap .fleche{ font-size:22px; font-weight:700; color:var(--olive); }
+  .swap i:last-child{ background:var(--kraft); }
+
+  /* ===== Hotspots ===== */
+  .hot{
+    position:absolute; z-index:5;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--terracotta); color:#fff;
+    border:2.5px solid #fff;
+    font-weight:700; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(226,114,91,.45);
+  }
+  .hot::before{
+    content:""; position:absolute; inset:-7px; border-radius:50%;
+    border:2px solid var(--terracotta); opacity:.55;
+    animation:pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{ transform:scale(.7); opacity:.7; }
+    100%{ transform:scale(1.25); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){ .hot::before{ animation:none; } }
+  .hot.olive{ background:var(--olive); box-shadow:0 3px 10px rgba(85,107,47,.45); }
+  .hot.olive::before{ border-color:var(--olive); }
+  .hot.seen{ background:#aab2ab; box-shadow:none; }
+  .hot.seen::before{ display:none; }
+  .hot.active{ transform:scale(1.18); }
+  .hot:focus-visible{ outline:3px solid var(--charbon); outline-offset:2px; }
+
+  /* halo sur l'élément expliqué */
+  .lit{ box-shadow:0 0 0 3px var(--terracotta), 0 0 0 8px rgba(226,114,91,.18) !important; border-radius:12px; }
+
+  /* ===== Popup ===== */
+  .pop{
+    position:fixed; z-index:60;
+    left:50%; bottom:14px; transform:translateX(-50%);
+    width:min(480px, calc(100vw - 24px));
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 14px 40px rgba(43,53,62,.22);
+    padding:18px 20px 14px;
+    display:none;
+  }
+  .pop.on{ display:block; animation:rise .22s ease; }
+  @keyframes rise{ from{ transform:translate(-50%, 14px); opacity:0; } to{ transform:translate(-50%,0); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .pop.on{ animation:none; } }
+  .pop .pop-step{
+    font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--terracotta); margin-bottom:4px;
+  }
+  .pop h3{ font-size:17.5px; font-weight:700; margin-bottom:6px; }
+  .pop p{ font-size:14px; color:#3d4650; }
+  .pop p + p{ margin-top:6px; }
+  .pop .ui{
+    display:inline-block; font-weight:600; font-size:.92em;
+    background:var(--olive-soft); color:var(--olive);
+    border:1px solid #cfd8b8; border-radius:5px; padding:0 7px 1px; white-space:nowrap;
+  }
+  .pop-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:14px; gap:10px;
+  }
+  .pop-nav .dots{ font-size:12.5px; font-weight:700; color:#8a9099; }
+  .pop-nav button{
+    border:1px solid var(--border); background:var(--blanc);
+    font-weight:700; font-size:13.5px; border-radius:99px; padding:7px 16px;
+    color:var(--charbon);
+  }
+  .pop-nav button.next{ background:var(--charbon); color:#fff; border-color:var(--charbon); }
+  .pop-close{
+    position:absolute; top:10px; right:12px;
+    border:none; background:transparent; font-size:17px; color:#8a9099;
+    padding:4px;
+  }
+
+  /* ===== Fin de visite : signature ===== */
+  .finale{
+    position:fixed; inset:0; z-index:80;
+    background:rgba(245,245,245,.96);
+    display:none; align-items:center; justify-content:center; text-align:center; padding:20px;
+  }
+  .finale.on{ display:flex; }
+  .finale .clic{ font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:#8a9099; margin-bottom:12px; }
+  .finale p.phrase{ font-size:clamp(22px,5vw,34px); font-weight:700; }
+  .finale p.phrase span{ color:var(--terracotta); }
+  .finale button{
+    margin-top:26px; background:var(--terracotta); color:#fff; border:none;
+    font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-logo" aria-hidden="true">
+    <i style="animation-delay:.10s"></i><i style="animation-delay:.16s"></i><i style="animation-delay:.22s"></i>
+    <i style="animation-delay:.08s"></i><i class="empty"></i><i style="animation-delay:.26s"></i>
+    <i style="animation-delay:.06s"></i><i class="empty"></i><i style="animation-delay:.30s"></i>
+    <i style="animation-delay:.04s"></i><i style="animation-delay:.02s"></i><i style="animation-delay:0s"></i>
+    <i class="tail"></i>
+  </div>
+  <h1>Découvrez l'app… en la touchant</h1>
+  <p>Chaque pastille cache une explication : <b>touchez-les librement</b>, ou lancez la visite guidée pour suivre le parcours complet, de l'écran jusqu'au mur.</p>
+</header>
+
+<div class="ctrl">
+  <button class="tour-btn" id="tourBtn">▶ Lancer la visite guidée</button>
+  <div class="scene-tabs" role="tablist" aria-label="Choisir la scène">
+    <button class="on" id="tabApp" role="tab" aria-selected="true">Dans l'app</button>
+    <button id="tabMaison" role="tab" aria-selected="false">Chez vous</button>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- ================= SCÈNE 1 : L'APP ================= -->
+  <div class="scene on" id="sceneApp">
+    <div class="mock">
+
+      <div class="panel p-outils" id="z-modes">
+        <div>
+          <h2>Mode</h2>
+          <span class="mockbtn mode-on">Mode couleur</span>
+          <span class="mockbtn">Mode photo</span>
+          <span class="mockbtn">Mode créatif</span>
+        </div>
+        <div id="z-palette">
+          <h2>Palette</h2>
+          <div class="swatches">
+            <i style="background:#E2725B"></i><i style="background:#556B2F"></i><i style="background:#CBBD93"></i><i style="background:#2b353e"></i><i style="background:#7A9CC6"></i>
+            <i style="background:#C65B7A"></i><i style="background:#E0B34C"></i><i style="background:#6BAA8E"></i><i style="background:#8A6FB1"></i><i style="background:#F5F5F5"></i>
+          </div>
+          <span class="mockbtn" style="margin-top:8px;">Réinitialiser la palette</span>
+        </div>
+        <div id="z-styles">
+          <h2>Style d'image</h2>
+          <span class="mockbtn">‹ &nbsp;Pointillé&nbsp; ›</span>
+        </div>
+      </div>
+
+      <div class="panel p-atelier" id="z-atelier">
+        <h2>Votre mur — carreau B2</h2>
+        <div class="tilenav" id="z-tilenav">
+          <span class="cell">A1</span><span class="cell">B1</span>
+          <span class="cell on">B2</span><span class="cell">A2</span>
+        </div>
+        <div class="grid7" aria-hidden="true">
+          <i></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i></i>
+          <i></i><i class="t"></i><i class="k"></i><i class="t"></i><i class="k"></i><i class="t"></i><i></i>
+          <i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="t"></i><i></i>
+          <i></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i></i>
+          <i></i><i></i><i></i><i class="t"></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="atelier-tools" id="z-outils-carreau">
+          <span class="mockbtn">Annuler la dernière action</span>
+          <span class="mockbtn">Dupliquer ce carreau</span>
+          <span class="mockbtn">Effacer ce carreau</span>
+        </div>
+      </div>
+
+      <div class="panel p-actions">
+        <div id="z-apercu">
+          <h2>Aperçu</h2>
+          <span class="mockbtn">Salon · Bureau · À plat</span>
+        </div>
+        <div id="z-designs">
+          <h2>Mes designs</h2>
+          <span class="mockbtn">Sauvegarder ce design</span>
+          <span class="mockbtn">Copier le code de ce mur</span>
+          <span class="mockbtn">Partager sur les réseaux</span>
+        </div>
+        <div id="z-fichiers">
+          <h2>Mes fichiers</h2>
+          <span class="mockbtn primary">Télécharger pour commander (ZIP)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SCÈNE 2 : CHEZ VOUS ================= -->
+  <div class="scene" id="sceneMaison">
+    <div class="maison">
+      <div class="step-visu" id="z-feuille">
+        <div class="feuille" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="cap">La feuille prédécoupée</div>
+        <div class="sub">imprimez chez vous</div>
+      </div>
+      <div class="step-visu" id="z-etui">
+        <div class="etui" aria-hidden="true"></div>
+        <div class="cap">L'étui</div>
+        <div class="sub">glissez, rabattez</div>
+      </div>
+      <div class="step-visu" id="z-mur">
+        <div class="murgrille" aria-hidden="true">
+          <i class="pin"></i><i class="done"></i><i class="done"></i><i class="pin"></i>
+          <i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i>
+          <i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i>
+          <i class="pin"></i><i class="done"></i><i></i><i class="pin"></i>
+        </div>
+        <div class="cap">La grille au mur</div>
+        <div class="sub">clipsez, sans colle</div>
+      </div>
+      <div class="step-visu" id="z-changer">
+        <div class="swap" aria-hidden="true">
+          <i></i><span class="fleche">⇄</span><i></i>
+        </div>
+        <div class="cap">Et demain ?</div>
+        <div class="sub">changez à volonté</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= POPUP ================= -->
+<div class="pop" id="pop" role="dialog" aria-modal="false" aria-labelledby="popTitle">
+  <button class="pop-close" id="popClose" aria-label="Fermer">✕</button>
+  <div class="pop-step" id="popStep"></div>
+  <h3 id="popTitle"></h3>
+  <div id="popBody"></div>
+  <div class="pop-nav">
+    <button id="popPrev">‹ Précédent</button>
+    <span class="dots" id="popDots"></span>
+    <button class="next" id="popNext">Suivant ›</button>
+  </div>
+</div>
+
+<!-- ================= FINALE ================= -->
+<div class="finale" id="finale">
+  <div>
+    <div class="clic">· clic ·</div>
+    <p class="phrase">Composez, imprimez, clipsez,<br><span>changez à volonté.</span></p>
+    <button id="finaleClose">Rejouer la visite</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---------- Contenu des étapes ----------
+  // scene: 'app' | 'maison' — anchor: id de l'élément à annoter — dx/dy: décalage pastille (%)
+  const STEPS = [
+    { scene:'app', anchor:'z-modes', num:1, title:'Trois modes, une grille',
+      html:"<p><b>Mode couleur</b> : peignez case par case. <b>Mode photo</b> : une photo par tesselle, un pêle-mêle de souvenirs. <b>Mode créatif</b> : une seule image répartie sur tout le mur (pixel art, photo mosaïque…).</p><p>Commencez simple : le Mode couleur se prend en main en dix secondes.</p>" },
+    { scene:'app', anchor:'z-palette', num:2, title:'Votre palette',
+      html:"<p>9 couleurs prêtes à l'emploi, et jusqu'à 10 couleurs à vous — ajoutez la teinte exacte de votre salon.</p><p>Envie de relief ? La texture <b>« 9 ronds »</b> décompose chaque couleur en nuances, différentes sur chaque tesselle.</p>" },
+    { scene:'app', anchor:'z-styles', num:3, title:'Les styles d\u2019image',
+      html:"<p>En mode photo, un carrousel habille vos images : Noir &amp; blanc, Sépia, Grain argentique, Duotone… et <b>Pointillé</b>, qui transforme votre photo en peinture pointilliste.</p>" },
+    { scene:'app', anchor:'z-atelier', num:4, title:'L\u2019atelier : votre carreau',
+      html:"<p>La grille 7 × 7 du carreau en cours. Touchez une case pour la peindre ou y placer une photo — <b>vous composez ici</b>, geste par geste.</p><p>Un carreau = 20 × 20 cm au mur.</p>" },
+    { scene:'app', anchor:'z-tilenav', num:5, title:'Naviguer entre les carreaux',
+      html:"<p>Un mur peut compter plusieurs carreaux — pas forcément en carré (2 × 1, 3 × 2…). Le repère façon bataille navale (<b>B2</b>) indique où vous êtes.</p><p>Ce même repère sera <b>au dos de vos tesselles imprimées</b> : l'app et le mur parlent la même langue.</p>" },
+    { scene:'app', anchor:'z-outils-carreau', num:6, title:'Le droit à l\u2019erreur',
+      html:"<p><span class='ui'>Annuler la dernière action</span> revient toujours en arrière — même après une action qui a changé tout le mur. <span class='ui'>Dupliquer ce carreau</span> répète un motif partout en un geste.</p><p>Impossible de rater : il n'y a pas d'erreurs, que des versions.</p>" },
+    { scene:'app', anchor:'z-apercu', num:7, title:'Votre mur en situation',
+      html:"<p>Projetez votre création dans un décor : <b>Salon</b>, <b>Bureau</b> ou <b>À plat</b>, à l'échelle.</p><p>Astuce : reculez de deux mètres — une photo mosaïque se juge de loin.</p>" },
+    { scene:'app', anchor:'z-designs', num:8, title:'Sauvegarder &amp; partager',
+      html:"<p><span class='ui'>Sauvegarder ce design</span> garde jusqu'à 20 créations dans votre navigateur. <span class='ui'>Copier le code de ce mur</span> transforme votre création en code texte : collez-le ailleurs, elle renaît à l'identique.</p><p><span class='ui'>Partager sur les réseaux</span> envoie votre composition à un proche — il peut l'imprimer et la clipser chez lui.</p>" },
+    { scene:'app', anchor:'z-fichiers', num:9, title:'Commander',
+      html:"<p><span class='ui'>Télécharger pour commander (ZIP)</span> génère vos fichiers d'impression, à l'échelle exacte de vos tesselles, puis vous dirige vers la boutique.</p><p>Vous recevez le kit : grille, tesselles, étuis et <b>feuille prédécoupée</b>. La suite se passe chez vous →</p>" },
+    { scene:'maison', anchor:'z-feuille', num:10, title:'Imprimez votre feuille',
+      html:"<p>La feuille prédécoupée est aux dimensions exactes de vos tesselles. Imprimez votre fichier dessus (échelle 100 %) avec n'importe quelle imprimante jet d'encre, puis <b>détachez</b> : aucune découpe à faire.</p><p>Au dos de chaque visuel, son code de position (B2 · D5) — votre plan de montage intégré.</p>" },
+    { scene:'maison', anchor:'z-etui', num:11, title:'Glissez dans l\u2019étui',
+      html:"<p>Le visuel se glisse dans son étui transparent, les <b>volets</b> se rabattent : tenu parfaitement à plat, <b>sans un point de colle</b>. Le clipsage dans la grille verrouille le tout naturellement.</p><p>Le même étui servira à tous vos visuels futurs.</p>" },
+    { scene:'maison', anchor:'z-mur', num:12, title:'Clipsez au mur',
+      html:"<p>Quatre punaises aux coins de la grille — recouvertes ensuite par les tesselles d'angle : <b>aucune fixation visible</b>, des trous minimes (parfait en location).</p><p>Puis chaque tesselle se clipse dans sa case : <b>clic</b> — pas de colle, pas de séchage. Le mur est fini quand la dernière tesselle clique.</p>" },
+    { scene:'maison', anchor:'z-changer', num:13, title:'Changez à volonté',
+      html:"<p>Une tesselle se déclipse et se remplace en secondes. Un mur entier change d'image pour le prix d'une feuille imprimée.</p><p>Vos anciennes compositions se rangent dans leur enveloppe — le mur de Noël ressortira l'année prochaine en quelques minutes.</p>" },
+  ];
+
+  const pop = document.getElementById('pop');
+  const popStep = document.getElementById('popStep');
+  const popTitle = document.getElementById('popTitle');
+  const popBody = document.getElementById('popBody');
+  const popDots = document.getElementById('popDots');
+  const popPrev = document.getElementById('popPrev');
+  const popNext = document.getElementById('popNext');
+  const finale = document.getElementById('finale');
+  const sceneApp = document.getElementById('sceneApp');
+  const sceneMaison = document.getElementById('sceneMaison');
+  const tabApp = document.getElementById('tabApp');
+  const tabMaison = document.getElementById('tabMaison');
+
+  let current = -1;      // index de l'étape affichée
+  let tourMode = false;  // visite guidée en cours
+
+  // ---------- Scènes ----------
+  function showScene(name){
+    const isApp = name === 'app';
+    sceneApp.classList.toggle('on', isApp);
+    sceneMaison.classList.toggle('on', !isApp);
+    tabApp.classList.toggle('on', isApp);
+    tabMaison.classList.toggle('on', !isApp);
+    tabApp.setAttribute('aria-selected', isApp);
+    tabMaison.setAttribute('aria-selected', !isApp);
+  }
+  tabApp.addEventListener('click', () => { closePop(); showScene('app'); });
+  tabMaison.addEventListener('click', () => { closePop(); showScene('maison'); });
+
+  // ---------- Hotspots : créés depuis STEPS, positionnés sur leur ancre ----------
+  const hots = [];
+  STEPS.forEach((s, i) => {
+    const anchor = document.getElementById(s.anchor);
+    const b = document.createElement('button');
+    b.className = 'hot' + (s.scene === 'app' ? ' olive' : '');
+    b.textContent = s.num;
+    b.setAttribute('aria-label', 'Étape ' + s.num + ' : ' + s.title.replace(/&amp;/g,'&'));
+    b.addEventListener('click', (e) => { e.stopPropagation(); openStep(i, false); });
+    // la pastille vit dans l'ancre, coin haut-droit
+    anchor.style.position = anchor.style.position || 'relative';
+    b.style.top = '-10px'; b.style.right = '-8px';
+    anchor.appendChild(b);
+    hots.push(b);
+  });
+
+  // ---------- Popup ----------
+  function openStep(i, fromTour){
+    const s = STEPS[i];
+    showScene(s.scene);
+    // reset visuel
+    document.querySelectorAll('.lit').forEach(el => el.classList.remove('lit'));
+    hots.forEach(h => h.classList.remove('active'));
+    // activer
+    document.getElementById(s.anchor).classList.add('lit');
+    hots[i].classList.add('active');
+    hots[i].classList.add('seen');
+    current = i;
+    if (fromTour !== undefined) tourMode = fromTour || tourMode;
+
+    popStep.textContent = 'Étape ' + s.num + ' / ' + STEPS.length;
+    popTitle.innerHTML = s.title;
+    popBody.innerHTML = s.html;
+    popDots.textContent = s.num + ' / ' + STEPS.length;
+    popPrev.style.visibility = i === 0 ? 'hidden' : 'visible';
+    popNext.textContent = i === STEPS.length - 1 ? 'Terminer ✓' : 'Suivant ›';
+    pop.classList.add('on');
+    hots[i].scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+
+  function closePop(){
+    pop.classList.remove('on');
+    document.querySelectorAll('.lit').forEach(el => el.classList.remove('lit'));
+    hots.forEach(h => h.classList.remove('active'));
+    current = -1;
+  }
+
+  popPrev.addEventListener('click', () => { if (current > 0) openStep(current - 1); });
+  popNext.addEventListener('click', () => {
+    if (current < STEPS.length - 1) openStep(current + 1);
+    else { closePop(); finale.classList.add('on'); tourMode = false; }
+  });
+  document.getElementById('popClose').addEventListener('click', closePop);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ closePop(); finale.classList.remove('on'); }
+    if (!pop.classList.contains('on')) return;
+    if (e.key === 'ArrowRight') popNext.click();
+    if (e.key === 'ArrowLeft') popPrev.click();
+  });
+
+  // ---------- Visite guidée ----------
+  document.getElementById('tourBtn').addEventListener('click', () => {
+    hots.forEach(h => h.classList.remove('seen'));
+    openStep(0, true);
+  });
+
+  // ---------- Finale ----------
+  document.getElementById('finaleClose').addEventListener('click', () => {
+    finale.classList.remove('on');
+    hots.forEach(h => h.classList.remove('seen'));
+    showScene('app');
+    openStep(0, true);
+  });
+})();
+</script>
+
+<footer class="guide-foot">
+  <p class="sig">Composez, imprimez, clipsez,<span> changez à volonté.</span></p>
+</footer>
+
+</body>
+</html>
