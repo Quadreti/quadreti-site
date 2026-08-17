@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique — Quadreti</title>
+<meta name="description" content="Commandez votre support créatif modulaire Quadreti : tesselles clipsables, carreaux 7×7, composez et recomposez sans colle.">
+<meta name="theme-color" content="#556B2F">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Boutique Quadreti">
+<meta property="og:description" content="Commandez votre support créatif modulaire Quadreti.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --olive:  #556B2F;
+    --terra:  #E2725B;
+    --cream:  #F4EFE6;
+    --page:   #F5F5F5;
+    --ink:    #2b353e;
+  }
+  body{
+    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
+    background: var(--page);
+    color: var(--ink);
+  }
+
+  /* Bandeau haut — même écriture que le bandeau défilant de l'accueil */
+  .qd-topbar{
+    background: var(--olive);
+    color: var(--cream);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+  .qd-topbar a{ color: var(--cream); text-decoration: none; font-weight: 600; }
+  .qd-topbar a:hover{ text-decoration: underline; }
+  .qd-topbar .qd-sep{ color: var(--terra); }
+  .qd-brand{ display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
+  .qd-logo{ display: grid; grid-template-columns: repeat(3, 7px); gap: 2px; }
+  .qd-logo i{ width: 7px; height: 7px; border-radius: 2px; background: var(--cream); display: block; }
+  .qd-logo i.tail{ background: var(--terra); }
+
+  /* Titre de page */
+  .qd-head{ text-align: center; padding: 40px 20px 8px; }
+  .qd-head h1{ font-size: clamp(26px, 4vw, 40px); font-weight: 700; color: var(--olive); }
+  .qd-head p{ margin-top: 10px; font-size: 16px; color: #5c646c; }
+
+  /* Zone boutique — pleine largeur, c'est tout l'intérêt de sortir du constructeur IONOS.
+     max-width volontairement large : la grille produits respire au lieu d'être enfermée. */
+  .qd-shop{
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px 20px 70px;
+  }
+  /* Ecwid s'adapte à la largeur de son conteneur : on lui laisse toute la place. */
+  #my-store-139886004{ width: 100%; }
+
+  .qd-foot{
+    background: var(--ink);
+    color: #cfd6dc;
+    text-align: center;
+    padding: 26px 20px;
+    font-size: 14px;
+  }
+  .qd-foot a{ color: var(--cream); text-decoration: none; font-weight: 600; }
+  .qd-foot a:hover{ text-decoration: underline; }
+  .qd-foot nav{ display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+
+  @media (max-width: 640px){
+    .qd-topbar{ justify-content: center; text-align: center; }
+    .qd-head{ padding-top: 28px; }
+    .qd-shop{ padding: 16px 12px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="qd-topbar">
+  <a class="qd-brand" href="/">
+    <span class="qd-logo" aria-hidden="true">
+      <i></i><i></i><i></i>
+      <i></i><i style="background:transparent"></i><i></i>
+      <i></i><i></i><i class="tail"></i>
+    </span>
+    Quadreti
+  </a>
+  <span>
+    <a href="/">Accueil</a>
+    <span class="qd-sep">•</span>
+    <a href="https://designer.quadreti.fr">Designer</a>
+  </span>
+</div>
+
+<header class="qd-head">
+  <h1>Boutique</h1>
+  <p>Composez, clipsez, recomposez — sans colle, autant de fois que vous voulez.</p>
+</header>
+
+<main class="qd-shop">
+  <!-- Boutique Ecwid n° 139886004 — le même magasin que celui affiché aujourd'hui sur la
+       page IONOS. Ecwid héberge les produits, le panier et le paiement ; cette page n'est
+       qu'un contenant. Rien à recréer, rien à migrer : c'est le même magasin. -->
+  <div id="my-store-139886004"></div>
+  <script data-cfasync="false" type="text/javascript" src="https://app.ecwid.com/script.js?139886004&data_platform=code" charset="utf-8"></script>
+  <script type="text/javascript">
+    xProductBrowser(
+      "categoriesPerRow=3",
+      "views=grid(20,3) list(60) table(60)",
+      "categoryView=grid",
+      "searchView=list",
+      "id=my-store-139886004"
+    );
+  </script>
+  <noscript>
+    <p>Votre navigateur doit autoriser JavaScript pour afficher la boutique.
+       Vous pouvez aussi nous écrire pour commander.</p>
+  </noscript>
+</main>
+
+<footer class="qd-foot">
+  <nav>
+    <a href="/">Accueil</a>
+    <a href="https://designer.quadreti.fr">Designer</a>
+    <a href="/boutique/">Boutique</a>
+  </nav>
+  <div>© Quadreti — support créatif modulaire</div>
+</footer>
+
+</body>
+</html>
