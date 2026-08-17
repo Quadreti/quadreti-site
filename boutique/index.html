@@ -4,110 +4,145 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Boutique — Quadreti</title>
-<meta name="description" content="Commandez votre support créatif modulaire Quadreti : tesselles clipsables, carreaux 7×7, composez et recomposez sans colle.">
-<meta name="theme-color" content="#556B2F">
+<meta name="description" content="Commandez votre support créatif modulaire Quadreti : tesselles clipsables, sans colle, à recomposer autant de fois que vous voulez.">
+<meta name="theme-color" content="#2b353e">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Boutique Quadreti">
 <meta property="og:description" content="Commandez votre support créatif modulaire Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Charte identique au site : memes variables, memes graisses, meme en-tete.
+     Toute couleur de cette page vient d'ici — rien n'est ecrit en dur ailleurs. */
   :root{
-    --olive:  #556B2F;
-    --terra:  #E2725B;
-    --cream:  #F4EFE6;
-    --page:   #F5F5F5;
-    --ink:    #2b353e;
+    --terracotta:#E2725B;
+    --terracotta-soft:#F6DED8;
+    --olive:#556B2F;
+    --olive-soft:#E9EDDD;
+    --kraft:#CBBD93;
+    --kraft-soft:#F1ECDD;
+    --charbon:#2b353e;
+    --fond:#F5F5F5;
+    --blanc:#FFFFFF;
+    --border:#E3E0DA;
   }
+  *{ box-sizing:border-box; margin:0; padding:0; }
   body{
-    font-family: "Quicksand", -apple-system, "Segoe UI", Arial, sans-serif;
-    background: var(--page);
-    color: var(--ink);
+    font-family:'Quicksand', -apple-system, "Segoe UI", Arial, sans-serif;
+    background:var(--fond); color:var(--charbon);
+    font-size:15px; line-height:1.55;
   }
 
-  /* Bandeau haut — même écriture que le bandeau défilant de l'accueil */
-  .qd-topbar{
-    background: var(--olive);
-    color: var(--cream);
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 14px;
+  /* ===== En-tete : copie conforme de celui du site ===== */
+  header.site{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    padding:15px 26px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:rgba(255,255,255,.94); backdrop-filter:blur(6px); z-index:50;
   }
-  .qd-topbar a{ color: var(--cream); text-decoration: none; font-weight: 600; }
-  .qd-topbar a:hover{ text-decoration: underline; }
-  .qd-topbar .qd-sep{ color: var(--terra); }
-  .qd-brand{ display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
-  .qd-logo{ display: grid; grid-template-columns: repeat(3, 7px); gap: 2px; }
-  .qd-logo i{ width: 7px; height: 7px; border-radius: 2px; background: var(--cream); display: block; }
-  .qd-logo i.tail{ background: var(--terra); }
-
-  /* Titre de page */
-  .qd-head{ text-align: center; padding: 40px 20px 8px; }
-  .qd-head h1{ font-size: clamp(26px, 4vw, 40px); font-weight: 700; color: var(--olive); }
-  .qd-head p{ margin-top: 10px; font-size: 16px; color: #5c646c; }
-
-  /* Zone boutique — pleine largeur, c'est tout l'intérêt de sortir du constructeur IONOS.
-     max-width volontairement large : la grille produits respire au lieu d'être enfermée. */
-  .qd-shop{
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 24px 20px 70px;
+  .logo-row{ display:flex; align-items:flex-start; gap:13px; text-decoration:none; color:inherit; }
+  .wordmark-col{ display:flex; flex-direction:column; gap:5px; line-height:1; padding-top:1px; }
+  .wordmark{ font-weight:700; font-size:19px; }
+  .category{
+    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#9099a1; white-space:nowrap;
   }
-  /* Ecwid s'adapte à la largeur de son conteneur : on lui laisse toute la place. */
-  #my-store-139886004{ width: 100%; }
-
-  .qd-foot{
-    background: var(--ink);
-    color: #cfd6dc;
-    text-align: center;
-    padding: 26px 20px;
-    font-size: 14px;
+  .qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
+  .qlogo i.empty{ visibility:hidden; }
+  .qlogo i.t{ background:var(--terracotta); }
+  .mainnav{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .mainnav a{ color:var(--charbon); text-decoration:none; font-weight:600; font-size:14.5px; }
+  .mainnav a:hover{ color:var(--terracotta); }
+  .nav-cta{
+    background:var(--terracotta); color:var(--blanc) !important;
+    font-weight:700; border-radius:99px; padding:9px 20px;
   }
-  .qd-foot a{ color: var(--cream); text-decoration: none; font-weight: 600; }
-  .qd-foot a:hover{ text-decoration: underline; }
-  .qd-foot nav{ display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .nav-cta:hover{ background:#cf6450; }
 
-  @media (max-width: 640px){
-    .qd-topbar{ justify-content: center; text-align: center; }
-    .qd-head{ padding-top: 28px; }
-    .qd-shop{ padding: 16px 12px 50px; }
+  /* ===== Titre de page ===== */
+  .shop-head{ text-align:center; padding:44px 20px 6px; }
+  .shop-head h1{ font-size:clamp(28px,4.4vw,42px); font-weight:800; letter-spacing:-.01em; }
+  .shop-head .rule{
+    width:54px; height:4px; border-radius:99px; background:var(--terracotta);
+    margin:14px auto 0;
+  }
+  .shop-head p{ margin-top:16px; font-size:17px; color:#5c646c; max-width:620px; margin-inline:auto; }
+
+  /* ===== Zone boutique : pleine largeur, c'est tout l'interet d'avoir quitte le
+     constructeur qui bridait la largeur. ===== */
+  .shop{ width:100%; max-width:1500px; margin:0 auto; padding:26px 20px 72px; }
+  #my-store-139886004{ width:100%; }
+
+  /* Harmonisation du magasin Ecwid sur la charte : boutons terracotta, coins arrondis,
+     typo du site. Ecwid genere son propre HTML — on ne redessine pas son fonctionnement,
+     on aligne seulement ce qui se voit. */
+  #my-store-139886004,
+  #my-store-139886004 .ec-store{ font-family:'Quicksand', sans-serif !important; }
+  #my-store-139886004 .form-control__button,
+  #my-store-139886004 .ec-cart__button button,
+  #my-store-139886004 button.form-control__button{
+    background:var(--terracotta) !important;
+    border-color:var(--terracotta) !important;
+    color:var(--blanc) !important;
+    border-radius:99px !important;
+    font-weight:700 !important;
+  }
+  #my-store-139886004 .form-control__button:hover{ background:#cf6450 !important; }
+  #my-store-139886004 .ec-link,
+  #my-store-139886004 a{ color:var(--terracotta); }
+
+  /* ===== Pied de page : meme esprit que celui du site ===== */
+  .foot{ background:var(--charbon); color:#cfd6dc; padding:30px 22px; text-align:center; }
+  .foot .qlogo i{ background:var(--fond); }
+  .foot .qlogo i.t{ background:var(--terracotta); }
+  .foot .logo-row{ justify-content:center; display:inline-flex; margin-bottom:14px; }
+  .foot .wordmark{ color:var(--fond); }
+  .foot .category{ color:#8b959e; }
+  .foot nav{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+  .foot a{ color:var(--fond); text-decoration:none; font-weight:600; }
+  .foot a:hover{ color:var(--terracotta); }
+  .foot .legal{ font-size:13px; color:#8b959e; }
+
+  @media (max-width:640px){
+    header.site{ padding:12px 15px; gap:10px; }
+    .mainnav{ gap:14px; width:100%; justify-content:center; }
+    .shop-head{ padding-top:30px; }
+    .shop{ padding:16px 12px 54px; }
   }
 </style>
 </head>
 <body>
 
-<div class="qd-topbar">
-  <a class="qd-brand" href="/">
-    <span class="qd-logo" aria-hidden="true">
-      <i></i><i></i><i></i>
-      <i></i><i style="background:transparent"></i><i></i>
-      <i></i><i></i><i class="tail"></i>
+<header class="site">
+  <a class="logo-row" href="/" aria-label="Quadreti — retour à l'accueil">
+    <span class="qlogo" aria-hidden="true">
+      <i></i><i></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i></i><i></i><i class="t"></i>
     </span>
-    Quadreti
+    <span class="wordmark-col">
+      <span class="wordmark">Quadreti</span>
+      <span class="category">Support créatif modulaire</span>
+    </span>
   </a>
-  <span>
+  <nav class="mainnav" aria-label="Navigation principale">
     <a href="/">Accueil</a>
-    <span class="qd-sep">•</span>
-    <a href="https://designer.quadreti.fr">Designer</a>
-  </span>
-</div>
-
-<header class="qd-head">
-  <h1>Boutique</h1>
-  <p>Composez, clipsez, recomposez — sans colle, autant de fois que vous voulez.</p>
+    <a href="/quadreti-guide-interactif.html">Le guide</a>
+    <a class="nav-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer mon mur</a>
+  </nav>
 </header>
 
-<main class="qd-shop">
-  <!-- Boutique Ecwid n° 139886004 — le même magasin que celui affiché aujourd'hui sur la
-       page IONOS. Ecwid héberge les produits, le panier et le paiement ; cette page n'est
-       qu'un contenant. Rien à recréer, rien à migrer : c'est le même magasin. -->
+<section class="shop-head">
+  <h1>La boutique</h1>
+  <div class="rule"></div>
+  <p>Composez, clipsez, recomposez — sans colle, autant de fois que vous voulez.</p>
+</section>
+
+<main class="shop">
+  <!-- Boutique Ecwid n° 139886004 : le magasin, le panier et le paiement sont chez Ecwid.
+       Cette page n'est que le contenant, aux couleurs Quadreti. -->
   <div id="my-store-139886004"></div>
   <script data-cfasync="false" type="text/javascript" src="https://app.ecwid.com/script.js?139886004&data_platform=code" charset="utf-8"></script>
   <script type="text/javascript">
@@ -121,17 +156,30 @@
   </script>
   <noscript>
     <p>Votre navigateur doit autoriser JavaScript pour afficher la boutique.
-       Vous pouvez aussi nous écrire pour commander.</p>
+       Vous pouvez aussi nous écrire à <a href="mailto:contact@quadreti.fr">contact@quadreti.fr</a>.</p>
   </noscript>
 </main>
 
-<footer class="qd-foot">
+<footer class="foot">
+  <a class="logo-row" href="/" aria-label="Quadreti — retour à l'accueil">
+    <span class="qlogo" aria-hidden="true">
+      <i></i><i></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i></i><i></i><i class="t"></i>
+    </span>
+    <span class="wordmark-col">
+      <span class="wordmark">Quadreti</span>
+      <span class="category">Support créatif modulaire</span>
+    </span>
+  </a>
   <nav>
     <a href="/">Accueil</a>
-    <a href="https://designer.quadreti.fr">Designer</a>
-    <a href="/boutique/">Boutique</a>
+    <a href="/quadreti-guide-interactif.html">Le guide</a>
+    <a href="https://designer.quadreti.fr" target="_blank" rel="noopener">L'app</a>
+    <a href="mailto:contact@quadreti.fr">Contact</a>
   </nav>
-  <div>© Quadreti — support créatif modulaire</div>
+  <div class="legal">© Quadreti — support créatif modulaire · Brevet déposé à l'INPI</div>
 </footer>
 
 </body>
