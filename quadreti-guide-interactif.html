@@ -285,9 +285,55 @@
     margin-top:26px; background:var(--terracotta); color:#fff; border:none;
     font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px;
   }
+
+  /* ===== Barre de navigation — le guide s'ouvre dans un nouvel onglet : sans elle,
+     le visiteur y entrait et ne pouvait plus revenir ni vers l'app, ni vers le site.
+     Meme ecriture que l'en-tete du site (logo en tesselles, collant, fond blanc voile). ===== */
+  .gnav{
+    position:sticky; top:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    padding:13px 22px; background:rgba(255,255,255,.94); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .gnav-brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--charbon); }
+  .gnav-logo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .gnav-logo i{ display:block; border-radius:1.5px; background:var(--charbon); }
+  .gnav-logo i.empty{ visibility:hidden; }
+  .gnav-logo i.tail{ background:var(--terracotta); }
+  .gnav-name{ font-weight:700; font-size:18px; }
+  .gnav-links{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .gnav-links a{ color:var(--charbon); text-decoration:none; font-weight:600; font-size:14.5px; }
+  .gnav-links a:hover{ color:var(--terracotta); }
+  .gnav-cta{
+    background:var(--terracotta); color:var(--blanc) !important; font-weight:700;
+    border-radius:99px; padding:9px 20px;
+  }
+  .gnav-cta:hover{ background:#cf6450; color:var(--blanc) !important; }
+  @media (max-width:560px){
+    .gnav{ padding:11px 14px; gap:10px; }
+    .gnav-links{ gap:14px; width:100%; justify-content:center; }
+    .gnav-name{ font-size:16px; }
+  }
 </style>
 </head>
 <body>
+
+<nav class="gnav" aria-label="Navigation Quadreti">
+  <a class="gnav-brand" href="https://quadreti.fr" aria-label="Aller au site Quadreti">
+    <span class="gnav-logo" aria-hidden="true">
+      <i></i><i></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i class="empty"></i><i></i><i class="empty"></i>
+      <i></i><i></i><i></i><i class="tail"></i>
+    </span>
+    <span class="gnav-name">Quadreti</span>
+  </a>
+  <span class="gnav-links">
+    <a href="https://quadreti.fr">Accueil</a>
+    <a href="https://quadreti.fr/boutique/">Boutique</a>
+    <a class="gnav-cta" href="https://designer.quadreti.fr">Retour à l'app</a>
+  </span>
+</nav>
 
 <header>
   <div class="brand-logo" aria-hidden="true">
