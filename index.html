@@ -89,6 +89,8 @@
   }
   @media (max-width:760px){ .mini{ grid-template-columns:repeat(7, 1fr); } }
   .mini i{ display:block; border-radius:4px; }
+  /* la photo remplit le bandeau sans se deformer, cadrage centre */
+  .shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
   .cap{
     position:absolute; top:14px; right:16px; z-index:2;
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
@@ -451,10 +453,23 @@
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
+  <!-- Chargement differe volontairement ECARTE : les diapos 2 et 3 sont invisibles au
+       demarrage, le navigateur repoussait leur chargement et le diaporama tournait sur une
+       image vide. Les trois photos pesent 466 Ko au total, c'est le prix d'un bandeau qui
+       fonctionne.
+       Diaporama du bandeau : de vraies photos de l'atelier, a la place des mosaiques
+       dessinees en CSS. Les trois temps du produit, dans l'ordre de la promesse affichee
+       a cote : on decoupe, on clipse, on compose sur le support. -->
   <div class="bg-slides" aria-hidden="true">
-    <div class="slide on"><div class="mini" id="g1"></div><span class="cap">Mode couleur</span></div>
-    <div class="slide"><div class="mini" id="g2"></div><span class="cap">Photo mosaïque</span></div>
-    <div class="slide"><div class="mini" id="g3"></div><span class="cap">Pixel art</span></div>
+    <div class="slide on"><img class="shot" src="img/bandeau-1-impression.jpg" alt=""><span class="cap">L'impression</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-2-planche.jpg" alt=""><span class="cap">La planche</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-3-clip.jpg" alt=""><span class="cap">Le clip</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-4-clipsage.jpg" alt=""><span class="cap">Le clipsage</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-5-tesselle.jpg" alt=""><span class="cap">La tesselle</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-6-pose.jpg" alt=""><span class="cap">La pose</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-7-mur.jpg" alt=""><span class="cap">Le mur</span></div>
+    <div class="slide"><img class="shot" data-src="img/bandeau-8-resultat.jpg" alt=""><span class="cap">Changez à volonté</span></div>
+  </div>
   </div>
   <div class="bg-veil" aria-hidden="true"></div>
 
@@ -472,7 +487,13 @@
     <button class="on" aria-label="Diapo 1"></button>
     <button aria-label="Diapo 2"></button>
     <button aria-label="Diapo 3"></button>
+    <button aria-label="Diapo 4"></button>
+    <button aria-label="Diapo 5"></button>
+    <button aria-label="Diapo 6"></button>
+    <button aria-label="Diapo 7"></button>
+    <button aria-label="Diapo 8"></button>
   </div>
+
 </div>
 
 <!-- ============ 1. STORYTELLING ============ -->
@@ -863,6 +884,7 @@
   /* ---------- Diaporama hero ---------- */
   function fillMiniGrid(id, colors){
     const el = document.getElementById(id);
+    if (!el) return;
     const count = 12 * 14;
     for (let n = 0; n < count; n++){
       const i = document.createElement('i');
@@ -870,9 +892,22 @@
       el.appendChild(i);
     }
   }
-  fillMiniGrid('g1', ['#E2725B','#CBBD93','#556B2F','#F5F5F5','#E2725B','#CBBD93']);
-  fillMiniGrid('g2', ['#c98a76','#e0b9a8','#8a6a55','#f0d9c9','#a9765f','#5c4636']);
-  fillMiniGrid('g3', ['#2b353e','#8a9099','#e7e4dd','#5a636b','#c7ccd1','#2b353e']);
+  // Les mosaiques factices du bandeau sont remplacees par de vraies photos (voir .shot).
+  // fillMiniGrid reste disponible pour les autres sections du site.
+
+  /* Les 7 photos suivantes ne sont pas dans le HTML au chargement : elles arrivent une fois
+     la page affichee. Le chargement differe natif (loading="lazy") avait ete essaye et
+     ECARTE : les diapos etant invisibles au demarrage, le navigateur ne les chargeait jamais
+     et le diaporama tournait sur une image vide. Ici on force, mais apres le premier rendu :
+     la page s'affiche vite ET toutes les photos sont pretes avant leur tour (4 s par diapo). */
+  function chargerLaSuite(){
+    document.querySelectorAll('.bg-slides .shot[data-src]').forEach(function(img){
+      img.src = img.getAttribute('data-src');
+      img.removeAttribute('data-src');
+    });
+  }
+  if (document.readyState === 'complete') chargerLaSuite();
+  else window.addEventListener('load', chargerLaSuite);
 
   const slides = document.querySelectorAll('.bg-slides .slide');
   const dots = document.querySelectorAll('#dots button');
