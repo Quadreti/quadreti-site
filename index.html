@@ -64,13 +64,17 @@
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
     color:#9099a1; white-space:nowrap;
   }
-  .qlogo{ display:grid; grid-template-columns:repeat(4, 7px); grid-auto-rows:7px; gap:2px; }
+  .qlogo{ display:grid; grid-template-columns:repeat(4, 7px); grid-auto-rows:7px; gap:1.3px; }
   .qlogo i{ display:block; border-radius:1.5px; transform:scale(0); opacity:0; }
-  .qlogo i.on{ transition:transform .32s cubic-bezier(.2,1.5,.4,1), opacity .22s ease; transform:scale(1); opacity:1; }
+  .qlogo i.on{ transition:transform .58s cubic-bezier(.2,1.5,.4,1), opacity .4s ease; transform:scale(1); opacity:1; }
   .qlogo i.d{ background:var(--charbon); }
   .qlogo i.t{ background:var(--terracotta); }
   .qlogo i.empty{ visibility:hidden; }
-  .wordmark{ font-weight:700; font-size:19px; }
+  .wordmark{ font-weight:600; font-size:19px; }
+  /* Point du i détaché — design system : terracotta sur fonds clairs et charbon,
+     positionné en 0.16em / 0.02em du haut, rayon 0.035em (référence Design System Quadreti.html) */
+  .wordmark .i-dot{ position:relative; display:inline-block; }
+  .wordmark .accent-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:.16em; height:.16em; border-radius:.035em; background:var(--terracotta); }
   .burger{
     width:37px; height:37px; border-radius:8px; border:1.5px solid var(--border); background:none;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
@@ -470,7 +474,7 @@
   <a class="logo-row" href="#hero" aria-label="Quadreti — retour en haut">
     <div class="qlogo" id="qlogo" aria-hidden="true"></div>
     <span class="wordmark-col">
-      <span class="wordmark">Quadreti</span>
+      <span class="wordmark">Quadret<span class="i-dot">ı<i class="accent-dot"></i></span></span>
       <span class="category">Support créatif modulaire</span>
     </span>
   </a>
@@ -903,7 +907,7 @@
     <div class="foot-brand">
       <a class="logo-row foot-logo" href="#hero" aria-label="Quadreti — retour en haut">
         <div class="qlogo" id="qlogoFoot" aria-hidden="true"></div>
-        <span class="wordmark">Quadreti</span>
+        <span class="wordmark">Quadret<span class="i-dot">ı<i class="accent-dot"></i></span></span>
       </a>
       <div class="foot-baseline">Composez, imprimez, clipsez, changez à volonté.</div>
       <div>© Quadreti — Conception et fabrication françaises</div>
@@ -919,40 +923,49 @@
 (function(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Logo Q (icône clipsée) : header animé au clipsage, footer statique en écho ---------- */
+  /* ---------- Logo Q (icône clipsée) : header animé au clipsage, footer statique en écho ----------
+     20/08/2026 : la construction des tesselles (buildQlogo) reste immédiate pour que l'icône
+     existe dès le premier rendu ; seul le DÉCLENCHEMENT de l'animation (triggerQlogo) est
+     repoussé à l'événement "load" + une marge de sécurité, pour ne pas jouer l'entrée avant que
+     la page soit réellement visible (connexion 4G lente, chargement des polices/images). */
   const Q = [
     ['d','d','d',''],
     ['d','','d',''],
     ['d','','d',''],
     ['d','d','d','t']
   ];
-  function renderQlogo(elId, animate){
+  const Q_STAGGER_MS = 75;
+  const QLOGO_START_BUFFER_MS = 300;
+  function buildQlogo(elId, animate){
     const el = document.getElementById(elId);
-    if (!el) return;
+    if (!el) return null;
     const cells = [];
     Q.forEach((row, r) => row.forEach((v, c) => {
       const i = document.createElement('i');
       i.className = v ? v : 'empty';
       if (v && animate){
-        i.dataset.delay = Math.round(Math.hypot(r - 1.5, c - 1.5) * 55);
+        i.dataset.delay = Math.round(Math.hypot(r - 1.5, c - 1.5) * Q_STAGGER_MS);
         cells.push(i);
       } else if (v){
         i.classList.add('on');
       }
       el.appendChild(i);
     }));
-    if (animate){
-      if (reduce){ cells.forEach(c => c.classList.add('on')); }
-      else {
-        cells.forEach(c => {
-          c.style.transitionDelay = c.dataset.delay + 'ms';
-          requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('on')));
-        });
-      }
-    }
+    return cells;
   }
-  renderQlogo('qlogo', true);
-  renderQlogo('qlogoFoot', false);
+  function triggerQlogo(cells){
+    if (!cells || !cells.length) return;
+    if (reduce){ cells.forEach(c => c.classList.add('on')); return; }
+    cells.forEach(c => {
+      c.style.transitionDelay = c.dataset.delay + 'ms';
+      requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('on')));
+    });
+  }
+  const headerQlogoCells = buildQlogo('qlogo', true);
+  buildQlogo('qlogoFoot', false);
+  function startHeaderQlogoAnim(){ setTimeout(() => triggerQlogo(headerQlogoCells), QLOGO_START_BUFFER_MS); }
+  if (document.readyState === 'complete'){ startHeaderQlogoAnim(); }
+  else { window.addEventListener('load', startHeaderQlogoAnim); }
 
   /* ---------- Diaporama hero ---------- */
   function fillMiniGrid(id, colors){
