@@ -75,12 +75,14 @@
   }
   .logo-row{ display:flex; align-items:flex-start; gap:13px; text-decoration:none; color:inherit; }
   .wordmark-col{ display:flex; flex-direction:column; gap:5px; line-height:1; padding-top:1px; }
-  .wordmark{ font-weight:700; font-size:19px; }
+  .wordmark{ font-weight:600; font-size:19px; }
+  .wordmark .i-dot{ position:relative; display:inline-block; }
+  .wordmark .accent-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:.16em; height:.16em; border-radius:.035em; background:var(--terracotta); }
   .category{
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
     color:#9099a1; white-space:nowrap;
   }
-  .qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:1.3px; }
   .qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
   .qlogo i.empty{ visibility:hidden; }
   .qlogo i.t{ background:var(--terracotta); }
@@ -207,7 +209,7 @@
       <i></i><i></i><i></i><i class="t"></i>
     </span>
     <span class="wordmark-col">
-      <span class="wordmark">Quadreti</span>
+      <span class="wordmark">Quadret<span class="i-dot">ı<i class="accent-dot"></i></span></span>
       <span class="category">Support créatif modulaire</span>
     </span>
   </a>
@@ -290,7 +292,7 @@
           <i></i><i class="empty"></i><i></i><i class="empty"></i>
           <i></i><i></i><i></i><i class="t"></i>
         </span>
-        <span class="wordmark">Quadreti</span>
+        <span class="wordmark">Quadret<span class="i-dot">ı<i class="accent-dot"></i></span></span>
       </a>
       <div class="foot-baseline">Composez, imprimez, clipsez, changez à volonté.</div>
       <div>© Quadreti — Conception et fabrication françaises</div>
