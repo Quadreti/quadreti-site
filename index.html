@@ -365,10 +365,10 @@
   .foot-legal a svg{ width:18px; height:18px; flex:0 0 auto; fill:none; stroke:var(--kraft); stroke-width:1.7; }
 
   footer{ background:#22292f; color:#aab2ba; padding:22px 22px 34px; border-top:1px solid rgba(255,255,255,.08); }
-  .foot{ max-width:1060px; margin:0 auto; display:flex; justify-content:flex-end; gap:18px; flex-wrap:wrap; font-size:13px; align-items:flex-start; }
+  .foot{ max-width:1060px; margin:0 auto; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; font-size:13px; align-items:center; }
   .foot a:not(.logo-row){ color:#d5dae0; text-decoration:none; font-weight:600; margin-right:18px; }
   .foot a:hover{ text-decoration:underline; }
-  .foot-brand{ display:flex; flex-direction:column; gap:11px; align-items:flex-end; text-align:right; }
+  .foot-brand{ display:flex; flex-direction:column; gap:11px; align-items:center; text-align:center; }
   .foot-logo{ align-items:center; }
   .foot-logo .qlogo i.d{ background:var(--fond); }
   .foot-logo .wordmark{ color:var(--fond); }
@@ -389,6 +389,9 @@
 
   /* ===== Navigation ===== */
   .logo-row{ text-decoration:none; color:inherit; }
+  /* .mainnav retirée du HTML le 20/08/2026 (décision : un seul menu sandwich, toutes tailles
+     d'écran). Règles conservées un temps au cas où, sans effet tant que la classe n'est plus
+     utilisée dans la page. */
   .mainnav{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; justify-content:flex-end; }
   .mainnav a{
     text-decoration:none; color:#5a636b; font-weight:700; font-size:13.5px; white-space:nowrap;
@@ -400,12 +403,6 @@
     box-shadow:0 6px 16px rgba(43,53,62,.25);
   }
   .mainnav .nav-cta:hover{ color:#fff; transform:translateY(-1px); }
-  /* 8 liens + CTA harmonisés le 20/08/2026 : resserré sous 1180px pour éviter le débordement,
-     avant le seuil de bascule complète vers le menu mobile (900px). À vérifier visuellement
-     sur un vrai écran avant mise en ligne. */
-  @media (max-width:1180px){ .mainnav{ gap:13px; } .mainnav a{ font-size:13px; } }
-  @media (max-width:900px){ .mainnav{ display:none; } }
-  @media (min-width:901px){ .burger{ display:none; } }
 
   .mobile-menu{
     display:none; flex-direction:column; gap:2px;
@@ -477,20 +474,8 @@
       <span class="category">Support créatif modulaire</span>
     </span>
   </a>
-  <nav class="mainnav" aria-label="Navigation principale">
-    <!-- Harmonisé le 20/08/2026 : le desktop reprend exactement les 8 liens du menu mobile,
-         dans l'ordre des sections de la page, pour ne plus avoir deux menus divergents.
-         Lien "Pro" toujours retiré (page du premier jet, n'existe plus). -->
-    <a href="#comment">Comment ça marche</a>
-    <a href="#app">L'app</a>
-    <a href="#styles">Les styles</a>
-    <a href="#gamme">La gamme</a>
-    <a href="#cadeau">À offrir</a>
-    <a href="#faq">FAQ</a>
-    <a href="quadreti-guide-interactif.html" target="_blank" rel="noopener">Le guide</a>
-    <a href="/boutique/">Boutique</a>
-    <a class="nav-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Essayer l'app — sans compte</a>
-  </nav>
+  <!-- Décision du 20/08/2026 : un seul menu sandwich, sur toutes les tailles d'écran —
+       plus de barre de liens desktop séparée. Le burger ouvre #mobileMenu partout. -->
   <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </header>
 
