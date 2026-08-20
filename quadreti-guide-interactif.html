@@ -49,10 +49,14 @@
   .wordmark-col{ display:flex; flex-direction:column; gap:5px; line-height:1; padding-top:1px; }
   .site-category{
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-    color:#9099a1; white-space:nowrap;
+    color:var(--terracotta); white-space:nowrap;
   }
   .site-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:1.3px; }
   .site-qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
+  /* Header uniquement (pas le footer, qui n'a pas de ligne catégorie) : icône agrandie pour
+     que son bas s'aligne avec le bas de la catégorie (.wordmark-col = 36px de haut). */
+  .logo-row:not(.foot-logo) .site-qlogo{ grid-template-columns:repeat(4, 7.93px); grid-auto-rows:7.93px; gap:1.43px; }
+  .logo-row:not(.foot-logo) .site-qlogo i{ border-radius:1.75px; }
   .site-qlogo i.empty{ visibility:hidden; }
   .site-qlogo i.t{ background:var(--terracotta); }
   .site-wordmark{ font-weight:600; font-size:19px; }
