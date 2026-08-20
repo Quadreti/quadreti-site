@@ -29,7 +29,55 @@
   }
   button{ font-family:inherit; cursor:pointer; }
 
-  /* ===== En-tête ===== */
+  /* ===== Ticker + en-tête site (harmonisation du 20/08/2026, identique à l'accueil) ===== */
+  .ticker{ background:var(--charbon); color:#fff; overflow:hidden; padding:9px 0; }
+  .ticker-track{ display:flex; width:max-content; animation:tickerScroll 22s linear infinite; }
+  .ticker-track span{
+    font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.92;
+    padding:0 26px; border-right:1px solid rgba(255,255,255,.22); white-space:nowrap;
+  }
+  @keyframes tickerScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; overflow-x:auto; } }
+
+  header.site{
+    text-align:left;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:15px 26px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:rgba(255,255,255,.94); backdrop-filter:blur(6px); z-index:50;
+  }
+  .logo-row{ display:flex; align-items:flex-start; gap:13px; text-decoration:none; color:inherit; }
+  .wordmark-col{ display:flex; flex-direction:column; gap:5px; line-height:1; padding-top:1px; }
+  .site-category{
+    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#9099a1; white-space:nowrap;
+  }
+  .site-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .site-qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
+  .site-qlogo i.empty{ visibility:hidden; }
+  .site-qlogo i.t{ background:var(--terracotta); }
+  .site-wordmark{ font-weight:700; font-size:19px; }
+  .burger{
+    width:37px; height:37px; border-radius:8px; border:1.5px solid var(--border); background:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;
+  }
+  .burger span{ width:15px; height:2px; background:var(--charbon); border-radius:2px; }
+  .mobile-menu{
+    display:none; flex-direction:column; gap:2px;
+    position:sticky; top:67px; z-index:49;
+    background:#fff; border-bottom:1px solid var(--border);
+    padding:10px 18px 16px;
+  }
+  .mobile-menu.open{ display:flex; }
+  .mobile-menu a{
+    text-decoration:none; color:var(--charbon); font-weight:700; font-size:15px;
+    padding:11px 8px; border-bottom:1px solid var(--fond); text-align:left;
+  }
+  .mobile-menu .mm-cta{
+    margin-top:12px; text-align:center; background:var(--charbon); color:#fff;
+    border-radius:99px; padding:13px; border-bottom:none;
+  }
+
+  /* ===== En-tête (titre de cette page) ===== */
   header{ text-align:center; padding:30px 16px 18px; }
   .brand-logo{
     position:relative; margin:0 auto 14px; width:44px; height:58px;
@@ -286,53 +334,94 @@
     font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px;
   }
 
-  /* ===== Barre de navigation — le guide s'ouvre dans un nouvel onglet : sans elle,
-     le visiteur y entrait et ne pouvait plus revenir ni vers l'app, ni vers le site.
-     Meme ecriture que l'en-tete du site (logo en tesselles, collant, fond blanc voile). ===== */
-  .gnav{
-    position:sticky; top:0; z-index:60;
-    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-    padding:13px 22px; background:rgba(255,255,255,.94); backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--border);
+  /* Ancienne barre .gnav retirée le 20/08/2026 — remplacée par le header.site + menu
+     sandwich harmonisés (voir plus haut), identiques à l'accueil et à la boutique. */
+
+  /* ===== Réseaux sociaux + footer légal (harmonisation 20/08/2026) ===== */
+  .section-reseaux{ width:100%; background:#22292f; padding:52px 22px 46px; text-align:center; }
+  .section-reseaux .accroche{ font-weight:600; font-size:20px; color:var(--fond); margin:0 0 4px; }
+  .section-reseaux .sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 32px; }
+  .section-reseaux .grid{ display:inline-grid; grid-template-columns:repeat(5,58px); gap:24px; }
+  .section-reseaux a{
+    width:58px; height:58px; border-radius:12.8px;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:transform .15s, box-shadow .15s, background .15s;
+    background:var(--kraft); color:var(--charbon);
   }
-  .gnav-brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--charbon); }
-  .gnav-logo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
-  .gnav-logo i{ display:block; border-radius:1.5px; background:var(--charbon); }
-  .gnav-logo i.empty{ visibility:hidden; }
-  .gnav-logo i.tail{ background:var(--terracotta); }
-  .gnav-name{ font-weight:700; font-size:18px; }
-  .gnav-links{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-  .gnav-links a{ color:var(--charbon); text-decoration:none; font-weight:600; font-size:14.5px; }
-  .gnav-links a:hover{ color:var(--terracotta); }
-  .gnav-cta{
-    background:var(--terracotta); color:var(--blanc) !important; font-weight:700;
-    border-radius:99px; padding:9px 20px;
+  .section-reseaux a svg{ width:22px; height:22px; display:block; fill:currentColor; }
+  .section-reseaux a:hover, .section-reseaux a:focus-visible{
+    transform:translateY(-4px) scale(1.04);
+    box-shadow:0 10px 18px rgba(0,0,0,.35);
+    background:var(--terracotta); color:#fff;
   }
-  .gnav-cta:hover{ background:#cf6450; color:var(--blanc) !important; }
-  @media (max-width:560px){
-    .gnav{ padding:11px 14px; gap:10px; }
-    .gnav-links{ gap:14px; width:100%; justify-content:center; }
-    .gnav-name{ font-size:16px; }
+  @media (max-width:520px){
+    .section-reseaux .grid{ grid-template-columns:repeat(5, 1fr); gap:12px; max-width:320px; }
   }
+  .foot-legal{ background:#22292f; padding:36px 22px 6px; border-top:1px solid rgba(255,255,255,.08); }
+  .foot-legal .wrap{ max-width:1060px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+  .foot-legal a{
+    display:flex; align-items:center; gap:10px;
+    background:#2d363f; border:1px solid rgba(255,255,255,.1); border-radius:12px;
+    padding:14px 16px; text-decoration:none; color:#e5e1e1;
+    font-size:13px; font-weight:600;
+    transition:background .15s, border-color .15s;
+  }
+  .foot-legal a:hover{ background:#37434e; border-color:rgba(255,255,255,.22); }
+  .foot-legal a svg{ width:18px; height:18px; flex:0 0 auto; fill:none; stroke:var(--kraft); stroke-width:1.7; }
+  footer.site-foot{ background:#22292f; color:#aab2ba; padding:22px 22px 34px; border-top:1px solid rgba(255,255,255,.08); text-align:center; }
+  .site-foot .foot{ max-width:1060px; margin:0 auto; display:flex; justify-content:center; align-items:center; }
+  .foot-brand{ display:flex; flex-direction:column; gap:11px; align-items:center; }
+  .foot-logo{ justify-content:center; }
+  .foot-logo .site-qlogo i{ background:var(--fond); }
+  .foot-logo .site-qlogo i.t{ background:var(--terracotta); }
+  .foot-logo .site-wordmark{ color:var(--fond); }
+  .to-top{
+    position:fixed; right:20px; bottom:20px; z-index:60;
+    width:44px; height:44px; border-radius:50%; border:none;
+    background:var(--charbon); color:#fff; box-shadow:0 8px 20px rgba(0,0,0,.28);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transform:translateY(8px);
+    transition:opacity .2s ease, transform .2s ease, background .15s ease;
+  }
+  .to-top.show{ opacity:1; pointer-events:auto; transform:none; }
+  .to-top:hover{ background:var(--terracotta); }
+  .to-top svg{ width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2.2; }
 </style>
 </head>
 <body>
 
-<nav class="gnav" aria-label="Navigation Quadreti">
-  <a class="gnav-brand" href="https://quadreti.fr" aria-label="Aller au site Quadreti">
-    <span class="gnav-logo" aria-hidden="true">
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>CONCEPTION ET FABRICATION FRANÇAISES</span><span>SANS COLLE, SANS DÉTÉRIORATION</span><span>UNE IMPRIMANTE DE SALON SUFFIT</span>
+    <span>CONCEPTION ET FABRICATION FRANÇAISES</span><span>SANS COLLE, SANS DÉTÉRIORATION</span><span>UNE IMPRIMANTE DE SALON SUFFIT</span>
+  </div>
+</div>
+
+<header class="site">
+  <a class="logo-row" href="https://quadreti.fr" aria-label="Quadreti — aller au site">
+    <span class="site-qlogo" aria-hidden="true">
       <i></i><i></i><i></i><i class="empty"></i>
       <i></i><i class="empty"></i><i></i><i class="empty"></i>
       <i></i><i class="empty"></i><i></i><i class="empty"></i>
-      <i></i><i></i><i></i><i class="tail"></i>
+      <i></i><i></i><i></i><i class="t"></i>
     </span>
-    <span class="gnav-name">Quadreti</span>
+    <span class="wordmark-col">
+      <span class="site-wordmark">Quadreti</span>
+      <span class="site-category">Support créatif modulaire</span>
+    </span>
   </a>
-  <span class="gnav-links">
-    <a href="https://quadreti.fr">Accueil</a>
-    <a href="https://quadreti.fr/boutique/">Boutique</a>
-    <a class="gnav-cta" href="https://designer.quadreti.fr">Retour à l'app</a>
-  </span>
+  <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu">
+  <a href="https://quadreti.fr/#comment">Comment ça marche</a>
+  <a href="https://quadreti.fr/#app">L'app</a>
+  <a href="https://quadreti.fr/#styles">Les styles</a>
+  <a href="https://quadreti.fr/#gamme">La gamme</a>
+  <a href="https://quadreti.fr/#cadeau">À offrir</a>
+  <a href="https://quadreti.fr/#faq">FAQ</a>
+  <a href="https://quadreti.fr/boutique/">Boutique</a>
+  <a class="mm-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Essayer l'app — sans compte</a>
 </nav>
 
 <header>
@@ -624,6 +713,78 @@
 <footer class="guide-foot">
   <p class="sig">Composez, imprimez, clipsez,<span> changez à volonté.</span></p>
 </footer>
+
+<!-- ============ RÉSEAUX SOCIAUX + FOOTER LÉGAL (harmonisation 20/08/2026) ============ -->
+<div class="section-reseaux">
+  <p class="accroche">Nos réseaux, à leur tour clipsés</p>
+  <p class="sub">Facebook · Snapchat · TikTok · YouTube · WhatsApp</p>
+  <div class="grid">
+    <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9H16l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z"/></svg></a>
+    <a href="#" aria-label="Snapchat" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.03.002c-.947 0-4.298.259-5.977 3.583-.783 1.55-.632 4.315-.51 6.532.006.104.011.204.011.3-.114.058-.319.129-.665.129-.386-.007-.848-.096-1.361-.267a1.06 1.06 0 0 0-.336-.058c-.361 0-.653.214-.756.535-.09.286-.048.828.652 1.28.13.083.32.184.55.293.6.283 1.397.652 1.397 1.3 0 .12-.024.31-.146.61-.02.05-.048.11-.08.174-.08.166-.17.35-.24.548-.16.44-.164.87.106 1.24.35.483 1.06.727 2.11.727.176 0 .366-.011.567-.031.036.316.12.665.31.976.393.638 1.14.958 2.216.958.176 0 .35-.008.51-.024.056.106.116.212.18.316.554.9 1.507 1.393 2.68 1.393h.007c1.173 0 2.126-.493 2.68-1.393.064-.104.124-.21.18-.316.16.016.334.024.51.024 1.077 0 1.823-.244 2.216-.958.19-.311.274-.66.31-.976.201.02.391.031.567.031 1.05 0 1.76-.244 2.11-.727.27-.37.266-.8.106-1.24-.07-.198-.16-.382-.24-.548-.032-.064-.06-.124-.08-.174-.122-.3-.146-.49-.146-.61 0-.648.797-1.017 1.397-1.3.23-.109.42-.21.55-.293.7-.452.742-.994.652-1.28-.103-.321-.395-.535-.756-.535a1.06 1.06 0 0 0-.336.058c-.513.171-.975.26-1.361.267-.346 0-.551-.071-.665-.129 0-.096.005-.196.011-.3.122-2.217.273-4.982-.51-6.532C16.298.261 12.978.002 12.031.002z"/></svg></a>
+    <a href="#" aria-label="TikTok" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M16.6 5.82c-.9-.98-1.45-2.24-1.5-3.62h-3.2v13.63c0 1.7-1.38 3.08-3.08 3.08a3.08 3.08 0 0 1-1.15-5.94A3.08 3.08 0 0 1 9 12.7V9.44c-.3-.04-.6-.06-.9-.06-3.5 0-6.34 2.84-6.34 6.34S4.6 22.06 8.1 22.06s6.34-2.84 6.34-6.34V8.85a8.3 8.3 0 0 0 4.85 1.55V7.2a5.28 5.28 0 0 1-2.69-1.38z"/></svg></a>
+    <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.19a2.97 2.97 0 0 0-2.09-2.09C19.65 3.5 12 3.5 12 3.5s-7.65 0-9.41.6A2.97 2.97 0 0 0 .5 6.19 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.81 2.97 2.97 0 0 0 2.09 2.09c1.76.6 9.41.6 9.41.6s7.65 0 9.41-.6a2.97 2.97 0 0 0 2.09-2.09A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+    <a href="https://wa.me/" aria-label="WhatsApp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg></a>
+  </div>
+</div>
+
+<div class="foot-legal">
+  <div class="wrap">
+    <a href="https://quadreti.fr/mentions-legales.html"><svg viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.4 9 10 5.2-1.6 9-5 9-10V6l-9-4z"/></svg>Mentions légales</a>
+    <a href="https://quadreti.fr/cgv.html"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 13h6M9 17h6"/></svg>CGV</a>
+    <a href="https://quadreti.fr/cgu.html"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>CGU / RGPD</a>
+    <a href="https://quadreti.fr/#livraison"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></svg>Livraison &amp; paiement</a>
+    <a href="mailto:contact@quadreti.fr"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>Contact</a>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="foot">
+    <div class="foot-brand">
+      <a class="logo-row foot-logo" href="https://quadreti.fr" aria-label="Quadreti — aller au site">
+        <span class="site-qlogo" aria-hidden="true">
+          <i></i><i></i><i></i><i class="empty"></i>
+          <i></i><i class="empty"></i><i></i><i class="empty"></i>
+          <i></i><i class="empty"></i><i></i><i class="empty"></i>
+          <i></i><i></i><i></i><i class="t"></i>
+        </span>
+        <span class="site-wordmark">Quadreti</span>
+      </a>
+      <div>© Quadreti — Conception et fabrication françaises</div>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Retour en haut">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (burger && mobileMenu){
+    burger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+      burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }));
+  }
+  const toTop = document.getElementById('toTop');
+  if (toTop){
+    window.addEventListener('scroll', () => {
+      toTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    toTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
