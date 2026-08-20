@@ -134,46 +134,52 @@
   /* ===== Pied de page — harmonisé le 20/08/2026 (identique à l'accueil) =====
      Remplace l'ancien .foot (footer charbon, nav 4 liens, mention brevet) par réseaux
      sociaux + cartouches légales + footer logo/baseline centré + bouton retour en haut. */
-  .section-reseaux{ width:100%; background:#22292f; padding:52px 22px 46px; text-align:center; }
+  /* 20/08/2026 — Direction D retenue (footer), harmonisée avec l'accueil : structure
+     resserrée + accent terracotta renforcé. Cartouches en flex (aérées sur toute la
+     largeur desktop sans s'étirer géant), texte centré dans chaque bouton. */
+  .section-reseaux{ width:100%; background:#22292f; padding:44px 22px; text-align:center; }
   .section-reseaux .accroche{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:20px; color:var(--fond); margin:0 0 4px; }
-  .section-reseaux .sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 32px; }
+  .section-reseaux .sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 24px; }
   .section-reseaux .grid{ display:inline-grid; grid-template-columns:repeat(5,58px); gap:24px; }
   .section-reseaux a{
     width:58px; height:58px; border-radius:12.8px;
     display:flex; align-items:center; justify-content:center;
     text-decoration:none; transition:transform .15s, box-shadow .15s, background .15s;
-    background:var(--kraft); color:var(--charbon);
+    background:var(--terracotta); color:#fff;
   }
   .section-reseaux a svg{ width:22px; height:22px; display:block; fill:currentColor; }
   .section-reseaux a:hover, .section-reseaux a:focus-visible{
     transform:translateY(-4px) scale(1.04);
     box-shadow:0 10px 18px rgba(0,0,0,.35);
-    background:var(--terracotta); color:#fff;
+    background:#c85a44;
   }
   @media (max-width:520px){
     .section-reseaux .grid{ grid-template-columns:repeat(5, 1fr); gap:12px; max-width:320px; }
   }
 
-  .foot-legal{ background:#22292f; padding:36px 22px 6px; border-top:1px solid rgba(255,255,255,.08); }
-  .foot-legal .wrap{ max-width:1060px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
-  .foot-legal a{
-    display:flex; align-items:center; gap:10px;
-    background:#2d363f; border:1px solid rgba(255,255,255,.1); border-radius:12px;
-    padding:14px 16px; text-decoration:none; color:#e5e1e1;
-    font-size:13px; font-weight:600;
-    transition:background .15s, border-color .15s;
+  .foot-legal{ background:#22292f; padding:32px 22px 40px; border-top:2px solid var(--terracotta); }
+  .foot-legal .wrap{
+    max-width:1320px; margin:0 auto;
+    display:flex; flex-wrap:wrap; justify-content:center; gap:20px;
   }
-  .foot-legal a:hover{ background:#37434e; border-color:rgba(255,255,255,.22); }
-  .foot-legal a svg{ width:18px; height:18px; flex:0 0 auto; fill:none; stroke:var(--kraft); stroke-width:1.7; }
+  .foot-legal a{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:#2d363f; border:1px solid rgba(226,114,91,.28); border-radius:12px;
+    padding:14px 22px; text-decoration:none; color:#e5e1e1;
+    font-size:13px; font-weight:600;
+    transition:background .15s, border-color .15s; flex:0 1 auto;
+  }
+  .foot-legal a:hover{ background:#37434e; border-color:rgba(226,114,91,.5); }
+  .foot-legal a svg{ width:18px; height:18px; flex:0 0 auto; fill:none; stroke:var(--terracotta); stroke-width:1.7; }
 
-  footer{ background:#22292f; color:#aab2ba; padding:22px 22px 34px; border-top:1px solid rgba(255,255,255,.08); }
+  footer{ background:#22292f; color:#aab2ba; padding:30px 22px 34px; border-top:1px solid rgba(255,255,255,.06); }
   .foot{ max-width:1060px; margin:0 auto; display:flex; justify-content:center; align-items:center; }
   .foot-brand{ display:flex; flex-direction:column; gap:11px; align-items:center; text-align:center; }
   .foot-logo{ justify-content:center; }
   .foot-logo .qlogo i{ background:var(--fond); }
   .foot-logo .qlogo i.t{ background:var(--terracotta); }
   .foot-logo .wordmark{ color:var(--fond); }
-  .foot-baseline{ font-size:12px; color:#8a939c; }
+  .foot-baseline{ font-size:12px; color:var(--terracotta); }
 
   .to-top{
     position:fixed; right:20px; bottom:20px; z-index:60;
