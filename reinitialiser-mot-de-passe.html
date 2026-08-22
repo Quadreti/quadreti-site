@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Créer votre mot de passe — Quadreti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --charbon:#2b353e; --creme:#F2EEDF; --terracotta:#e2725b; --terracotta-f:#cf6450; --fond:#F5F5F5; --adouci:#6a727b; --bord:#2b353e22; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; min-height:100vh; background:var(--fond); color:var(--charbon); font-family:'Karla',sans-serif; font-size:15px;
+    display:flex; align-items:center; justify-content:center; padding:24px; }
+  .carte{ background:#fff; border:1px solid var(--bord); border-radius:14px; padding:26px 26px 24px; max-width:380px; width:100%; }
+  h1{ font-family:'Quicksand',sans-serif; font-size:17px; font-weight:700; margin:0 0 6px; }
+  p.aide{ font-size:13px; color:var(--adouci); margin:0 0 18px; }
+  label{ display:block; font-size:12.5px; font-weight:600; color:var(--adouci); margin:10px 0 4px; }
+  input{ width:100%; padding:9px 12px; border:1px solid var(--bord); border-radius:9px; font:inherit; background:var(--fond); }
+  input:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
+  button{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; border:none; border-radius:10px; padding:11px 18px;
+    cursor:pointer; background:var(--terracotta); color:var(--creme); width:100%; margin-top:16px; }
+  button:hover{ background:var(--terracotta-f); }
+  button:disabled{ opacity:.5; cursor:default; }
+  a{ color:var(--terracotta); font-weight:600; }
+  #erreur{ background:#8a332422; border:1px solid #8a332455; color:#8a3324; border-radius:9px; padding:10px 12px; font-size:13px; margin-top:14px; }
+  #ok{ background:#e2725b22; border:1px solid #e2725b55; border-radius:9px; padding:14px; font-size:13.5px; }
+  .cache{ display:none !important; }
+</style>
+</head>
+<body>
+<div class="carte">
+  <div id="blocFormulaire">
+    <h1>Créer votre mot de passe</h1>
+    <p class="aide">Ce mot de passe servira à vous connecter au panneau du site.</p>
+    <label for="mdp1">Nouveau mot de passe</label>
+    <input type="password" id="mdp1" autocomplete="new-password">
+    <label for="mdp2">Confirmez-le</label>
+    <input type="password" id="mdp2" autocomplete="new-password">
+    <button id="btnValider">Enregistrer</button>
+    <div id="erreur" class="cache"></div>
+  </div>
+  <div id="blocOk" class="cache">
+    <div id="ok"></div>
+  </div>
+  <div id="blocLienInvalide" class="cache">
+    <div id="erreur">Ce lien n'est plus valable (déjà utilisé, ou trop ancien). Retournez sur le panneau et redemandez un lien.</div>
+  </div>
+</div>
+<script>
+'use strict';
+var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
+var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
+
+function paramsHash(){
+  var h = location.hash.replace(/^#/, '');
+  var p = {};
+  h.split('&').forEach(function(kv){
+    var i = kv.indexOf('=');
+    if (i > -1) p[decodeURIComponent(kv.slice(0,i))] = decodeURIComponent(kv.slice(i+1));
+  });
+  return p;
+}
+var accessToken, type;
+
+function demarrer(){
+  var params = paramsHash();
+  accessToken = params.access_token;
+  type = params.type;
+
+  if (!accessToken || (type !== 'recovery' && type !== 'invite')) {
+    document.getElementById('blocFormulaire').classList.add('cache');
+    document.getElementById('blocLienInvalide').classList.remove('cache');
+    return;
+  }
+  document.getElementById('btnValider').addEventListener('click', function(){
+    var m1 = document.getElementById('mdp1').value, m2 = document.getElementById('mdp2').value;
+    var err = document.getElementById('erreur');
+    err.classList.add('cache');
+    if (m1.length < 8) { err.textContent = 'Au moins 8 caractères.'; err.classList.remove('cache'); return; }
+    if (m1 !== m2) { err.textContent = 'Les deux mots de passe ne correspondent pas.'; err.classList.remove('cache'); return; }
+    var btn = document.getElementById('btnValider'); btn.disabled = true; btn.textContent = 'Enregistrement...';
+    fetch(SB_URL + '/auth/v1/user', {
+      method: 'PUT',
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: m1 })
+    }).then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); })
+      .then(function(res){
+        if (!res.ok) throw new Error((res.d && res.d.msg) || 'échec');
+        document.getElementById('blocFormulaire').classList.add('cache');
+        document.getElementById('ok').innerHTML = 'Mot de passe créé. <a href="panneau-site.html">Aller au panneau du site →</a>';
+        document.getElementById('blocOk').classList.remove('cache');
+      })
+      .catch(function(){
+        err.textContent = 'Échec de l\'enregistrement. Réessayez ou redemandez un lien.';
+        err.classList.remove('cache');
+        btn.disabled = false; btn.textContent = 'Enregistrer';
+      });
+  });
+}
+
+if (document.readyState === 'complete') demarrer();
+else window.addEventListener('load', demarrer);
+</script>
+</body>
+</html>

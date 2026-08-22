@@ -81,19 +81,23 @@
   <!-- ============ Connexion ============ -->
   <div class="carte connexion" id="blocConnexion">
     <h2>Connexion administrateur</h2>
-    <p class="aide">Même principe que l'app : votre email, puis le code reçu par email. Réservé aux emails de la liste des administrateurs.</p>
-    <div id="etapeEmail">
+    <p class="aide">Réservé aux emails de la liste des administrateurs.</p>
+    <div id="etapeMdp">
       <label for="champEmail">Votre email</label>
       <input type="email" id="champEmail" autocomplete="email" placeholder="vous@exemple.fr">
-      <div class="actions"><button class="accent" id="btnEnvoyerCode">Recevoir le code</button></div>
-    </div>
-    <div id="etapeCode" class="cache">
-      <label for="champCode">Code reçu par email</label>
-      <input type="text" id="champCode" inputmode="numeric" autocomplete="one-time-code" placeholder="123456">
+      <label for="champMdp">Mot de passe</label>
+      <input type="password" id="champMdp" autocomplete="current-password">
       <div class="actions">
-        <button class="accent" id="btnValiderCode">Se connecter</button>
-        <button class="discret" id="btnRenvoyer">Renvoyer un code</button>
+        <button class="accent" id="btnConnexionMdp">Se connecter</button>
       </div>
+      <p class="aide" style="margin-top:14px">
+        Premier accès ou mot de passe oublié ?
+        <a href="#" id="lienMdpOublie" style="color:var(--terracotta); font-weight:600;">Recevoir un lien pour en créer un</a>
+      </p>
+    </div>
+    <div id="etapeMdpEnvoye" class="cache">
+      <p class="aide">Email envoyé. Ouvrez-le et cliquez sur le lien : il vous amènera sur une page pour créer votre mot de passe.</p>
+      <div class="actions"><button class="discret" id="btnRetourConnexion">Retour</button></div>
     </div>
   </div>
 
@@ -209,29 +213,31 @@ function entetesAuth(){
   return { apikey: SB_KEY, Authorization: 'Bearer ' + (session ? session.access_token : SB_KEY), 'Content-Type': 'application/json' };
 }
 
-/* ---------- Connexion (code par email, comme l'app) ---------- */
-function envoyerCode(){
-  var email = $('champEmail').value.trim();
-  if (!email) { toast('Entrez votre email.', true); return; }
-  fetch(SB_URL + '/auth/v1/otp', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
-    body: JSON.stringify({ email:email, create_user:true }) })
-  .then(function(r){ if(!r.ok) throw 0;
-    $('etapeEmail').classList.add('cache'); $('etapeCode').classList.remove('cache');
-    toast('Code envoyé — regardez votre boîte mail.'); $('champCode').focus(); })
-  .catch(function(){ toast('Envoi impossible. Réessayez dans une minute.', true); });
-}
-function validerCode(){
-  var email = $('champEmail').value.trim(), code = $('champCode').value.trim();
-  if (!code) { toast('Entrez le code reçu.', true); return; }
-  fetch(SB_URL + '/auth/v1/verify', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
-    body: JSON.stringify({ type:'email', email:email, token:code }) })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if (!d.access_token) { toast('Code refusé. Vérifiez ou renvoyez un code.', true); return; }
-    session = d; localStorage.setItem(CLE_SESSION, JSON.stringify(d));
+/* ---------- Connexion (email + mot de passe) ---------- */
+function connexionMdp(){
+  var email = $('champEmail').value.trim(), mdp = $('champMdp').value;
+  if (!email || !mdp) { toast('Entrez votre email et votre mot de passe.', true); return; }
+  fetch(SB_URL + '/auth/v1/token?grant_type=password', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
+    body: JSON.stringify({ email:email, password:mdp }) })
+  .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); })
+  .then(function(res){
+    if (!res.ok || !res.d.access_token) { toast('Email ou mot de passe incorrect.', true); return; }
+    session = res.d; localStorage.setItem(CLE_SESSION, JSON.stringify(res.d));
     verifierAdminEtOuvrir(email);
   })
   .catch(function(){ toast('Connexion impossible.', true); });
+}
+function demanderLienMdp(){
+  var email = $('champEmail').value.trim();
+  if (!email) { toast('Entrez votre email d\'abord.', true); return; }
+  fetch(SB_URL + '/auth/v1/recover', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
+    body: JSON.stringify({ email:email, redirect_to: location.origin + location.pathname.replace(/[^/]*$/, '') + 'reinitialiser-mot-de-passe.html' }) })
+  .then(function(r){
+    if (r.status === 429) { toast('Trop de demandes récentes — patientez une heure et réessayez.', true); return; }
+    if (!r.ok) { toast('Envoi impossible. Réessayez.', true); return; }
+    $('etapeMdp').classList.add('cache'); $('etapeMdpEnvoye').classList.remove('cache');
+  })
+  .catch(function(){ toast('Envoi impossible. Réessayez.', true); });
 }
 function verifierAdminEtOuvrir(email){
   fetch(SB_URL + '/rest/v1/admins?select=email', { headers: entetesAuth() })
@@ -249,7 +255,7 @@ function verifierAdminEtOuvrir(email){
 function deconnexion(){
   session = null; localStorage.removeItem(CLE_SESSION);
   $('blocPanneau').classList.add('cache'); $('btnDeconnexion').classList.add('cache');
-  $('blocConnexion').classList.remove('cache'); $('etapeEmail').classList.remove('cache'); $('etapeCode').classList.add('cache');
+  $('blocConnexion').classList.remove('cache'); $('etapeMdp').classList.remove('cache'); $('etapeMdpEnvoye').classList.add('cache');
   $('quiLigne').textContent = '';
 }
 
@@ -401,12 +407,12 @@ document.addEventListener('click', function(e){
 });
 
 /* ---------- Démarrage ---------- */
-$('btnEnvoyerCode').addEventListener('click', envoyerCode);
-$('btnRenvoyer').addEventListener('click', envoyerCode);
-$('btnValiderCode').addEventListener('click', validerCode);
+$('btnConnexionMdp').addEventListener('click', connexionMdp);
+$('lienMdpOublie').addEventListener('click', function(e){ e.preventDefault(); demanderLienMdp(); });
+$('btnRetourConnexion').addEventListener('click', function(){ $('etapeMdpEnvoye').classList.add('cache'); $('etapeMdp').classList.remove('cache'); });
 $('btnDeconnexion').addEventListener('click', deconnexion);
-$('champEmail').addEventListener('keydown', function(e){ if (e.key === 'Enter') envoyerCode(); });
-$('champCode').addEventListener('keydown', function(e){ if (e.key === 'Enter') validerCode(); });
+$('champEmail').addEventListener('keydown', function(e){ if (e.key === 'Enter') connexionMdp(); });
+$('champMdp').addEventListener('keydown', function(e){ if (e.key === 'Enter') connexionMdp(); });
 construireFormulaires();
 try {
   var s = JSON.parse(localStorage.getItem(CLE_SESSION) || 'null');
