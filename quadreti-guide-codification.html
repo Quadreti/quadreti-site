@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadreti — Le repérage : chaque visuel connaît sa place</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charbon:#2b353e;
+    --terracotta:#E2725B;
+    --olive:#556B2F;
+    --kraft:#CBBD93;
+    --creme:#F2EEDF;
+    --gris-clair:#F5F5F5;
+    --gris-texte:#5c646c;
+    --blanc:#FFFFFF;
+    /* Harmonisation charte site (18/08) : memes noms et memes valeurs que quadreti.fr,
+       pour qu'une couleur changee un jour le soit partout. */
+    --fond:#F5F5F5;
+    --border:#E3E0DA;
+    --terracotta-soft:#F6DED8;
+    --olive-soft:#E9EDDD;
+    --kraft-soft:#F1ECDD;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Quicksand',sans-serif;
+    color:var(--charbon);
+    background:var(--gris-clair);
+    line-height:1.55;
+  }
+  h1,h2,h3,.qs{font-family:'Quicksand',sans-serif;font-weight:600;}
+
+  section.ecran{
+    background:var(--blanc);
+    border-radius:14px; /* chrome de page uniquement — jamais sur le produit */
+    margin:26px auto;
+    padding:38px 34px 34px;
+    max-width:760px;
+  }
+  @media(max-width:600px){section.ecran{padding:26px 18px;margin:18px 10px;border-radius:14px;}}
+
+  .ecran-tag{
+    display:inline-block; font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--olive); font-weight:700; margin-bottom:10px; font-family:'Quicksand',sans-serif;
+  }
+  .ecran h2{font-size:26px; margin-bottom:12px; line-height:1.25;}
+  .ecran p.lead{color:var(--gris-texte); font-size:16.5px; max-width:58ch;}
+
+  /* ===== HERO ===== */
+  header.hero{
+    background:var(--creme);
+    padding:56px 20px 66px;
+    text-align:center;
+  }
+  .hero .eyebrow{
+    font-size:13px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--olive); font-weight:700; font-family:'Quicksand',sans-serif;
+  }
+  .hero h1{font-size:clamp(28px,5vw,40px); margin:14px auto 10px; max-width:20ch; line-height:1.2;}
+  .hero p{color:var(--gris-texte); max-width:46ch; margin:0 auto 34px; font-size:17px;}
+
+  /* Verso du visuel — ANGLES DROITS (représente le produit) */
+  .visuel-verso{
+    width:190px;height:190px;
+    background:var(--kraft);
+    border:2px solid var(--charbon);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    margin:0 auto;
+    box-shadow:0 14px 34px rgba(43,53,62,.14);
+    position:relative;
+  }
+  .visuel-verso{gap:4px;}
+  .visuel-verso .code-carreau{font-family:'Quicksand',sans-serif;font-weight:700;font-size:30px;color:var(--charbon);letter-spacing:.04em;line-height:1;}
+  .visuel-verso .code-position{font-family:'Quicksand',sans-serif;font-weight:700;font-size:52px;color:var(--terracotta);line-height:1;letter-spacing:.04em;}
+  .visuel-verso .dot{color:var(--kraft);font-size:22px;line-height:.6;}
+  .visuel-verso::after{
+    content:"dos du visuel (papier)";
+    position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
+    font-size:12.5px; color:var(--gris-texte); white-space:nowrap; letter-spacing:.04em;
+  }
+
+  /* ===== Légende couleurs (accessibilité) ===== */
+  .legende{
+    display:flex;justify-content:center;gap:26px;flex-wrap:wrap;
+    margin:46px auto 0;max-width:560px;
+  }
+  .legende .item{
+    display:flex;align-items:center;gap:10px;font-size:14.5px;
+    background:var(--blanc);padding:10px 16px;box-shadow:0 4px 12px rgba(43,53,62,.07);
+  }
+  .legende .sw{width:16px;height:16px;flex:0 0 16px;}
+  .legende .sw.c1{background:var(--charbon);}
+  .legende .sw.c2{background:var(--terracotta);}
+  .legende b{font-family:'Quicksand',sans-serif;}
+
+  /* ===== Glossaire ===== */
+  .glossaire{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 4px;}
+  @media(max-width:600px){.glossaire{grid-template-columns:1fr;}}
+  .mot{
+    background:var(--gris-clair);
+    padding:18px 16px 16px;
+    display:flex;gap:14px;align-items:flex-start;
+  }
+  .mot .schema{flex:0 0 56px;height:56px;position:relative;}
+  .mot h3{font-size:16px;margin-bottom:4px;}
+  .mot p{font-size:13.5px;color:var(--gris-texte);}
+  /* mini-schémas produit — angles droits */
+  .sch-carreau{width:56px;height:56px;border:2px solid var(--charbon);background:var(--creme);
+    background-image:linear-gradient(var(--kraft) 1px,transparent 1px),linear-gradient(90deg,var(--kraft) 1px,transparent 1px);
+    background-size:8px 8px;}
+  .sch-tesselle{width:40px;height:40px;margin:8px;background:var(--kraft);border:2px solid var(--charbon);}
+  .sch-etui{width:40px;height:40px;margin:8px;background:var(--blanc);border:2px solid var(--charbon);position:relative;}
+  .sch-etui::after{content:"";position:absolute;inset:5px;border:1.5px dashed var(--gris-texte);}
+  .sch-visuel{width:40px;height:40px;margin:8px;border:2px solid var(--charbon);
+    background:linear-gradient(135deg,var(--terracotta) 0 33%,var(--kraft) 33% 66%,var(--olive) 66%);}
+
+  /* ===== Grille bataille navale — ANGLES DROITS ===== */
+  .bn-wrap{display:flex;justify-content:center;margin:30px 0 8px;}
+  .bn{
+    display:grid;
+    grid-template-columns:26px repeat(7,34px);
+    grid-template-rows:26px repeat(7,34px);
+    gap:3px;
+  }
+  @media(max-width:600px){
+    .bn{grid-template-columns:22px repeat(7,28px);grid-template-rows:22px repeat(7,28px);}
+  }
+  .bn .lbl{
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;color:var(--charbon);
+  }
+  .bn .cell{background:var(--creme);cursor:pointer;transition:background .15s;}
+  .bn .cell:hover{background:#e6dfc9;}
+  .bn .cell.hit{background:var(--kraft);position:relative;}
+  .bn .cell.hit::after{
+    content:attr(data-code);
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--terracotta);font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;
+  }
+  .bn-caption{text-align:center;color:var(--gris-texte);font-size:14.5px;margin-top:14px;}
+  .bn-caption b{color:var(--charbon);}
+  .bn-caption .t{color:var(--terracotta);font-weight:700;}
+
+  /* ===== Décomposition du code (accessibilité) ===== */
+  .decompo{
+    display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+    margin:26px 0 4px;
+  }
+  .decompo .bloc{
+    text-align:center;padding:16px 20px;background:var(--gris-clair);
+    min-width:150px;display:flex;flex-direction:column;align-items:center;
+  }
+  .decompo .bloc small{margin-left:auto;margin-right:auto;}
+  .decompo .bloc .big{font-family:'Quicksand',sans-serif;font-weight:700;font-size:34px;line-height:1.1;letter-spacing:.05em;}
+  .decompo .bloc.b1 .big{color:var(--charbon);}
+  .decompo .bloc.b2 .big{color:var(--terracotta);}
+  .decompo .bloc small{display:block;margin-top:6px;font-size:12.5px;color:var(--gris-texte);max-width:16ch;}
+  .decompo .sep{font-size:26px;color:var(--kraft);font-weight:700;}
+
+  /* ===== Du carreau au mur — la double lecture ===== */
+  .mur-detail-wrap{display:flex;justify-content:center;margin:30px 0 8px;}
+  .mur-detail{
+    display:grid;
+    grid-template-columns:24px repeat(2,minmax(120px,150px));
+    grid-template-rows:24px repeat(2,minmax(120px,150px));
+    gap:6px;
+  }
+  .mur-detail .axe{
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:14px;color:var(--charbon);
+  }
+  .carreau-voisin{
+    background:var(--creme);border:2px solid var(--charbon);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:20px;color:var(--charbon);
+  }
+  .carreau-focus{
+    background:var(--blanc);border:2.5px solid var(--terracotta);
+    padding:5px;position:relative;
+  }
+  .carreau-focus .tag-carreau{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+    background:var(--charbon);color:var(--blanc);
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;
+    padding:2px 9px;letter-spacing:.05em;
+  }
+  .mini-bn{
+    display:grid;
+    grid-template-columns:10px repeat(7,1fr);
+    grid-template-rows:10px repeat(7,1fr);
+    gap:1.5px;height:100%;
+  }
+  .mini-bn .mlbl{
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:6.5px;color:var(--charbon);
+  }
+  .mini-bn .mcell{background:var(--creme);}
+  .mini-bn .mcell.mhit{
+    background:var(--kraft);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--terracotta);font-family:'Quicksand',sans-serif;font-weight:700;font-size:7.5px;
+  }
+  .lecture{
+    display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;
+    margin:24px 0 4px;font-family:'Quicksand',sans-serif;font-weight:700;text-align:center;
+  }
+  .lecture > span{display:flex;flex-direction:column;align-items:center;}
+  .lecture .lsep{align-self:center;}
+  .lecture .lc{font-size:34px;color:var(--charbon);}
+  .lecture .lsep{font-size:26px;color:var(--kraft);}
+  .lecture .lt{font-size:34px;color:var(--terracotta);}
+  .lecture small{
+    display:block;font-family:'Quicksand',sans-serif;font-weight:400;font-size:12px;
+    color:var(--gris-texte);text-align:center;margin-top:2px;
+  }
+
+  .continuite{
+    display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;
+    margin:30px 0 6px;
+  }
+  .chip-app{
+    background:var(--charbon);color:var(--blanc);
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:15px;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .chip-app .pin{width:9px;height:9px;background:var(--olive);}
+  .chip-app small{display:block;font-size:10.5px;color:var(--kraft);font-weight:400;letter-spacing:.08em;text-transform:uppercase;}
+  .fleche{font-size:22px;color:var(--kraft);}
+  .visuel-mini{
+    width:96px;height:96px;background:var(--kraft);
+    border:1.6px solid var(--charbon);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .visuel-mini{gap:3px;}
+  .visuel-mini .c{font-family:'Quicksand',sans-serif;font-weight:700;font-size:15px;color:var(--charbon);line-height:1;}
+  .visuel-mini .t{font-family:'Quicksand',sans-serif;font-weight:700;font-size:24px;color:var(--terracotta);line-height:1;}
+  .continuite-caption{text-align:center;color:var(--gris-texte);font-size:14.5px;max-width:54ch;margin:14px auto 0;}
+
+  /* ===== 3 gestes ===== */
+  .gestes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 4px;}
+  @media(max-width:600px){.gestes{grid-template-columns:1fr;}}
+  .geste{
+    background:var(--gris-clair);
+    padding:20px 16px 18px;
+    text-align:center;
+  }
+  .geste .ico{
+    width:52px;height:52px;margin:0 auto 12px;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    background:var(--blanc);border:1.5px solid var(--kraft);
+  }
+  .geste h3{font-size:16px;margin-bottom:6px;}
+  .geste p{font-size:13.5px;color:var(--gris-texte);}
+  .geste .num{font-family:'Quicksand',sans-serif;font-weight:700;color:var(--olive);font-size:12px;letter-spacing:.1em;display:block;margin-bottom:8px;}
+
+  /* ===== Quiz vrai/faux ===== */
+  .quiz{margin:26px 0 4px;}
+  .quiz .question{
+    background:var(--gris-clair);
+    padding:20px 18px;
+    margin-bottom:12px;
+  }
+  .quiz .q-txt{font-size:15.5px;margin-bottom:12px;}
+  .quiz .q-txt .code-c{color:var(--charbon);font-weight:700;font-family:'Quicksand',sans-serif;}
+  .quiz .q-txt .code-t{color:var(--terracotta);font-weight:700;font-family:'Quicksand',sans-serif;}
+  .quiz .btns{display:flex;gap:10px;}
+  .quiz button{
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;
+    padding:9px 22px;border:1.6px solid var(--charbon);background:var(--blanc);
+    color:var(--charbon);cursor:pointer;transition:transform .12s;
+  }
+  .quiz button:hover{transform:translateY(-2px);}
+  .quiz .feedback{
+    margin-top:10px;font-size:14px;font-weight:600;display:none;
+    padding:8px 12px;
+  }
+  .quiz .question.ok .feedback{display:block;background:#eef2e4;color:var(--olive);animation:pop .3s ease;}
+  .quiz .question.ko .feedback{display:block;background:#faeae6;color:#c85a44;animation:shake .35s ease;}
+  @keyframes pop{0%{transform:scale(.92);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  @media(prefers-reduced-motion:reduce){.quiz .question.ok .feedback,.quiz .question.ko .feedback{animation:none;}}
+
+  /* ===== Mini-album ===== */
+  .album-scene{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;margin:30px 0 4px;}
+  .album-cover{
+    width:170px;height:210px;background:var(--charbon);position:relative;
+    box-shadow:0 14px 30px rgba(43,53,62,.2);
+  }
+  .album-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:#37434e;}
+  .album-cover .titre{
+    position:absolute;left:30px;right:14px;top:26px;
+    color:var(--blanc);font-family:'Quicksand',sans-serif;font-weight:600;font-size:15px;line-height:1.3;
+  }
+  .album-cover .titre small{display:block;color:var(--kraft);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-top:6px;font-weight:400;}
+  .album-cover .q{
+    position:absolute;left:30px;bottom:22px;width:26px;height:26px;
+    background:var(--terracotta);
+  }
+  .album-page{
+    width:210px;background:var(--blanc);border:1.5px solid var(--kraft);
+    padding:14px 14px 10px;position:relative;
+    box-shadow:0 10px 24px rgba(43,53,62,.1);
+  }
+  .album-page .page-titre{
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:12.5px;margin-bottom:9px;
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .album-page .page-titre em{font-style:normal;color:var(--terracotta);}
+  .album-page .page-titre small{color:var(--gris-texte);font-weight:400;font-size:10.5px;}
+  .pochettes{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
+  }
+  .pochettes span{
+    aspect-ratio:1;background:var(--creme);border:1px solid var(--kraft);
+  }
+  .pochettes span.v1{background:var(--terracotta);}
+  .pochettes span.v2{background:var(--kraft);}
+  .pochettes span.v3{background:var(--olive);}
+  .pochettes span.vide{background:var(--gris-clair);border-style:dashed;}
+  .album-page .rangee-lbl{
+    position:absolute;left:3px;top:44px;bottom:12px;width:9px;
+    display:flex;flex-direction:column;justify-content:space-around;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:6.5px;color:var(--gris-texte);text-align:center;
+  }
+  .onglets{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:22px 0 0;}
+  .onglet{
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;
+    background:var(--gris-clair);color:var(--charbon);padding:7px 14px;
+    border-top:3px solid var(--kraft);
+  }
+  .onglet.actif{background:var(--creme);border-top-color:var(--terracotta);}
+  .album-caption{text-align:center;color:var(--gris-texte);font-size:14.5px;max-width:56ch;margin:16px auto 0;}
+
+  /* ===== Mur qui grandit — ANGLES DROITS ===== */
+  .murs{display:flex;align-items:flex-end;justify-content:center;gap:34px;flex-wrap:wrap;margin:30px 0 6px;}
+  .mur{text-align:center;}
+  .mur .grille1{
+    width:86px;height:86px;background:var(--creme);border:2px solid var(--charbon);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:17px;color:var(--terracotta);
+  }
+  .mur .grille4{
+    display:grid;grid-template-columns:repeat(2,64px);grid-template-rows:repeat(2,64px);gap:4px;
+  }
+  .mur .grille4 div{
+    background:var(--creme);border:2px solid var(--charbon);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;color:var(--charbon);
+  }
+  .mur .grille4 div em{font-style:normal;color:var(--terracotta);font-size:13px;}
+  .mur .cap{font-size:13px;color:var(--gris-texte);margin-top:10px;max-width:22ch;}
+  .mur .cap b{color:var(--charbon);}
+
+  .cloture{
+    background:var(--charbon);color:var(--blanc);
+    border-radius:14px;max-width:760px;margin:26px auto 50px;
+    padding:40px 34px;text-align:center;
+  }
+  @media(max-width:600px){.cloture{margin:18px 10px 40px;padding:30px 20px;}}
+  .cloture p.phrase{font-family:'Quicksand',sans-serif;font-weight:600;font-size:22px;max-width:28ch;margin:0 auto 8px;line-height:1.35;}
+  .cloture p.sub{color:var(--kraft);font-size:15px;}
+
+  /* ===== Ticker bar (repris de l'accueil) ===== */
+  .ticker{
+    background:var(--charbon);color:var(--kraft);
+    overflow:hidden;white-space:nowrap;
+    font-family:'Quicksand',sans-serif;font-weight:600;
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:7px 0;
+  }
+  .ticker .track{display:inline-block;animation:tick 34s linear infinite;}
+  .ticker .track span{padding:0 26px;}
+  .ticker .track span::after{content:"·";margin-left:26px;color:#5c646c;}
+  @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.ticker .track{animation:none;}}
+
+  /* ===== Nav (reprise de l'accueil) ===== */
+  .site-nav{
+    position:sticky;top:0;z-index:50;
+    background:var(--blanc);
+    border-bottom:1px solid #e5e1d6;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:11px 24px;
+  }
+  .site-nav .brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+  .site-nav .brand .bl{
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:11px;
+    color:var(--gris-texte);letter-spacing:.08em;text-transform:uppercase;
+    border-left:1px solid #e5e1d6;padding-left:11px;
+  }
+  .site-nav .links{display:flex;gap:19px;align-items:center;}
+  .site-nav .links a{
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:13.5px;
+    color:var(--charbon);text-decoration:none;
+  }
+  .site-nav .links a:hover{color:var(--terracotta);}
+  .site-nav .links a.cta{background:var(--terracotta);color:var(--blanc);padding:9px 20px;border-radius:99px;}
+  .site-nav .links a.cta:hover{background:#c85a44;color:var(--blanc);}
+  /* Burger */
+  .burger{
+    display:none;background:none;border:none;cursor:pointer;
+    padding:8px;margin-left:4px;
+  }
+  .burger span{
+    display:block;width:22px;height:2px;background:var(--charbon);
+    margin:4px 0;transition:transform .25s,opacity .2s;
+  }
+  .burger.on span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .burger.on span:nth-child(2){opacity:0;}
+  .burger.on span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+  .drawer{
+    display:none;
+    position:sticky;top:56px;z-index:49;
+    background:var(--blanc);border-bottom:1px solid #e5e1d6;
+    padding:6px 16px 14px;
+  }
+  .drawer.on{display:block;}
+  .drawer a{
+    display:block;padding:12px 2px;text-decoration:none;
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:15px;
+    color:var(--charbon);border-bottom:1px solid #f0ece1;
+  }
+  .drawer a:last-child{border-bottom:none;}
+  .drawer a.cta{
+    background:var(--terracotta);color:var(--blanc);text-align:center;
+    margin-top:10px;padding:12px;border-radius:99px;
+  }
+  @media(max-width:860px){
+    .site-nav{padding:10px 16px;}
+    .site-nav .brand .bl{display:none;}
+    .site-nav .links{display:none;}
+    .site-nav .nav-qlogo{ grid-template-columns:repeat(4,6px); grid-auto-rows:6px; }
+    .burger{display:block;}
+  }
+
+  /* ===== Footer (design accueil : logo + copyright, sans menu) ===== */
+  .site-foot{background:var(--charbon);color:var(--blanc);padding:44px 24px 34px;text-align:center;}
+  .site-foot img.logo{height:30px;display:block;margin:0 auto;}
+  .site-foot .foot-sign{
+    max-width:1000px;margin:22px auto 0;
+    color:#8a94a0;font-size:12.5px;
+  }
+  /* Logo en tesselles de l'en-tete — meme dessin que le pied de page : un seul logo,
+     dessine en CSS, plus aucune image PNG a maintenir (ni a telecharger). */
+  .nav-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .nav-qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
+  .nav-qlogo i.empty{ visibility:hidden; }
+  .nav-qlogo i.tail{ background:var(--terracotta); }
+  /* Logo en tesselles du pied de page — meme dessin que l'en-tete, en clair sur charbon */
+  .foot-logo-row{ display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
+  .foot-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
+  .foot-qlogo i{ display:block; border-radius:1.5px; background:var(--fond); }
+  .foot-qlogo i.empty{ visibility:hidden; }
+  .foot-qlogo i.tail{ background:var(--terracotta); }
+  .foot-word{ font-weight:700; font-size:18px; color:var(--fond); }
+</style>
+<style id="qz-bloc-commun">
+  :root{
+    --qz-charbon:#2B353E;
+    --qz-creme:#F2EEDF;
+    --qz-terracotta:#E2725B;
+    --qz-kraft:#CBBD93;
+    --qz-clair:#F5F5F5;
+    --qz-sombre:#1f272e;
+  }
+
+  /* ===== BANDEAU ===== */
+  .qz-header{
+    width:100%; background:var(--qz-clair); border-bottom:1px solid #2b353e14;
+    padding:14px 32px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:16px;
+    position:relative; z-index:60; box-sizing:border-box;
+  }
+  .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
+  .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
+  .qz-qlogo i{ border-radius:1.4px; background:transparent; }
+  .qz-qlogo i.t{ background:var(--qz-charbon); }
+  .qz-qlogo i.a{ background:var(--qz-terracotta); }
+  .qz-wordmark{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:16px; color:var(--qz-charbon); white-space:nowrap; }
+  .qz-doti{ position:relative; display:inline-block; }
+  .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
+
+  /* Animation dactylo — CSS pur, lettre par lettre, ~2.3s au chargement.
+     Chaque lettre est un <b> (sans gras) qui apparaît à son tour ;
+     le point terracotta du ı final apparaît en dernier. */
+  .qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }
+  .qz-wordmark b:nth-child(1){ animation-delay:.40s; }
+  .qz-wordmark b:nth-child(2){ animation-delay:.62s; }
+  .qz-wordmark b:nth-child(3){ animation-delay:.84s; }
+  .qz-wordmark b:nth-child(4){ animation-delay:1.06s; }
+  .qz-wordmark b:nth-child(5){ animation-delay:1.28s; }
+  .qz-wordmark b:nth-child(6){ animation-delay:1.50s; }
+  .qz-wordmark b:nth-child(7){ animation-delay:1.72s; }
+  .qz-wordmark b:nth-child(8){ animation-delay:1.94s; }
+  .qz-wordmark .qz-dot{ opacity:0; animation:qzLettre .05s steps(1) forwards; animation-delay:2.30s; }
+  .qz-qlogo{ opacity:0; animation:qzLettre .4s ease forwards; animation-delay:.15s; }
+  @keyframes qzLettre{ to{ opacity:1; } }
+
+  /* Colonne mot + catégorie — alignement du SVG de référence LOGO CATEGORIE.svg :
+     baseline « Support créatif modulaire » en terracotta, alignée à gauche du mot,
+     apparaît en fondu une fois le mot écrit. */
+  .qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
+  .qz-cat{
+    font-family:'Quicksand',sans-serif; font-weight:600; font-size:8.5px; letter-spacing:.08em;
+    color:var(--qz-terracotta); white-space:nowrap;
+    opacity:0; animation:qzLettre .45s ease forwards; animation-delay:2.55s;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .qz-wordmark b, .qz-wordmark .qz-dot, .qz-qlogo, .qz-cat{ animation:none; opacity:1; }
+  }
+
+  .qz-burger{
+    justify-self:center; width:42px; height:42px; border-radius:22%;
+    background:var(--qz-charbon); border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    transition:background .15s;
+  }
+  .qz-burger:hover, .qz-burger:focus-visible{ background:#1f272e; }
+  .qz-burger span{ width:18px; height:2px; border-radius:1px; background:var(--qz-creme); transition:transform .2s, opacity .2s; }
+  .qz-burger.active span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+  .qz-burger.active span:nth-child(2){ opacity:0; }
+  .qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+
+  .qz-cta{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; border-radius:10px; padding:10px 18px; text-decoration:none; white-space:nowrap; background:var(--qz-charbon); color:var(--qz-creme); justify-self:end; }
+  .qz-cta:hover{ background:#1f272e; }
+  @media (max-width:640px){ .qz-cta{ display:none; } }
+
+  .qz-navpanel{ width:100%; background:var(--qz-charbon); max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
+  .qz-navpanel.open{ max-height:560px; }
+  .qz-navpanel ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
+  .qz-navpanel a{ font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
+  .qz-navpanel a:hover{ color:var(--qz-terracotta); }
+  .qz-subtoggle{
+    width:100%; background:none; border:none; cursor:pointer;
+    font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2;
+    padding:9px 0; display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .qz-subtoggle:hover{ color:var(--qz-terracotta); }
+  .qz-subtoggle .qz-chev{ font-size:10px; transition:transform .2s; color:var(--qz-kraft); }
+  li.qz-hassub.open .qz-subtoggle .qz-chev{ transform:rotate(180deg); }
+  li.qz-hassub.open .qz-subtoggle{ color:var(--qz-creme); }
+  .qz-sublist{ list-style:none; margin:0; padding:0; max-height:0; overflow:hidden; transition:max-height .25s ease; background:#37434e; border-radius:10px; }
+  li.qz-hassub.open .qz-sublist{ max-height:120px; margin-bottom:4px; }
+  .qz-sublist li{ max-width:none !important; }
+  .qz-sublist a{ font-size:12.5px; font-weight:600; color:#9aa2a9; padding:8px 0; }
+  .qz-sublist a:hover{ color:var(--qz-terracotta); }
+
+  /* ===== FOOTER (3 étages empilés) ===== */
+  /* Étage 1 — bas de page : logo + baseline */
+  .qz-basdepage{
+    width:100%; background:var(--qz-charbon); box-sizing:border-box;
+    padding:36px 32px 30px; display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .qz-basdepage .qz-logorow{ justify-self:auto; }
+  .qz-basdepage .qz-qlogo{ grid-template-columns:repeat(4,8px); grid-template-rows:repeat(4,8px); gap:1.6px; opacity:1; animation:none; }
+  .qz-basdepage .qz-qlogo i{ border-radius:1.6px; }
+  .qz-basdepage .qz-qlogo i.t{ background:var(--qz-creme); }
+  .qz-basdepage .qz-wordmark{ color:var(--qz-creme); }
+  .qz-basdepage .qz-wordmark b, .qz-basdepage .qz-wordmark .qz-dot{ opacity:1; animation:none; }
+  .qz-baseline{ font-family:'Quicksand',sans-serif; font-weight:500; font-size:12px; color:#c9c3b2; }
+
+  /* Étage 2 — réseaux sociaux */
+  .qz-reseaux{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:56px 32px; text-align:center; }
+  .qz-reseaux .qz-accroche{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:20px; color:var(--qz-creme); margin:0 0 4px; }
+  .qz-reseaux .qz-sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 32px; font-family:'Karla',sans-serif; }
+  .qz-reseaux .qz-grid{ display:inline-grid; grid-template-columns:repeat(5,58px); gap:32px; }
+  .qz-reseaux .qz-grid a{
+    width:58px; height:58px; border-radius:12.8px;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:transform .15s, box-shadow .15s, background .15s;
+    background:var(--qz-kraft); color:var(--qz-charbon);
+  }
+  .qz-reseaux .qz-grid a:hover, .qz-reseaux .qz-grid a:focus-visible{
+    transform:translateY(-4px) scale(1.04); box-shadow:0 10px 18px #00000055;
+    background:var(--qz-terracotta); color:var(--qz-creme);
+  }
+  .qz-reseaux .qz-ico{ width:22px; height:22px; display:block; fill:currentColor; }
+  @media (max-width:640px){ .qz-reseaux .qz-grid{ grid-template-columns:repeat(5,1fr); gap:12px; max-width:320px; } }
+
+  /* Étage 3 — footer légal en cartouches + copyright unique */
+  .qz-legal{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:0 32px 32px; }
+  .qz-legal .qz-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:820px; margin:0 auto; }
+  .qz-legal a.qz-leg{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    background:#37434e; border:1px solid #ffffff1a; border-radius:12px;
+    padding:16px 10px; text-align:center; text-decoration:none; transition:.15s;
+  }
+  .qz-legal a.qz-leg:hover, .qz-legal a.qz-leg:focus-visible{ background:var(--qz-terracotta); border-color:var(--qz-terracotta); }
+  .qz-legal .qz-picto{ width:22px; height:22px; color:var(--qz-kraft); transition:.15s; }
+  .qz-legal a.qz-leg:hover .qz-picto{ color:var(--qz-creme); }
+  .qz-legal a.qz-leg span{ font-size:11.5px; font-weight:600; color:#e5e1e1; font-family:'Karla',sans-serif; line-height:1.3; }
+  .qz-copy{ max-width:820px; margin:22px auto 0; text-align:center; font-size:11px; color:#7a828b; }
+  @media (max-width:640px){ .qz-legal .qz-row{ grid-template-columns:repeat(2,1fr); } .qz-legal a.qz-leg:last-child{ grid-column:1/-1; } }
+
+  /* Bouton flottant retour en haut — fixe, suit le scroll */
+  .qz-fab{
+    position:fixed; right:18px; bottom:18px; z-index:70;
+    width:38px; height:38px; border-radius:50%;
+    background:#37434e; border:1px solid #ffffff1f;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:background .15s, border-color .15s;
+  }
+  .qz-fab:hover, .qz-fab:focus-visible{ background:var(--qz-terracotta); border-color:var(--qz-terracotta); }
+  .qz-fab svg{ width:14px; height:14px; stroke:var(--qz-kraft); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  .qz-fab:hover svg{ stroke:var(--qz-creme); }
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="track"><span>Brevet déposé à l'INPI</span><span>Conception et fabrication françaises</span><span>Sans colle, sans détérioration</span><span>Une imprimante de salon suffit</span><span>Brevet déposé à l'INPI</span><span>Conception et fabrication françaises</span><span>Sans colle, sans détérioration</span><span>Une imprimante de salon suffit</span></div>
+</div>
+
+<!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<header class="qz-header">
+  <a class="qz-logorow" href="index.html" aria-label="Quadreti — accueil">
+    <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
+    <span class="qz-wm-col">
+      <span class="qz-wordmark" aria-label="Quadreti"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
+      <span class="qz-cat">Support créatif modulaire</span>
+    </span>
+  </a>
+  <button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="qz-cta" href="https://designer.quadreti.fr">Essayer l'app — sans compte</a>
+</header>
+
+<nav class="qz-navpanel" id="qzNavPanel" aria-label="Menu principal">
+  <ul>
+    <li><a href="index.html">Accueil</a></li>
+    <li class="qz-hassub" id="qzCcmItem">
+      <button class="qz-subtoggle" id="qzCcmToggle" aria-expanded="false">
+        Comment ça marche <span class="qz-chev">▾</span>
+      </button>
+      <ul class="qz-sublist">
+        <li><a href="quadreti-guide-interactif.html">Guide de l'app</a></li>
+        <li><a href="quadreti-guide-codification.html">Guide de montage</a></li>
+      </ul>
+    </li>
+    <li><a href="boutique/">Boutique</a></li>
+    <li><a href="index.html#livraison">Livraison &amp; paiement</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="mailto:contact@quadreti.fr">Contact</a></li>
+  </ul>
+</nav>
+<!-- ===== BANDEAU COMMUN — FIN ===== -->
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="eyebrow">Le repérage Quadreti</div>
+  <h1>Chaque visuel connaît sa place.</h1>
+  <p>Un code imprimé au dos de chaque visuel, le même que dans l'app. Vous montez, démontez, remontez — sans jamais deviner.</p>
+  <div class="visuel-verso">
+    <div class="code-carreau">B2</div>
+    <div class="dot">·</div>
+    <div class="code-position">D5</div>
+  </div>
+  <div class="legende">
+    <div class="item"><span class="sw c1"></span><span><b>1re ligne, foncée</b> — le carreau (quel cadre du mur)</span></div>
+    <div class="item"><span class="sw c2"></span><span><b>2e ligne, terracotta</b> — la place dans ce carreau</span></div>
+  </div>
+</header>
+
+<!-- ═══════════ ÉCRAN 0 — GLOSSAIRE ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">Les quatre mots du mur</span>
+  <h2>Avant de commencer : qui est qui.</h2>
+  <p class="lead">Quatre mots suffisent pour tout comprendre. Les voici, une fois pour toutes.</p>
+  <div class="glossaire">
+    <div class="mot">
+      <div class="schema"><div class="sch-carreau"></div></div>
+      <div><h3>Le carreau</h3><p>La grille murale. Elle accueille 7 × 7 tesselles. Un mur peut compter un ou plusieurs carreaux.</p></div>
+    </div>
+    <div class="mot">
+      <div class="schema"><div class="sch-tesselle"></div></div>
+      <div><h3>La tesselle</h3><p>La pièce qui se clipse dans le carreau. C'est le support.</p></div>
+    </div>
+    <div class="mot">
+      <div class="schema"><div class="sch-etui"></div></div>
+      <div><h3>L'étui</h3><p>Il habille la tesselle et maintient le visuel. C'est lui qui rend le visuel changeable.</p></div>
+    </div>
+    <div class="mot">
+      <div class="schema"><div class="sch-visuel"></div></div>
+      <div><h3>Le visuel</h3><p>Le papier imprimé par vous : photo, couleur, motif. Le code de repérage est imprimé à son dos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ÉCRAN 1 ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">Le principe</span>
+  <h2>Une lettre, un chiffre. Rien d'autre.</h2>
+  <p class="lead">La lettre donne la ligne, le chiffre donne la colonne. Suivez la lettre, suivez le chiffre : là où ils se croisent, c'est la place.</p>
+  <div class="bn-wrap">
+    <div class="bn" id="bn">
+      <div class="lbl"></div>
+      <div class="lbl">A</div><div class="lbl">B</div><div class="lbl">C</div><div class="lbl">D</div><div class="lbl">E</div><div class="lbl">F</div><div class="lbl">G</div>
+      <!-- rangées générées en JS pour l'interaction -->
+    </div>
+  </div>
+  <p class="bn-caption">Colonne <b>D</b> + ligne <b>5</b> → la place <span class="t">D5</span>. La lettre se lit en haut, le chiffre sur le côté — le même sens de lecture pour les places et pour les carreaux. <em>Touchez une case pour voir son code.</em></p>
+  <div class="decompo">
+    <div class="bloc b1"><span class="big">B2</span><small>le carreau, en foncé</small></div>
+    <div class="sep">·</div>
+    <div class="bloc b2"><span class="big">D5</span><small>la place dans le carreau, en terracotta</small></div>
+  </div>
+</section>
+
+<!-- ═══════════ ÉCRAN 2 — DU CARREAU AU MUR ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">Du carreau au mur : la double lecture</span>
+  <h2>Le mur est une grille de carreaux. Chaque carreau, une grille de places.</h2>
+  <p class="lead">Reprenez la grille que vous venez d'apprendre : la voici sur le mur, entourée de ses voisins. Le mur se lit exactement de la même façon — la lettre en haut, le chiffre sur le côté. Deux grilles, une seule logique.</p>
+  <div class="mur-detail-wrap">
+    <div class="mur-detail">
+      <div class="axe"></div><div class="axe">A</div><div class="axe">B</div>
+      <div class="axe">1</div>
+      <div class="carreau-voisin">A1</div>
+      <div class="carreau-voisin">B1</div>
+      <div class="axe">2</div>
+      <div class="carreau-voisin">A2</div>
+      <div class="carreau-focus">
+        <span class="tag-carreau">B2</span>
+        <div class="mini-bn" id="miniBn"></div>
+      </div>
+    </div>
+  </div>
+  <div class="lecture">
+    <span><span class="lc">B2</span><small>colonne B, ligne 2<br>du mur</small></span>
+    <span class="lsep">·</span>
+    <span><span class="lt">D5</span><small>colonne D, ligne 5<br>dans le carreau</small></span>
+  </div>
+</section>
+
+<!-- ═══════════ ÉCRAN 3 ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">De l'app au dos du visuel</span>
+  <h2>Un seul repère, trois endroits.</h2>
+  <p class="lead">Le repère affiché dans l'app est imprimé au dos de chaque visuel — généré automatiquement avec votre fiche d'impression. Vous n'écrivez jamais rien.</p>
+  <div class="continuite">
+    <div class="chip-app"><span class="pin"></span><span><small>Dans l'app</small>Carreau B2</span></div>
+    <div class="fleche">→</div>
+    <div class="chip-app" style="background:var(--olive);"><span class="pin" style="background:var(--kraft);"></span><span><small>Sur la fiche</small>Volet — codification</span></div>
+    <div class="fleche">→</div>
+    <div class="visuel-mini"><span class="c">B2</span><span class="t">D5</span></div>
+  </div>
+  <p class="continuite-caption">Ce que vous voyez à l'écran, vous le retrouvez sur la fiche imprimée, puis au dos du visuel. Aucune traduction, aucune devinette.</p>
+</section>
+
+<!-- ═══════════ ÉCRAN 3 ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">Monter</span>
+  <h2>Trois gestes, toujours les mêmes.</h2>
+  <div class="gestes">
+    <div class="geste">
+      <span class="num">GESTE 1</span>
+      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#2b353e" stroke-width="1.8"><ellipse cx="12" cy="12" rx="9" ry="5.5"/><circle cx="12" cy="12" r="2.4" fill="#E2725B" stroke="none"/></svg></div>
+      <h3>Repérez</h3>
+      <p>Le code au dos du visuel : B2 · D5.</p>
+    </div>
+    <div class="geste">
+      <span class="num">GESTE 2</span>
+      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#2b353e" stroke-width="1.8"><path d="M4 12a8 8 0 1 1 2.4 5.7"/><path d="M4 21v-5h5" stroke="#E2725B"/></svg></div>
+      <h3>Retournez</h3>
+      <p>Le visuel face à vous, le code disparaît derrière.</p>
+    </div>
+    <div class="geste">
+      <span class="num">GESTE 3</span>
+      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#2b353e" stroke-width="1.8"><rect x="5" y="5" width="14" height="14"/><path d="M12 2v6M9 5.5 12 8.5 15 5.5" stroke="#E2725B"/></svg></div>
+      <h3>Clipsez</h3>
+      <p>Carreau B2, colonne D, ligne 5. Clic.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ÉCRAN 4 — QUIZ ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">À vous de jouer</span>
+  <h2>Vrai ou faux ?</h2>
+  <p class="lead">Trois questions pour vérifier — et vous verrez que c'est déjà acquis.</p>
+  <div class="quiz">
+    <div class="question" data-answer="vrai">
+      <p class="q-txt">Le code <span class="code-c">B2</span> · <span class="code-t">D5</span> signifie : carreau B2, colonne D, ligne 5.</p>
+      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
+      <div class="feedback"></div>
+    </div>
+    <div class="question" data-answer="faux">
+      <p class="q-txt">La partie <span class="code-t">terracotta</span> du code indique le carreau du mur.</p>
+      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
+      <div class="feedback"></div>
+    </div>
+    <div class="question" data-answer="vrai">
+      <p class="q-txt">Sur un mur d'un seul carreau, le code se réduit à la place : <span class="code-t">D5</span>.</p>
+      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
+      <div class="feedback"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ÉCRAN 5 — L'ALBUM ═══════════ -->
+<section class="ecran">
+  <span class="ecran-tag">Ranger, remonter… et y revenir à chaque occasion</span>
+  <h2>Une composition se range dans son album. Et revient.</h2>
+  <p class="lead">Déclipsez, glissez chaque visuel dans sa pochette — la page reprend la grille du carreau, chaque visuel garde sa place. Remonter le mur, c'est lire la page.</p>
+  <div class="album-scene">
+    <div class="album-cover">
+      <div class="titre">Mes compositions<small>Album Quadreti</small></div>
+      <div class="q"></div>
+    </div>
+    <div class="album-page">
+      <div class="page-titre"><span>« Noël » · carreau B2</span><small>7 × 7</small></div>
+      <div class="pochettes" id="pochettes"></div>
+    </div>
+  </div>
+  <div class="onglets">
+    <span class="onglet actif">Noël</span>
+    <span class="onglet">Anniversaire de Léa</span>
+    <span class="onglet">Été 2026</span>
+    <span class="onglet">Printemps</span>
+  </div>
+  <p class="album-caption">Noël se clipse en décembre, le printemps le remplacera en avril. Chaque occasion a sa page — les anniversaires, les saisons, les photos de famille — et retrouve son mur en quelques minutes.</p>
+</section>
+
+<!-- ═══════════ CLÔTURE ═══════════ -->
+<div class="cloture">
+  <p class="phrase">« Chaque visuel trouve sa place — son code au dos vous la montre. »</p>
+  <p class="sub">Ici, l'erreur n'existe pas. Il n'y a que des versions.</p>
+</div>
+
+<script>
+  // Remplissage de la page d'album (pochettes 7×7, quelques visuels rangés)
+  (function(){
+    const p = document.getElementById('pochettes');
+    if(!p) return;
+    const variants = ['','v1','v2','v3','','v1','v2'];
+    for (let i = 0; i < 49; i++){
+      const s = document.createElement('span');
+      if (i > 41) s.className = 'vide'; // dernière rangée en cours de rangement
+      else s.className = variants[(i*3+Math.floor(i/7))%7] || '';
+      p.appendChild(s);
+    }
+  })();
+
+  // Menu burger (mobile)
+  (function(){
+    const b = document.getElementById('burger');
+    const d = document.getElementById('drawer');
+    if(!b || !d) return;
+    b.addEventListener('click', function(){
+      const open = d.classList.toggle('on');
+      b.classList.toggle('on', open);
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    d.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        d.classList.remove('on'); b.classList.remove('on');
+        b.setAttribute('aria-expanded','false');
+      });
+    });
+  })();
+
+  // Mini-grille du carreau B2 (écran 2) — réplique du visuel écran 1
+  (function(){
+    const m = document.getElementById('miniBn');
+    if(!m) return;
+    const cols = ['A','B','C','D','E','F','G'];
+    m.appendChild(document.createElement('div')).className='mlbl';
+    cols.forEach(function(cl){ const d=document.createElement('div'); d.className='mlbl'; d.textContent=cl; m.appendChild(d); });
+    for (let r = 1; r <= 7; r++){
+      const lbl=document.createElement('div'); lbl.className='mlbl'; lbl.textContent=r; m.appendChild(lbl);
+      cols.forEach(function(cl){
+        const c=document.createElement('div');
+        c.className = (cl==='D' && r===5) ? 'mcell mhit' : 'mcell';
+        if (cl==='D' && r===5) c.textContent='D5';
+        m.appendChild(c);
+      });
+    }
+  })();
+
+  // Grille interactive écran 1 — convention unifiée : lettre = colonne, chiffre = ligne
+  (function(){
+    const bn = document.getElementById('bn');
+    const cols = ['A','B','C','D','E','F','G'];
+    for (let r = 1; r <= 7; r++){
+      const lbl = document.createElement('div');
+      lbl.className = 'lbl'; lbl.textContent = r;
+      bn.appendChild(lbl);
+      cols.forEach(function(colLetter){
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        const code = colLetter + r;
+        if (code === 'D5'){ cell.classList.add('hit'); cell.dataset.code = 'D5'; }
+        cell.addEventListener('click', function(){
+          bn.querySelectorAll('.cell.hit').forEach(function(x){ x.classList.remove('hit'); x.removeAttribute('data-code'); });
+          cell.classList.add('hit');
+          cell.dataset.code = code;
+        });
+        bn.appendChild(cell);
+      });
+    }
+  })();
+
+  // Quiz vrai/faux
+  document.querySelectorAll('.quiz .question').forEach(function(q){
+    const answer = q.dataset.answer;
+    const fb = q.querySelector('.feedback');
+    q.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.classList.remove('ok','ko');
+        void q.offsetWidth; // relance l'animation
+        if (btn.dataset.v === answer){
+          q.classList.add('ok');
+          fb.textContent = 'Exact ! Vous avez tout compris.';
+        } else {
+          q.classList.add('ko');
+          fb.textContent = 'Presque ! Le foncé indique le carreau, le terracotta indique la place dans le carreau.';
+        }
+      });
+    });
+  });
+</script>
+
+
+<!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<footer>
+  <div class="qz-basdepage">
+    <div class="qz-logorow">
+      <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
+      <span class="qz-wordmark"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
+    </div>
+    <div class="qz-baseline">Composez, imprimez, clipsez, changez à volonté.</div>
+  </div>
+
+  <div class="qz-reseaux">
+    <p class="qz-accroche">Nos réseaux, à leur tour clipsés</p>
+    <p class="qz-sub">Facebook · Snapchat · TikTok · YouTube · WhatsApp</p>
+    <div class="qz-grid">
+      <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9H16l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z"/></svg></a>
+      <a href="#" aria-label="Snapchat" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M12.031.002c-.947 0-4.298.259-5.977 3.583-.783 1.55-.632 4.315-.51 6.532.006.104.011.204.011.3-.114.058-.319.129-.665.129-.386-.007-.848-.096-1.361-.267a1.06 1.06 0 0 0-.336-.058c-.361 0-.653.214-.756.535-.09.286-.048.828.652 1.28.13.083.32.184.55.293.6.283 1.397.652 1.397 1.3 0 .12-.024.31-.146.61-.02.05-.048.11-.08.174-.08.166-.17.35-.24.548-.16.44-.164.87.106 1.24.35.483 1.06.727 2.11.727.176 0 .366-.011.567-.031.036.316.12.665.31.976.393.638 1.14.958 2.216.958.176 0 .35-.008.51-.024.056.106.116.212.18.316.554.9 1.507 1.393 2.68 1.393h.007c1.173 0 2.126-.493 2.68-1.393.064-.104.124-.21.18-.316.16.016.334.024.51.024 1.077 0 1.823-.244 2.216-.958.19-.311.274-.66.31-.976.201.02.391.031.567.031 1.05 0 1.76-.244 2.11-.727.27-.37.266-.8.106-1.24-.07-.198-.16-.382-.24-.548-.032-.064-.06-.124-.08-.174-.122-.3-.146-.49-.146-.61 0-.648.797-1.017 1.397-1.3.23-.109.42-.21.55-.293.7-.452.742-.994.652-1.28-.103-.321-.395-.535-.756-.535a1.06 1.06 0 0 0-.336.058c-.513.171-.975.26-1.361.267-.346 0-.551-.071-.665-.129 0-.096.005-.196.011-.3.122-2.217.273-4.982-.51-6.532C16.298.261 12.978.002 12.031.002z"/></svg></a>
+      <a href="#" aria-label="TikTok" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M16.6 5.82c-.9-.98-1.45-2.24-1.5-3.62h-3.2v13.63c0 1.7-1.38 3.08-3.08 3.08a3.08 3.08 0 0 1-1.15-5.94A3.08 3.08 0 0 1 9 12.7V9.44c-.3-.04-.6-.06-.9-.06-3.5 0-6.34 2.84-6.34 6.34S4.6 22.06 8.1 22.06s6.34-2.84 6.34-6.34V8.85a8.3 8.3 0 0 0 4.85 1.55V7.2a5.28 5.28 0 0 1-2.69-1.38z"/></svg></a>
+      <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M23.5 6.19a2.97 2.97 0 0 0-2.09-2.09C19.65 3.5 12 3.5 12 3.5s-7.65 0-9.41.6A2.97 2.97 0 0 0 .5 6.19 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.81 2.97 2.97 0 0 0 2.09 2.09c1.76.6 9.41.6 9.41.6s7.65 0 9.41-.6a2.97 2.97 0 0 0 2.09-2.09A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+      <a href="https://wa.me/" aria-label="WhatsApp" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="qz-legal">
+    <div class="qz-row">
+      <a class="qz-leg" href="mentions-legales.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
+        <span>Mentions<br>légales</span>
+      </a>
+      <a class="qz-leg" href="cgv.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
+        <span>CGV</span>
+      </a>
+      <a class="qz-leg" href="cgu.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r=".6" fill="currentColor" stroke="none"/></svg>
+        <span>CGU &amp;<br>RGPD</span>
+      </a>
+      <a class="qz-leg" href="index.html#livraison">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8h11v9H2z"/><path d="M13 11h4l4 3v3h-8z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+        <span>Livraison &amp;<br>paiement</span>
+      </a>
+      <a class="qz-leg" href="mailto:contact@quadreti.fr">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+        <span>Contact</span>
+      </a>
+    </div>
+    <div class="qz-copy">© 2026 Quadreti — Tous droits réservés · Brevet déposé · Conçu et fabriqué en France</div>
+  </div>
+</footer>
+
+<a class="qz-fab" href="#qz-top" aria-label="Retour en haut de page" title="Retour en haut de page">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</a>
+
+<script>
+/* Bloc commun — seul JS embarqué : ouverture/fermeture du volet menu
+   (aucune animation en JS, conformément à la consigne CSS pur). */
+(function(){
+  var btn = document.getElementById('qzMenuBtn');
+  var panel = document.getElementById('qzNavPanel');
+  if(btn && panel){
+    btn.addEventListener('click', function(){
+      var willOpen = !panel.classList.contains('open');
+      panel.classList.toggle('open', willOpen);
+      btn.classList.toggle('active', willOpen);
+      btn.setAttribute('aria-expanded', String(willOpen));
+      btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+      var item = document.getElementById('qzCcmItem');
+      var tog = document.getElementById('qzCcmToggle');
+      if(!willOpen && item && tog){ item.classList.remove('open'); tog.setAttribute('aria-expanded','false'); }
+    });
+  }
+  var ccmToggle = document.getElementById('qzCcmToggle');
+  var ccmItem = document.getElementById('qzCcmItem');
+  if(ccmToggle && ccmItem){
+    ccmToggle.addEventListener('click', function(){
+      var open = !ccmItem.classList.contains('open');
+      ccmItem.classList.toggle('open', open);
+      ccmToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+})();
+</script>
+<!-- ===== FOOTER COMMUN — FIN ===== -->
+</body>
+</html>
