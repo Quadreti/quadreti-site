@@ -280,7 +280,7 @@
     padding:8px 12px;
   }
   .quiz .question.ok .feedback{display:block;background:#eef2e4;color:var(--olive);animation:pop .3s ease;}
-  .quiz .question.ko .feedback{display:block;background:#faeae6;color:#c85a44;animation:shake .35s ease;}
+  .quiz .question.ko .feedback{display:block;background:#faeae6;color:#cf6450;animation:shake .35s ease;}
   @keyframes pop{0%{transform:scale(.92);opacity:0;}100%{transform:scale(1);opacity:1;}}
   @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
   @media(prefers-reduced-motion:reduce){.quiz .question.ok .feedback,.quiz .question.ko .feedback{animation:none;}}
@@ -383,7 +383,7 @@
   .site-nav{
     position:sticky;top:0;z-index:50;
     background:var(--blanc);
-    border-bottom:1px solid #e5e1d6;
+    border-bottom:1px solid #e5e1e1;
     display:flex;align-items:center;justify-content:space-between;gap:16px;
     padding:11px 24px;
   }
@@ -391,7 +391,7 @@
   .site-nav .brand .bl{
     font-family:'Quicksand',sans-serif;font-weight:600;font-size:11px;
     color:var(--gris-texte);letter-spacing:.08em;text-transform:uppercase;
-    border-left:1px solid #e5e1d6;padding-left:11px;
+    border-left:1px solid #e5e1e1;padding-left:11px;
   }
   .site-nav .links{display:flex;gap:19px;align-items:center;}
   .site-nav .links a{
@@ -400,7 +400,7 @@
   }
   .site-nav .links a:hover{color:var(--terracotta);}
   .site-nav .links a.cta{background:var(--terracotta);color:var(--blanc);padding:9px 20px;border-radius:99px;}
-  .site-nav .links a.cta:hover{background:#c85a44;color:var(--blanc);}
+  .site-nav .links a.cta:hover{background:#cf6450;color:var(--blanc);}
   /* Burger */
   .burger{
     display:none;background:none;border:none;cursor:pointer;
@@ -416,7 +416,7 @@
   .drawer{
     display:none;
     position:sticky;top:56px;z-index:49;
-    background:var(--blanc);border-bottom:1px solid #e5e1d6;
+    background:var(--blanc);border-bottom:1px solid #e5e1e1;
     padding:6px 16px 14px;
   }
   .drawer.on{display:block;}
