@@ -149,6 +149,33 @@
     </div>
 
     <div class="carte">
+      <h2>Bulle WhatsApp flottante</h2>
+      <p class="aide">Utilise le numéro renseigné dans « Réseaux sociaux » ci-dessous — renseignez-le d'abord si ce n'est pas fait.</p>
+      <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="waActif"> Diffusion active</label>
+      <label>Couleur</label>
+      <div class="couleur"><input type="color" id="waCouleur"><code id="waCouleurHex"></code></div>
+      <div class="actions"><button class="principal" data-enregistre="whatsapp_bulle">Enregistrer la bulle WhatsApp</button></div>
+    </div>
+
+    <div class="carte">
+      <h2>Bandeau de réassurance</h2>
+      <p class="aide">Affiché juste sous le bandeau défilant, sur toutes les pages. 3 messages courts, uniquement des faits vrais.</p>
+      <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="reasActif"> Diffusion active</label>
+      <label>Message 1</label>
+      <input type="text" id="reasItem1" placeholder="Conception et fabrication françaises">
+      <label>Message 2</label>
+      <input type="text" id="reasItem2" placeholder="Sans colle, sans détérioration">
+      <label>Message 3</label>
+      <input type="text" id="reasItem3" placeholder="Une imprimante de salon suffit">
+      <label style="margin-top:12px">Couleurs</label>
+      <div class="rang">
+        <div><label>Fond</label><div class="couleur"><input type="color" id="reasCouleur"><code id="reasCouleurHex"></code></div></div>
+        <div><label>Texte</label><div class="couleur"><input type="color" id="reasTexteCouleur"><code id="reasTexteCouleurHex"></code></div></div>
+      </div>
+      <div class="actions"><button class="principal" data-enregistre="reassurance">Enregistrer la réassurance</button></div>
+    </div>
+
+    <div class="carte">
       <h2>Popup de remise</h2>
       <p class="aide">Apparaît une seule fois par visiteur (4-5 secondes après l'arrivée), avec un champ email pour s'inscrire.</p>
       <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="popActif"> Diffusion active</label>
@@ -451,6 +478,18 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
+  var wa = reglages.whatsapp_bulle || {};
+  $('waActif').checked = !!wa.actif;
+  $('waCouleur').value = wa.couleur || '#25D366'; majHex('waCouleur','waCouleurHex');
+
+  var reas = reglages.reassurance || {};
+  $('reasActif').checked = !!reas.actif;
+  $('reasItem1').value = reas.item1 || '';
+  $('reasItem2').value = reas.item2 || '';
+  $('reasItem3').value = reas.item3 || '';
+  $('reasCouleur').value = reas.couleur || '#F2EEDF'; majHex('reasCouleur','reasCouleurHex');
+  $('reasTexteCouleur').value = reas.texte_couleur || '#2b353e'; majHex('reasTexteCouleur','reasTexteCouleurHex');
+
   var pop = reglages.popup || {};
   $('popActif').checked = !!pop.actif;
   $('popTitre').value = pop.titre || '';
@@ -543,6 +582,8 @@ function construireFormulaires(){
   lierCouleur('cFond','cFondHex'); lierCouleur('cTexte','cTexteHex');
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   lierCouleur('popFond','popFondHex'); lierCouleur('popTexteCouleur','popTexteCouleurHex'); lierCouleur('popBouton','popBoutonHex');
+  lierCouleur('waCouleur','waCouleurHex');
+  lierCouleur('reasCouleur','reasCouleurHex'); lierCouleur('reasTexteCouleur','reasTexteCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
     var slot = $('memSlot').value;
@@ -607,6 +648,12 @@ function valeursDepuisFormulaire(cle){
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
+  if (cle === 'whatsapp_bulle') return { actif: $('waActif').checked, couleur: $('waCouleur').value };
+  if (cle === 'reassurance') return {
+    actif: $('reasActif').checked,
+    item1: $('reasItem1').value.trim(), item2: $('reasItem2').value.trim(), item3: $('reasItem3').value.trim(),
+    couleur: $('reasCouleur').value, texte_couleur: $('reasTexteCouleur').value
+  };
   if (cle === 'popup') {
     var p = {
       actif: $('popActif').checked,
@@ -655,6 +702,14 @@ document.addEventListener('click', function(e){
   var valeurs = valeursDepuisFormulaire(cle);
   if (cle === 'popup' && valeurs.actif && !valeurs.titre && !valeurs.texte) {
     toast('Diffusion active mais titre et texte vides : la popup ne s\'affichera pas. Ajoutez au moins l\'un des deux.', true);
+    return;
+  }
+  if (cle === 'whatsapp_bulle' && valeurs.actif && !(reglages.reseaux || {}).whatsapp) {
+    toast('Diffusion active mais aucun numéro WhatsApp renseigné dans « Réseaux sociaux » : la bulle ne s\'affichera pas.', true);
+    return;
+  }
+  if (cle === 'reassurance' && valeurs.actif && !valeurs.item1 && !valeurs.item2 && !valeurs.item3) {
+    toast('Diffusion active mais aucun message rempli : le bandeau ne s\'affichera pas.', true);
     return;
   }
   enregistrer(cle, valeurs);

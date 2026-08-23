@@ -201,6 +201,51 @@
     });
   }
 
+  function appliquerWhatsappBulle(w, reseaux) {
+    if (!w || !w.actif) return;
+    var url = (reseaux || {}).whatsapp;
+    if (!url) return; /* pas de numéro renseigné dans « Réseaux sociaux » : rien à afficher */
+    var couleur = w.couleur || '#25D366';
+    injecterStyle('qz-whatsapp-bulle-style', [
+      '.qz-whatsapp-bulle{position:fixed;left:18px;bottom:18px;z-index:60;width:52px;height:52px;border-radius:50%;',
+      'background:' + couleur + ';display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px #00000040;',
+      'text-decoration:none;transition:transform .15s ease}',
+      '.qz-whatsapp-bulle:hover{transform:scale(1.06)}',
+      '.qz-whatsapp-bulle svg{width:28px;height:28px;fill:#fff}'
+    ].join('\n'));
+    var a = document.createElement('a');
+    a.className = 'qz-whatsapp-bulle';
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.setAttribute('aria-label', 'Discuter sur WhatsApp');
+    a.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg>';
+    document.body.appendChild(a);
+  }
+
+  function appliquerReassurance(r) {
+    if (!r || !r.actif) return;
+    var items = [r.item1, r.item2, r.item3].filter(Boolean);
+    if (!items.length) return;
+    var ancre = document.querySelector('.ticker') || document.querySelector('.qz-header');
+    if (!ancre) return;
+    var fond = r.couleur || '#F2EEDF';
+    var texte = r.texte_couleur || '#2b353e';
+    injecterStyle('qz-reassurance-style', [
+      '.qz-reassurance{width:100%;background:' + fond + ';color:' + texte + ';padding:10px 16px;',
+      'display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;font-size:12px;font-weight:700;',
+      'letter-spacing:.04em;text-align:center;box-sizing:border-box}',
+      '.qz-reassurance span{white-space:nowrap}',
+      '@media (max-width:640px){.qz-reassurance{gap:6px 16px;font-size:11px}}'
+    ].join('\n'));
+    var bar = document.createElement('div');
+    bar.className = 'qz-reassurance';
+    items.forEach(function (t) {
+      var s = document.createElement('span');
+      s.textContent = t;
+      bar.appendChild(s);
+    });
+    ancre.insertAdjacentElement('afterend', bar);
+  }
+
   var CLE_POPUP_VUE = 'quadretiPopupVue';
 
   function appliquerPopup(p) {
@@ -295,6 +340,8 @@
       appliquerDisposition(g.disposition);
       appliquerSeo(g.seo);
       appliquerPopup(g.popup);
+      appliquerWhatsappBulle(g.whatsapp_bulle, g.reseaux);
+      appliquerReassurance(g.reassurance);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
     .then(function () { clearTimeout(minuteur); });
