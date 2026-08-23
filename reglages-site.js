@@ -189,15 +189,31 @@
   }
 
   function appliquerBandeauVideo(cfg) {
-    var hero = document.getElementById('hero');
-    if (!hero) return; /* page d'accueil uniquement */
     cfg = cfg || {};
-    hero.classList.toggle('voile-actif', !!cfg.voile);
-    if (window.__reglerBandeauVideo) {
-      window.__reglerBandeauVideo(
-        typeof cfg.vitesse === 'number' ? cfg.vitesse : undefined,
-        typeof cfg.pause_ms === 'number' ? cfg.pause_ms : undefined
-      );
+    var hero = document.getElementById('hero');
+    if (hero) {
+      hero.classList.toggle('voile-actif', !!cfg.voile);
+      if (window.__reglerBandeauVideo) {
+        window.__reglerBandeauVideo(
+          typeof cfg.vitesse === 'number' ? cfg.vitesse : undefined,
+          typeof cfg.pause_ms === 'number' ? cfg.pause_ms : undefined
+        );
+      }
+    }
+    appliquerPositionTicker(cfg.position_ticker);
+  }
+
+  function appliquerPositionTicker(position) {
+    var ticker = document.querySelector('.ticker');
+    if (!ticker || !position) return; /* pages sans bandeau defilant, ou reglage absent = position deja correcte dans le HTML */
+    if (position === 'aucun') { ticker.style.display = 'none'; return; }
+    ticker.style.display = '';
+    if (position === 'haut') {
+      document.body.insertBefore(ticker, document.body.firstChild);
+    } else { /* sous_bandeau : sous le bandeau anime (#hero / .hero) si la page en a un,
+                sinon juste sous le menu (position deja bonne, on ne bouge rien) */
+      var banniere = document.querySelector('#hero, .hero');
+      if (banniere) banniere.insertAdjacentElement('afterend', ticker);
     }
   }
 
