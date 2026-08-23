@@ -162,7 +162,7 @@
       var sec = document.getElementById(id);
       if (!sec) return; /* les autres pages ignorent les sections de l'accueil */
       var d = s[id] || {};
-      if (d.titre) { var h = sec.querySelector('h2'); if (h) h.textContent = d.titre; }
+      if (d.titre) { var h = sec.querySelector('h2') || sec.querySelector('h1'); if (h) h.textContent = d.titre; }
       if (d.texte) { var p = sec.querySelector('p'); if (p) p.textContent = d.texte; }
     });
   }
@@ -358,6 +358,7 @@
       appliquerReseaux(g.reseaux);
       appliquerCopyright(g.copyright);
       appliquerSections(g.sections_accueil);
+      appliquerSections(g.sections_guides);
       appliquerPageContact(g.page_contact);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);

@@ -404,6 +404,13 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Textes des guides (app &amp; montage)</h2></summary>
+      <p class="aide">Titre principal de chaque guide, et titre + premier paragraphe de chaque étape du guide de montage. Laissez vide pour garder le texte actuel. Les couleurs suivent le thème global du site.</p>
+      <div id="listeSectionsGuides"></div>
+      <div class="actions"><button class="principal" data-enregistre="sections_guides">Enregistrer les textes des guides</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Photos du diaporama d'accueil</h2></summary>
       <p class="aide">Cliquez sur « Remplacer » sous une photo. La nouvelle photo est en ligne immédiatement.</p>
       <div class="photos" id="grillePhotos"></div>
@@ -456,6 +463,16 @@ var SECTIONS = [
   ['cadeau','Un cadeau qui continue.'],
   ['faq','Tout ce que vous vous demandez.'],
   ['livraison','Commandez en confiance.']
+];
+var SECTIONS_GUIDES = [
+  ['guideInteractifHero', 'Guide de l\'app — titre d\'accueil'],
+  ['guideCodifHero', 'Guide de montage — titre d\'accueil'],
+  ['guideCodifGlossaire', 'Guide de montage — Les quatre mots du mur'],
+  ['guideCodifPrincipe', 'Guide de montage — Le principe (lettre + chiffre)'],
+  ['guideCodifMur', 'Guide de montage — Du carreau au mur'],
+  ['guideCodifRepere', 'Guide de montage — De l\'app au dos du visuel'],
+  ['guideCodifQuiz', 'Guide de montage — Vrai ou faux ?'],
+  ['guideCodifAlbum', 'Guide de montage — L\'album']
 ];
 var RAISONS_CONTACT = [
   ['raison1', 'Une commande en cours', 'Suivi, délai, modification, annulation.'],
@@ -657,6 +674,13 @@ function remplirFormulaires(){
     $('pc_texte_' + def[0]).value = d.texte || '';
   });
 
+  var sg = reglages.sections_guides || {};
+  SECTIONS_GUIDES.forEach(function(def){
+    var d = sg[def[0]] || {};
+    $('secg_titre_' + def[0]).value = d.titre || '';
+    $('secg_texte_' + def[0]).value = d.texte || '';
+  });
+
   dessinerPhotos();
 }
 function construireFormulaires(){
@@ -690,6 +714,16 @@ function construireFormulaires(){
     var i2 = document.createElement('textarea'); i2.id = 'pc_texte_' + def[0]; i2.placeholder = def[2];
     det.appendChild(l1); det.appendChild(i1); det.appendChild(l2); det.appendChild(i2);
     $('listeRaisonsContact').appendChild(det);
+  });
+  SECTIONS_GUIDES.forEach(function(def){
+    var det = document.createElement('details'); det.className = 'section-item';
+    var sum = document.createElement('summary'); sum.textContent = def[1]; det.appendChild(sum);
+    var l1 = document.createElement('label'); l1.textContent = 'Titre (vide = titre actuel)';
+    var i1 = document.createElement('input'); i1.type = 'text'; i1.id = 'secg_titre_' + def[0]; i1.placeholder = def[1];
+    var l2 = document.createElement('label'); l2.textContent = 'Premier paragraphe (vide = texte actuel)';
+    var i2 = document.createElement('textarea'); i2.id = 'secg_texte_' + def[0];
+    det.appendChild(l1); det.appendChild(i1); det.appendChild(l2); det.appendChild(i2);
+    $('listeSectionsGuides').appendChild(det);
   });
   ZONES_FINES.forEach(function(z){
     var ligne = document.createElement('div'); ligne.className = 'zone-fine';
@@ -838,6 +872,14 @@ function valeursDepuisFormulaire(cle){
       if (t || x) { pc[def[0]] = {}; if (t) pc[def[0]].titre = t; if (x) pc[def[0]].texte = x; }
     });
     return pc;
+  }
+  if (cle === 'sections_guides') {
+    var sg = {};
+    SECTIONS_GUIDES.forEach(function(def){
+      var t = $('secg_titre_' + def[0]).value.trim(), x = $('secg_texte_' + def[0]).value.trim();
+      if (t || x) { sg[def[0]] = {}; if (t) sg[def[0]].titre = t; if (x) sg[def[0]].texte = x; }
+    });
+    return sg;
   }
 }
 document.addEventListener('click', function(e){
