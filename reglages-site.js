@@ -188,6 +188,12 @@
     texte('#coloriagesLead', pc.accroche);
   }
 
+  function appliquerVoileBandeau(v) {
+    var hero = document.getElementById('hero');
+    if (!hero) return; /* page d'accueil uniquement */
+    hero.classList.toggle('voile-actif', !!(v && v.actif));
+  }
+
   function appliquerBandeau(b) {
     if (!b) return;
     var track = document.querySelector('.ticker-track');
@@ -368,6 +374,7 @@
       appliquerSections(g.sections_guides);
       appliquerPageContact(g.page_contact);
       appliquerPageColoriages(g.page_coloriages);
+      appliquerVoileBandeau(g.voile_bandeau);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
       appliquerDisposition(g.disposition);

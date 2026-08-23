@@ -226,6 +226,13 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Intégration animation</h2></summary>
+      <p class="aide">Réglages du bandeau vidéo/photo de l'accueil.</p>
+      <label class="suivre" style="font-size:13px;"><input type="checkbox" id="voileActif"> Voile actif (assombrit le bandeau en dégradé pour la lisibilité du texte ; sans voile, le texte passe automatiquement en blanc)</label>
+      <div class="actions"><button class="principal" data-enregistre="voile_bandeau">Enregistrer</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Bulle de contact flottante</h2></summary>
       <p class="aide">Une seule à la fois — WhatsApp ou Facebook, pas les deux. Utilise le lien déjà renseigné dans « Réseaux sociaux » ci-dessous.</p>
       <div class="theme-choix" id="choixBulleContact">
@@ -617,6 +624,8 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
+  $('voileActif').checked = !!(reglages.voile_bandeau || {}).actif;
+
   var bc = reglages.bulle_contact || {};
   document.querySelector('input[name=bulleContact][value="' + (bc.choix || 'aucun') + '"]').checked = true;
   majChoixBulleContact();
@@ -896,6 +905,7 @@ function valeursDepuisFormulaire(cle){
     return sg;
   }
   if (cle === 'page_coloriages') return { titre: $('colTitre').value.trim(), accroche: $('colAccroche').value.trim() };
+  if (cle === 'voile_bandeau') return { actif: $('voileActif').checked };
 }
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');
