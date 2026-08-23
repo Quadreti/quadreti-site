@@ -72,6 +72,9 @@
   .zone-fine label.suivre{ display:flex; align-items:center; gap:6px; margin:0; font-size:12px; color:var(--adouci); cursor:pointer; white-space:nowrap; }
   .zone-fine input[type=color]{ width:38px; height:30px; border:1px solid var(--bord); border-radius:7px; padding:2px; background:var(--carte); cursor:pointer; }
   .zone-fine .cache-couleur{ visibility:hidden; }
+  .favicon-apercu{ display:flex; align-items:center; gap:10px; }
+  .favicon-apercu img{ width:32px; height:32px; border:1px solid var(--bord); border-radius:6px; background:var(--fond); object-fit:contain; }
+  .favicon-apercu input[type=file]{ display:none; }
   .memoriser{ margin-top:18px; padding-top:14px; border-top:1px solid var(--bord); }
   .memoriser-rang{ display:flex; gap:8px; flex-wrap:wrap; }
   .memoriser-rang select{ flex:0 0 150px; width:auto; }
@@ -143,6 +146,22 @@
           <button class="discret" id="btnMemoriser">Mémoriser</button>
         </div>
       </div>
+    </div>
+
+    <div class="carte">
+      <h2>Favicon &amp; SEO</h2>
+      <p class="aide">Le favicon change dans l'onglet du navigateur (peut demander un rechargement complet pour apparaître). Le titre/description : visibles dans l'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement, avant toute modification du panneau.</p>
+      <label>Favicon actuel</label>
+      <div class="favicon-apercu">
+        <img id="favAperçu" src="/favicon.ico" alt="" onerror="this.style.visibility='hidden'">
+        <input type="file" id="favFichier" accept="image/png,image/x-icon,image/svg+xml">
+        <button class="discret" type="button" id="btnFavicon">Remplacer</button>
+      </div>
+      <label style="margin-top:14px">Titre de la page (onglet + Google)</label>
+      <input type="text" id="seoTitre" placeholder="Quadreti — Composez, imprimez, clipsez, changez à volonté.">
+      <label>Description (Google)</label>
+      <textarea id="seoDescription" placeholder="Composez votre mur photo, imprimez chez vous, clipsez sans colle."></textarea>
+      <div class="actions"><button class="principal" data-enregistre="seo">Enregistrer titre &amp; description</button></div>
     </div>
 
     <div class="carte">
@@ -235,6 +254,7 @@
 'use strict';
 var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
 var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
+var FN_UPLOAD = SB_URL + '/functions/v1/televerser-fichier';
 var CLE_SESSION = 'quadretiPanneauSiteSession';
 
 var DEFAUTS = {
@@ -393,6 +413,11 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
+  var seo = reglages.seo || {};
+  $('seoTitre').value = seo.titre || '';
+  $('seoDescription').value = seo.description || '';
+  if (seo.favicon) $('favAperçu').src = seo.favicon;
+
   var bd = reglages.bandeau || {};
   $('bd_suivre_fond').checked = !bd.fond;
   $('bd_fond').value = bd.fond || '#2b353e';
@@ -496,11 +521,26 @@ function dessinerPhotos(){
     g.appendChild(slot);
   })(n);
 }
+function televerserFichier(fichier, chemin){
+  var fd = new FormData();
+  fd.append('phrase', phrase);
+  fd.append('chemin', chemin);
+  fd.append('fichier', fichier);
+  return fetch(FN_UPLOAD, { method:'POST', body: fd })
+    .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); });
+}
 function televerserPhoto(n, fichier, btn){
-  /* Upload photo : temporairement indisponible — nécessite une pièce serveur
-     supplémentaire depuis le passage à la connexion par phrase secrète.
-     Le reste du panneau (couleurs, textes, etc.) fonctionne normalement. */
-  toast('Upload photo bientôt de retour — pas encore branché sur la nouvelle connexion.', true);
+  if (fichier.size > 4 * 1024 * 1024) { toast('Photo trop lourde (4 Mo max).', true); return; }
+  btn.disabled = true; btn.textContent = 'Envoi...';
+  var ext = (fichier.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+  var chemin = 'diapo-' + n + '-' + Date.now() + '.' + ext;
+  televerserFichier(fichier, chemin).then(function(res){
+    if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+    var ph = Object.assign({}, reglages.photos_diaporama || {});
+    ph[n] = res.d.url;
+    return enregistrer('photos_diaporama', ph).then(function(){ dessinerPhotos(); });
+  }).catch(function(){ toast('Envoi de la photo impossible (réseau).', true); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Remplacer'; });
 }
 
 /* ---------- Boutons Enregistrer ---------- */
@@ -516,6 +556,12 @@ function valeursDepuisFormulaire(cle){
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
+  if (cle === 'seo') {
+    var s = Object.assign({}, reglages.seo || {});
+    s.titre = $('seoTitre').value.trim();
+    s.description = $('seoDescription').value.trim();
+    return s;
+  }
   if (cle === 'bandeau') {
     var bd = {};
     if (!$('bd_suivre_fond').checked) bd.fond = $('bd_fond').value;
@@ -541,6 +587,23 @@ function valeursDepuisFormulaire(cle){
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');
   if (cle) enregistrer(cle, valeursDepuisFormulaire(cle));
+});
+
+/* ---------- Favicon ---------- */
+$('btnFavicon').addEventListener('click', function(){ $('favFichier').click(); });
+$('favFichier').addEventListener('change', function(){
+  var f = $('favFichier').files[0];
+  if (!f) return;
+  if (f.size > 512 * 1024) { toast('Favicon trop lourd (512 Ko max).', true); return; }
+  var btn = $('btnFavicon'); btn.disabled = true; btn.textContent = 'Envoi...';
+  var ext = (f.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g,'') || 'png';
+  televerserFichier(f, 'favicon-site.' + ext).then(function(res){
+    if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+    var s = Object.assign({}, reglages.seo || {});
+    s.favicon = res.d.url;
+    return enregistrer('seo', s).then(function(){ $('favAperçu').src = s.favicon; $('favAperçu').style.visibility = 'visible'; });
+  }).catch(function(){ toast('Envoi du favicon impossible (réseau).', true); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Remplacer'; });
 });
 
 /* ---------- Démarrage ---------- */

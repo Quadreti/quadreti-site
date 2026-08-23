@@ -83,6 +83,23 @@
     injecterStyle('qz-reglages-couleurs', css);
   }
 
+  function appliquerSeo(s) {
+    if (!s) return;
+    if (s.titre) document.title = s.titre;
+    if (s.description) {
+      var m = document.querySelector('meta[name="description"]');
+      if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
+      m.content = s.description;
+    }
+    if (s.favicon) {
+      var liens = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+      if (!liens.length) {
+        var l = document.createElement('link'); l.rel = 'icon'; document.head.appendChild(l); liens = [l];
+      }
+      liens.forEach(function (l) { l.href = s.favicon; });
+    }
+  }
+
   function appliquerDisposition(d) {
     if (!d || !d.heroCta || d.heroCta === 'centre') return;
     var css = d.heroCta === 'gauche'
@@ -202,6 +219,7 @@
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
       appliquerDisposition(g.disposition);
+      appliquerSeo(g.seo);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
     .then(function () { clearTimeout(minuteur); });
