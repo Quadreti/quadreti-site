@@ -73,10 +73,10 @@
     if (c.menu) css += '\n.qz-header{background:' + c.menu + '}';
     if (c.logo) css += '\n.qz-header .qz-qlogo i.t{background:' + c.logo + '}\n.qz-header .qz-wordmark{color:' + c.logo + '}';
     if (c.boutiqueFond && /\/boutique\//.test(location.pathname)) css += '\nbody{background:' + c.boutiqueFond + '}';
-    if (c.carte) css += '\n.step{background:' + c.carte + '!important}';
+    if (c.carte) css += '\n.step,.reason,.c-form-compact{background:' + c.carte + '!important}';
     if (c.encartFond) css += '\n:root{--olive-soft:' + c.encartFond + '}';
     if (c.encartTexte) css += '\n:root{--olive:' + c.encartTexte + '}';
-    if (c.enumeration) css += '\n.step .num{background:' + c.enumeration + '}';
+    if (c.enumeration) css += '\n.step .num,.reason .ic{background:' + c.enumeration + '}';
     if (c.titres) css += '\nh2,h3{color:' + c.titres + '}';
     if (c.texteDoux) css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
       '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + c.texteDoux + '}';
@@ -164,6 +164,20 @@
       var d = s[id] || {};
       if (d.titre) { var h = sec.querySelector('h2'); if (h) h.textContent = d.titre; }
       if (d.texte) { var p = sec.querySelector('p'); if (p) p.textContent = d.texte; }
+    });
+  }
+
+  function appliquerPageContact(pc) {
+    if (!pc) return;
+    if (!/(^|\/)contact\.html$/.test(location.pathname)) return; /* les autres pages ignorent ces textes */
+    texte('#contactHeroTitre', pc.titre);
+    texte('#contactHeroLead', pc.accroche);
+    ['raison1', 'raison2', 'raison3', 'raison4'].forEach(function (cle, i) {
+      var d = pc[cle];
+      if (!d) return;
+      var n = i + 1;
+      texte('#reason' + n + ' h3', d.titre);
+      texte('#reason' + n + ' p', d.texte);
     });
   }
 
@@ -344,6 +358,7 @@
       appliquerReseaux(g.reseaux);
       appliquerCopyright(g.copyright);
       appliquerSections(g.sections_accueil);
+      appliquerPageContact(g.page_contact);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
       appliquerDisposition(g.disposition);
