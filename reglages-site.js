@@ -201,23 +201,29 @@
     });
   }
 
-  function appliquerWhatsappBulle(w, reseaux) {
-    if (!w || !w.actif) return;
-    var url = (reseaux || {}).whatsapp;
-    if (!url) return; /* pas de numéro renseigné dans « Réseaux sociaux » : rien à afficher */
-    var couleur = w.couleur || '#25D366';
-    injecterStyle('qz-whatsapp-bulle-style', [
-      '.qz-whatsapp-bulle{position:fixed;left:18px;bottom:18px;z-index:60;width:52px;height:52px;border-radius:50%;',
+  var ICONES_BULLE = {
+    whatsapp: '<svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg>',
+    facebook: '<svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9H16l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z"/></svg>'
+  };
+  var LIBELLES_BULLE = { whatsapp: 'Discuter sur WhatsApp', facebook: 'Nous contacter sur Facebook' };
+
+  function appliquerBulleContact(b, reseaux) {
+    if (!b || !b.choix || b.choix === 'aucun') return;
+    var url = (reseaux || {})[b.choix];
+    if (!url) return; /* pas de lien renseigné dans « Réseaux sociaux » : rien à afficher */
+    var couleur = b.couleur || (b.choix === 'whatsapp' ? '#25D366' : '#1877F2');
+    injecterStyle('qz-bulle-contact-style', [
+      '.qz-bulle-contact{position:fixed;left:18px;bottom:18px;z-index:60;width:52px;height:52px;border-radius:50%;',
       'background:' + couleur + ';display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px #00000040;',
       'text-decoration:none;transition:transform .15s ease}',
-      '.qz-whatsapp-bulle:hover{transform:scale(1.06)}',
-      '.qz-whatsapp-bulle svg{width:28px;height:28px;fill:#fff}'
+      '.qz-bulle-contact:hover{transform:scale(1.06)}',
+      '.qz-bulle-contact svg{width:28px;height:28px;fill:#fff}'
     ].join('\n'));
     var a = document.createElement('a');
-    a.className = 'qz-whatsapp-bulle';
+    a.className = 'qz-bulle-contact';
     a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.setAttribute('aria-label', 'Discuter sur WhatsApp');
-    a.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg>';
+    a.setAttribute('aria-label', LIBELLES_BULLE[b.choix]);
+    a.innerHTML = ICONES_BULLE[b.choix];
     document.body.appendChild(a);
   }
 
@@ -340,7 +346,7 @@
       appliquerDisposition(g.disposition);
       appliquerSeo(g.seo);
       appliquerPopup(g.popup);
-      appliquerWhatsappBulle(g.whatsapp_bulle, g.reseaux);
+      appliquerBulleContact(g.bulle_contact, g.reseaux);
       appliquerReassurance(g.reassurance);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })

@@ -149,12 +149,16 @@
     </div>
 
     <div class="carte">
-      <h2>Bulle WhatsApp flottante</h2>
-      <p class="aide">Utilise le numéro renseigné dans « Réseaux sociaux » ci-dessous — renseignez-le d'abord si ce n'est pas fait.</p>
-      <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="waActif"> Diffusion active</label>
-      <label>Couleur</label>
-      <div class="couleur"><input type="color" id="waCouleur"><code id="waCouleurHex"></code></div>
-      <div class="actions"><button class="principal" data-enregistre="whatsapp_bulle">Enregistrer la bulle WhatsApp</button></div>
+      <h2>Bulle de contact flottante</h2>
+      <p class="aide">Une seule à la fois — WhatsApp ou Facebook, pas les deux. Utilise le lien déjà renseigné dans « Réseaux sociaux » ci-dessous.</p>
+      <div class="theme-choix" id="choixBulleContact">
+        <label><input type="radio" name="bulleContact" value="aucun"> Aucune</label>
+        <label><input type="radio" name="bulleContact" value="whatsapp"> WhatsApp</label>
+        <label><input type="radio" name="bulleContact" value="facebook"> Facebook</label>
+      </div>
+      <label style="margin-top:12px">Couleur</label>
+      <div class="couleur"><input type="color" id="bcCouleur"><code id="bcCouleurHex"></code></div>
+      <div class="actions"><button class="principal" data-enregistre="bulle_contact">Enregistrer la bulle de contact</button></div>
     </div>
 
     <div class="carte">
@@ -421,6 +425,12 @@ function majHex(idColor, idHex){ $(idHex).textContent = $(idColor).value; }
 function lierCouleur(idColor, idHex){
   $(idColor).addEventListener('input', function(){ majHex(idColor, idHex); });
 }
+function majChoixBulleContact(){
+  var v = document.querySelector('input[name=bulleContact]:checked').value;
+  document.querySelectorAll('#choixBulleContact label').forEach(function(l){
+    l.classList.toggle('actif', l.querySelector('input').value === v);
+  });
+}
 function majChoixTheme(){
   var v = document.querySelector('input[name=theme]:checked').value;
   document.querySelectorAll('.theme-choix label').forEach(function(l){
@@ -478,9 +488,10 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
-  var wa = reglages.whatsapp_bulle || {};
-  $('waActif').checked = !!wa.actif;
-  $('waCouleur').value = wa.couleur || '#25D366'; majHex('waCouleur','waCouleurHex');
+  var bc = reglages.bulle_contact || {};
+  document.querySelector('input[name=bulleContact][value="' + (bc.choix || 'aucun') + '"]').checked = true;
+  majChoixBulleContact();
+  $('bcCouleur').value = bc.couleur || (bc.choix === 'facebook' ? '#1877F2' : '#25D366'); majHex('bcCouleur','bcCouleurHex');
 
   var reas = reglages.reassurance || {};
   $('reasActif').checked = !!reas.actif;
@@ -582,7 +593,8 @@ function construireFormulaires(){
   lierCouleur('cFond','cFondHex'); lierCouleur('cTexte','cTexteHex');
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   lierCouleur('popFond','popFondHex'); lierCouleur('popTexteCouleur','popTexteCouleurHex'); lierCouleur('popBouton','popBoutonHex');
-  lierCouleur('waCouleur','waCouleurHex');
+  lierCouleur('bcCouleur','bcCouleurHex');
+  document.querySelectorAll('input[name=bulleContact]').forEach(function(r){ r.addEventListener('change', majChoixBulleContact); });
   lierCouleur('reasCouleur','reasCouleurHex'); lierCouleur('reasTexteCouleur','reasTexteCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
@@ -648,7 +660,10 @@ function valeursDepuisFormulaire(cle){
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
-  if (cle === 'whatsapp_bulle') return { actif: $('waActif').checked, couleur: $('waCouleur').value };
+  if (cle === 'bulle_contact') return {
+    choix: document.querySelector('input[name=bulleContact]:checked').value,
+    couleur: $('bcCouleur').value
+  };
   if (cle === 'reassurance') return {
     actif: $('reasActif').checked,
     item1: $('reasItem1').value.trim(), item2: $('reasItem2').value.trim(), item3: $('reasItem3').value.trim(),
@@ -704,8 +719,8 @@ document.addEventListener('click', function(e){
     toast('Diffusion active mais titre et texte vides : la popup ne s\'affichera pas. Ajoutez au moins l\'un des deux.', true);
     return;
   }
-  if (cle === 'whatsapp_bulle' && valeurs.actif && !(reglages.reseaux || {}).whatsapp) {
-    toast('Diffusion active mais aucun numéro WhatsApp renseigné dans « Réseaux sociaux » : la bulle ne s\'affichera pas.', true);
+  if (cle === 'bulle_contact' && valeurs.choix !== 'aucun' && !(reglages.reseaux || {})[valeurs.choix]) {
+    toast('Aucun lien ' + (valeurs.choix === 'facebook' ? 'Facebook' : 'WhatsApp') + ' renseigné dans « Réseaux sociaux » : la bulle ne s\'affichera pas.', true);
     return;
   }
   if (cle === 'reassurance' && valeurs.actif && !valeurs.item1 && !valeurs.item2 && !valeurs.item3) {
