@@ -65,6 +65,14 @@
       '\na:hover .qz-picto{color:inherit}';
     if (c.theme === 'magazine') css += '\n' + MAGAZINE_EXTRAS;
     else css += '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
+
+    /* Zones fines (facultatives) : absentes = suivent le thème global.
+       Ajoutées EN DERNIER pour primer sur le préréglage Magazine. */
+    if (c.cartouches) css += '\n.qz-legal a.qz-leg{background:' + c.cartouches + '}';
+    if (c.bouton) css += '\n.cta,.qz-cta{background:' + c.bouton + '!important}';
+    if (c.menu) css += '\n.qz-header{background:' + c.menu + '}';
+    if (c.logo) css += '\n.qz-header .qz-qlogo i.t{background:' + c.logo + '}\n.qz-header .qz-wordmark{color:' + c.logo + '}';
+    if (c.boutiqueFond && /\/boutique\//.test(location.pathname)) css += '\nbody{background:' + c.boutiqueFond + '}';
     injecterStyle('qz-reglages-couleurs', css);
   }
 

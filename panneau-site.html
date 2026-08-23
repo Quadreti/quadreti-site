@@ -60,6 +60,22 @@
   .photo-slot .nom{ font-size:11px; color:var(--adouci); padding:4px 2px 2px; }
   .photo-slot input[type=file]{ display:none; }
   .photo-slot .remplacer{ display:block; width:100%; border-radius:0; background:var(--charbon); color:var(--creme); font-size:11.5px; padding:7px 4px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 14px; }
+  .chips button{ font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:999px;
+    background:var(--fond); color:var(--charbon); border:1.5px solid var(--bord); }
+  .chips button:hover{ border-color:var(--terracotta); }
+  .chips button.vide{ color:var(--adouci); font-style:italic; font-weight:400; }
+  .chips button.origine{ border-color:var(--charbon); }
+  .zone-fine{ display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px dashed var(--bord); }
+  .zone-fine:last-child{ border-bottom:none; }
+  .zone-fine .zf-nom{ flex:1; font-size:13px; }
+  .zone-fine label.suivre{ display:flex; align-items:center; gap:6px; margin:0; font-size:12px; color:var(--adouci); cursor:pointer; white-space:nowrap; }
+  .zone-fine input[type=color]{ width:38px; height:30px; border:1px solid var(--bord); border-radius:7px; padding:2px; background:var(--carte); cursor:pointer; }
+  .zone-fine .cache-couleur{ visibility:hidden; }
+  .memoriser{ margin-top:18px; padding-top:14px; border-top:1px solid var(--bord); }
+  .memoriser-rang{ display:flex; gap:8px; flex-wrap:wrap; }
+  .memoriser-rang select{ flex:0 0 150px; width:auto; }
+  .memoriser-rang input{ flex:1; min-width:140px; }
   #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--sombre); color:var(--creme);
     padding:11px 20px; border-radius:11px; font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .25s; z-index:50; max-width:88vw; }
   #toast.on{ opacity:1; }
@@ -95,6 +111,10 @@
     <div class="carte">
       <h2>Thème et couleurs</h2>
       <p class="aide">S'applique à tout le site. Les couleurs individuelles priment sur le thème choisi.</p>
+
+      <label>Palettes mémorisées — cliquez pour charger dans le formulaire</label>
+      <div class="chips" id="chipsPalettes"></div>
+
       <div class="theme-choix" id="choixTheme">
         <label><input type="radio" name="theme" value="actuel"> Actuel (crème / charbon)</label>
         <label><input type="radio" name="theme" value="magazine"> Magazine Déco (lin / terracotta)</label>
@@ -105,7 +125,24 @@
         <div><label>Accent</label><div class="couleur"><input type="color" id="cAccent"><code id="cAccentHex"></code></div></div>
         <div><label>Survol</label><div class="couleur"><input type="color" id="cSurvol"><code id="cSurvolHex"></code></div></div>
       </div>
-      <div class="actions"><button class="principal" data-enregistre="couleurs">Enregistrer les couleurs</button></div>
+
+      <label style="margin-top:16px">Réglages fins — décochez pour choisir une couleur à part</label>
+      <div id="zonesFines"></div>
+
+      <div class="actions"><button class="principal" data-enregistre="couleurs">Enregistrer les couleurs (appliquer au site)</button></div>
+
+      <div class="memoriser">
+        <label>Mémoriser la composition actuelle dans un emplacement</label>
+        <div class="memoriser-rang">
+          <select id="memSlot">
+            <option value="1">Emplacement 1</option><option value="2">Emplacement 2</option>
+            <option value="3">Emplacement 3</option><option value="4">Emplacement 4</option>
+            <option value="5">Emplacement 5</option>
+          </select>
+          <input type="text" id="memNom" placeholder="Nom (ex. Magazine Déco)" maxlength="24">
+          <button class="discret" id="btnMemoriser">Mémoriser</button>
+        </div>
+      </div>
     </div>
 
     <div class="carte">
@@ -173,6 +210,14 @@ var DEFAUTS = {
 };
 var POLICES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
 var RESEAUX = ['facebook','snapchat','tiktok','youtube','whatsapp'];
+/* Zones fines : [clé, libellé, couleur de départ quand on décoche] */
+var ZONES_FINES = [
+  ['cartouches', 'Cartouches légales (bas de page)', 'accent'],
+  ['bouton', 'Boutons (Composer mon mur, Essayer l\'app...)', 'accent'],
+  ['menu', 'Bandeau de navigation (haut de page)', 'fond'],
+  ['boutiqueFond', 'Arrière-plan de la page Boutique', 'fond'],
+  ['logo', 'Logo (tesselles + nom, bandeau du haut)', 'texte']
+];
 var SECTIONS = [
   ['histoire','La mosaïque pixel, revisitée.'],
   ['comment','Trois gestes. Pas de colle, pas d\'outils, pas d\'attente.'],
@@ -254,12 +299,48 @@ function majChoixTheme(){
     l.classList.toggle('actif', l.querySelector('input').value === v);
   });
 }
-function remplirFormulaires(){
-  var c = Object.assign({}, DEFAUTS.couleurs, reglages.couleurs || {});
+function chargerCouleursDansFormulaire(c){
+  c = Object.assign({}, DEFAUTS.couleurs, c || {});
   document.querySelector('input[name=theme][value="' + (c.theme || 'actuel') + '"]').checked = true;
   majChoixTheme();
   $('cFond').value = c.fond; $('cTexte').value = c.texte; $('cAccent').value = c.accent; $('cSurvol').value = c.survol;
   majHex('cFond','cFondHex'); majHex('cTexte','cTexteHex'); majHex('cAccent','cAccentHex'); majHex('cSurvol','cSurvolHex');
+  ZONES_FINES.forEach(function(z){
+    var actif = !!c[z[0]];
+    $('zf_suivre_' + z[0]).checked = !actif;
+    $('zf_couleur_' + z[0]).value = c[z[0]] || c[z[2]] || DEFAUTS.couleurs[z[2]];
+    $('zf_couleur_' + z[0]).classList.toggle('cache-couleur', !actif);
+  });
+}
+function dessinerChips(){
+  var zone = $('chipsPalettes'); zone.textContent = '';
+  var bOrigine = document.createElement('button');
+  bOrigine.textContent = 'Origine'; bOrigine.className = 'origine'; bOrigine.type = 'button';
+  bOrigine.addEventListener('click', function(){
+    chargerCouleursDansFormulaire(DEFAUTS.couleurs);
+    toast('Couleurs d\'origine chargées — cliquez Enregistrer pour les appliquer au site.');
+  });
+  zone.appendChild(bOrigine);
+  var pals = reglages.palettes || {};
+  for (var n = 1; n <= 5; n++) (function(n){
+    var p = pals[n];
+    var b = document.createElement('button'); b.type = 'button';
+    if (p && p.couleurs) {
+      b.textContent = p.nom || ('Palette ' + n);
+      b.addEventListener('click', function(){
+        chargerCouleursDansFormulaire(p.couleurs);
+        toast('« ' + (p.nom || 'Palette ' + n) + ' » chargée — cliquez Enregistrer pour l\'appliquer au site.');
+      });
+    } else {
+      b.textContent = 'Emplacement ' + n + ' (vide)'; b.className = 'vide';
+      b.addEventListener('click', function(){ toast('Emplacement vide — composez vos couleurs puis « Mémoriser ».'); });
+    }
+    zone.appendChild(b);
+  })(n);
+}
+function remplirFormulaires(){
+  chargerCouleursDansFormulaire(reglages.couleurs);
+  dessinerChips();
 
   var p = Object.assign({}, DEFAUTS.polices, reglages.polices || {});
   $('pTitres').value = p.titres; $('pTexte').value = p.texte;
@@ -303,9 +384,30 @@ function construireFormulaires(){
     det.appendChild(l1); det.appendChild(i1); det.appendChild(l2); det.appendChild(i2);
     $('listeSections').appendChild(det);
   });
+  ZONES_FINES.forEach(function(z){
+    var ligne = document.createElement('div'); ligne.className = 'zone-fine';
+    var nom = document.createElement('span'); nom.className = 'zf-nom'; nom.textContent = z[1];
+    var lab = document.createElement('label'); lab.className = 'suivre';
+    var chk = document.createElement('input'); chk.type = 'checkbox'; chk.id = 'zf_suivre_' + z[0]; chk.checked = true;
+    lab.appendChild(chk); lab.appendChild(document.createTextNode('Suivre le thème'));
+    var col = document.createElement('input'); col.type = 'color'; col.id = 'zf_couleur_' + z[0]; col.classList.add('cache-couleur');
+    chk.addEventListener('change', function(){
+      col.classList.toggle('cache-couleur', chk.checked);
+      if (!chk.checked) col.value = $({'accent':'cAccent','fond':'cFond','texte':'cTexte'}[z[2]]).value;
+    });
+    ligne.appendChild(nom); ligne.appendChild(lab); ligne.appendChild(col);
+    $('zonesFines').appendChild(ligne);
+  });
   lierCouleur('cFond','cFondHex'); lierCouleur('cTexte','cTexteHex');
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
+  $('btnMemoriser').addEventListener('click', function(){
+    var slot = $('memSlot').value;
+    var nom = $('memNom').value.trim() || ('Palette ' + slot);
+    var pals = Object.assign({}, reglages.palettes || {});
+    pals[slot] = { nom: nom, couleurs: valeursDepuisFormulaire('couleurs') };
+    enregistrer('palettes', pals).then(function(){ dessinerChips(); $('memNom').value = ''; });
+  });
 }
 
 /* ---------- Photos ---------- */
@@ -336,10 +438,16 @@ function televerserPhoto(n, fichier, btn){
 
 /* ---------- Boutons Enregistrer ---------- */
 function valeursDepuisFormulaire(cle){
-  if (cle === 'couleurs') return {
-    theme: document.querySelector('input[name=theme]:checked').value,
-    fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value
-  };
+  if (cle === 'couleurs') {
+    var c = {
+      theme: document.querySelector('input[name=theme]:checked').value,
+      fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value
+    };
+    ZONES_FINES.forEach(function(z){
+      if (!$('zf_suivre_' + z[0]).checked) c[z[0]] = $('zf_couleur_' + z[0]).value;
+    });
+    return c;
+  }
   if (cle === 'polices') return { titres: $('pTitres').value, texte: $('pTexte').value };
   if (cle === 'baselines') return { produit: $('bProduit').value.trim(), categorie: $('bCategorie').value.trim() };
   if (cle === 'reseaux') { var o = {}; RESEAUX.forEach(function(n){ o[n] = $('reseau_' + n).value.trim(); }); return o; }
