@@ -261,16 +261,6 @@
       <div class="actions"><button class="principal" data-enregistre="bulle_contact">Enregistrer la bulle de contact</button></div>
     </details>
 
-    <details class="carte">
-      <summary><h2>CTA flottant</h2></summary>
-      <p class="aide">Bulle ronde flottante, même gabarit que la bulle de contact WhatsApp/Facebook — au-dessus du bouton "retour en haut", lien vers l'app (designer.quadreti.fr).</p>
-      <label class="suivre" style="font-size:13px;"><input type="checkbox" id="ctaFlottantActif"> Actif</label>
-      <label style="margin-top:12px">Texte (info-bulle au survol)</label>
-      <input type="text" id="ctaFlottantTexte" placeholder="Composer mon mur">
-      <label style="margin-top:12px">Couleur</label>
-      <div class="couleur"><input type="color" id="ctaFlottantCouleur"><code id="ctaFlottantCouleurHex"></code></div>
-      <div class="actions"><button class="principal" data-enregistre="cta_flottant">Enregistrer le CTA flottant</button></div>
-    </details>
 
     <details class="carte">
       <summary><h2>Bandeau de réassurance</h2></summary>
@@ -669,11 +659,6 @@ function remplirFormulaires(){
   majChoixBulleContact();
   $('bcCouleur').value = bc.couleur || (bc.choix === 'facebook' ? '#1877F2' : '#25D366'); majHex('bcCouleur','bcCouleurHex');
 
-  var cf = reglages.cta_flottant || {};
-  $('ctaFlottantActif').checked = !!cf.actif;
-  $('ctaFlottantTexte').value = cf.texte || '';
-  $('ctaFlottantCouleur').value = cf.couleur || '#2b353e'; majHex('ctaFlottantCouleur','ctaFlottantCouleurHex');
-
   var reas = reglages.reassurance || {};
   $('reasActif').checked = !!reas.actif;
   $('reasItem1').value = reas.item1 || '';
@@ -815,7 +800,6 @@ function construireFormulaires(){
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   lierCouleur('popFond','popFondHex'); lierCouleur('popTexteCouleur','popTexteCouleurHex'); lierCouleur('popBouton','popBoutonHex');
   lierCouleur('bcCouleur','bcCouleurHex');
-  lierCouleur('ctaFlottantCouleur','ctaFlottantCouleurHex');
   document.querySelectorAll('input[name=bulleContact]').forEach(function(r){ r.addEventListener('change', majChoixBulleContact); });
   lierCouleur('reasCouleur','reasCouleurHex'); lierCouleur('reasTexteCouleur','reasTexteCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
@@ -885,11 +869,6 @@ function valeursDepuisFormulaire(cle){
   if (cle === 'bulle_contact') return {
     choix: document.querySelector('input[name=bulleContact]:checked').value,
     couleur: $('bcCouleur').value
-  };
-  if (cle === 'cta_flottant') return {
-    actif: $('ctaFlottantActif').checked,
-    texte: $('ctaFlottantTexte').value.trim(),
-    couleur: $('ctaFlottantCouleur').value
   };
   if (cle === 'reassurance') return {
     actif: $('reasActif').checked,

@@ -280,30 +280,6 @@
     document.body.appendChild(a);
   }
 
-  function appliquerCtaFlottant(cfg) {
-    if (!cfg || !cfg.actif) return;
-    var texte = cfg.texte || 'Composer mon mur';
-    var couleur = cfg.couleur || '#2b353e';
-    /* Meme gabarit que la bulle de contact (WhatsApp/Facebook) : bulle ronde flottante,
-       icone seule + info-bulle native (title) portant le texte. Positionnee au-dessus du
-       bouton "retour en haut" (bottom:18px) pour ne pas se chevaucher. */
-    injecterStyle('qz-cta-flottant-style', [
-      '.qz-cta-flottant{position:fixed;right:18px;bottom:80px;z-index:60;width:52px;height:52px;border-radius:50%;',
-      'background:' + couleur + ';display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px #00000040;',
-      'text-decoration:none;transition:transform .15s ease}',
-      '.qz-cta-flottant:hover{transform:scale(1.06)}',
-      '.qz-cta-flottant svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'
-    ].join('\n'));
-    var a = document.createElement('a');
-    a.className = 'qz-cta-flottant';
-    a.href = 'https://designer.quadreti.fr';
-    a.target = '_blank'; a.rel = 'noopener';
-    a.setAttribute('aria-label', texte);
-    a.title = texte;
-    a.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
-    document.body.appendChild(a);
-  }
-
   function appliquerReassurance(r) {
     if (!r || !r.actif) return;
     var items = [r.item1, r.item2, r.item3].filter(Boolean);
@@ -431,7 +407,6 @@
       appliquerSeo(g.seo);
       appliquerPopup(g.popup);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
-      appliquerCtaFlottant(g.cta_flottant);
       appliquerReassurance(g.reassurance);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
