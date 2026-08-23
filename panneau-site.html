@@ -149,6 +149,44 @@
     </div>
 
     <div class="carte">
+      <h2>Popup de remise</h2>
+      <p class="aide">Apparaît une seule fois par visiteur (4-5 secondes après l'arrivée), avec un champ email pour s'inscrire.</p>
+      <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="popActif"> Diffusion active</label>
+
+      <label>Titre</label>
+      <input type="text" id="popTitre" placeholder="Profitez de -10% sur votre premier mur">
+      <label>Texte</label>
+      <textarea id="popTexte" placeholder="Inscrivez-vous et recevez le code BIENVENUE10, valable sur toute la boutique."></textarea>
+      <label>Texte du bouton</label>
+      <input type="text" id="popBoutonTexte" placeholder="Je m'inscris">
+      <label>Délai avant apparition (secondes)</label>
+      <input type="text" id="popDelai" inputmode="numeric" placeholder="4">
+
+      <label style="margin-top:12px">Image (facultative)</label>
+      <div class="favicon-apercu">
+        <img id="popImgApercu" src="" alt="" style="visibility:hidden; width:60px; height:44px; object-fit:cover;">
+        <input type="file" id="popImgFichier" accept="image/*">
+        <button class="discret" type="button" id="btnPopImg">Choisir une image</button>
+        <button class="discret" type="button" id="btnPopImgRetirer">Retirer</button>
+      </div>
+
+      <label style="margin-top:12px">Couleurs</label>
+      <div class="rang">
+        <div><label>Fond</label><div class="couleur"><input type="color" id="popFond"><code id="popFondHex"></code></div></div>
+        <div><label>Texte</label><div class="couleur"><input type="color" id="popTexteCouleur"><code id="popTexteCouleurHex"></code></div></div>
+        <div><label>Bouton</label><div class="couleur"><input type="color" id="popBouton"><code id="popBoutonHex"></code></div></div>
+      </div>
+
+      <div class="actions"><button class="principal" data-enregistre="popup">Enregistrer la popup</button></div>
+
+      <div class="memoriser">
+        <label>Emails inscrits</label>
+        <div class="actions"><button class="discret" type="button" id="btnListeAbonnes">Afficher / copier la liste</button></div>
+        <textarea id="popListeAbonnes" class="cache" readonly style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+    <div class="carte">
       <h2>Favicon &amp; SEO</h2>
       <p class="aide">Le favicon change dans l'onglet du navigateur (peut demander un rechargement complet pour apparaître). Le titre/description : visibles dans l'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement, avant toute modification du panneau.</p>
       <label>Favicon actuel</label>
@@ -413,6 +451,18 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
+  var pop = reglages.popup || {};
+  $('popActif').checked = !!pop.actif;
+  $('popTitre').value = pop.titre || '';
+  $('popTexte').value = pop.texte || '';
+  $('popBoutonTexte').value = pop.bouton_texte || '';
+  $('popDelai').value = pop.delai || '';
+  $('popImgApercu').src = pop.image || '';
+  $('popImgApercu').style.visibility = pop.image ? 'visible' : 'hidden';
+  $('popFond').value = pop.fond || '#F2EEDF'; majHex('popFond','popFondHex');
+  $('popTexteCouleur').value = pop.texte_couleur || '#2b353e'; majHex('popTexteCouleur','popTexteCouleurHex');
+  $('popBouton').value = pop.bouton || '#e2725b'; majHex('popBouton','popBoutonHex');
+
   var seo = reglages.seo || {};
   $('seoTitre').value = seo.titre || '';
   $('seoDescription').value = seo.description || '';
@@ -492,6 +542,7 @@ function construireFormulaires(){
   });
   lierCouleur('cFond','cFondHex'); lierCouleur('cTexte','cTexteHex');
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
+  lierCouleur('popFond','popFondHex'); lierCouleur('popTexteCouleur','popTexteCouleurHex'); lierCouleur('popBouton','popBoutonHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
     var slot = $('memSlot').value;
@@ -556,6 +607,20 @@ function valeursDepuisFormulaire(cle){
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
+  if (cle === 'popup') {
+    var p = {
+      actif: $('popActif').checked,
+      titre: $('popTitre').value.trim(),
+      texte: $('popTexte').value.trim(),
+      bouton_texte: $('popBoutonTexte').value.trim(),
+      delai: parseInt($('popDelai').value, 10) || undefined,
+      image: (reglages.popup || {}).image || '',
+      fond: $('popFond').value,
+      texte_couleur: $('popTexteCouleur').value,
+      bouton: $('popBouton').value
+    };
+    return p;
+  }
   if (cle === 'seo') {
     var s = Object.assign({}, reglages.seo || {});
     s.titre = $('seoTitre').value.trim();
@@ -587,6 +652,41 @@ function valeursDepuisFormulaire(cle){
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');
   if (cle) enregistrer(cle, valeursDepuisFormulaire(cle));
+});
+
+/* ---------- Popup ---------- */
+$('btnPopImg').addEventListener('click', function(){ $('popImgFichier').click(); });
+$('popImgFichier').addEventListener('change', function(){
+  var f = $('popImgFichier').files[0];
+  if (!f) return;
+  if (f.size > 4 * 1024 * 1024) { toast('Image trop lourde (4 Mo max).', true); return; }
+  var btn = $('btnPopImg'); btn.disabled = true; btn.textContent = 'Envoi...';
+  var ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+  televerserFichier(f, 'popup-remise-' + Date.now() + '.' + ext).then(function(res){
+    if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+    var p = Object.assign({}, reglages.popup || {});
+    p.image = res.d.url;
+    return enregistrer('popup', p).then(function(){
+      $('popImgApercu').src = p.image; $('popImgApercu').style.visibility = 'visible';
+    });
+  }).catch(function(){ toast('Envoi impossible (réseau).', true); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Choisir une image'; });
+});
+$('btnPopImgRetirer').addEventListener('click', function(){
+  var p = Object.assign({}, reglages.popup || {});
+  p.image = '';
+  enregistrer('popup', p).then(function(){ $('popImgApercu').src = ''; $('popImgApercu').style.visibility = 'hidden'; });
+});
+$('btnListeAbonnes').addEventListener('click', function(){
+  rpc('lister_abonnes_popup', { p_phrase: phrase }).then(function(res){
+    var zone = $('popListeAbonnes');
+    if (!res.ok || !Array.isArray(res.d)) { toast('Impossible de charger la liste.', true); return; }
+    zone.value = res.d.length
+      ? res.d.map(function(l){ return l.email + '  —  ' + new Date(l.cree_le).toLocaleDateString('fr-FR'); }).join('\n')
+      : 'Aucun email pour l\'instant.';
+    zone.classList.remove('cache');
+    zone.style.minHeight = Math.min(220, 30 + res.d.length * 22) + 'px';
+  });
 });
 
 /* ---------- Favicon ---------- */
