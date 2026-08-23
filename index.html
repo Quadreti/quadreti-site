@@ -691,20 +691,16 @@
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
-  <!-- Diaporama du bandeau : les 8 photos du shooting, dans l'ordre du parcours -— on
-       imprime, on decoupe, on clipse, on pose, on expose. Le chargement differe natif
-       (loading="lazy") a ete essaye et ECARTE : les diapos etant invisibles au demarrage, le
-       navigateur ne les chargeait jamais et le diaporama tournait sur une image vide. Elles
-       sont donc chargees par script juste apres le premier affichage (voir chargerLaSuite). -->
+  <!-- Test bandeau video (fil Video/Animation, 23/08/2026) : 4 carreaux qui se remplissent
+       depuis les coins pour reconstruire un oeil colore. Remplace temporairement le diaporama
+       photo pour jugement en situation ; l'ancien diaporama (8 photos) reste dans l'historique
+       git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
-    <div class="slide on"><img class="shot" src="img/bandeau-1-impression.jpg" alt=""><span class="cap">L'impression</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-2-planche.jpg" alt=""><span class="cap">La planche</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-3-clip.jpg" alt=""><span class="cap">Le clip</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-4-clipsage.jpg" alt=""><span class="cap">Le clipsage</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-5-tesselle.jpg" alt=""><span class="cap">La tesselle</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-6-pose.jpg" alt=""><span class="cap">La pose</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-7-mur.jpg" alt=""><span class="cap">Le mur</span></div>
-    <div class="slide"><img class="shot" data-src="img/bandeau-8-resultat.jpg" alt=""><span class="cap">Changez à volonté</span></div>
+    <div class="slide on">
+      <video class="shot" style="object-position:60% center" autoplay muted loop playsinline poster="img/bandeau-1-impression.jpg">
+        <source src="video/quadreti-bandeau-oeil.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
   <div class="bg-veil" aria-hidden="true"></div>
 
@@ -717,16 +713,7 @@
   <p class="h-line l4">Changez à volonté.</p>
   <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer mon mur</a>
 
-  <div class="dots" id="dots">
-    <button class="on" aria-label="Diapo 1"></button>
-    <button aria-label="Diapo 2"></button>
-    <button aria-label="Diapo 3"></button>
-    <button aria-label="Diapo 4"></button>
-    <button aria-label="Diapo 5"></button>
-    <button aria-label="Diapo 6"></button>
-    <button aria-label="Diapo 7"></button>
-    <button aria-label="Diapo 8"></button>
-  </div>
+  <div class="dots" id="dots"></div>
 
 </div>
 
