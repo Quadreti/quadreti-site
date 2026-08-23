@@ -156,13 +156,6 @@
   }
   .badge .dot{ width:15px; height:15px; border-radius:50%; background:var(--olive); color:#fff; font-size:9.5px; display:flex; align-items:center; justify-content:center; }
   .hero-cta{ position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:4; }
-  /* Devient flottant (fixe a l'ecran) des qu'on defile plus bas que le bandeau — reste
-     accessible sans avoir a remonter. Voir l'IntersectionObserver plus bas.
-     !important : le reglage panneau "Disposition > position du CTA hero" (gauche/droite)
-     injecte une regle .hero-cta{left/right:26px;transform:none} via reglages-site.js une
-     fois la base chargee — sans ca elle gagne le conflit de specificite et le bouton reste
-     fige a gauche/droite au lieu de se recentrer en mode flottant. */
-  .hero-cta.flottant{ position:fixed !important; left:50% !important; right:auto !important; bottom:20px !important; transform:translateX(-50%) !important; z-index:55; }
   .dots{ position:absolute; bottom:32px; right:20px; z-index:4; display:flex; gap:6px; }
   .dots button{ width:9px; height:9px; border-radius:50%; background:rgba(43,53,62,.3); border:none; padding:0; }
   .dots button.on{ background:var(--charbon); width:22px; border-radius:5px; transition:all .25s; }
@@ -1305,26 +1298,6 @@
     });
   }, { threshold:.18 });
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
-
-  /* CTA du bandeau : reste a sa place au chargement, devient flottant des qu'on defile
-     plus bas que le bandeau, pour rester cliquable sans avoir a remonter — et redescend
-     proprement des qu'on remonte. Calcul direct sur le scroll (pas d'IntersectionObserver) :
-     plus fiable ici, un essai precedent avec IO donnait un flash au chargement (la premiere
-     mesure d'intersection tombait parfois avant que la mise en page du bandeau soit stable). */
-  const heroCta = document.querySelector('.hero-cta');
-  const heroEl = document.getElementById('hero');
-  if (heroCta && heroEl){
-    let ctaEnCours = false;
-    function majCtaFlottant(){
-      const flottant = heroEl.getBoundingClientRect().bottom <= 0;
-      heroCta.classList.toggle('flottant', flottant);
-      ctaEnCours = false;
-    }
-    window.addEventListener('scroll', () => {
-      if (!ctaEnCours){ ctaEnCours = true; requestAnimationFrame(majCtaFlottant); }
-    }, { passive: true });
-    majCtaFlottant();
-  }
 
   if (reduce){
     document.querySelectorAll('.rv').forEach(el => el.classList.add('in'));
