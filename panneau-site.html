@@ -81,23 +81,11 @@
   <!-- ============ Connexion ============ -->
   <div class="carte connexion" id="blocConnexion">
     <h2>Connexion administrateur</h2>
-    <p class="aide">Réservé aux emails de la liste des administrateurs.</p>
-    <div id="etapeMdp">
-      <label for="champEmail">Votre email</label>
-      <input type="email" id="champEmail" autocomplete="email" placeholder="vous@exemple.fr">
-      <label for="champMdp">Mot de passe</label>
-      <input type="password" id="champMdp" autocomplete="current-password">
-      <div class="actions">
-        <button class="accent" id="btnConnexionMdp">Se connecter</button>
-      </div>
-      <p class="aide" style="margin-top:14px">
-        Premier accès ou mot de passe oublié ?
-        <a href="#" id="lienMdpOublie" style="color:var(--terracotta); font-weight:600;">Recevoir un lien pour en créer un</a>
-      </p>
-    </div>
-    <div id="etapeMdpEnvoye" class="cache">
-      <p class="aide">Email envoyé. Ouvrez-le et cliquez sur le lien : il vous amènera sur une page pour créer votre mot de passe.</p>
-      <div class="actions"><button class="discret" id="btnRetourConnexion">Retour</button></div>
+    <p class="aide">Phrase secrète — celle que je t'ai donnée. Pas d'email, pas de compte.</p>
+    <label for="champPhrase">Phrase secrète</label>
+    <input type="password" id="champPhrase" autocomplete="current-password">
+    <div class="actions">
+      <button class="accent" id="btnConnexionPhrase">Se connecter</button>
     </div>
   </div>
 
@@ -209,59 +197,37 @@ function toast(msg, erreur){
   t.className = 'on' + (erreur ? ' erreur' : '');
   clearTimeout(t._m); t._m = setTimeout(function(){ t.className=''; }, 3200);
 }
-function entetesAuth(){
-  return { apikey: SB_KEY, Authorization: 'Bearer ' + (session ? session.access_token : SB_KEY), 'Content-Type': 'application/json' };
+function enteteAnon(){
+  return { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+}
+function rpc(nom, corps){
+  return fetch(SB_URL + '/rest/v1/rpc/' + nom, { method:'POST', headers: enteteAnon(), body: JSON.stringify(corps) })
+    .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); });
 }
 
-/* ---------- Connexion (email + mot de passe) ---------- */
-function connexionMdp(){
-  var email = $('champEmail').value.trim(), mdp = $('champMdp').value;
-  if (!email || !mdp) { toast('Entrez votre email et votre mot de passe.', true); return; }
-  fetch(SB_URL + '/auth/v1/token?grant_type=password', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
-    body: JSON.stringify({ email:email, password:mdp }) })
-  .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); })
-  .then(function(res){
-    if (!res.ok || !res.d.access_token) { toast('Email ou mot de passe incorrect.', true); return; }
-    session = res.d; localStorage.setItem(CLE_SESSION, JSON.stringify(res.d));
-    verifierAdminEtOuvrir(email);
-  })
-  .catch(function(){ toast('Connexion impossible.', true); });
-}
-function demanderLienMdp(){
-  var email = $('champEmail').value.trim();
-  if (!email) { toast('Entrez votre email d\'abord.', true); return; }
-  fetch(SB_URL + '/auth/v1/recover', { method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
-    body: JSON.stringify({ email:email, redirect_to: location.origin + location.pathname.replace(/[^/]*$/, '') + 'reinitialiser-mot-de-passe.html' }) })
-  .then(function(r){
-    if (r.status === 429) { toast('Trop de demandes récentes — patientez une heure et réessayez.', true); return; }
-    if (!r.ok) { toast('Envoi impossible. Réessayez.', true); return; }
-    $('etapeMdp').classList.add('cache'); $('etapeMdpEnvoye').classList.remove('cache');
-  })
-  .catch(function(){ toast('Envoi impossible. Réessayez.', true); });
-}
-function verifierAdminEtOuvrir(email){
-  fetch(SB_URL + '/rest/v1/admins?select=email', { headers: entetesAuth() })
-  .then(function(r){ return r.ok ? r.json() : []; })
-  .then(function(l){
-    if (!l.length) { toast('Cet email n\'est pas administrateur.', true); deconnexion(); return; }
+/* ---------- Connexion (phrase secrète, aucun email/compte) ---------- */
+var phrase = null;
+function connexionPhrase(){
+  var p = $('champPhrase').value;
+  if (!p) { toast('Entrez la phrase secrète.', true); return; }
+  rpc('verifier_phrase_panneau', { p_phrase: p }).then(function(res){
+    if (!res.ok || res.d !== true) { toast('Phrase incorrecte.', true); return; }
+    phrase = p; sessionStorage.setItem(CLE_SESSION, p);
     $('blocConnexion').classList.add('cache');
     $('blocPanneau').classList.remove('cache');
     $('btnDeconnexion').classList.remove('cache');
-    $('quiLigne').innerHTML = 'Connecté : <b></b>';
-    $('quiLigne').querySelector('b').textContent = email;
     chargerReglages();
-  });
+  }).catch(function(){ toast('Connexion impossible.', true); });
 }
 function deconnexion(){
-  session = null; localStorage.removeItem(CLE_SESSION);
+  phrase = null; sessionStorage.removeItem(CLE_SESSION);
   $('blocPanneau').classList.add('cache'); $('btnDeconnexion').classList.add('cache');
-  $('blocConnexion').classList.remove('cache'); $('etapeMdp').classList.remove('cache'); $('etapeMdpEnvoye').classList.add('cache');
-  $('quiLigne').textContent = '';
+  $('blocConnexion').classList.remove('cache'); $('champPhrase').value = '';
 }
 
 /* ---------- Lecture / écriture des réglages ---------- */
 function chargerReglages(){
-  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur', { headers: entetesAuth() })
+  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur', { headers: enteteAnon() })
   .then(function(r){ return r.json(); })
   .then(function(lignes){
     reglages = {};
@@ -270,12 +236,9 @@ function chargerReglages(){
   });
 }
 function enregistrer(cle, valeur){
-  return fetch(SB_URL + '/rest/v1/reglages_site?cle=eq.' + cle, {
-    method:'PATCH', headers: Object.assign(entetesAuth(), { Prefer:'return=minimal' }),
-    body: JSON.stringify({ valeur: valeur })
-  }).then(function(r){
-    if (r.ok) { reglages[cle] = valeur; toast('Enregistré — en ligne immédiatement.'); }
-    else if (r.status === 401 || r.status === 403) { toast('Session expirée : reconnectez-vous.', true); deconnexion(); }
+  return rpc('enregistrer_reglage_admin', { p_cle: cle, p_valeur: valeur, p_phrase: phrase }).then(function(res){
+    if (res.ok && res.d === true) { reglages[cle] = valeur; toast('Enregistré — en ligne immédiatement.'); }
+    else if (res.ok && res.d === false) { toast('Session expirée : reconnectez-vous.', true); deconnexion(); }
     else toast('Échec de l\'enregistrement.', true);
   }).catch(function(){ toast('Échec de l\'enregistrement (réseau).', true); });
 }
@@ -365,21 +328,10 @@ function dessinerPhotos(){
   })(n);
 }
 function televerserPhoto(n, fichier, btn){
-  if (fichier.size > 4 * 1024 * 1024) { toast('Photo trop lourde (4 Mo max).', true); return; }
-  btn.disabled = true; btn.textContent = 'Envoi...';
-  var ext = (fichier.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
-  var chemin = 'diapo-' + n + '-' + Date.now() + '.' + ext;
-  fetch(SB_URL + '/storage/v1/object/images-site/' + chemin, {
-    method:'POST', headers:{ apikey:SB_KEY, Authorization:'Bearer ' + session.access_token, 'Content-Type': fichier.type || 'image/jpeg' },
-    body: fichier
-  }).then(function(r){
-    if (!r.ok) throw 0;
-    var url = SB_URL + '/storage/v1/object/public/images-site/' + chemin;
-    var ph = Object.assign({}, reglages.photos_diaporama || {});
-    ph[n] = url;
-    return enregistrer('photos_diaporama', ph).then(function(){ dessinerPhotos(); });
-  }).catch(function(){ toast('Envoi de la photo impossible.', true); })
-    .then(function(){ btn.disabled = false; btn.textContent = 'Remplacer'; });
+  /* Upload photo : temporairement indisponible — nécessite une pièce serveur
+     supplémentaire depuis le passage à la connexion par phrase secrète.
+     Le reste du panneau (couleurs, textes, etc.) fonctionne normalement. */
+  toast('Upload photo bientôt de retour — pas encore branché sur la nouvelle connexion.', true);
 }
 
 /* ---------- Boutons Enregistrer ---------- */
@@ -407,16 +359,25 @@ document.addEventListener('click', function(e){
 });
 
 /* ---------- Démarrage ---------- */
-$('btnConnexionMdp').addEventListener('click', connexionMdp);
-$('lienMdpOublie').addEventListener('click', function(e){ e.preventDefault(); demanderLienMdp(); });
-$('btnRetourConnexion').addEventListener('click', function(){ $('etapeMdpEnvoye').classList.add('cache'); $('etapeMdp').classList.remove('cache'); });
+$('btnConnexionPhrase').addEventListener('click', connexionPhrase);
 $('btnDeconnexion').addEventListener('click', deconnexion);
-$('champEmail').addEventListener('keydown', function(e){ if (e.key === 'Enter') connexionMdp(); });
-$('champMdp').addEventListener('keydown', function(e){ if (e.key === 'Enter') connexionMdp(); });
+$('champPhrase').addEventListener('keydown', function(e){ if (e.key === 'Enter') connexionPhrase(); });
 construireFormulaires();
 try {
-  var s = JSON.parse(localStorage.getItem(CLE_SESSION) || 'null');
-  if (s && s.access_token && s.user && s.user.email) { session = s; verifierAdminEtOuvrir(s.user.email); }
+  var p = sessionStorage.getItem(CLE_SESSION);
+  if (p) {
+    rpc('verifier_phrase_panneau', { p_phrase: p }).then(function(res){
+      if (res.ok && res.d === true) {
+        phrase = p;
+        $('blocConnexion').classList.add('cache');
+        $('blocPanneau').classList.remove('cache');
+        $('btnDeconnexion').classList.remove('cache');
+        chargerReglages();
+      } else {
+        sessionStorage.removeItem(CLE_SESSION);
+      }
+    });
+  }
 } catch (e) {}
 </script>
 </body>
