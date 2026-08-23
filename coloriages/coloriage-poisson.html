@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le blog Quadreti — Composez, imprimez, clipsez</title>
-<meta name="description" content="Idées de composition, coulisses de fabrication et inspirations pour votre mur Quadreti.">
+<title>Coloriage poisson à imprimer gratuit — pixel à chiffres | Quadreti</title>
+<meta name="description" content="Coloriage pixel à chiffres d'un poisson à imprimer gratuitement : un jeu de coloriage numéroté, ludique et apaisant pour les enfants.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600&display=swap" rel="stylesheet">
@@ -178,30 +178,60 @@
 </style>
 <style>
   body{ margin:0; background:var(--fond,#F5F5F5); font-family:'Karla',sans-serif; color:var(--charbon,#2b353e); }
-  main.blog{ max-width:900px; margin:0 auto; padding:48px 22px 64px; }
-  .blog-entete{ text-align:center; margin-bottom:40px; }
-  .blog-entete .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
-  .blog-entete h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(26px,4vw,38px); margin:0 0 10px; }
-  .blog-entete p{ color:#5c646c; font-size:15px; max-width:520px; margin:0 auto; }
-  .blog-grille{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; }
-  .blog-carte{ display:block; text-decoration:none; color:inherit; background:#fff; border:1px solid #2b353e18; border-radius:14px; overflow:hidden; transition:transform .15s ease, box-shadow .15s ease; }
-  .blog-carte:hover{ transform:translateY(-3px); box-shadow:0 12px 28px #00000014; }
-  .blog-carte img{ width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:#eceae3; }
-  .blog-carte .corps{ padding:16px 18px 20px; }
-  .blog-carte .date{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:6px; display:block; }
-  .blog-carte h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:17px; margin:0 0 8px; line-height:1.3; }
-  .blog-carte p{ font-size:13.5px; color:#5c646c; line-height:1.5; margin:0; }
-  .blog-vide{ text-align:center; color:#8a9099; padding:60px 20px; font-size:14px; }
-  .blog-article{ max-width:680px; margin:0 auto; }
-  .blog-article .date{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); }
-  .blog-article h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin:10px 0 20px; line-height:1.2; }
-  .blog-article img.couverture{ width:100%; max-height:380px; object-fit:cover; border-radius:14px; margin-bottom:26px; background:#eceae3; }
-  .blog-article .contenu{ font-size:15.5px; line-height:1.75; }
-  .blog-article .contenu p{ margin:0 0 18px; }
-  .blog-article .contenu h3{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:19px; margin:28px 0 12px; }
-  .blog-article .contenu a{ color:var(--terracotta,#e2725b); font-weight:600; }
-  .blog-article .retour{ display:inline-block; margin-bottom:24px; font-size:13.5px; font-weight:700; color:var(--charbon,#2b353e); text-decoration:none; }
-  .blog-article .retour:hover{ color:var(--terracotta,#e2725b); }
+  .wrap{ max-width:900px; margin:0 auto; padding:0 22px; }
+  section.blk{ padding:clamp(36px,6vw,60px) 0; }
+  .fil{ font-size:12.5px; color:#8a929a; margin:0 0 18px; }
+  .fil a{ color:#8a929a; }
+  .fil a:hover{ color:var(--terracotta,#e2725b); }
+  .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:8px; }
+  .blk h1{ font-family:'Quicksand',sans-serif; font-size:clamp(24px,3.4vw,32px); font-weight:700; letter-spacing:-.01em; line-height:1.15; margin:0 0 12px; }
+  .blk p.lead{ font-size:15px; color:#5c646c; max-width:560px; margin:0 0 22px; }
+  .badge-diff{ display:inline-block; font-size:12px; font-weight:700; padding:5px 12px; border-radius:99px; background:var(--creme,#F2EEDF); color:var(--charbon,#2b353e); margin-bottom:24px; }
+  .btn-imprimer{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px;
+    padding:12px 26px; cursor:pointer; background:var(--charbon,#2b353e); color:#fff; margin-bottom:28px;
+  }
+  .btn-imprimer:hover{ background:#1f272e; }
+
+  .page-imprimable{ background:#fff; border:1px solid #2b353e18; border-radius:8px 8px 8px 22px; padding:22px; max-width:640px; margin:0 auto 32px; }
+  .entete-c{ display:flex; align-items:center; gap:10px; border-bottom:2px solid #2b353e; padding-bottom:10px; margin-bottom:14px; }
+  .marque-c{ display:flex; align-items:center; gap:6px; }
+  .qzm{ display:grid; grid-template-columns:repeat(4,3.2px); grid-template-rows:repeat(4,3.2px); gap:0.8px; }
+  .qzm i{ background:transparent; border-radius:0.8px; }
+  .qzm i.t{ background:#2b353e; }
+  .qzm i.a{ background:#e2725b; }
+  .marque-c span{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; color:#2b353e; }
+  .entete-c .titre-c{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:17px; flex:1; text-align:center; color:#2b353e; }
+
+  .grille-c{ display:grid; border-left:1px solid #2b353e; border-top:1px solid #2b353e; margin:0 auto; }
+  .grille-c .cell{
+    aspect-ratio:1/1; border-right:1px solid #2b353e; border-bottom:1px solid #2b353e;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Karla',sans-serif; font-weight:700; color:#2b353e; font-size:9px;
+  }
+
+  .legende-c{ margin-top:24px; }
+  .legende-c h2{ font-family:'Quicksand',sans-serif; font-size:15px; margin:0 0 12px; }
+  .grille-legende-c{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px 12px; }
+  .item-legende-c{ display:flex; align-items:center; gap:8px; }
+  .item-legende-c .num{ flex:0 0 auto; width:20px; height:20px; border-radius:5px; border:1.5px solid #2b353e; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:10px; }
+  .item-legende-c .swatch{ flex:0 0 auto; width:18px; height:18px; border-radius:4px; border:1px solid #2b353e33; }
+  .item-legende-c .nom{ font-size:11px; }
+
+  .autres-c{ margin-top:36px; }
+  .autres-c h2{ font-family:'Quicksand',sans-serif; font-size:16px; margin:0 0 14px; }
+  .grille-autres{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:14px; }
+  .carte-autre{ display:block; text-decoration:none; text-align:center; }
+  .carte-autre img{ width:100%; aspect-ratio:1/1; object-fit:cover; image-rendering:pixelated; border-radius:8px 8px 8px 18px; border:1px solid #2b353e18; margin-bottom:6px; }
+  .carte-autre span{ font-size:12.5px; font-weight:600; color:#2b353e; }
+  .carte-autre:hover span{ color:var(--terracotta,#e2725b); }
+
+  @media print{
+    .qz-header, .qz-navpanel, footer.qz-footer, .qz-fab, .fil, .btn-imprimer, .autres-c{ display:none !important; }
+    body{ background:#fff; }
+    .page-imprimable{ border:none; box-shadow:none; padding:0; max-width:none; page-break-inside:avoid; }
+    .legende-c{ page-break-before:always; }
+  }
 </style>
 </head>
 <body id="qz-top">
@@ -232,8 +262,8 @@
       </ul>
     </li>
     <li><a href="../boutique/">Boutique</a></li>
-    <li><a href="index.html">Blog</a></li>
-    <li><a href="../coloriages/">Coloriages</a></li>
+    <li><a href="../blog/">Blog</a></li>
+    <li><a href="index.html">Coloriages</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -241,47 +271,34 @@
 </nav>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<main class="blog">
-  <div class="blog-entete">
-    <div class="eyebrow">Quadreti · Blog</div>
-    <h1>Idées, coulisses et inspirations</h1>
-    <p>Compositions, astuces de montage et histoires de murs Quadreti.</p>
-  </div>
-  <div class="blog-grille" id="blogGrille">
-    <p class="blog-vide">Chargement…</p>
-  </div>
-</main>
+<section class="blk">
+  <div class="wrap">
+    <p class="fil"><a href="../index.html">Accueil</a> · <a href="index.html">Coloriages</a> · Le poisson</p>
+    <div class="eyebrow">Coloriage pixel à chiffres</div>
+    <h1>Le poisson — à colorier numéro par numéro</h1>
+    <p class="lead">Imprimez cette page, suivez les numéros et coloriez chaque case avec la couleur qui lui correspond dans la légende. Un jeu simple, calme et gratifiant.</p>
+    <div class="badge-diff">Facile — dès 4-5 ans</div>
+    <div><button class="btn-imprimer" onclick="window.print()">Imprimer ce coloriage</button></div>
 
-<script>
-'use strict';
-var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
-var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
-fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publication&statut=eq.publie&order=date_publication.desc', {
-  headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
-}).then(function(r){ return r.json(); }).then(function(articles){
-  var grille = document.getElementById('blogGrille');
-  if (!articles || !articles.length) {
-    grille.innerHTML = "<p class=\"blog-vide\">Aucun article pour l'instant — revenez bientôt.</p>";
-    return;
-  }
-  grille.textContent = '';
-  articles.forEach(function(a){
-    var carte = document.createElement('a');
-    carte.className = 'blog-carte';
-    carte.href = 'article.html?slug=' + encodeURIComponent(a.slug);
-    var img = a.image ? '<img src="' + a.image + '" alt="">' : '';
-    var date = new Date(a.date_publication + 'T00:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-    carte.innerHTML = img +
-      '<div class="corps"><span class="date"></span><h2></h2><p></p></div>';
-    carte.querySelector('.date').textContent = date;
-    carte.querySelector('h2').textContent = a.titre;
-    carte.querySelector('p').textContent = a.extrait;
-    grille.appendChild(carte);
-  });
-}).catch(function(){
-  document.getElementById('blogGrille').innerHTML = "<p class=\"blog-vide\">Impossible de charger les articles pour l'instant.</p>";
-});
-</script>
+    <div class="page-imprimable">
+      <div class="entete-c">
+        <div class="marque-c"><div class="qzm" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div><span>Quadretı</span></div>
+        <div class="titre-c">Le poisson</div>
+      </div>
+      <div class="grille-c" style="grid-template-columns:repeat(20,7mm)"><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">5</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">4</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">4</div><div class="cell">4</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">3</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">6</div><div class="cell">3</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">2</div><div class="cell">2</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">3</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">2</div><div class="cell">3</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">3</div><div class="cell">4</div><div class="cell">4</div><div class="cell">3</div><div class="cell">1</div><div class="cell">5</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">4</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div></div>
+      <div class="legende-c">
+        <h2>Légende des couleurs</h2>
+        <p style="font-size:11.5px;color:#5c646c;margin:0 0 14px;">Chaque numéro correspond à une couleur. Retrouve la couleur la plus proche dans ta boîte de crayons ou feutres.</p>
+        <div class="grille-legende-c"><div class="item-legende-c"><span class="num">1</span><span class="swatch" style="background:#91d7ce"></span><span class="nom">Bleu ciel</span></div><div class="item-legende-c"><span class="num">2</span><span class="swatch" style="background:#f6af41"></span><span class="nom">Orange</span></div><div class="item-legende-c"><span class="num">3</span><span class="swatch" style="background:#cfb97c"></span><span class="nom">Kraft</span></div><div class="item-legende-c"><span class="num">4</span><span class="swatch" style="background:#d95749"></span><span class="nom">Terracotta</span></div><div class="item-legende-c"><span class="num">5</span><span class="swatch" style="background:#c4e4d8"></span><span class="nom">Beige</span></div><div class="item-legende-c"><span class="num">6</span><span class="swatch" style="background:#797772"></span><span class="nom">Gris</span></div></div>
+      </div>
+    </div>
+
+    <div class="autres-c">
+      <h2>D'autres coloriages à imprimer</h2>
+      <div class="grille-autres"><a class="carte-autre" href="coloriage-chat.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABVklEQVR4AcSSoU5DQRBFJzVYHO8PcCAwJGBQCAwCAwaCxZDwFSQgsQQDGotDIDAkgOsfvLpWVrU5m04zs29na9q0ye2bnXvndDavvc92NFmFerKiz3rAOx/X4X1qHkPhxtt/T/gCoCRMzVDnCsEb7U+e7ZxrmSKYDTuUoBFlO+Da9QK2lGYcmEDtehGYGWat78DWoH75auXo/pfSiR6ea2YHB+aXMz8dLcTWyZx95bMOPMu4x+VBI1eHjYybvSRqei5UOFTB52cncvvwKpunj7K1f5FETQ+vwJu3qmBgmhx8vwnSs/W0Z58OzHXVZDOteQJC1CqbsbP4DkxjWXLg/u5NekHA7bU5l6QZtmXWZhwYQwP8fXSQfi48MvR1hlrVAWP8Hz+nzRkcvt+llwZIRQ+PTckyk6sIJsQWDDEMxIoeHhmyJYVgDTMMxIqe+tFzITgaXNSfAgAA///6OgKgAAAABklEQVQDAM5f2z19tMsTAAAAAElFTkSuQmCC" alt="Coloriage le chat"><span>Le chat</span></a><a class="carte-autre" href="coloriage-dinosaure.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABkElEQVR4AeyTvUoDURCFh2AhKUREooElahMQBCtFFBQ7CxHs8gg2voWNYKWNvoG1WNiJhSCKhSAINv6whYioWAQRQfMNO8vuvbvZWKQz5NyZO3PmzP3b0uXb1083UJIu/f6F44MtPIrXZigg/DhSG1cWOIXCNy+H0vy+lounY7UFetqchbQVhnB1eyYP7/eqZ1YnGQN8FkIqUxgCW2elk/UZeLIQrMtcbU39vMFEB8qBZAqfhDuyt7UtB+f78vx5pyB2+rgrNAQ0TzYgBtdinrAVVOcrUq0NGU8thZw1SDbSZDSM9I+q5wlrtDW4oq2Q97dG7CToW5LV+qZgIeYKk+wUNOAoknxPmINPEjr13RfjCSNU6R3DeCBu8JJOIFPYLgAuQlPDiwKIG5gD8vBceMJcBNtKFjB3C21OI7jjg8sWUpsS5qnxpQGIFOCDduJ8OO7dpIS1VTRApCCaZppyz0T8vFxCrrBLZMu80SRo7vJsnhKG2JjdEGAE/JXpRu7KjOfalDBJxAE+wGeV+H/BLwAAAP//dryTawAAAAZJREFUAwCw+/O7caNhvwAAAABJRU5ErkJggg==" alt="Coloriage le dinosaure"><span>Le dinosaure</span></a><a class="carte-autre" href="coloriage-voiture.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABOklEQVR4AeySP0tCURjGX4w+Q0MNfYSgtbGtoCYbGxqjtT6DTYE0NrQUNSno5iKIm+DgB3DQQXBxFlF+B57DuZdzFAURwQvPff88z/vcl3NPYTbpzbeBgm3pORj7g93dUbT+GzZ4fInCrxdJVm58Xq+6sbPvsgn9mzsDjki8lhqzLXMxk6vitYlHk8dSY23LECYCfXL6KWSMEYfnqSGMQtBXLT2z9IWMMWIR68b8bMZ4XbO8ftp9862kcWl6ZMArIwk8EHV8UVJqUWPEneHIiYr9sYv5l/rolIeajDH3lKuF+P35yR7ub52WD9EPAQGPjhyOKHhj/iqAuDw9sdfPL/ur1CiTgAcSaJ7aG3PhhfLPh2GuzanFKbIpPCbt5q+pTw28MUUIzDQQ9pVjBI9OvTAmjUPRJvn+GS8AAAD//9mCVBoAAAAGSURBVAMAanrpwzZOSiAAAAAASUVORK5CYII=" alt="Coloriage la voiture"><span>La voiture</span></a><a class="carte-autre" href="coloriage-fusee.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABDUlEQVR4AcSTMarCQBCG59m81z3wACIIVl7AW4iliOIJPIpgaaUi2tpYWAk2egnBK9hppXwLkXHZSaYJBv7sP//ufJlAUqm1us8yVJGSru+D+/WnIO8Luice/t8FWeD4oS6wbtJeP2R1/dGluMB6Uu0/SFFRCE5NmMoibvHE7d5AqtONHMfzIDxZDIrrwolp2F4eLEHah8C4ucBGb27sAncav2+I9u8wYVxg+gAivEdusAemz+SC+axO66U+HzwZe6Ewbrng7GeYDEdy3h+C8LCyPXxKJpiJFrc/yX7V5m4mCAgZe5yhTskE04xoylbtyZAFN8FAtJgQ6QwPnDWWGwwAxQCrdoMtgJWXBn4BAAD//7gpA6EAAAAGSURBVAMAmxpzfwk6bfUAAAAASUVORK5CYII=" alt="Coloriage la fusée"><span>La fusée</span></a></div>
+    </div>
+  </div>
+</section>
 
 <footer class="qz-footer">
   <div class="qz-basdepage">

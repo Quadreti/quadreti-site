@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le blog Quadreti — Composez, imprimez, clipsez</title>
-<meta name="description" content="Idées de composition, coulisses de fabrication et inspirations pour votre mur Quadreti.">
+<title>Coloriages pixel à chiffres à imprimer gratuitement | Quadreti</title>
+<meta name="description" content="Une bibliothèque de coloriages pixel à chiffres, gratuits et à imprimer : chat, dinosaure, voiture, fusée... Un jeu ludique pour les enfants, proposé par Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600&display=swap" rel="stylesheet">
@@ -178,30 +178,19 @@
 </style>
 <style>
   body{ margin:0; background:var(--fond,#F5F5F5); font-family:'Karla',sans-serif; color:var(--charbon,#2b353e); }
-  main.blog{ max-width:900px; margin:0 auto; padding:48px 22px 64px; }
-  .blog-entete{ text-align:center; margin-bottom:40px; }
-  .blog-entete .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
-  .blog-entete h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(26px,4vw,38px); margin:0 0 10px; }
-  .blog-entete p{ color:#5c646c; font-size:15px; max-width:520px; margin:0 auto; }
-  .blog-grille{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; }
-  .blog-carte{ display:block; text-decoration:none; color:inherit; background:#fff; border:1px solid #2b353e18; border-radius:14px; overflow:hidden; transition:transform .15s ease, box-shadow .15s ease; }
-  .blog-carte:hover{ transform:translateY(-3px); box-shadow:0 12px 28px #00000014; }
-  .blog-carte img{ width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:#eceae3; }
-  .blog-carte .corps{ padding:16px 18px 20px; }
-  .blog-carte .date{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:6px; display:block; }
-  .blog-carte h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:17px; margin:0 0 8px; line-height:1.3; }
-  .blog-carte p{ font-size:13.5px; color:#5c646c; line-height:1.5; margin:0; }
-  .blog-vide{ text-align:center; color:#8a9099; padding:60px 20px; font-size:14px; }
-  .blog-article{ max-width:680px; margin:0 auto; }
-  .blog-article .date{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); }
-  .blog-article h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin:10px 0 20px; line-height:1.2; }
-  .blog-article img.couverture{ width:100%; max-height:380px; object-fit:cover; border-radius:14px; margin-bottom:26px; background:#eceae3; }
-  .blog-article .contenu{ font-size:15.5px; line-height:1.75; }
-  .blog-article .contenu p{ margin:0 0 18px; }
-  .blog-article .contenu h3{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:19px; margin:28px 0 12px; }
-  .blog-article .contenu a{ color:var(--terracotta,#e2725b); font-weight:600; }
-  .blog-article .retour{ display:inline-block; margin-bottom:24px; font-size:13.5px; font-weight:700; color:var(--charbon,#2b353e); text-decoration:none; }
-  .blog-article .retour:hover{ color:var(--terracotta,#e2725b); }
+  .wrap{ max-width:1000px; margin:0 auto; padding:0 22px; }
+  section.blk{ padding:clamp(40px,6vw,68px) 0; }
+  .center{ text-align:center; }
+  .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
+  .blk h1{ font-family:'Quicksand',sans-serif; font-size:clamp(26px,3.6vw,36px); font-weight:700; letter-spacing:-.01em; margin:0 0 14px; }
+  .blk p.lead{ font-size:16px; color:#5c646c; max-width:600px; margin:0 auto; }
+  .grille-lib{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-top:40px; }
+  .carte-lib{ display:block; text-decoration:none; background:#fff; border:1px solid #2b353e18; border-radius:8px 8px 8px 22px; overflow:hidden; transition:transform .15s ease; }
+  .carte-lib:hover{ transform:translateY(-3px); }
+  .carte-lib img{ width:100%; aspect-ratio:1/1; object-fit:cover; image-rendering:pixelated; display:block; }
+  .carte-lib-corps{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:4px; }
+  .carte-lib-titre{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; }
+  .carte-lib-diff{ font-size:11.5px; color:#8a929a; }
 </style>
 </head>
 <body id="qz-top">
@@ -232,8 +221,8 @@
       </ul>
     </li>
     <li><a href="../boutique/">Boutique</a></li>
-    <li><a href="index.html">Blog</a></li>
-    <li><a href="../coloriages/">Coloriages</a></li>
+    <li><a href="../blog/">Blog</a></li>
+    <li><a href="index.html">Coloriages</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -241,47 +230,38 @@
 </nav>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<main class="blog">
-  <div class="blog-entete">
-    <div class="eyebrow">Quadreti · Blog</div>
-    <h1>Idées, coulisses et inspirations</h1>
-    <p>Compositions, astuces de montage et histoires de murs Quadreti.</p>
+<section class="blk">
+  <div class="wrap center">
+    <div class="eyebrow">Pour les enfants</div>
+    <h1>Des coloriages pixel à imprimer, gratuitement</h1>
+    <p class="lead">Chaque case porte un numéro, chaque numéro une couleur : un coloriage calme et gratifiant, à faire et refaire. Cliquez sur un modèle, imprimez-le (Ctrl+P) et c'est parti.</p>
+    <div class="grille-lib"><a class="carte-lib" href="coloriage-chat.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABVklEQVR4AcSSoU5DQRBFJzVYHO8PcCAwJGBQCAwCAwaCxZDwFSQgsQQDGotDIDAkgOsfvLpWVrU5m04zs29na9q0ye2bnXvndDavvc92NFmFerKiz3rAOx/X4X1qHkPhxtt/T/gCoCRMzVDnCsEb7U+e7ZxrmSKYDTuUoBFlO+Da9QK2lGYcmEDtehGYGWat78DWoH75auXo/pfSiR6ea2YHB+aXMz8dLcTWyZx95bMOPMu4x+VBI1eHjYybvSRqei5UOFTB52cncvvwKpunj7K1f5FETQ+vwJu3qmBgmhx8vwnSs/W0Z58OzHXVZDOteQJC1CqbsbP4DkxjWXLg/u5NekHA7bU5l6QZtmXWZhwYQwP8fXSQfi48MvR1hlrVAWP8Hz+nzRkcvt+llwZIRQ+PTckyk6sIJsQWDDEMxIoeHhmyJYVgDTMMxIqe+tFzITgaXNSfAgAA///6OgKgAAAABklEQVQDAM5f2z19tMsTAAAAAElFTkSuQmCC" alt="Coloriage le chat à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le chat</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-dinosaure.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABkElEQVR4AeyTvUoDURCFh2AhKUREooElahMQBCtFFBQ7CxHs8gg2voWNYKWNvoG1WNiJhSCKhSAINv6whYioWAQRQfMNO8vuvbvZWKQz5NyZO3PmzP3b0uXb1083UJIu/f6F44MtPIrXZigg/DhSG1cWOIXCNy+H0vy+lounY7UFetqchbQVhnB1eyYP7/eqZ1YnGQN8FkIqUxgCW2elk/UZeLIQrMtcbU39vMFEB8qBZAqfhDuyt7UtB+f78vx5pyB2+rgrNAQ0TzYgBtdinrAVVOcrUq0NGU8thZw1SDbSZDSM9I+q5wlrtDW4oq2Q97dG7CToW5LV+qZgIeYKk+wUNOAoknxPmINPEjr13RfjCSNU6R3DeCBu8JJOIFPYLgAuQlPDiwKIG5gD8vBceMJcBNtKFjB3C21OI7jjg8sWUpsS5qnxpQGIFOCDduJ8OO7dpIS1VTRApCCaZppyz0T8vFxCrrBLZMu80SRo7vJsnhKG2JjdEGAE/JXpRu7KjOfalDBJxAE+wGeV+H/BLwAAAP//dryTawAAAAZJREFUAwCw+/O7caNhvwAAAABJRU5ErkJggg==" alt="Coloriage le dinosaure à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le dinosaure</span><span class="carte-lib-diff">Moyen — 6-8 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-voiture.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABOklEQVR4AeySP0tCURjGX4w+Q0MNfYSgtbGtoCYbGxqjtT6DTYE0NrQUNSno5iKIm+DgB3DQQXBxFlF+B57DuZdzFAURwQvPff88z/vcl3NPYTbpzbeBgm3pORj7g93dUbT+GzZ4fInCrxdJVm58Xq+6sbPvsgn9mzsDjki8lhqzLXMxk6vitYlHk8dSY23LECYCfXL6KWSMEYfnqSGMQtBXLT2z9IWMMWIR68b8bMZ4XbO8ftp9862kcWl6ZMArIwk8EHV8UVJqUWPEneHIiYr9sYv5l/rolIeajDH3lKuF+P35yR7ub52WD9EPAQGPjhyOKHhj/iqAuDw9sdfPL/ur1CiTgAcSaJ7aG3PhhfLPh2GuzanFKbIpPCbt5q+pTw28MUUIzDQQ9pVjBI9OvTAmjUPRJvn+GS8AAAD//9mCVBoAAAAGSURBVAMAanrpwzZOSiAAAAAASUVORK5CYII=" alt="Coloriage la voiture à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">La voiture</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-fusee.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABDUlEQVR4AcSTMarCQBCG59m81z3wACIIVl7AW4iliOIJPIpgaaUi2tpYWAk2egnBK9hppXwLkXHZSaYJBv7sP//ufJlAUqm1us8yVJGSru+D+/WnIO8Luice/t8FWeD4oS6wbtJeP2R1/dGluMB6Uu0/SFFRCE5NmMoibvHE7d5AqtONHMfzIDxZDIrrwolp2F4eLEHah8C4ucBGb27sAncav2+I9u8wYVxg+gAivEdusAemz+SC+axO66U+HzwZe6Ewbrng7GeYDEdy3h+C8LCyPXxKJpiJFrc/yX7V5m4mCAgZe5yhTskE04xoylbtyZAFN8FAtJgQ6QwPnDWWGwwAxQCrdoMtgJWXBn4BAAD//7gpA6EAAAAGSURBVAMAmxpzfwk6bfUAAAAASUVORK5CYII=" alt="Coloriage la fusée à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">La fusée</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-poisson.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABCklEQVR4AdSToYpCYRCFf0zLhX2E3boLGzcKBpPZIAarT2C0WIwGsy8gBrPJIBi1qlUfQbzYlG9gZBz+K1cxqDDOzJlzvssVLPRXy9MzqxCe/HlT4P9nEv0hKp12VLdi9JUX+9R6ZFZYaTuWPesrClQz4ea6Faiv+jFQP+lcdm7qs12AsSMQwtbs51hOgATtEZgP232TFMNomopkcwgCZAAKyBu4+cJbKyeBTtn7BWjFPLMHaeYC5DUGv70w+67q7aEuQGAWBDgvzXsFaGEKwsiDdPedGx6vC9CLuvMgQoR3w49AMaMd/hpqu+o3geoEPOl0ZWVmiP2b0HMBMVIKZc6qu4BZEKu/PvAMAAD//ykSdiMAAAAGSURBVAMAJcCWTZ9XspMAAAAASUVORK5CYII=" alt="Coloriage le poisson à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le poisson</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-papillon.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABLElEQVR4AcSSrU5DQRCFN30MguAJEOh6whvggBdokDiCxpC+AKAgeEIIFl2BRACCVFRUNTUVbb+bzGR2djbpTXrTpic7e+acr7+9xWyy7EK91NFjt+DPh7F+LjurGQzhO6ZsRe/5+jEhZrtjxvMqwFHw//cjDd/uGzF7SNTJwD5wdDj0DL37ne9mYG2tBynKubb0KZ6cujCDgv0rmszGo2UouH++lwFGX4PsHl18xjIUXCv6Mjk8xFxTBravyK8v8mXxOWVnu3gZGIPAwftl6n+/ZmKHvN9k3ddIrgDPR1f4rRR1CvD09qcVlHDUKcAEt6ECvP/00pobdQowVB/8O77DbmRnDJ/FQyGYBQUR/5TByUVCzOJzko1UBfvw6c1ZQt6v3TcG1wA1vzPwCgAA//8epN68AAAABklEQVQDAMqI3L3Y6WoWAAAAAElFTkSuQmCC" alt="Coloriage le papillon à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le papillon</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-arc-en-ciel.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABoklEQVR4AbSUMUsDURCElyOFgmJaC7ER4UAESwU7SWPhHwg21mnF0tJORPwD/gN7G7FVEBHETklhJwqCoIXyLcyxeXcxkLsEhre7MzvzHoTLbt++fyeJzCb8ayxg5uXS8vsdB7Xu3UgAxgsfp/I0aoXUDpBR4Z4UtQMSv1JbO+BzcatkGge1AzDrz/U4CtAruJEAzB5XL0ygV1ojATKrOkcG8C9pnx8ZmN/fNkAN4KpM42xoAAaYzZ4d2/TDtUOL6uHQoBWXnqUAbsUSJojb3Zb9BzRo2WGXPmIgAAG3kgBj1cPOqGEXj6gdCEAAyRKgFk6m1ixCc060gFoe1KAI4IkMJKQGMqWOqJprV17oPSB9FgTAhLP/3LUqwElDHSFPD2hd3TinG9BoEWP6/OnHIpiJk5aZPOTpAfwLIAUtyABjcTo1k0Y74uWZ6SlKlkCnjDZ6uUXAi6OOkBfe/oJIqtbN6DHmjIizqI0aag/4Wtm017t14ysIIMYBuwAvPPHI+PK97x4YoAad5UPb6yw54k0t+cFJxw67AC9A7S9I9hpt/wAAAP//9ML6hQAAAAZJREFUAwB2EQ4gQD9QLwAAAABJRU5ErkJggg==" alt="Coloriage l'arc-en-ciel à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">L'arc-en-ciel</span><span class="carte-lib-diff">Moyen — 6-8 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-etoile.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABSElEQVR4AayRPUpDURCFh/iHIAh2FkLqmM4yuAIbEd2CtjZZgLWN2JktaOsK3IJYBywsbbTRBM13YSYzL5Mfkice7pkzZ867mds4aJ/91YmG1Py3cmBzfzNcaaHA6/NfAWFySrFQYOdwICDL6H/8BHluID+p3RQB8DCdFHMDTzvfNua5iRUSAo9bX2VX7EtxdTKwEbjqejJjhhEJge+fe2VXDCpGnvCvOid7ZcYbQiAL7vZ25bU/tlzeDkuNBtcONV5mVOMMgQgYMDJA3euulQfhUeBo9PDgpfaYCKSJ8f5xCE1BD482/eungRiPWlscKao9H26B/iuksHBO8PC8LgAOfI/awwL9VwhnZ+yKh7h72hAAR6OHxwcpt0AV9ORGFzfb8vK2o1LhaPRMrJA0kNtyo4rXylm9NNAmZxA+mrWXDszC0GoP/AcAAP//x1FRoQAAAAZJREFUAwBYIqMxV+YxvQAAAABJRU5ErkJggg==" alt="Coloriage l'étoile à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">L'étoile</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a></div>
   </div>
-  <div class="blog-grille" id="blogGrille">
-    <p class="blog-vide">Chargement…</p>
-  </div>
-</main>
-
-<script>
-'use strict';
-var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
-var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
-fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publication&statut=eq.publie&order=date_publication.desc', {
-  headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
-}).then(function(r){ return r.json(); }).then(function(articles){
-  var grille = document.getElementById('blogGrille');
-  if (!articles || !articles.length) {
-    grille.innerHTML = "<p class=\"blog-vide\">Aucun article pour l'instant — revenez bientôt.</p>";
-    return;
-  }
-  grille.textContent = '';
-  articles.forEach(function(a){
-    var carte = document.createElement('a');
-    carte.className = 'blog-carte';
-    carte.href = 'article.html?slug=' + encodeURIComponent(a.slug);
-    var img = a.image ? '<img src="' + a.image + '" alt="">' : '';
-    var date = new Date(a.date_publication + 'T00:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-    carte.innerHTML = img +
-      '<div class="corps"><span class="date"></span><h2></h2><p></p></div>';
-    carte.querySelector('.date').textContent = date;
-    carte.querySelector('h2').textContent = a.titre;
-    carte.querySelector('p').textContent = a.extrait;
-    grille.appendChild(carte);
-  });
-}).catch(function(){
-  document.getElementById('blogGrille').innerHTML = "<p class=\"blog-vide\">Impossible de charger les articles pour l'instant.</p>";
-});
-</script>
+</section>
 
 <footer class="qz-footer">
   <div class="qz-basdepage">
