@@ -651,7 +651,13 @@ function valeursDepuisFormulaire(cle){
 }
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');
-  if (cle) enregistrer(cle, valeursDepuisFormulaire(cle));
+  if (!cle) return;
+  var valeurs = valeursDepuisFormulaire(cle);
+  if (cle === 'popup' && valeurs.actif && !valeurs.titre && !valeurs.texte) {
+    toast('Diffusion active mais titre et texte vides : la popup ne s\'affichera pas. Ajoutez au moins l\'un des deux.', true);
+    return;
+  }
+  enregistrer(cle, valeurs);
 });
 
 /* ---------- Popup ---------- */
