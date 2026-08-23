@@ -692,12 +692,14 @@
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
   <!-- Test bandeau video (fil Video/Animation, 23/08/2026) : 4 carreaux qui se remplissent
-       depuis les coins pour reconstruire un oeil colore. Remplace temporairement le diaporama
-       photo pour jugement en situation ; l'ancien diaporama (8 photos) reste dans l'historique
-       git si on revient en arriere. -->
+       depuis les coins pour reconstruire un oeil colore. Deux sources responsive (carree en
+       dessous de 760px, meme seuil que .hero, large au-dessus) pour un recadrage correct sur
+       mobile. Remplace temporairement le diaporama photo pour jugement en situation ;
+       l'ancien diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
-      <video class="shot" style="object-position:60% center" autoplay muted loop playsinline poster="img/bandeau-1-impression.jpg">
+      <video class="shot" autoplay muted loop playsinline poster="img/bandeau-1-impression.jpg">
+        <source media="(max-width:759px)" src="video/quadreti-bandeau-oeil-carre.mp4" type="video/mp4">
         <source src="video/quadreti-bandeau-oeil.mp4" type="video/mp4">
       </video>
     </div>
