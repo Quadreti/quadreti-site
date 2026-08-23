@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le blog Quadreti — Composez, imprimez, clipsez</title>
-<meta name="description" content="Idées de composition, coulisses de fabrication et inspirations pour votre mur Quadreti.">
+<title>Quadreti — Contact</title>
+<meta name="description" content="Une commande en cours, une question avant d'acheter, un souci de montage ou une demande presse : dites-nous ce qu'il vous faut.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600&display=swap" rel="stylesheet">
@@ -33,9 +33,6 @@
   .qz-doti{ position:relative; display:inline-block; }
   .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
 
-  /* Animation dactylo — CSS pur, lettre par lettre, ~2.3s au chargement.
-     Chaque lettre est un <b> (sans gras) qui apparaît à son tour ;
-     le point terracotta du ı final apparaît en dernier. */
   .qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }
   .qz-wordmark b:nth-child(1){ animation-delay:.40s; }
   .qz-wordmark b:nth-child(2){ animation-delay:.62s; }
@@ -49,9 +46,6 @@
   .qz-qlogo{ opacity:0; animation:qzLettre .4s ease forwards; animation-delay:.15s; }
   @keyframes qzLettre{ to{ opacity:1; } }
 
-  /* Colonne mot + catégorie — alignement du SVG de référence LOGO CATEGORIE.svg :
-     baseline « Support créatif modulaire » en terracotta, alignée à gauche du mot,
-     apparaît en fondu une fois le mot écrit. */
   .qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
   .qz-cat{
     font-family:'Quicksand',sans-serif; font-weight:600; font-size:8.5px; letter-spacing:.08em;
@@ -99,15 +93,10 @@
   .qz-sublist a{ font-size:12.5px; font-weight:600; color:#9aa2a9; padding:8px 0; }
   .qz-sublist a:hover{ color:var(--qz-terracotta); }
 
-  /* ===== FOOTER (3 étages empilés) ===== */
-  /* Remise à zéro : chaque page avait sa propre règle sur l'élément <footer>
-     (padding, fond...) qui encaissait le bloc commun — on neutralise tout
-     pour que le footer soit toujours pleine largeur, bord à bord. */
   footer.qz-footer{
     display:block; width:100%; max-width:none; box-sizing:border-box;
     padding:0; margin:0; background:transparent; border:none; text-align:initial;
   }
-  /* Étage 1 — bas de page : logo + baseline */
   .qz-basdepage{
     width:100%; background:var(--qz-charbon); box-sizing:border-box;
     padding:36px 32px 30px; display:flex; flex-direction:column; align-items:center; gap:10px;
@@ -120,7 +109,6 @@
   .qz-basdepage .qz-wordmark b, .qz-basdepage .qz-wordmark .qz-dot{ opacity:1; animation:none; }
   .qz-baseline{ font-family:'Quicksand',sans-serif; font-weight:500; font-size:12px; color:#c9c3b2; }
 
-  /* Étage 2 — réseaux sociaux */
   .qz-reseaux{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:56px 32px; text-align:center; }
   .qz-reseaux .qz-accroche{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:20px; color:var(--qz-creme); margin:0 0 4px; }
   .qz-reseaux .qz-sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 32px; font-family:'Karla',sans-serif; }
@@ -136,15 +124,12 @@
     background:var(--qz-terracotta); color:var(--qz-creme);
   }
   .qz-reseaux .qz-ico{ width:22px; height:22px; display:block; fill:currentColor; }
-  /* Mobile : grille fluide — les carrés rétrécissent avec l'écran au lieu de déborder
-     (largeur fixe 58px seulement quand la place existe). */
   @media (max-width:640px){
     .qz-reseaux{ padding:44px 20px; }
     .qz-reseaux .qz-grid{ display:grid; width:100%; max-width:320px; margin:0 auto; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
     .qz-reseaux .qz-grid a{ width:100%; max-width:58px; height:auto; aspect-ratio:1/1; margin:0 auto; }
   }
 
-  /* Étage 3 — footer légal en cartouches + copyright unique */
   .qz-legal{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:0 32px 32px; }
   .qz-legal .qz-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:820px; margin:0 auto; }
   .qz-legal a.qz-leg{
@@ -164,7 +149,6 @@
     .qz-basdepage{ padding:30px 20px 26px; }
   }
 
-  /* Bouton flottant retour en haut — fixe, suit le scroll */
   .qz-fab{
     position:fixed; right:18px; bottom:18px; z-index:70;
     width:38px; height:38px; border-radius:50%;
@@ -178,35 +162,53 @@
 </style>
 <style>
   body{ margin:0; background:var(--fond,#F5F5F5); font-family:'Karla',sans-serif; color:var(--charbon,#2b353e); }
-  main.blog{ max-width:900px; margin:0 auto; padding:48px 22px 64px; }
-  .blog-entete{ text-align:center; margin-bottom:40px; }
-  .blog-entete .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
-  .blog-entete h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(26px,4vw,38px); margin:0 0 10px; }
-  .blog-entete p{ color:#5c646c; font-size:15px; max-width:520px; margin:0 auto; }
-  .blog-grille{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; }
-  .blog-carte{ display:block; text-decoration:none; color:inherit; background:#fff; border:1px solid #2b353e18; border-radius:14px; overflow:hidden; transition:transform .15s ease, box-shadow .15s ease; }
-  .blog-carte:hover{ transform:translateY(-3px); box-shadow:0 12px 28px #00000014; }
-  .blog-carte img{ width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:#eceae3; }
-  .blog-carte .corps{ padding:16px 18px 20px; }
-  .blog-carte .date{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:6px; display:block; }
-  .blog-carte h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:17px; margin:0 0 8px; line-height:1.3; }
-  .blog-carte p{ font-size:13.5px; color:#5c646c; line-height:1.5; margin:0; }
-  .blog-vide{ text-align:center; color:#8a9099; padding:60px 20px; font-size:14px; }
-  .blog-article{ max-width:680px; margin:0 auto; }
-  .blog-article .date{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); }
-  .blog-article h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin:10px 0 20px; line-height:1.2; }
-  .blog-article img.couverture{ width:100%; max-height:380px; object-fit:cover; border-radius:14px; margin-bottom:26px; background:#eceae3; }
-  .blog-article .contenu{ font-size:15.5px; line-height:1.75; }
-  .blog-article .contenu p{ margin:0 0 18px; }
-  .blog-article .contenu h3{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:19px; margin:28px 0 12px; }
-  .blog-article .contenu a{ color:var(--terracotta,#e2725b); font-weight:600; }
-  .blog-article .retour{ display:inline-block; margin-bottom:24px; font-size:13.5px; font-weight:700; color:var(--charbon,#2b353e); text-decoration:none; }
-  .blog-article .retour:hover{ color:var(--terracotta,#e2725b); }
+  .wrap{ max-width:1060px; margin:0 auto; padding:0 22px; }
+  .rv{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
+  .rv.in{ opacity:1; transform:none; }
+  section.blk{ padding:clamp(48px,7vw,80px) 0; }
+  .center{ text-align:center; }
+  .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
+  .blk h1{ font-family:'Quicksand',sans-serif; font-size:clamp(24px,3.4vw,36px); font-weight:700; letter-spacing:-.01em; line-height:1.15; margin:0 0 14px; }
+  .blk p.lead{ font-size:16px; color:#5c646c; max-width:560px; margin:0 auto; }
+
+  .reason-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:38px; }
+  .reason{
+    background:#fff; border:1px solid #2b353e18; border-radius:8px 8px 8px 22px;
+    padding:24px 22px 20px; text-align:left; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+    font-family:inherit;
+  }
+  .reason:hover{ transform:translateY(-3px); border-color:var(--charbon,#2b353e); }
+  .reason.active{ border-color:var(--charbon,#2b353e); box-shadow:0 8px 20px rgba(43,53,62,.14); }
+  .reason .ic{
+    width:38px; height:38px; border-radius:8px 8px 8px 15px; background:var(--terracotta,#e2725b); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; margin-bottom:12px;
+  }
+  .reason h3{ font-family:'Quicksand',sans-serif; font-size:16px; font-weight:700; margin:0 0 5px; }
+  .reason p{ font-size:13.5px; color:#5a636b; margin:0; }
+
+  .c-form-compact{ max-width:640px; margin:40px auto 0; background:#fff; border:1px solid #2b353e18; border-radius:8px 8px 8px 22px; padding:clamp(24px,4vw,36px); }
+  .c-field{ margin-bottom:18px; }
+  .c-field label{ display:block; font-weight:700; font-size:14px; margin-bottom:6px; }
+  .c-field input, .c-field select, .c-field textarea{
+    width:100%; font-family:inherit; font-size:15px; padding:12px 14px; box-sizing:border-box;
+    border:1.5px solid #2b353e18; border-radius:10px; background:var(--fond,#F5F5F5); color:var(--charbon,#2b353e);
+  }
+  .c-field textarea{ resize:vertical; min-height:120px; }
+  .c-field input:focus, .c-field select:focus, .c-field textarea:focus{ outline:2px solid var(--terracotta,#e2725b); outline-offset:1px; }
+  .c-submit{
+    display:block; width:100%; text-align:center; border:none; border-radius:99px;
+    padding:15px 34px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:15.5px;
+    background:var(--charbon,#2b353e); color:#fff; cursor:pointer; transition:transform .15s ease;
+  }
+  .c-submit:hover{ transform:translateY(-2px); }
+  .direct-note{ text-align:center; margin-top:22px; font-size:14.5px; color:#6a727b; }
+  .direct-note a{ color:var(--charbon,#2b353e); font-weight:700; }
 </style>
 </head>
 <body id="qz-top">
+<!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <header class="qz-header">
-  <a class="qz-logorow" href="../index.html" aria-label="Quadreti — accueil">
+  <a class="qz-logorow" href="index.html" aria-label="Quadreti — accueil">
     <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
     <span class="qz-wm-col">
       <span class="qz-wordmark" aria-label="Quadreti"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
@@ -221,67 +223,88 @@
 
 <nav class="qz-navpanel" id="qzNavPanel" aria-label="Menu principal">
   <ul>
-    <li><a href="../index.html">Accueil</a></li>
+    <li><a href="index.html">Accueil</a></li>
     <li class="qz-hassub" id="qzCcmItem">
       <button class="qz-subtoggle" id="qzCcmToggle" aria-expanded="false">
         Comment ça marche <span class="qz-chev">▾</span>
       </button>
       <ul class="qz-sublist">
-        <li><a href="../quadreti-guide-interactif.html">Guide de l'app</a></li>
-        <li><a href="../quadreti-guide-codification.html">Guide de montage</a></li>
+        <li><a href="quadreti-guide-interactif.html">Guide de l'app</a></li>
+        <li><a href="quadreti-guide-codification.html">Guide de montage</a></li>
       </ul>
     </li>
-    <li><a href="../boutique/">Boutique</a></li>
-    <li><a href="index.html">Blog</a></li>
-    <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
-    <li><a href="../index.html#faq">FAQ</a></li>
-    <li><a href="../contact.html">Contact</a></li>
+    <li><a href="boutique/">Boutique</a></li>
+    <li><a href="blog/">Blog</a></li>
+    <li><a href="index.html#livraison">Livraison &amp; paiement</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<main class="blog">
-  <div class="blog-entete">
-    <div class="eyebrow">Quadreti · Blog</div>
-    <h1>Idées, coulisses et inspirations</h1>
-    <p>Compositions, astuces de montage et histoires de murs Quadreti.</p>
+<section class="blk" id="contact-hero">
+  <div class="wrap center">
+    <div class="eyebrow">Nous contacter</div>
+    <h1>Dites-nous ce qu'il vous faut.</h1>
+    <p class="lead">Choisissez le motif de votre message : nous l'orientons directement vers la bonne réponse.</p>
   </div>
-  <div class="blog-grille" id="blogGrille">
-    <p class="blog-vide">Chargement…</p>
+</section>
+
+<section class="blk" id="contact-reasons" style="padding-top:0">
+  <div class="wrap">
+    <div class="reason-grid">
+      <button class="reason" data-subject="Commande en cours" type="button">
+        <div class="ic">1</div>
+        <h3>Une commande en cours</h3>
+        <p>Suivi, délai, modification, annulation.</p>
+      </button>
+      <button class="reason" data-subject="Question avant achat" type="button">
+        <div class="ic">2</div>
+        <h3>Avant d'acheter</h3>
+        <p>Format, montage, compatibilité imprimante.</p>
+      </button>
+      <button class="reason" data-subject="Montage / SAV" type="button">
+        <div class="ic">3</div>
+        <h3>Montage ou SAV</h3>
+        <p>Pièce abîmée, question de pose, remplacement.</p>
+      </button>
+      <button class="reason" data-subject="Presse / partenariat" type="button">
+        <div class="ic">4</div>
+        <h3>Presse &amp; partenariats</h3>
+        <p>Journalistes, collaborations, revendeurs.</p>
+      </button>
+    </div>
+
+    <form class="c-form-compact" id="contactForm" action="https://formspree.io/f/myegbdyd" method="post" enctype="multipart/form-data">
+      <div class="c-field">
+        <label for="subjectB">Sujet</label>
+        <input type="text" id="subjectB" name="subject" value="Question avant achat" required>
+      </div>
+      <div class="c-field">
+        <label for="nameB">Nom</label>
+        <input type="text" id="nameB" name="name" required>
+      </div>
+      <div class="c-field">
+        <label for="emailB">E-mail</label>
+        <input type="email" id="emailB" name="email" required>
+      </div>
+      <div class="c-field">
+        <label for="messageB">Message</label>
+        <textarea id="messageB" name="message" required></textarea>
+      </div>
+      <div class="c-field">
+        <label for="fileB">Photo ou document (facultatif)</label>
+        <input type="file" id="fileB" name="attachment" accept="image/*,.pdf">
+      </div>
+      <p style="font-size:13px; color:#6a727b; margin:-10px 0 18px;">Utile pour une pièce abîmée ou un visuel à montrer. Formats acceptés : images, PDF.</p>
+      <button class="c-submit" type="submit">Envoyer le message</button>
+    </form>
+
+    <p class="direct-note">Vous préférez écrire directement ? <a href="mailto:contact@quadreti.fr">contact@quadreti.fr</a> — réponse sous 48h ouvrées.</p>
   </div>
-</main>
+</section>
 
-<script>
-'use strict';
-var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
-var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
-fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publication&statut=eq.publie&order=date_publication.desc', {
-  headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
-}).then(function(r){ return r.json(); }).then(function(articles){
-  var grille = document.getElementById('blogGrille');
-  if (!articles || !articles.length) {
-    grille.innerHTML = "<p class=\"blog-vide\">Aucun article pour l'instant — revenez bientôt.</p>";
-    return;
-  }
-  grille.textContent = '';
-  articles.forEach(function(a){
-    var carte = document.createElement('a');
-    carte.className = 'blog-carte';
-    carte.href = 'article.html?slug=' + encodeURIComponent(a.slug);
-    var img = a.image ? '<img src="' + a.image + '" alt="">' : '';
-    var date = new Date(a.date_publication + 'T00:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-    carte.innerHTML = img +
-      '<div class="corps"><span class="date"></span><h2></h2><p></p></div>';
-    carte.querySelector('.date').textContent = date;
-    carte.querySelector('h2').textContent = a.titre;
-    carte.querySelector('p').textContent = a.extrait;
-    grille.appendChild(carte);
-  });
-}).catch(function(){
-  document.getElementById('blogGrille').innerHTML = "<p class=\"blog-vide\">Impossible de charger les articles pour l'instant.</p>";
-});
-</script>
-
+<!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <footer class="qz-footer">
   <div class="qz-basdepage">
     <div class="qz-logorow">
@@ -305,19 +328,19 @@ fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publ
 
   <div class="qz-legal">
     <div class="qz-row">
-      <a class="qz-leg" href="../mentions-legales.html">
+      <a class="qz-leg" href="mentions-legales.html">
         <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
         <span>Mentions<br>légales</span>
       </a>
-      <a class="qz-leg" href="../cgv.html">
+      <a class="qz-leg" href="cgv.html">
         <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
         <span>CGV</span>
       </a>
-      <a class="qz-leg" href="../cgu.html">
+      <a class="qz-leg" href="cgu.html">
         <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r=".6" fill="currentColor" stroke="none"/></svg>
         <span>CGU &amp;<br>RGPD</span>
       </a>
-      <a class="qz-leg" href="../index.html#livraison">
+      <a class="qz-leg" href="index.html#livraison">
         <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8h11v9H2z"/><path d="M13 11h4l4 3v3h-8z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
         <span>Livraison &amp;<br>paiement</span>
       </a>
@@ -335,8 +358,6 @@ fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publ
 </a>
 
 <script>
-/* Bloc commun — seul JS embarqué : ouverture/fermeture du volet menu
-   (aucune animation en JS, conformément à la consigne CSS pur). */
 (function(){
   var btn = document.getElementById('qzMenuBtn');
   var panel = document.getElementById('qzNavPanel');
@@ -364,6 +385,18 @@ fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publ
 })();
 </script>
 <!-- ===== FOOTER COMMUN — FIN ===== -->
-<script src="../reglages-site.js" defer></script>
+
+<script>
+  document.querySelectorAll('.reason').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.reason').forEach(function(r){ r.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('subjectB').value = btn.dataset.subject;
+      var form = document.getElementById('contactForm');
+      form.scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+  });
+</script>
+<script src="reglages-site.js" defer></script>
 </body>
 </html>
