@@ -75,6 +75,22 @@
   .favicon-apercu{ display:flex; align-items:center; gap:10px; }
   .favicon-apercu img{ width:32px; height:32px; border:1px solid var(--bord); border-radius:6px; background:var(--fond); object-fit:contain; }
   .favicon-apercu input[type=file]{ display:none; }
+  .editeur-barre{ display:flex; gap:6px; margin-top:4px; }
+  .editeur-barre button{ background:var(--fond); border:1px solid var(--bord); border-radius:7px; padding:6px 11px; font-size:13px; color:var(--charbon); cursor:pointer; }
+  .editeur-barre button:hover{ background:var(--bord); }
+  .editeur-contenu{ min-height:140px; border:1px solid var(--bord); border-radius:9px; padding:12px 14px; background:var(--carte); font-size:14px; line-height:1.6; margin-top:6px; }
+  .editeur-contenu:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
+  .editeur-contenu h3{ font-size:15px; font-weight:700; margin:10px 0 6px; }
+  .editeur-contenu p{ margin:0 0 8px; }
+  .editeur-contenu a{ color:var(--terracotta); }
+  .blog-ligne{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px dashed var(--bord); font-size:13px; }
+  .blog-ligne:last-child{ border-bottom:none; }
+  .blog-ligne .titre{ flex:1; font-weight:600; }
+  .blog-ligne .badge-statut{ font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
+  .blog-ligne .badge-statut.publie{ background:#556B2F22; color:#556B2F; }
+  .blog-ligne .badge-statut.brouillon{ background:#8a909922; color:#6a727b; }
+  .blog-ligne .date{ color:var(--adouci); font-size:12px; white-space:nowrap; }
+  .blog-ligne button{ background:none; border:none; color:var(--terracotta); font-weight:600; font-size:12.5px; cursor:pointer; padding:4px 6px; }
   .memoriser{ margin-top:18px; padding-top:14px; border-top:1px solid var(--bord); }
   .memoriser-rang{ display:flex; gap:8px; flex-wrap:wrap; }
   .memoriser-rang select{ flex:0 0 150px; width:auto; }
@@ -144,6 +160,54 @@
           </select>
           <input type="text" id="memNom" placeholder="Nom (ex. Magazine Déco)" maxlength="24">
           <button class="discret" id="btnMemoriser">Mémoriser</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="carte">
+      <h2>Blog</h2>
+      <p class="aide">Créez, modifiez et publiez vos articles — visibles dès l'enregistrement en statut « Publié ».</p>
+      <div id="blogListe"></div>
+      <div class="actions"><button class="principal" type="button" id="btnNouvelArticle">+ Nouvel article</button></div>
+
+      <div id="blogFormulaire" class="cache" style="margin-top:18px; padding-top:16px; border-top:1px solid var(--bord);">
+        <input type="hidden" id="artId">
+        <label>Titre</label>
+        <input type="text" id="artTitre" placeholder="Comment composer votre premier mur">
+        <label>Adresse (générée depuis le titre, modifiable)</label>
+        <input type="text" id="artSlug" placeholder="comment-composer-votre-premier-mur">
+
+        <label style="margin-top:12px">Image de couverture</label>
+        <div class="favicon-apercu">
+          <img id="artImgApercu" src="" alt="" style="visibility:hidden; width:60px; height:44px; object-fit:cover;">
+          <input type="file" id="artImgFichier" accept="image/*">
+          <button class="discret" type="button" id="btnArtImg">Choisir une image</button>
+          <button class="discret" type="button" id="btnArtImgRetirer">Retirer</button>
+        </div>
+
+        <label style="margin-top:12px">Extrait (résumé affiché sur la liste)</label>
+        <textarea id="artExtrait"></textarea>
+
+        <label>Contenu</label>
+        <div class="editeur-barre">
+          <button type="button" data-cmd="bold" title="Gras"><b>G</b></button>
+          <button type="button" data-cmd="italic" title="Italique"><i>I</i></button>
+          <button type="button" data-cmd="lien" title="Lien">Lien</button>
+          <button type="button" data-cmd="soustitre" title="Sous-titre">Sous-titre</button>
+          <button type="button" data-cmd="paragraphe" title="Texte normal">¶</button>
+        </div>
+        <div id="artContenu" class="editeur-contenu" contenteditable="true"></div>
+
+        <div class="rang" style="margin-top:12px">
+          <div><label>Date de publication</label><input type="text" id="artDate" placeholder="2026-08-23"></div>
+          <div><label>Statut</label>
+            <select id="artStatut"><option value="brouillon">Brouillon</option><option value="publie">Publié</option></select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="principal" type="button" id="btnEnregistrerArticle">Enregistrer l'article</button>
+          <button class="discret" type="button" id="btnAnnulerArticle">Annuler</button>
+          <button class="discret" type="button" id="btnSupprimerArticle" style="color:#8a3324">Supprimer</button>
         </div>
       </div>
     </div>
@@ -417,6 +481,7 @@ function chargerReglages(){
     reglages = {};
     lignes.forEach(function(l){ reglages[l.cle] = l.valeur; });
     remplirFormulaires();
+    chargerListeArticles();
   });
 }
 function enregistrer(cle, valeur){
@@ -782,6 +847,158 @@ $('btnListeAbonnes').addEventListener('click', function(){
       : 'Aucun email pour l\'instant.';
     zone.classList.remove('cache');
     zone.style.minHeight = Math.min(220, 30 + res.d.length * 22) + 'px';
+  });
+});
+
+/* ---------- Blog ---------- */
+function genererSlug(titre){
+  var regexDiacritiques = new RegExp('[̀-ͯ]', 'g');
+  return (titre || '').toString().normalize('NFD').replace(regexDiacritiques, '')
+    .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'article';
+}
+/* Même logique que blog/article.html — le contenu passe par ici avant d'atteindre
+   la base, et sera re-nettoyé côté public aussi (défense en profondeur). */
+function nettoyerHtmlArticle(html){
+  var autorises = { P:[], BR:[], B:[], STRONG:[], I:[], EM:[], H3:[], A:['href'] };
+  var div = document.createElement('div');
+  div.innerHTML = html;
+  (function nettoyer(noeud){
+    Array.prototype.slice.call(noeud.childNodes).forEach(function(enfant){
+      if (enfant.nodeType === 1) {
+        var tag = enfant.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE') { noeud.removeChild(enfant); return; }
+        if (!autorises.hasOwnProperty(tag)) {
+          while (enfant.firstChild) noeud.insertBefore(enfant.firstChild, enfant);
+          noeud.removeChild(enfant);
+          return;
+        }
+        Array.prototype.slice.call(enfant.attributes).forEach(function(attr){
+          if (autorises[tag].indexOf(attr.name) === -1) enfant.removeAttribute(attr.name);
+        });
+        if (tag === 'A') {
+          var href = enfant.getAttribute('href') || '';
+          if (!/^https?:\/\//i.test(href)) enfant.removeAttribute('href');
+          enfant.setAttribute('target', '_blank'); enfant.setAttribute('rel', 'noopener');
+        }
+        nettoyer(enfant);
+      } else if (enfant.nodeType !== 3) {
+        noeud.removeChild(enfant);
+      }
+    });
+  })(div);
+  return div.innerHTML;
+}
+
+var articleEnEdition = null;
+
+function chargerListeArticles(){
+  rpc('admin_lister_articles', { p_phrase: phrase }).then(function(res){
+    var zone = $('blogListe');
+    if (!res.ok || !Array.isArray(res.d)) { zone.innerHTML = '<p class="aide">Impossible de charger les articles.</p>'; return; }
+    if (!res.d.length) { zone.innerHTML = '<p class="aide">Aucun article pour l\'instant.</p>'; return; }
+    zone.textContent = '';
+    res.d.forEach(function(a){
+      var l = document.createElement('div'); l.className = 'blog-ligne';
+      var titre = document.createElement('span'); titre.className = 'titre'; titre.textContent = a.titre;
+      var badge = document.createElement('span'); badge.className = 'badge-statut ' + a.statut; badge.textContent = a.statut === 'publie' ? 'Publié' : 'Brouillon';
+      var date = document.createElement('span'); date.className = 'date'; date.textContent = a.date_publication;
+      var btnMod = document.createElement('button'); btnMod.type = 'button'; btnMod.textContent = 'Modifier';
+      btnMod.addEventListener('click', function(){ ouvrirFormulaireArticle(a); });
+      l.appendChild(titre); l.appendChild(badge); l.appendChild(date); l.appendChild(btnMod);
+      zone.appendChild(l);
+    });
+  });
+}
+
+function ouvrirFormulaireArticle(a){
+  articleEnEdition = a || null;
+  $('artId').value = a ? a.id : '';
+  $('artTitre').value = a ? a.titre : '';
+  $('artSlug').value = a ? a.slug : '';
+  $('artImgApercu').src = (a && a.image) || '';
+  $('artImgApercu').style.visibility = (a && a.image) ? 'visible' : 'hidden';
+  $('artExtrait').value = a ? a.extrait : '';
+  $('artContenu').innerHTML = a ? nettoyerHtmlArticle(a.contenu || '') : '';
+  $('artDate').value = a ? a.date_publication : new Date().toISOString().slice(0, 10);
+  $('artStatut').value = a ? a.statut : 'brouillon';
+  $('btnSupprimerArticle').classList.toggle('cache', !a);
+  $('blogFormulaire').classList.remove('cache');
+  $('blogFormulaire').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function fermerFormulaireArticle(){
+  articleEnEdition = null;
+  $('blogFormulaire').classList.add('cache');
+}
+
+$('btnNouvelArticle').addEventListener('click', function(){ ouvrirFormulaireArticle(null); });
+$('btnAnnulerArticle').addEventListener('click', fermerFormulaireArticle);
+$('artTitre').addEventListener('input', function(){
+  if (!articleEnEdition) $('artSlug').value = genererSlug($('artTitre').value);
+});
+
+document.querySelectorAll('.editeur-barre button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    $('artContenu').focus();
+    var cmd = btn.getAttribute('data-cmd');
+    if (cmd === 'bold') document.execCommand('bold');
+    else if (cmd === 'italic') document.execCommand('italic');
+    else if (cmd === 'paragraphe') document.execCommand('formatBlock', false, 'P');
+    else if (cmd === 'soustitre') document.execCommand('formatBlock', false, 'H3');
+    else if (cmd === 'lien') {
+      var url = prompt('Adresse du lien (https://...)');
+      if (url) document.execCommand('createLink', false, url);
+    }
+  });
+});
+
+$('btnArtImg').addEventListener('click', function(){ $('artImgFichier').click(); });
+$('artImgFichier').addEventListener('change', function(){
+  var f = $('artImgFichier').files[0];
+  if (!f) return;
+  if (f.size > 4 * 1024 * 1024) { toast('Image trop lourde (4 Mo max).', true); return; }
+  var btn = $('btnArtImg'); btn.disabled = true; btn.textContent = 'Envoi...';
+  var ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+  televerserFichier(f, 'article-' + Date.now() + '.' + ext).then(function(res){
+    if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+    $('artImgApercu').src = res.d.url; $('artImgApercu').style.visibility = 'visible';
+  }).catch(function(){ toast('Envoi impossible (réseau).', true); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Choisir une image'; });
+});
+$('btnArtImgRetirer').addEventListener('click', function(){ $('artImgApercu').src = ''; $('artImgApercu').style.visibility = 'hidden'; });
+
+$('btnEnregistrerArticle').addEventListener('click', function(){
+  var titre = $('artTitre').value.trim();
+  var slug = genererSlug($('artSlug').value.trim() || titre);
+  if (!titre) { toast('Le titre est obligatoire.', true); return; }
+  var contenu = nettoyerHtmlArticle($('artContenu').innerHTML);
+  var id = $('artId').value || null;
+  var corps = {
+    p_phrase: phrase, p_id: id, p_slug: slug, p_titre: titre,
+    p_extrait: $('artExtrait').value.trim(), p_contenu: contenu,
+    p_image: $('artImgApercu').style.visibility === 'visible' ? $('artImgApercu').src : '',
+    p_date: $('artDate').value.trim() || new Date().toISOString().slice(0, 10),
+    p_statut: $('artStatut').value
+  };
+  rpc('admin_enregistrer_article', corps).then(function(res){
+    if (!res.ok) {
+      var msg = (res.d && res.d.message) || '';
+      if (msg.indexOf('duplicate') > -1 || msg.indexOf('unique') > -1) toast('Cette adresse existe déjà — changez-la.', true);
+      else toast('Échec de l\'enregistrement.', true);
+      return;
+    }
+    toast('Article enregistré.');
+    fermerFormulaireArticle();
+    chargerListeArticles();
+  });
+});
+$('btnSupprimerArticle').addEventListener('click', function(){
+  if (!articleEnEdition) return;
+  if (!confirm('Supprimer définitivement cet article ? Cette action est irréversible.')) return;
+  rpc('admin_supprimer_article', { p_phrase: phrase, p_id: articleEnEdition.id }).then(function(res){
+    if (!res.ok) { toast('Échec de la suppression.', true); return; }
+    toast('Article supprimé.');
+    fermerFormulaireArticle();
+    chargerListeArticles();
   });
 });
 

@@ -3,204 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boutique — Quadreti</title>
-<meta name="description" content="Commandez votre support créatif modulaire Quadreti : tesselles clipsables, sans colle, à recomposer autant de fois que vous voulez.">
-<meta name="theme-color" content="#2b353e">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Boutique Quadreti">
-<meta property="og:description" content="Commandez votre support créatif modulaire Quadreti.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' rx='46' fill='%23F5F5F5'/%3E%3Cg transform='translate%2836.50,36.50%29'%3E%3Crect x='0.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='177.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%23E2725B'/%3E%3C/g%3E%3C/svg%3E">
+<title>Le blog Quadreti — Composez, imprimez, clipsez</title>
+<meta name="description" content="Idées de composition, coulisses de fabrication et inspirations pour votre mur Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  /* Charte identique au site : memes variables, memes graisses, meme en-tete.
-     Toute couleur de cette page vient d'ici — rien n'est ecrit en dur ailleurs. */
-  :root{
-    --terracotta:#E2725B;
-    --terracotta-soft:#F6DED8;
-    --olive:#556B2F;
-    --olive-soft:#E9EDDD;
-    --kraft:#CBBD93;
-    --kraft-soft:#F1ECDD;
-    --charbon:#2b353e;
-    --fond:#F5F5F5;
-    --blanc:#FFFFFF;
-    --border:#E3E0DA;
-  }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  body{
-    font-family:'Quicksand', -apple-system, "Segoe UI", Arial, sans-serif;
-    background:var(--fond); color:var(--charbon);
-    font-size:15px; line-height:1.55;
-  }
-
-  /* ===== Ticker (harmonisation du 20/08/2026 — identique à l'accueil) ===== */
-  .ticker{ background:var(--charbon); color:#fff; overflow:hidden; padding:9px 0; }
-  .ticker-track{ display:flex; width:max-content; animation:tickerScroll 22s linear infinite; }
-  .ticker-track span{
-    font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.92;
-    padding:0 26px; border-right:1px solid rgba(255,255,255,.22); white-space:nowrap;
-  }
-  @keyframes tickerScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; overflow-x:auto; } }
-
-  /* ===== Menu sandwich (harmonisation du 20/08/2026 — identique à l'accueil, remplace
-     l'ancien .mainnav de cette page) ===== */
-  .burger{
-    width:37px; height:37px; border-radius:8px; border:1.5px solid var(--border); background:none;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;
-  }
-  .burger span{ width:15px; height:2px; background:var(--charbon); border-radius:2px; }
-  .mobile-menu{
-    display:none; flex-direction:column; gap:2px;
-    position:sticky; top:67px; z-index:49;
-    background:#fff; border-bottom:1px solid var(--border);
-    padding:10px 18px 16px;
-  }
-  .mobile-menu.open{ display:flex; }
-  .mobile-menu a{
-    text-decoration:none; color:var(--charbon); font-weight:700; font-size:15px;
-    padding:11px 8px; border-bottom:1px solid var(--fond);
-  }
-  .mobile-menu .mm-cta{
-    margin-top:12px; text-align:center; background:var(--charbon); color:#fff;
-    border-radius:99px; padding:13px; border-bottom:none;
-  }
-
-  /* ===== En-tete : copie conforme de celui du site ===== */
-  header.site{
-    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-    padding:15px 26px; border-bottom:1px solid var(--border);
-    position:sticky; top:0; background:rgba(255,255,255,.94); backdrop-filter:blur(6px); z-index:50;
-  }
-  .logo-row{ display:flex; align-items:flex-start; gap:13px; text-decoration:none; color:inherit; }
-  .wordmark-col{ display:flex; flex-direction:column; gap:5px; line-height:1; padding-top:1px; }
-  .wordmark{ font-weight:600; font-size:19px; }
-  .wordmark .i-dot{ position:relative; display:inline-block; }
-  .wordmark .accent-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:.16em; height:.16em; border-radius:.035em; background:var(--terracotta); }
-  .category{
-    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--terracotta); white-space:nowrap;
-  }
-  .qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:1.3px; }
-  .qlogo i{ display:block; border-radius:1.5px; background:var(--charbon); }
-  /* Header uniquement (pas le footer, qui n'a pas de ligne catégorie) : icône agrandie pour
-     que son bas s'aligne avec le bas de la catégorie (.wordmark-col = 36px de haut). */
-  .logo-row:not(.foot-logo) .qlogo{ grid-template-columns:repeat(4, 7.93px); grid-auto-rows:7.93px; gap:1.43px; }
-  .logo-row:not(.foot-logo) .qlogo i{ border-radius:1.75px; }
-  .qlogo i.empty{ visibility:hidden; }
-  .qlogo i.t{ background:var(--terracotta); }
-  .mainnav{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
-  .mainnav a{ color:var(--charbon); text-decoration:none; font-weight:600; font-size:14.5px; }
-  .mainnav a:hover{ color:var(--terracotta); }
-  .nav-cta{
-    background:var(--terracotta); color:var(--blanc) !important;
-    font-weight:700; border-radius:99px; padding:9px 20px;
-  }
-  .nav-cta:hover{ background:#cf6450; }
-
-  /* ===== Titre de page ===== */
-  .shop-head{ text-align:center; padding:44px 20px 6px; }
-  .shop-head h1{ font-size:clamp(28px,4.4vw,42px); font-weight:800; letter-spacing:-.01em; }
-  .shop-head .rule{
-    width:54px; height:4px; border-radius:99px; background:var(--terracotta);
-    margin:14px auto 0;
-  }
-  .shop-head p{ margin-top:16px; font-size:17px; color:#5c646c; max-width:620px; margin-inline:auto; }
-
-  /* ===== Zone boutique : pleine largeur, c'est tout l'interet d'avoir quitte le
-     constructeur qui bridait la largeur. ===== */
-  .shop{ width:100%; max-width:1500px; margin:0 auto; padding:26px 20px 72px; }
-  #my-store-139886004{ width:100%; }
-
-  /* Harmonisation du magasin Ecwid sur la charte : boutons terracotta, coins arrondis,
-     typo du site. Ecwid genere son propre HTML — on ne redessine pas son fonctionnement,
-     on aligne seulement ce qui se voit. */
-  #my-store-139886004,
-  #my-store-139886004 .ec-store{ font-family:'Quicksand', sans-serif !important; }
-  #my-store-139886004 .form-control__button,
-  #my-store-139886004 .ec-cart__button button,
-  #my-store-139886004 button.form-control__button{
-    background:var(--terracotta) !important;
-    border-color:var(--terracotta) !important;
-    color:var(--blanc) !important;
-    border-radius:99px !important;
-    font-weight:700 !important;
-  }
-  #my-store-139886004 .form-control__button:hover{ background:#cf6450 !important; }
-  #my-store-139886004 .ec-link,
-  #my-store-139886004 a{ color:var(--terracotta); }
-
-  /* ===== Pied de page — harmonisé le 20/08/2026 (identique à l'accueil) =====
-     Remplace l'ancien .foot (footer charbon, nav 4 liens, mention brevet) par réseaux
-     sociaux + cartouches légales + footer logo/baseline centré + bouton retour en haut. */
-  /* 20/08/2026 — Direction D retenue (footer), harmonisée avec l'accueil : structure
-     resserrée + accent terracotta renforcé. Cartouches en flex (aérées sur toute la
-     largeur desktop sans s'étirer géant), texte centré dans chaque bouton. */
-  .section-reseaux{ width:100%; background:#1f272e; padding:44px 22px; text-align:center; }
-  .section-reseaux .accroche{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:20px; color:var(--fond); margin:0 0 4px; }
-  .section-reseaux .sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 24px; }
-  .section-reseaux .grid{ display:inline-grid; grid-template-columns:repeat(5,58px); gap:24px; }
-  .section-reseaux a{
-    width:58px; height:58px; border-radius:12.8px;
-    display:flex; align-items:center; justify-content:center;
-    text-decoration:none; transition:transform .15s, box-shadow .15s, background .15s;
-    background:var(--terracotta); color:#fff;
-  }
-  .section-reseaux a svg{ width:22px; height:22px; display:block; fill:currentColor; }
-  .section-reseaux a:hover, .section-reseaux a:focus-visible{
-    transform:translateY(-4px) scale(1.04);
-    box-shadow:0 10px 18px rgba(0,0,0,.35);
-    background:#cf6450;
-  }
-  @media (max-width:520px){
-    .section-reseaux .grid{ grid-template-columns:repeat(5, 1fr); gap:12px; max-width:320px; }
-  }
-
-  .foot-legal{ background:#1f272e; padding:32px 22px 40px; border-top:2px solid var(--terracotta); }
-  .foot-legal .wrap{
-    max-width:1320px; margin:0 auto;
-    display:flex; flex-wrap:wrap; justify-content:center; gap:20px;
-  }
-  .foot-legal a{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    background:#2d363f; border:1px solid rgba(226,114,91,.28); border-radius:12px;
-    padding:14px 22px; text-decoration:none; color:#e5e1e1;
-    font-size:13px; font-weight:600;
-    transition:background .15s, border-color .15s; flex:0 1 auto;
-  }
-  .foot-legal a:hover{ background:#37434e; border-color:rgba(226,114,91,.5); }
-  .foot-legal a svg{ width:18px; height:18px; flex:0 0 auto; fill:none; stroke:var(--terracotta); stroke-width:1.7; }
-
-  footer{ background:#1f272e; color:#aab2ba; padding:30px 22px 34px; border-top:1px solid rgba(255,255,255,.06); }
-  .foot{ max-width:1060px; margin:0 auto; display:flex; justify-content:center; align-items:center; }
-  .foot-brand{ display:flex; flex-direction:column; gap:11px; align-items:center; text-align:center; }
-  .foot-logo{ justify-content:center; }
-  .foot-logo .qlogo i{ background:var(--fond); }
-  .foot-logo .qlogo i.t{ background:var(--terracotta); }
-  .foot-logo .wordmark{ color:var(--fond); }
-  .foot-baseline{ font-size:12px; color:var(--terracotta); }
-
-  .to-top{
-    position:fixed; right:20px; bottom:20px; z-index:60;
-    width:44px; height:44px; border-radius:50%; border:none;
-    background:var(--charbon); color:#fff; box-shadow:0 8px 20px rgba(0,0,0,.28);
-    display:flex; align-items:center; justify-content:center;
-    opacity:0; pointer-events:none; transform:translateY(8px);
-    transition:opacity .2s ease, transform .2s ease, background .15s ease;
-  }
-  .to-top.show{ opacity:1; pointer-events:auto; transform:none; }
-  .to-top:hover{ background:var(--terracotta); }
-  .to-top svg{ width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2.2; }
-
-  @media (max-width:640px){
-    header.site{ padding:12px 15px; gap:10px; }
-    .mainnav{ gap:14px; width:100%; justify-content:center; }
-    .shop-head{ padding-top:30px; }
-    .shop{ padding:16px 12px 54px; }
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600&display=swap" rel="stylesheet">
 <style id="qz-bloc-commun">
   :root{
     --qz-charbon:#2B353E;
@@ -369,18 +176,35 @@
   .qz-fab svg{ width:14px; height:14px; stroke:var(--qz-kraft); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
   .qz-fab:hover svg{ stroke:var(--qz-creme); }
 </style>
-<script src="../reglages-site.js" defer></script>
+<style>
+  body{ margin:0; background:var(--fond,#F5F5F5); font-family:'Karla',sans-serif; color:var(--charbon,#2b353e); }
+  main.blog{ max-width:900px; margin:0 auto; padding:48px 22px 64px; }
+  .blog-entete{ text-align:center; margin-bottom:40px; }
+  .blog-entete .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
+  .blog-entete h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(26px,4vw,38px); margin:0 0 10px; }
+  .blog-entete p{ color:#5c646c; font-size:15px; max-width:520px; margin:0 auto; }
+  .blog-grille{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; }
+  .blog-carte{ display:block; text-decoration:none; color:inherit; background:#fff; border:1px solid #2b353e18; border-radius:14px; overflow:hidden; transition:transform .15s ease, box-shadow .15s ease; }
+  .blog-carte:hover{ transform:translateY(-3px); box-shadow:0 12px 28px #00000014; }
+  .blog-carte img{ width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:#eceae3; }
+  .blog-carte .corps{ padding:16px 18px 20px; }
+  .blog-carte .date{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:6px; display:block; }
+  .blog-carte h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:17px; margin:0 0 8px; line-height:1.3; }
+  .blog-carte p{ font-size:13.5px; color:#5c646c; line-height:1.5; margin:0; }
+  .blog-vide{ text-align:center; color:#8a9099; padding:60px 20px; font-size:14px; }
+  .blog-article{ max-width:680px; margin:0 auto; }
+  .blog-article .date{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta,#e2725b); }
+  .blog-article h1{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin:10px 0 20px; line-height:1.2; }
+  .blog-article img.couverture{ width:100%; max-height:380px; object-fit:cover; border-radius:14px; margin-bottom:26px; background:#eceae3; }
+  .blog-article .contenu{ font-size:15.5px; line-height:1.75; }
+  .blog-article .contenu p{ margin:0 0 18px; }
+  .blog-article .contenu h3{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:19px; margin:28px 0 12px; }
+  .blog-article .contenu a{ color:var(--terracotta,#e2725b); font-weight:600; }
+  .blog-article .retour{ display:inline-block; margin-bottom:24px; font-size:13.5px; font-weight:700; color:var(--charbon,#2b353e); text-decoration:none; }
+  .blog-article .retour:hover{ color:var(--terracotta,#e2725b); }
+</style>
 </head>
-<body>
-
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <span>CONCEPTION ET FABRICATION FRANÇAISES</span><span>SANS COLLE, SANS DÉTÉRIORATION</span><span>UNE IMPRIMANTE DE SALON SUFFIT</span>
-    <span>CONCEPTION ET FABRICATION FRANÇAISES</span><span>SANS COLLE, SANS DÉTÉRIORATION</span><span>UNE IMPRIMANTE DE SALON SUFFIT</span>
-  </div>
-</div>
-
-<!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<body id="qz-top">
 <header class="qz-header">
   <a class="qz-logorow" href="../index.html" aria-label="Quadreti — accueil">
     <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
@@ -407,8 +231,8 @@
         <li><a href="../quadreti-guide-codification.html">Guide de montage</a></li>
       </ul>
     </li>
-    <li><a href="./">Boutique</a></li>
-    <li><a href="../blog/">Blog</a></li>
+    <li><a href="../boutique/">Boutique</a></li>
+    <li><a href="index.html">Blog</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="mailto:contact@quadreti.fr">Contact</a></li>
@@ -416,34 +240,48 @@
 </nav>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<section class="shop-head">
-  <h1>La boutique</h1>
-  <div class="rule"></div>
-  <p>Composez, clipsez, recomposez — sans colle, autant de fois que vous voulez.</p>
-</section>
-
-<main class="shop">
-  <!-- Boutique Ecwid n° 139886004 : le magasin, le panier et le paiement sont chez Ecwid.
-       Cette page n'est que le contenant, aux couleurs Quadreti. -->
-  <div id="my-store-139886004"></div>
-  <script data-cfasync="false" type="text/javascript" src="https://app.ecwid.com/script.js?139886004&data_platform=code" charset="utf-8"></script>
-  <script type="text/javascript">
-    xProductBrowser(
-      "categoriesPerRow=3",
-      "views=grid(20,3) list(60) table(60)",
-      "categoryView=grid",
-      "searchView=list",
-      "id=my-store-139886004"
-    );
-  </script>
-  <noscript>
-    <p>Votre navigateur doit autoriser JavaScript pour afficher la boutique.
-       Vous pouvez aussi nous écrire à <a href="mailto:contact@quadreti.fr">contact@quadreti.fr</a>.</p>
-  </noscript>
+<main class="blog">
+  <div class="blog-entete">
+    <div class="eyebrow">Quadreti · Blog</div>
+    <h1>Idées, coulisses et inspirations</h1>
+    <p>Compositions, astuces de montage et histoires de murs Quadreti.</p>
+  </div>
+  <div class="blog-grille" id="blogGrille">
+    <p class="blog-vide">Chargement…</p>
+  </div>
 </main>
 
-<!-- ============ RÉSEAUX SOCIAUX (harmonisation 20/08/2026, identique à l'accueil) ============ -->
-<!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<script>
+'use strict';
+var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
+var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
+fetch(SB_URL + '/rest/v1/articles_blog?select=slug,titre,extrait,image,date_publication&statut=eq.publie&order=date_publication.desc', {
+  headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+}).then(function(r){ return r.json(); }).then(function(articles){
+  var grille = document.getElementById('blogGrille');
+  if (!articles || !articles.length) {
+    grille.innerHTML = "<p class=\"blog-vide\">Aucun article pour l'instant — revenez bientôt.</p>";
+    return;
+  }
+  grille.textContent = '';
+  articles.forEach(function(a){
+    var carte = document.createElement('a');
+    carte.className = 'blog-carte';
+    carte.href = 'article.html?slug=' + encodeURIComponent(a.slug);
+    var img = a.image ? '<img src="' + a.image + '" alt="">' : '';
+    var date = new Date(a.date_publication + 'T00:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+    carte.innerHTML = img +
+      '<div class="corps"><span class="date"></span><h2></h2><p></p></div>';
+    carte.querySelector('.date').textContent = date;
+    carte.querySelector('h2').textContent = a.titre;
+    carte.querySelector('p').textContent = a.extrait;
+    grille.appendChild(carte);
+  });
+}).catch(function(){
+  document.getElementById('blogGrille').innerHTML = "<p class=\"blog-vide\">Impossible de charger les articles pour l'instant.</p>";
+});
+</script>
+
 <footer class="qz-footer">
   <div class="qz-basdepage">
     <div class="qz-logorow">
@@ -526,36 +364,6 @@
 })();
 </script>
 <!-- ===== FOOTER COMMUN — FIN ===== -->
-
-<script>
-(function(){
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const burger = document.getElementById('burger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  if (burger && mobileMenu){
-    burger.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      burger.setAttribute('aria-expanded', open);
-      burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
-    });
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      burger.setAttribute('aria-expanded', 'false');
-    }));
-  }
-
-  const toTop = document.getElementById('toTop');
-  if (toTop){
-    window.addEventListener('scroll', () => {
-      toTop.classList.toggle('show', window.scrollY > 600);
-    }, { passive: true });
-    toTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    });
-  }
-})();
-</script>
-
+<script src="../reglages-site.js" defer></script>
 </body>
 </html>
