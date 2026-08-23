@@ -411,6 +411,16 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Textes de la bibliothèque de coloriages</h2></summary>
+      <p class="aide">Titre et accroche de la page d'accueil des coloriages (quadreti.fr/coloriages/). Les coloriages eux-mêmes sont des pages générées, pas éditables ici.</p>
+      <label>Titre</label>
+      <input type="text" id="colTitre" placeholder="Des coloriages pixel à imprimer, gratuitement">
+      <label>Accroche</label>
+      <textarea id="colAccroche"></textarea>
+      <div class="actions"><button class="principal" data-enregistre="page_coloriages">Enregistrer les textes des coloriages</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Photos du diaporama d'accueil</h2></summary>
       <p class="aide">Cliquez sur « Remplacer » sous une photo. La nouvelle photo est en ligne immédiatement.</p>
       <div class="photos" id="grillePhotos"></div>
@@ -681,6 +691,10 @@ function remplirFormulaires(){
     $('secg_texte_' + def[0]).value = d.texte || '';
   });
 
+  var col = reglages.page_coloriages || {};
+  $('colTitre').value = col.titre || '';
+  $('colAccroche').value = col.accroche || '';
+
   dessinerPhotos();
 }
 function construireFormulaires(){
@@ -881,6 +895,7 @@ function valeursDepuisFormulaire(cle){
     });
     return sg;
   }
+  if (cle === 'page_coloriages') return { titre: $('colTitre').value.trim(), accroche: $('colAccroche').value.trim() };
 }
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');

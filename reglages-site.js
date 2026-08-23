@@ -181,6 +181,13 @@
     });
   }
 
+  function appliquerPageColoriages(pc) {
+    if (!pc) return;
+    if (!/\/coloriages\/(index\.html)?$/.test(location.pathname)) return; /* seule la page bibliothèque */
+    texte('#coloriagesTitre', pc.titre);
+    texte('#coloriagesLead', pc.accroche);
+  }
+
   function appliquerBandeau(b) {
     if (!b) return;
     var track = document.querySelector('.ticker-track');
@@ -360,6 +367,7 @@
       appliquerSections(g.sections_accueil);
       appliquerSections(g.sections_guides);
       appliquerPageContact(g.page_contact);
+      appliquerPageColoriages(g.page_coloriages);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
       appliquerDisposition(g.disposition);
