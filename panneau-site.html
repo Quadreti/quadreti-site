@@ -38,6 +38,11 @@
   .carte > *:not(summary){ margin-left:22px; margin-right:22px; }
   .carte > summary + *{ margin-top:0; }
   .carte h2{ font-size:15.5px; font-weight:700; margin:0; }
+  .titre-groupe{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--adouci); margin:28px 2px 10px;
+  }
+  .titre-groupe:first-of-type{ margin-top:0; }
   .carte .aide{ font-size:12.5px; color:var(--adouci); margin:0 0 14px; }
   label{ display:block; font-size:12.5px; font-weight:600; color:var(--adouci); margin:10px 0 4px; }
   input[type=text], input[type=url], input[type=email], textarea, select{
@@ -140,6 +145,8 @@
   <!-- ============ Panneau ============ -->
   <div id="blocPanneau" class="cache">
 
+    <h2 class="titre-groupe">Identité & style global</h2>
+
     <details class="carte">
       <summary><h2>Thème et couleurs</h2></summary>
       <p class="aide">S'applique à tout le site. Les couleurs individuelles priment sur le thème choisi.</p>
@@ -178,51 +185,78 @@
     </details>
 
     <details class="carte">
-      <summary><h2>Blog</h2></summary>
-      <p class="aide">Créez, modifiez et publiez vos articles — visibles dès l'enregistrement en statut « Publié ».</p>
-      <div id="blogListe"></div>
-      <div class="actions"><button class="principal" type="button" id="btnNouvelArticle">+ Nouvel article</button></div>
-
-      <div id="blogFormulaire" class="cache" style="margin-top:18px; padding-top:16px; border-top:1px solid var(--bord);">
-        <input type="hidden" id="artId">
-        <label>Titre</label>
-        <input type="text" id="artTitre" placeholder="Comment composer votre premier mur">
-        <label>Adresse (générée depuis le titre, modifiable)</label>
-        <input type="text" id="artSlug" placeholder="comment-composer-votre-premier-mur">
-
-        <label style="margin-top:12px">Image de couverture</label>
-        <div class="favicon-apercu">
-          <img id="artImgApercu" src="" alt="" style="visibility:hidden; width:60px; height:44px; object-fit:cover;">
-          <input type="file" id="artImgFichier" accept="image/*">
-          <button class="discret" type="button" id="btnArtImg">Choisir une image</button>
-          <button class="discret" type="button" id="btnArtImgRetirer">Retirer</button>
-        </div>
-
-        <label style="margin-top:12px">Extrait (résumé affiché sur la liste)</label>
-        <textarea id="artExtrait"></textarea>
-
-        <label>Contenu</label>
-        <div class="editeur-barre">
-          <button type="button" data-cmd="bold" title="Gras"><b>G</b></button>
-          <button type="button" data-cmd="italic" title="Italique"><i>I</i></button>
-          <button type="button" data-cmd="lien" title="Lien">Lien</button>
-          <button type="button" data-cmd="soustitre" title="Sous-titre">Sous-titre</button>
-          <button type="button" data-cmd="paragraphe" title="Texte normal">¶</button>
-        </div>
-        <div id="artContenu" class="editeur-contenu" contenteditable="true"></div>
-
-        <div class="rang" style="margin-top:12px">
-          <div><label>Date de publication</label><input type="text" id="artDate" placeholder="2026-08-23"></div>
-          <div><label>Statut</label>
-            <select id="artStatut"><option value="brouillon">Brouillon</option><option value="publie">Publié</option></select>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="principal" type="button" id="btnEnregistrerArticle">Enregistrer l'article</button>
-          <button class="discret" type="button" id="btnAnnulerArticle">Annuler</button>
-          <button class="discret" type="button" id="btnSupprimerArticle" style="color:#8a3324">Supprimer</button>
-        </div>
+      <summary><h2>Polices</h2></summary>
+      <p class="aide">Quicksand et Karla sont les polices d'origine du site.</p>
+      <div class="rang">
+        <div><label>Titres</label><select id="pTitres"></select></div>
+        <div><label>Texte courant</label><select id="pTexte"></select></div>
       </div>
+      <div class="actions"><button class="principal" data-enregistre="polices">Enregistrer les polices</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Baselines</h2></summary>
+      <div class="rang">
+        <div><label>Baseline produit (footer)</label><input type="text" id="bProduit"></div>
+        <div><label>Baseline catégorie (sous le logo)</label><input type="text" id="bCategorie"></div>
+      </div>
+      <div class="actions"><button class="principal" data-enregistre="baselines">Enregistrer les baselines</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Réseaux sociaux</h2></summary>
+      <p class="aide">Laissez vide pour garder le bouton inactif sur le site.</p>
+      <div class="rang" id="champsReseaux"></div>
+      <div class="actions"><button class="principal" data-enregistre="reseaux">Enregistrer les réseaux</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Ligne de copyright</h2></summary>
+      <label>Texte affiché tout en bas du site</label>
+      <input type="text" id="copyTexte">
+      <div class="actions"><button class="principal" data-enregistre="copyright">Enregistrer le copyright</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Favicon &amp; SEO</h2></summary>
+      <p class="aide">Le favicon change dans l'onglet du navigateur (peut demander un rechargement complet pour apparaître). Le titre/description : visibles dans l'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement, avant toute modification du panneau.</p>
+      <label>Favicon actuel</label>
+      <div class="favicon-apercu">
+        <img id="favAperçu" src="/favicon.ico" alt="" onerror="this.style.visibility='hidden'">
+        <input type="file" id="favFichier" accept="image/png,image/x-icon,image/svg+xml">
+        <button class="discret" type="button" id="btnFavicon">Remplacer</button>
+      </div>
+      <label style="margin-top:14px">Titre de la page (onglet + Google)</label>
+      <input type="text" id="seoTitre" placeholder="Quadreti — Composez, imprimez, clipsez, changez à volonté.">
+      <label>Description (Google)</label>
+      <textarea id="seoDescription" placeholder="Composez votre mur photo, imprimez chez vous, clipsez sans colle."></textarea>
+      <div class="actions"><button class="principal" data-enregistre="seo">Enregistrer titre &amp; description</button></div>
+    </details>
+
+    <h2 class="titre-groupe">Page d'accueil</h2>
+
+    <details class="carte">
+      <summary><h2>Bandeau défilant (haut de l'accueil)</h2></summary>
+      <p class="aide">Les messages en majuscules qui défilent au-dessus du menu.</p>
+      <div class="zone-fine">
+        <span class="zf-nom">Couleur de fond</span>
+        <label class="suivre"><input type="checkbox" id="bd_suivre_fond" checked> Suivre le thème</label>
+        <input type="color" id="bd_fond" class="cache-couleur">
+      </div>
+      <div class="zone-fine">
+        <span class="zf-nom">Couleur du texte</span>
+        <label class="suivre"><input type="checkbox" id="bd_suivre_texte" checked> Blanc (origine)</label>
+        <input type="color" id="bd_texte" class="cache-couleur">
+      </div>
+      <label style="margin-top:12px">Vitesse de défilement</label>
+      <select id="bd_vitesse">
+        <option value="34">Lente</option>
+        <option value="" selected>Normale (origine)</option>
+        <option value="14">Rapide</option>
+      </select>
+      <label>Messages — un par ligne (vide = messages d'origine)</label>
+      <textarea id="bd_messages" placeholder="CONCEPTION ET FABRICATION FRANÇAISES&#10;SANS COLLE, SANS DÉTÉRIORATION&#10;UNE IMPRIMANTE DE SALON SUFFIT"></textarea>
+      <div class="actions"><button class="principal" data-enregistre="bandeau">Enregistrer le bandeau</button></div>
     </details>
 
     <details class="carte">
@@ -249,6 +283,32 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Photos du diaporama d'accueil</h2></summary>
+      <p class="aide">Cliquez sur « Remplacer » sous une photo. La nouvelle photo est en ligne immédiatement.</p>
+      <div class="photos" id="grillePhotos"></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Disposition</h2></summary>
+      <label for="dispHeroCta">Position du bouton principal (« Composer mon mur », en bas de la photo d'accueil)</label>
+      <select id="dispHeroCta">
+        <option value="gauche">Gauche</option>
+        <option value="centre" selected>Centre (origine)</option>
+        <option value="droite">Droite</option>
+      </select>
+      <div class="actions"><button class="principal" data-enregistre="disposition">Enregistrer la disposition</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>Textes de la page d'accueil</h2></summary>
+      <p class="aide">Le titre et le premier paragraphe de chaque section. Laissez vide pour garder le texte actuel du site.</p>
+      <div id="listeSections"></div>
+      <div class="actions"><button class="principal" data-enregistre="sections_accueil">Enregistrer les textes</button></div>
+    </details>
+
+    <h2 class="titre-groupe">Widgets & popups</h2>
+
+    <details class="carte">
       <summary><h2>Bulle de contact flottante</h2></summary>
       <p class="aide">Une seule à la fois — WhatsApp ou Facebook, pas les deux. Utilise le lien déjà renseigné dans « Réseaux sociaux » ci-dessous.</p>
       <div class="theme-choix" id="choixBulleContact">
@@ -260,7 +320,6 @@
       <div class="couleur"><input type="color" id="bcCouleur"><code id="bcCouleurHex"></code></div>
       <div class="actions"><button class="principal" data-enregistre="bulle_contact">Enregistrer la bulle de contact</button></div>
     </details>
-
 
     <details class="carte">
       <summary><h2>Bandeau de réassurance</h2></summary>
@@ -325,96 +384,7 @@
       </div>
     </details>
 
-    <details class="carte">
-      <summary><h2>Favicon &amp; SEO</h2></summary>
-      <p class="aide">Le favicon change dans l'onglet du navigateur (peut demander un rechargement complet pour apparaître). Le titre/description : visibles dans l'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement, avant toute modification du panneau.</p>
-      <label>Favicon actuel</label>
-      <div class="favicon-apercu">
-        <img id="favAperçu" src="/favicon.ico" alt="" onerror="this.style.visibility='hidden'">
-        <input type="file" id="favFichier" accept="image/png,image/x-icon,image/svg+xml">
-        <button class="discret" type="button" id="btnFavicon">Remplacer</button>
-      </div>
-      <label style="margin-top:14px">Titre de la page (onglet + Google)</label>
-      <input type="text" id="seoTitre" placeholder="Quadreti — Composez, imprimez, clipsez, changez à volonté.">
-      <label>Description (Google)</label>
-      <textarea id="seoDescription" placeholder="Composez votre mur photo, imprimez chez vous, clipsez sans colle."></textarea>
-      <div class="actions"><button class="principal" data-enregistre="seo">Enregistrer titre &amp; description</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Disposition</h2></summary>
-      <label for="dispHeroCta">Position du bouton principal (« Composer mon mur », en bas de la photo d'accueil)</label>
-      <select id="dispHeroCta">
-        <option value="gauche">Gauche</option>
-        <option value="centre" selected>Centre (origine)</option>
-        <option value="droite">Droite</option>
-      </select>
-      <div class="actions"><button class="principal" data-enregistre="disposition">Enregistrer la disposition</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Bandeau défilant (haut de l'accueil)</h2></summary>
-      <p class="aide">Les messages en majuscules qui défilent au-dessus du menu.</p>
-      <div class="zone-fine">
-        <span class="zf-nom">Couleur de fond</span>
-        <label class="suivre"><input type="checkbox" id="bd_suivre_fond" checked> Suivre le thème</label>
-        <input type="color" id="bd_fond" class="cache-couleur">
-      </div>
-      <div class="zone-fine">
-        <span class="zf-nom">Couleur du texte</span>
-        <label class="suivre"><input type="checkbox" id="bd_suivre_texte" checked> Blanc (origine)</label>
-        <input type="color" id="bd_texte" class="cache-couleur">
-      </div>
-      <label style="margin-top:12px">Vitesse de défilement</label>
-      <select id="bd_vitesse">
-        <option value="34">Lente</option>
-        <option value="" selected>Normale (origine)</option>
-        <option value="14">Rapide</option>
-      </select>
-      <label>Messages — un par ligne (vide = messages d'origine)</label>
-      <textarea id="bd_messages" placeholder="CONCEPTION ET FABRICATION FRANÇAISES&#10;SANS COLLE, SANS DÉTÉRIORATION&#10;UNE IMPRIMANTE DE SALON SUFFIT"></textarea>
-      <div class="actions"><button class="principal" data-enregistre="bandeau">Enregistrer le bandeau</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Polices</h2></summary>
-      <p class="aide">Quicksand et Karla sont les polices d'origine du site.</p>
-      <div class="rang">
-        <div><label>Titres</label><select id="pTitres"></select></div>
-        <div><label>Texte courant</label><select id="pTexte"></select></div>
-      </div>
-      <div class="actions"><button class="principal" data-enregistre="polices">Enregistrer les polices</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Baselines</h2></summary>
-      <div class="rang">
-        <div><label>Baseline produit (footer)</label><input type="text" id="bProduit"></div>
-        <div><label>Baseline catégorie (sous le logo)</label><input type="text" id="bCategorie"></div>
-      </div>
-      <div class="actions"><button class="principal" data-enregistre="baselines">Enregistrer les baselines</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Réseaux sociaux</h2></summary>
-      <p class="aide">Laissez vide pour garder le bouton inactif sur le site.</p>
-      <div class="rang" id="champsReseaux"></div>
-      <div class="actions"><button class="principal" data-enregistre="reseaux">Enregistrer les réseaux</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Ligne de copyright</h2></summary>
-      <label>Texte affiché tout en bas du site</label>
-      <input type="text" id="copyTexte">
-      <div class="actions"><button class="principal" data-enregistre="copyright">Enregistrer le copyright</button></div>
-    </details>
-
-    <details class="carte">
-      <summary><h2>Textes de la page d'accueil</h2></summary>
-      <p class="aide">Le titre et le premier paragraphe de chaque section. Laissez vide pour garder le texte actuel du site.</p>
-      <div id="listeSections"></div>
-      <div class="actions"><button class="principal" data-enregistre="sections_accueil">Enregistrer les textes</button></div>
-    </details>
+    <h2 class="titre-groupe">Contenu par page</h2>
 
     <details class="carte">
       <summary><h2>Textes de la page Contact</h2></summary>
@@ -445,11 +415,52 @@
     </details>
 
     <details class="carte">
-      <summary><h2>Photos du diaporama d'accueil</h2></summary>
-      <p class="aide">Cliquez sur « Remplacer » sous une photo. La nouvelle photo est en ligne immédiatement.</p>
-      <div class="photos" id="grillePhotos"></div>
-    </details>
+      <summary><h2>Blog</h2></summary>
+      <p class="aide">Créez, modifiez et publiez vos articles — visibles dès l'enregistrement en statut « Publié ».</p>
+      <div id="blogListe"></div>
+      <div class="actions"><button class="principal" type="button" id="btnNouvelArticle">+ Nouvel article</button></div>
 
+      <div id="blogFormulaire" class="cache" style="margin-top:18px; padding-top:16px; border-top:1px solid var(--bord);">
+        <input type="hidden" id="artId">
+        <label>Titre</label>
+        <input type="text" id="artTitre" placeholder="Comment composer votre premier mur">
+        <label>Adresse (générée depuis le titre, modifiable)</label>
+        <input type="text" id="artSlug" placeholder="comment-composer-votre-premier-mur">
+
+        <label style="margin-top:12px">Image de couverture</label>
+        <div class="favicon-apercu">
+          <img id="artImgApercu" src="" alt="" style="visibility:hidden; width:60px; height:44px; object-fit:cover;">
+          <input type="file" id="artImgFichier" accept="image/*">
+          <button class="discret" type="button" id="btnArtImg">Choisir une image</button>
+          <button class="discret" type="button" id="btnArtImgRetirer">Retirer</button>
+        </div>
+
+        <label style="margin-top:12px">Extrait (résumé affiché sur la liste)</label>
+        <textarea id="artExtrait"></textarea>
+
+        <label>Contenu</label>
+        <div class="editeur-barre">
+          <button type="button" data-cmd="bold" title="Gras"><b>G</b></button>
+          <button type="button" data-cmd="italic" title="Italique"><i>I</i></button>
+          <button type="button" data-cmd="lien" title="Lien">Lien</button>
+          <button type="button" data-cmd="soustitre" title="Sous-titre">Sous-titre</button>
+          <button type="button" data-cmd="paragraphe" title="Texte normal">¶</button>
+        </div>
+        <div id="artContenu" class="editeur-contenu" contenteditable="true"></div>
+
+        <div class="rang" style="margin-top:12px">
+          <div><label>Date de publication</label><input type="text" id="artDate" placeholder="2026-08-23"></div>
+          <div><label>Statut</label>
+            <select id="artStatut"><option value="brouillon">Brouillon</option><option value="publie">Publié</option></select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="principal" type="button" id="btnEnregistrerArticle">Enregistrer l'article</button>
+          <button class="discret" type="button" id="btnAnnulerArticle">Annuler</button>
+          <button class="discret" type="button" id="btnSupprimerArticle" style="color:#8a3324">Supprimer</button>
+        </div>
+      </div>
+    </details>
   </div>
 </main>
 
