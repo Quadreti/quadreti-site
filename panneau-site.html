@@ -146,6 +146,17 @@
     </div>
 
     <div class="carte">
+      <h2>Disposition</h2>
+      <label for="dispHeroCta">Position du bouton principal (« Composer mon mur », en bas de la photo d'accueil)</label>
+      <select id="dispHeroCta">
+        <option value="gauche">Gauche</option>
+        <option value="centre" selected>Centre (origine)</option>
+        <option value="droite">Droite</option>
+      </select>
+      <div class="actions"><button class="principal" data-enregistre="disposition">Enregistrer la disposition</button></div>
+    </div>
+
+    <div class="carte">
       <h2>Bandeau défilant (haut de l'accueil)</h2>
       <p class="aide">Les messages en majuscules qui défilent au-dessus du menu.</p>
       <div class="zone-fine">
@@ -235,12 +246,20 @@ var DEFAUTS = {
 var POLICES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
 var RESEAUX = ['facebook','snapchat','tiktok','youtube','whatsapp'];
 /* Zones fines : [clé, libellé, couleur de départ quand on décoche] */
+/* Zones fines : [clé, libellé, repli] — le repli est soit 'accent'/'fond'/'texte'
+   (recopie la couleur globale correspondante), soit une couleur littérale #xxxxxx. */
 var ZONES_FINES = [
   ['cartouches', 'Cartouches légales (bas de page)', 'accent'],
   ['bouton', 'Boutons (Composer mon mur, Essayer l\'app...)', 'accent'],
   ['menu', 'Bandeau de navigation (haut de page)', 'fond'],
   ['boutiqueFond', 'Arrière-plan de la page Boutique', 'fond'],
-  ['logo', 'Logo (tesselles + nom, bandeau du haut)', 'texte']
+  ['logo', 'Logo (tesselles + nom, bandeau du haut)', 'texte'],
+  ['carte', 'Fond des encarts blancs (ex. « Comment ça marche »)', '#ffffff'],
+  ['encartFond', 'Fond des encarts d\'info pastel (partout sur le site)', '#E9EDDD'],
+  ['encartTexte', 'Texte des encarts d\'info pastel', '#556B2F'],
+  ['enumeration', 'Pastilles numérotées (1, 2, 3...)', 'texte'],
+  ['titres', 'Titres (partout sur le site)', 'texte'],
+  ['texteDoux', 'Texte courant / paragraphes (partout sur le site)', '#4a5158']
 ];
 var SECTIONS = [
   ['histoire','La mosaïque pixel, revisitée.'],
@@ -332,9 +351,15 @@ function chargerCouleursDansFormulaire(c){
   ZONES_FINES.forEach(function(z){
     var actif = !!c[z[0]];
     $('zf_suivre_' + z[0]).checked = !actif;
-    $('zf_couleur_' + z[0]).value = c[z[0]] || c[z[2]] || DEFAUTS.couleurs[z[2]];
+    $('zf_couleur_' + z[0]).value = c[z[0]] || repliZoneFine(z);
     $('zf_couleur_' + z[0]).classList.toggle('cache-couleur', !actif);
   });
+}
+/* Couleur à afficher quand une zone fine suit le thème : soit une des 3 couleurs
+   globales (accent/fond/texte), soit une couleur littérale déclarée dans ZONES_FINES. */
+function repliZoneFine(z){
+  if (z[2].charAt(0) === '#') return z[2];
+  return $({'accent':'cAccent','fond':'cFond','texte':'cTexte'}[z[2]]).value;
 }
 function dessinerChips(){
   var zone = $('chipsPalettes'); zone.textContent = '';
@@ -365,6 +390,8 @@ function dessinerChips(){
 function remplirFormulaires(){
   chargerCouleursDansFormulaire(reglages.couleurs);
   dessinerChips();
+
+  $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
   var bd = reglages.bandeau || {};
   $('bd_suivre_fond').checked = !bd.fond;
@@ -427,7 +454,7 @@ function construireFormulaires(){
     var col = document.createElement('input'); col.type = 'color'; col.id = 'zf_couleur_' + z[0]; col.classList.add('cache-couleur');
     chk.addEventListener('change', function(){
       col.classList.toggle('cache-couleur', chk.checked);
-      if (!chk.checked) col.value = $({'accent':'cAccent','fond':'cFond','texte':'cTexte'}[z[2]]).value;
+      if (!chk.checked) col.value = repliZoneFine(z);
     });
     ligne.appendChild(nom); ligne.appendChild(lab); ligne.appendChild(col);
     $('zonesFines').appendChild(ligne);
@@ -488,6 +515,7 @@ function valeursDepuisFormulaire(cle){
     });
     return c;
   }
+  if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
   if (cle === 'bandeau') {
     var bd = {};
     if (!$('bd_suivre_fond').checked) bd.fond = $('bd_fond').value;

@@ -73,7 +73,22 @@
     if (c.menu) css += '\n.qz-header{background:' + c.menu + '}';
     if (c.logo) css += '\n.qz-header .qz-qlogo i.t{background:' + c.logo + '}\n.qz-header .qz-wordmark{color:' + c.logo + '}';
     if (c.boutiqueFond && /\/boutique\//.test(location.pathname)) css += '\nbody{background:' + c.boutiqueFond + '}';
+    if (c.carte) css += '\n.step{background:' + c.carte + '!important}';
+    if (c.encartFond) css += '\n:root{--olive-soft:' + c.encartFond + '}';
+    if (c.encartTexte) css += '\n:root{--olive:' + c.encartTexte + '}';
+    if (c.enumeration) css += '\n.step .num{background:' + c.enumeration + '}';
+    if (c.titres) css += '\nh2,h3{color:' + c.titres + '}';
+    if (c.texteDoux) css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
+      '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + c.texteDoux + '}';
     injecterStyle('qz-reglages-couleurs', css);
+  }
+
+  function appliquerDisposition(d) {
+    if (!d || !d.heroCta || d.heroCta === 'centre') return;
+    var css = d.heroCta === 'gauche'
+      ? '.hero-cta{left:26px;transform:none}'
+      : '.hero-cta{left:auto;right:26px;transform:none}';
+    injecterStyle('qz-reglages-disposition', css);
   }
 
   function appliquerPolices(p) {
@@ -186,6 +201,7 @@
       appliquerSections(g.sections_accueil);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
+      appliquerDisposition(g.disposition);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
     .then(function () { clearTimeout(minuteur); });
