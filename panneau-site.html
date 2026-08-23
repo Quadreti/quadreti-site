@@ -228,10 +228,16 @@
     <details class="carte">
       <summary><h2>Intégration animation</h2></summary>
       <p class="aide">Réglages du bandeau vidéo/photo de l'accueil.</p>
+      <label class="suivre" style="font-size:13px;"><input type="checkbox" id="bandeauVideoActif"> Vidéo active (décoché = revient au fond uni, sans vidéo)</label>
       <label class="suivre" style="font-size:13px;"><input type="checkbox" id="voileActif"> Voile actif (assombrit le bandeau en dégradé pour la lisibilité du texte ; sans voile, le texte passe automatiquement en blanc)</label>
       <div class="rang" style="margin-top:12px">
         <div><label>Vitesse de lecture (1 = normale, 0.6 = 60%)</label><input type="number" id="bandeauVitesse" min="0.1" max="2" step="0.05"></div>
         <div><label>Pause sur la dernière image (ms)</label><input type="number" id="bandeauPauseMs" min="0" max="10000" step="100"></div>
+      </div>
+      <p class="aide" style="margin-top:12px">Cadrage de la vidéo/photo (déplacer ce qui est visible dans le bandeau). 50% = centré.</p>
+      <div class="rang">
+        <div><label>Position horizontale (%)</label><input type="number" id="bandeauPosX" min="0" max="100" step="5"></div>
+        <div><label>Position verticale (%)</label><input type="number" id="bandeauPosY" min="0" max="100" step="5"></div>
       </div>
       <label style="margin-top:12px">Position du bandeau défilant</label>
       <div class="theme-choix" id="choixPositionTicker">
@@ -253,6 +259,17 @@
       <label style="margin-top:12px">Couleur</label>
       <div class="couleur"><input type="color" id="bcCouleur"><code id="bcCouleurHex"></code></div>
       <div class="actions"><button class="principal" data-enregistre="bulle_contact">Enregistrer la bulle de contact</button></div>
+    </details>
+
+    <details class="carte">
+      <summary><h2>CTA flottant</h2></summary>
+      <p class="aide">Bouton d'action flottant, visible sur toutes les pages (au-dessus du bouton "retour en haut"), lien vers l'app (designer.quadreti.fr).</p>
+      <label class="suivre" style="font-size:13px;"><input type="checkbox" id="ctaFlottantActif"> Actif</label>
+      <label style="margin-top:12px">Texte du bouton</label>
+      <input type="text" id="ctaFlottantTexte" placeholder="Composer mon mur">
+      <label style="margin-top:12px">Couleur</label>
+      <div class="couleur"><input type="color" id="ctaFlottantCouleur"><code id="ctaFlottantCouleurHex"></code></div>
+      <div class="actions"><button class="principal" data-enregistre="cta_flottant">Enregistrer le CTA flottant</button></div>
     </details>
 
     <details class="carte">
@@ -635,9 +652,12 @@ function remplirFormulaires(){
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
   var bv = reglages.bandeau_video || {};
+  $('bandeauVideoActif').checked = (typeof bv.actif === 'boolean') ? bv.actif : true;
   $('voileActif').checked = !!bv.voile;
   $('bandeauVitesse').value = (typeof bv.vitesse === 'number') ? bv.vitesse : 0.6;
   $('bandeauPauseMs').value = (typeof bv.pause_ms === 'number') ? bv.pause_ms : 1500;
+  $('bandeauPosX').value = (typeof bv.pos_x === 'number') ? bv.pos_x : '';
+  $('bandeauPosY').value = (typeof bv.pos_y === 'number') ? bv.pos_y : '';
   (function(){
     var pos = bv.position_ticker || 'sous_bandeau';
     var r = document.querySelector('input[name=positionTicker][value="' + pos + '"]');
@@ -648,6 +668,11 @@ function remplirFormulaires(){
   document.querySelector('input[name=bulleContact][value="' + (bc.choix || 'aucun') + '"]').checked = true;
   majChoixBulleContact();
   $('bcCouleur').value = bc.couleur || (bc.choix === 'facebook' ? '#1877F2' : '#25D366'); majHex('bcCouleur','bcCouleurHex');
+
+  var cf = reglages.cta_flottant || {};
+  $('ctaFlottantActif').checked = !!cf.actif;
+  $('ctaFlottantTexte').value = cf.texte || '';
+  $('ctaFlottantCouleur').value = cf.couleur || '#2b353e'; majHex('ctaFlottantCouleur','ctaFlottantCouleurHex');
 
   var reas = reglages.reassurance || {};
   $('reasActif').checked = !!reas.actif;
@@ -790,6 +815,7 @@ function construireFormulaires(){
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   lierCouleur('popFond','popFondHex'); lierCouleur('popTexteCouleur','popTexteCouleurHex'); lierCouleur('popBouton','popBoutonHex');
   lierCouleur('bcCouleur','bcCouleurHex');
+  lierCouleur('ctaFlottantCouleur','ctaFlottantCouleurHex');
   document.querySelectorAll('input[name=bulleContact]').forEach(function(r){ r.addEventListener('change', majChoixBulleContact); });
   lierCouleur('reasCouleur','reasCouleurHex'); lierCouleur('reasTexteCouleur','reasTexteCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
@@ -860,6 +886,11 @@ function valeursDepuisFormulaire(cle){
     choix: document.querySelector('input[name=bulleContact]:checked').value,
     couleur: $('bcCouleur').value
   };
+  if (cle === 'cta_flottant') return {
+    actif: $('ctaFlottantActif').checked,
+    texte: $('ctaFlottantTexte').value.trim(),
+    couleur: $('ctaFlottantCouleur').value
+  };
   if (cle === 'reassurance') return {
     actif: $('reasActif').checked,
     item1: $('reasItem1').value.trim(), item2: $('reasItem2').value.trim(), item3: $('reasItem3').value.trim(),
@@ -926,13 +957,19 @@ function valeursDepuisFormulaire(cle){
   if (cle === 'bandeau_video') {
     var vitesseVal = parseFloat($('bandeauVitesse').value);
     var pauseVal = parseInt($('bandeauPauseMs').value, 10);
+    var posXVal = parseFloat($('bandeauPosX').value);
+    var posYVal = parseFloat($('bandeauPosY').value);
     var posEl = document.querySelector('input[name=positionTicker]:checked');
-    return {
+    var v = {
+      actif: $('bandeauVideoActif').checked,
       voile: $('voileActif').checked,
       vitesse: isNaN(vitesseVal) ? 0.6 : vitesseVal,
       pause_ms: isNaN(pauseVal) ? 1500 : pauseVal,
       position_ticker: posEl ? posEl.value : 'sous_bandeau'
     };
+    if (!isNaN(posXVal)) v.pos_x = posXVal;
+    if (!isNaN(posYVal)) v.pos_y = posYVal;
+    return v;
   }
 }
 document.addEventListener('click', function(e){

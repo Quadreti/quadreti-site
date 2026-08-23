@@ -108,6 +108,10 @@
   @media (min-width:760px){
     #hero video.shot{ object-position:65% center; }
   }
+  /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
+  .repli-video{ display:none; }
+  .hero.video-inactive video.shot{ display:none; }
+  .hero.video-inactive .repli-video{ display:block; }
   .cap{
     position:absolute; top:14px; right:16px; z-index:2;
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
@@ -708,10 +712,11 @@
        l'ancien diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
-      <video class="shot" autoplay muted playsinline poster="img/bandeau-1-impression.jpg">
+      <video class="shot" autoplay muted playsinline>
         <source media="(max-width:759px)" src="video/quadreti-bandeau-oeil-carre.mp4" type="video/mp4">
         <source src="video/quadreti-bandeau-oeil.mp4" type="video/mp4">
       </video>
+      <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="">
     </div>
   </div>
   <div class="bg-veil" aria-hidden="true"></div>
@@ -1244,9 +1249,14 @@
     heroVideo.addEventListener('ended', () => {
       setTimeout(() => { heroVideo.currentTime = 0; heroVideo.play(); }, pauseBandeauMs);
     });
-    window.__reglerBandeauVideo = function (vitesse, pauseMs) {
+    window.__reglerBandeauVideo = function (vitesse, pauseMs, actif, posX, posY) {
       if (typeof vitesse === 'number' && vitesse > 0) { vitesseBandeau = vitesse; appliquerVitesseBandeau(); }
       if (typeof pauseMs === 'number' && pauseMs >= 0) pauseBandeauMs = pauseMs;
+      if (actif === false) heroVideo.closest('.hero').classList.add('video-inactive');
+      else if (actif === true) heroVideo.closest('.hero').classList.remove('video-inactive');
+      if (typeof posX === 'number' || typeof posY === 'number') {
+        heroVideo.style.objectPosition = (typeof posX === 'number' ? posX : 50) + '% ' + (typeof posY === 'number' ? posY : 50) + '%';
+      }
     };
   }
 

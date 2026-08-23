@@ -196,7 +196,10 @@
       if (window.__reglerBandeauVideo) {
         window.__reglerBandeauVideo(
           typeof cfg.vitesse === 'number' ? cfg.vitesse : undefined,
-          typeof cfg.pause_ms === 'number' ? cfg.pause_ms : undefined
+          typeof cfg.pause_ms === 'number' ? cfg.pause_ms : undefined,
+          typeof cfg.actif === 'boolean' ? cfg.actif : undefined,
+          typeof cfg.pos_x === 'number' ? cfg.pos_x : undefined,
+          typeof cfg.pos_y === 'number' ? cfg.pos_y : undefined
         );
       }
     }
@@ -274,6 +277,27 @@
     a.href = url; a.target = '_blank'; a.rel = 'noopener';
     a.setAttribute('aria-label', LIBELLES_BULLE[b.choix]);
     a.innerHTML = ICONES_BULLE[b.choix];
+    document.body.appendChild(a);
+  }
+
+  function appliquerCtaFlottant(cfg) {
+    if (!cfg || !cfg.actif) return;
+    var texte = cfg.texte || 'Composer mon mur';
+    var couleur = cfg.couleur || '#2b353e';
+    injecterStyle('qz-cta-flottant-style', [
+      '.qz-cta-flottant{position:fixed;right:18px;bottom:70px;z-index:60;',
+      'background:' + couleur + ';color:#fff;text-decoration:none;white-space:nowrap;',
+      'font-family:\'Quicksand\',sans-serif;font-weight:700;font-size:13.5px;',
+      'padding:12px 20px;border-radius:99px;box-shadow:0 8px 20px #00000040;',
+      'transition:transform .15s ease}',
+      '.qz-cta-flottant:hover{transform:translateY(-2px)}',
+      '@media (max-width:480px){.qz-cta-flottant{padding:10px 16px;font-size:12.5px;bottom:64px;right:14px}}'
+    ].join('\n'));
+    var a = document.createElement('a');
+    a.className = 'qz-cta-flottant';
+    a.href = 'https://designer.quadreti.fr';
+    a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = texte;
     document.body.appendChild(a);
   }
 
@@ -404,6 +428,7 @@
       appliquerSeo(g.seo);
       appliquerPopup(g.popup);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
+      appliquerCtaFlottant(g.cta_flottant);
       appliquerReassurance(g.reassurance);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
