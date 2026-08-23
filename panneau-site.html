@@ -208,11 +208,18 @@
         <div><label>Bouton</label><div class="couleur"><input type="color" id="popBouton"><code id="popBoutonHex"></code></div></div>
       </div>
 
-      <div class="actions"><button class="principal" data-enregistre="popup">Enregistrer la popup</button></div>
+      <div class="actions">
+        <button class="principal" data-enregistre="popup">Enregistrer la popup</button>
+        <button class="discret" type="button" id="btnApercuPopup">Prévisualiser maintenant</button>
+      </div>
+      <p class="aide" style="margin-top:6px">Une fois fermée (croix ou inscription), la popup ne réapparaît plus sur cet appareil — c'est normal, pas un bug. Utilisez « Prévisualiser » pour la revoir à volonté.</p>
 
       <div class="memoriser">
         <label>Emails inscrits</label>
-        <div class="actions"><button class="discret" type="button" id="btnListeAbonnes">Afficher / copier la liste</button></div>
+        <div class="actions">
+          <button class="discret" type="button" id="btnListeAbonnes">Afficher / copier la liste</button>
+          <button class="discret" type="button" id="btnViderAbonnes">Vider la liste</button>
+        </div>
         <textarea id="popListeAbonnes" class="cache" readonly style="margin-top:8px"></textarea>
       </div>
     </div>
@@ -752,6 +759,19 @@ $('btnPopImgRetirer').addEventListener('click', function(){
   var p = Object.assign({}, reglages.popup || {});
   p.image = '';
   enregistrer('popup', p).then(function(){ $('popImgApercu').src = ''; $('popImgApercu').style.visibility = 'hidden'; });
+});
+$('btnApercuPopup').addEventListener('click', function(){
+  try { localStorage.removeItem('quadretiPopupVue'); } catch(e){}
+  window.open(location.origin + '/index.html?apercu_popup=1', '_blank');
+});
+$('btnViderAbonnes').addEventListener('click', function(){
+  if (!confirm('Supprimer définitivement tous les emails inscrits ? Cette action est irréversible.')) return;
+  rpc('vider_abonnes_popup', { p_phrase: phrase }).then(function(res){
+    if (!res.ok) { toast('Impossible de vider la liste.', true); return; }
+    toast(res.d + ' email(s) supprimé(s).');
+    $('popListeAbonnes').classList.add('cache');
+    $('popListeAbonnes').value = '';
+  });
 });
 $('btnListeAbonnes').addEventListener('click', function(){
   rpc('lister_abonnes_popup', { p_phrase: phrase }).then(function(res){

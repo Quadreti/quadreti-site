@@ -257,7 +257,10 @@
   function appliquerPopup(p) {
     if (!p || !p.actif) return;
     if (!p.titre && !p.texte) return; /* rien à montrer */
-    try { if (localStorage.getItem(CLE_POPUP_VUE)) return; } catch (e) {}
+    var apercu = /[?&]apercu_popup=1\b/.test(location.search);
+    if (!apercu) {
+      try { if (localStorage.getItem(CLE_POPUP_VUE)) return; } catch (e) {}
+    }
 
     var fond = p.fond || '#F2EEDF';
     var texte = p.texte_couleur || '#2b353e';
@@ -323,7 +326,7 @@
       }).catch(function () { btn.disabled = false; });
     });
 
-    setTimeout(function () { fond_el.classList.add('qz-on'); }, (p.delai || 4) * 1000);
+    setTimeout(function () { fond_el.classList.add('qz-on'); }, apercu ? 300 : (p.delai || 4) * 1000);
   }
 
   var ctl = ('AbortController' in window) ? new AbortController() : null;
