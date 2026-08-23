@@ -229,7 +229,11 @@
       <summary><h2>Intégration animation</h2></summary>
       <p class="aide">Réglages du bandeau vidéo/photo de l'accueil.</p>
       <label class="suivre" style="font-size:13px;"><input type="checkbox" id="voileActif"> Voile actif (assombrit le bandeau en dégradé pour la lisibilité du texte ; sans voile, le texte passe automatiquement en blanc)</label>
-      <div class="actions"><button class="principal" data-enregistre="voile_bandeau">Enregistrer</button></div>
+      <div class="rang" style="margin-top:12px">
+        <div><label>Vitesse de lecture (1 = normale, 0.6 = 60%)</label><input type="number" id="bandeauVitesse" min="0.1" max="2" step="0.05"></div>
+        <div><label>Pause sur la dernière image (ms)</label><input type="number" id="bandeauPauseMs" min="0" max="10000" step="100"></div>
+      </div>
+      <div class="actions"><button class="principal" data-enregistre="bandeau_video">Enregistrer</button></div>
     </details>
 
     <details class="carte">
@@ -624,7 +628,10 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
-  $('voileActif').checked = !!(reglages.voile_bandeau || {}).actif;
+  var bv = reglages.bandeau_video || {};
+  $('voileActif').checked = !!bv.voile;
+  $('bandeauVitesse').value = (typeof bv.vitesse === 'number') ? bv.vitesse : 0.6;
+  $('bandeauPauseMs').value = (typeof bv.pause_ms === 'number') ? bv.pause_ms : 1500;
 
   var bc = reglages.bulle_contact || {};
   document.querySelector('input[name=bulleContact][value="' + (bc.choix || 'aucun') + '"]').checked = true;
@@ -905,7 +912,15 @@ function valeursDepuisFormulaire(cle){
     return sg;
   }
   if (cle === 'page_coloriages') return { titre: $('colTitre').value.trim(), accroche: $('colAccroche').value.trim() };
-  if (cle === 'voile_bandeau') return { actif: $('voileActif').checked };
+  if (cle === 'bandeau_video') {
+    var vitesseVal = parseFloat($('bandeauVitesse').value);
+    var pauseVal = parseInt($('bandeauPauseMs').value, 10);
+    return {
+      voile: $('voileActif').checked,
+      vitesse: isNaN(vitesseVal) ? 0.6 : vitesseVal,
+      pause_ms: isNaN(pauseVal) ? 1500 : pauseVal
+    };
+  }
 }
 document.addEventListener('click', function(e){
   var cle = e.target && e.target.getAttribute && e.target.getAttribute('data-enregistre');

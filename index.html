@@ -715,7 +715,7 @@
        l'ancien diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
-      <video class="shot" autoplay muted loop playsinline poster="img/bandeau-1-impression.jpg">
+      <video class="shot" autoplay muted playsinline poster="img/bandeau-1-impression.jpg">
         <source media="(max-width:759px)" src="video/quadreti-bandeau-oeil-carre.mp4" type="video/mp4">
         <source src="video/quadreti-bandeau-oeil.mp4" type="video/mp4">
       </video>
@@ -1230,13 +1230,24 @@
   if (document.readyState === 'complete') chargerLaSuite();
   else window.addEventListener('load', chargerLaSuite);
 
-  /* Video bandeau (test 23/08) : lecture ralentie, l'animation d'origine defile trop vite
-     pour se laisser deviner. Reglage cote site (pas besoin de re-render cote Video/Animation). */
+  /* Video bandeau (test 23/08) : vitesse et pause sur la derniere image reglables depuis le
+     panneau (section "Integration animation"), sans re-render cote Video/Animation. Valeurs
+     ci-dessous = reglages par defaut tant que la base ne repond pas (voir reglages-site.js,
+     window.__reglerBandeauVideo). La boucle native <video loop> est remplacee par un
+     redemarrage manuel pour pouvoir marquer une pause avant de relancer. */
   const heroVideo = document.querySelector('#hero video.shot');
   if (heroVideo){
-    const ralentir = () => { heroVideo.playbackRate = 0.6; };
-    ralentir();
-    heroVideo.addEventListener('loadedmetadata', ralentir);
+    let vitesseBandeau = 0.6, pauseBandeauMs = 1500;
+    const appliquerVitesseBandeau = () => { heroVideo.playbackRate = vitesseBandeau; };
+    appliquerVitesseBandeau();
+    heroVideo.addEventListener('loadedmetadata', appliquerVitesseBandeau);
+    heroVideo.addEventListener('ended', () => {
+      setTimeout(() => { heroVideo.currentTime = 0; heroVideo.play(); }, pauseBandeauMs);
+    });
+    window.__reglerBandeauVideo = function (vitesse, pauseMs) {
+      if (typeof vitesse === 'number' && vitesse > 0) { vitesseBandeau = vitesse; appliquerVitesseBandeau(); }
+      if (typeof pauseMs === 'number' && pauseMs >= 0) pauseBandeauMs = pauseMs;
+    };
   }
 
   const slides = document.querySelectorAll('.bg-slides .slide');

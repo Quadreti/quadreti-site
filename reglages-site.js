@@ -188,10 +188,17 @@
     texte('#coloriagesLead', pc.accroche);
   }
 
-  function appliquerVoileBandeau(v) {
+  function appliquerBandeauVideo(cfg) {
     var hero = document.getElementById('hero');
     if (!hero) return; /* page d'accueil uniquement */
-    hero.classList.toggle('voile-actif', !!(v && v.actif));
+    cfg = cfg || {};
+    hero.classList.toggle('voile-actif', !!cfg.voile);
+    if (window.__reglerBandeauVideo) {
+      window.__reglerBandeauVideo(
+        typeof cfg.vitesse === 'number' ? cfg.vitesse : undefined,
+        typeof cfg.pause_ms === 'number' ? cfg.pause_ms : undefined
+      );
+    }
   }
 
   function appliquerBandeau(b) {
@@ -374,7 +381,7 @@
       appliquerSections(g.sections_guides);
       appliquerPageContact(g.page_contact);
       appliquerPageColoriages(g.page_coloriages);
-      appliquerVoileBandeau(g.voile_bandeau);
+      appliquerBandeauVideo(g.bandeau_video);
       appliquerPhotos(g.photos_diaporama);
       appliquerBandeau(g.bandeau);
       appliquerDisposition(g.disposition);
