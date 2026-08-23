@@ -23,8 +23,21 @@
   .entete .qui b{ color:var(--creme); font-weight:600; }
   .entete button{ margin-left:10px; }
   main{ max-width:820px; margin:0 auto; padding:26px 18px 80px; }
-  .carte{ background:var(--carte); border:1px solid var(--bord); border-radius:14px; padding:20px 22px; margin-bottom:18px; }
-  .carte h2{ font-size:15.5px; font-weight:700; margin:0 0 4px; }
+  .carte{ background:var(--carte); border:1px solid var(--bord); border-radius:14px; padding:0; margin-bottom:14px; overflow:hidden; }
+  .carte[open]{ padding-bottom:20px; }
+  .carte summary{ list-style:none; cursor:pointer; padding:18px 22px; display:flex; align-items:center; user-select:none; }
+  .carte summary::-webkit-details-marker{ display:none; }
+  .carte summary::after{
+    content:''; margin-left:auto; width:9px; height:9px; flex-shrink:0;
+    border-right:2px solid var(--adouci); border-bottom:2px solid var(--adouci);
+    transform:rotate(45deg); transition:transform .15s ease;
+  }
+  .carte[open] summary::after{ transform:rotate(-135deg); }
+  .carte summary:hover::after{ border-color:var(--terracotta); }
+  .carte summary h2{ margin:0; }
+  .carte > *:not(summary){ margin-left:22px; margin-right:22px; }
+  .carte > summary + *{ margin-top:0; }
+  .carte h2{ font-size:15.5px; font-weight:700; margin:0; }
   .carte .aide{ font-size:12.5px; color:var(--adouci); margin:0 0 14px; }
   label{ display:block; font-size:12.5px; font-weight:600; color:var(--adouci); margin:10px 0 4px; }
   input[type=text], input[type=url], input[type=email], textarea, select{
@@ -127,8 +140,8 @@
   <!-- ============ Panneau ============ -->
   <div id="blocPanneau" class="cache">
 
-    <div class="carte">
-      <h2>Thème et couleurs</h2>
+    <details class="carte">
+      <summary><h2>Thème et couleurs</h2></summary>
       <p class="aide">S'applique à tout le site. Les couleurs individuelles priment sur le thème choisi.</p>
 
       <label>Palettes mémorisées — cliquez pour charger dans le formulaire</label>
@@ -162,10 +175,10 @@
           <button class="discret" id="btnMemoriser">Mémoriser</button>
         </div>
       </div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Blog</h2>
+    <details class="carte">
+      <summary><h2>Blog</h2></summary>
       <p class="aide">Créez, modifiez et publiez vos articles — visibles dès l'enregistrement en statut « Publié ».</p>
       <div id="blogListe"></div>
       <div class="actions"><button class="principal" type="button" id="btnNouvelArticle">+ Nouvel article</button></div>
@@ -210,10 +223,10 @@
           <button class="discret" type="button" id="btnSupprimerArticle" style="color:#8a3324">Supprimer</button>
         </div>
       </div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Bulle de contact flottante</h2>
+    <details class="carte">
+      <summary><h2>Bulle de contact flottante</h2></summary>
       <p class="aide">Une seule à la fois — WhatsApp ou Facebook, pas les deux. Utilise le lien déjà renseigné dans « Réseaux sociaux » ci-dessous.</p>
       <div class="theme-choix" id="choixBulleContact">
         <label><input type="radio" name="bulleContact" value="aucun"> Aucune</label>
@@ -223,10 +236,10 @@
       <label style="margin-top:12px">Couleur</label>
       <div class="couleur"><input type="color" id="bcCouleur"><code id="bcCouleurHex"></code></div>
       <div class="actions"><button class="principal" data-enregistre="bulle_contact">Enregistrer la bulle de contact</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Bandeau de réassurance</h2>
+    <details class="carte">
+      <summary><h2>Bandeau de réassurance</h2></summary>
       <p class="aide">Affiché juste sous le bandeau défilant, sur toutes les pages. 3 messages courts, uniquement des faits vrais.</p>
       <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="reasActif"> Diffusion active</label>
       <label>Message 1</label>
@@ -241,10 +254,10 @@
         <div><label>Texte</label><div class="couleur"><input type="color" id="reasTexteCouleur"><code id="reasTexteCouleurHex"></code></div></div>
       </div>
       <div class="actions"><button class="principal" data-enregistre="reassurance">Enregistrer la réassurance</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Popup de remise</h2>
+    <details class="carte">
+      <summary><h2>Popup de remise</h2></summary>
       <p class="aide">Apparaît une seule fois par visiteur (4-5 secondes après l'arrivée), avec un champ email pour s'inscrire.</p>
       <label class="suivre" style="font-size:13px; margin-bottom:10px;"><input type="checkbox" id="popActif"> Diffusion active</label>
 
@@ -286,10 +299,10 @@
         </div>
         <textarea id="popListeAbonnes" class="cache" readonly style="margin-top:8px"></textarea>
       </div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Favicon &amp; SEO</h2>
+    <details class="carte">
+      <summary><h2>Favicon &amp; SEO</h2></summary>
       <p class="aide">Le favicon change dans l'onglet du navigateur (peut demander un rechargement complet pour apparaître). Le titre/description : visibles dans l'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement, avant toute modification du panneau.</p>
       <label>Favicon actuel</label>
       <div class="favicon-apercu">
@@ -302,10 +315,10 @@
       <label>Description (Google)</label>
       <textarea id="seoDescription" placeholder="Composez votre mur photo, imprimez chez vous, clipsez sans colle."></textarea>
       <div class="actions"><button class="principal" data-enregistre="seo">Enregistrer titre &amp; description</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Disposition</h2>
+    <details class="carte">
+      <summary><h2>Disposition</h2></summary>
       <label for="dispHeroCta">Position du bouton principal (« Composer mon mur », en bas de la photo d'accueil)</label>
       <select id="dispHeroCta">
         <option value="gauche">Gauche</option>
@@ -313,10 +326,10 @@
         <option value="droite">Droite</option>
       </select>
       <div class="actions"><button class="principal" data-enregistre="disposition">Enregistrer la disposition</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Bandeau défilant (haut de l'accueil)</h2>
+    <details class="carte">
+      <summary><h2>Bandeau défilant (haut de l'accueil)</h2></summary>
       <p class="aide">Les messages en majuscules qui défilent au-dessus du menu.</p>
       <div class="zone-fine">
         <span class="zf-nom">Couleur de fond</span>
@@ -337,53 +350,53 @@
       <label>Messages — un par ligne (vide = messages d'origine)</label>
       <textarea id="bd_messages" placeholder="CONCEPTION ET FABRICATION FRANÇAISES&#10;SANS COLLE, SANS DÉTÉRIORATION&#10;UNE IMPRIMANTE DE SALON SUFFIT"></textarea>
       <div class="actions"><button class="principal" data-enregistre="bandeau">Enregistrer le bandeau</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Polices</h2>
+    <details class="carte">
+      <summary><h2>Polices</h2></summary>
       <p class="aide">Quicksand et Karla sont les polices d'origine du site.</p>
       <div class="rang">
         <div><label>Titres</label><select id="pTitres"></select></div>
         <div><label>Texte courant</label><select id="pTexte"></select></div>
       </div>
       <div class="actions"><button class="principal" data-enregistre="polices">Enregistrer les polices</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Baselines</h2>
+    <details class="carte">
+      <summary><h2>Baselines</h2></summary>
       <div class="rang">
         <div><label>Baseline produit (footer)</label><input type="text" id="bProduit"></div>
         <div><label>Baseline catégorie (sous le logo)</label><input type="text" id="bCategorie"></div>
       </div>
       <div class="actions"><button class="principal" data-enregistre="baselines">Enregistrer les baselines</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Réseaux sociaux</h2>
+    <details class="carte">
+      <summary><h2>Réseaux sociaux</h2></summary>
       <p class="aide">Laissez vide pour garder le bouton inactif sur le site.</p>
       <div class="rang" id="champsReseaux"></div>
       <div class="actions"><button class="principal" data-enregistre="reseaux">Enregistrer les réseaux</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Ligne de copyright</h2>
+    <details class="carte">
+      <summary><h2>Ligne de copyright</h2></summary>
       <label>Texte affiché tout en bas du site</label>
       <input type="text" id="copyTexte">
       <div class="actions"><button class="principal" data-enregistre="copyright">Enregistrer le copyright</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Textes de la page d'accueil</h2>
+    <details class="carte">
+      <summary><h2>Textes de la page d'accueil</h2></summary>
       <p class="aide">Le titre et le premier paragraphe de chaque section. Laissez vide pour garder le texte actuel du site.</p>
       <div id="listeSections"></div>
       <div class="actions"><button class="principal" data-enregistre="sections_accueil">Enregistrer les textes</button></div>
-    </div>
+    </details>
 
-    <div class="carte">
-      <h2>Photos du diaporama d'accueil</h2>
+    <details class="carte">
+      <summary><h2>Photos du diaporama d'accueil</h2></summary>
       <p class="aide">Cliquez sur « Remplacer » sous une photo. La nouvelle photo est en ligne immédiatement.</p>
       <div class="photos" id="grillePhotos"></div>
-    </div>
+    </details>
 
   </div>
 </main>
