@@ -1307,14 +1307,23 @@
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
   /* CTA du bandeau : reste a sa place au chargement, devient flottant des qu'on defile
-     plus bas que le bandeau, pour rester cliquable sans avoir a remonter. */
+     plus bas que le bandeau, pour rester cliquable sans avoir a remonter — et redescend
+     proprement des qu'on remonte. Calcul direct sur le scroll (pas d'IntersectionObserver) :
+     plus fiable ici, un essai precedent avec IO donnait un flash au chargement (la premiere
+     mesure d'intersection tombait parfois avant que la mise en page du bandeau soit stable). */
   const heroCta = document.querySelector('.hero-cta');
   const heroEl = document.getElementById('hero');
   if (heroCta && heroEl){
-    const ioCta = new IntersectionObserver(entries => {
-      entries.forEach(e => heroCta.classList.toggle('flottant', !e.isIntersecting));
-    }, { threshold: 0 });
-    ioCta.observe(heroEl);
+    let ctaEnCours = false;
+    function majCtaFlottant(){
+      const flottant = heroEl.getBoundingClientRect().bottom <= 0;
+      heroCta.classList.toggle('flottant', flottant);
+      ctaEnCours = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ctaEnCours){ ctaEnCours = true; requestAnimationFrame(majCtaFlottant); }
+    }, { passive: true });
+    majCtaFlottant();
   }
 
   if (reduce){
