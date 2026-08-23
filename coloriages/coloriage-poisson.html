@@ -227,6 +227,19 @@
   .item-legende-c .swatch{ flex:0 0 auto; width:18px; height:18px; border-radius:4px; border:1px solid #2b353e33; }
   .item-legende-c .nom{ font-size:11px; }
 
+  .cta-boutique{
+    max-width:640px; margin:0 auto 40px; background:var(--charbon,#2b353e); border-radius:8px 8px 8px 22px;
+    padding:24px 26px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .cta-boutique-texte{ flex:1; min-width:220px; }
+  .cta-boutique h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:16.5px; color:#fff; margin:0 0 6px; }
+  .cta-boutique p{ font-size:12.5px; color:#c9c3b2; margin:0; }
+  .cta-boutique-btn{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; white-space:nowrap;
+    background:var(--terracotta,#e2725b); color:#fff; text-decoration:none; border-radius:99px; padding:11px 22px;
+  }
+  .cta-boutique-btn:hover{ background:#cf6450; }
+
   .autres-c{ margin-top:36px; }
   .autres-c h2{ font-family:'Quicksand',sans-serif; font-size:16px; margin:0 0 14px; }
   .grille-autres{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:14px; }
@@ -236,7 +249,7 @@
   .carte-autre:hover span{ color:var(--terracotta,#e2725b); }
 
   @media print{
-    .qz-header, .qz-navpanel, footer.qz-footer, .qz-fab, .fil, .btn-imprimer, .autres-c{ display:none !important; }
+    .qz-header, .qz-navpanel, footer.qz-footer, .qz-fab, .fil, .btn-imprimer, .autres-c, .cta-boutique{ display:none !important; }
     body{ background:#fff; }
     .page-imprimable{ border:none; box-shadow:none; padding:0; max-width:none; page-break-inside:avoid; }
     .legende-c{ page-break-before:always; }
@@ -308,6 +321,14 @@
         <p style="font-size:11.5px;color:#5c646c;margin:0 0 14px;">Chaque numéro correspond à une couleur. Retrouve la couleur la plus proche dans ta boîte de crayons ou feutres.</p>
         <div class="grille-legende-c"><div class="item-legende-c"><span class="num">1</span><span class="swatch" style="background:#91d7ce"></span><span class="nom">Bleu ciel</span></div><div class="item-legende-c"><span class="num">2</span><span class="swatch" style="background:#f6af41"></span><span class="nom">Orange</span></div><div class="item-legende-c"><span class="num">3</span><span class="swatch" style="background:#cfb97c"></span><span class="nom">Kraft</span></div><div class="item-legende-c"><span class="num">4</span><span class="swatch" style="background:#d95749"></span><span class="nom">Terracotta</span></div><div class="item-legende-c"><span class="num">5</span><span class="swatch" style="background:#c4e4d8"></span><span class="nom">Beige</span></div><div class="item-legende-c"><span class="num">6</span><span class="swatch" style="background:#797772"></span><span class="nom">Gris</span></div></div>
       </div>
+    </div>
+
+    <div class="cta-boutique">
+      <div class="cta-boutique-texte">
+        <h2>Et si vous transformiez ce coloriage en vraie mosaïque ?</h2>
+        <p>QuadretI, c'est le même principe en vrai : des tesselles à composer et recomposer sur votre mur, sans colle, à volonté.</p>
+      </div>
+      <a class="cta-boutique-btn" href="../boutique/">Découvrir la boutique</a>
     </div>
 
     <div class="autres-c">

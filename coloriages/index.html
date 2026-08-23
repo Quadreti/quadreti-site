@@ -184,7 +184,10 @@
   .eyebrow{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
   .blk h1{ font-family:'Quicksand',sans-serif; font-size:clamp(26px,3.6vw,36px); font-weight:700; letter-spacing:-.01em; margin:0 0 14px; }
   .blk p.lead{ font-size:16px; color:#5c646c; max-width:600px; margin:0 auto; }
-  .grille-lib{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-top:40px; }
+  .section-lib{ margin-top:44px; text-align:left; }
+  .section-lib:first-of-type{ margin-top:40px; }
+  .titre-section-lib{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:18px; margin:0 0 18px; }
+  .grille-lib{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; }
   .carte-lib{ display:block; text-decoration:none; background:#fff; border:1px solid #2b353e18; border-radius:8px 8px 8px 22px; overflow:hidden; transition:transform .15s ease; }
   .carte-lib:hover{ transform:translateY(-3px); }
   .carte-lib img{ width:100%; aspect-ratio:1/1; object-fit:cover; image-rendering:pixelated; display:block; }
@@ -235,6 +238,8 @@
     <div class="eyebrow">Pixel Number</div>
     <h1 id="coloriagesTitre">Des coloriages pixel à imprimer, gratuitement</h1>
     <p class="lead" id="coloriagesLead">Chaque case porte un numéro, chaque numéro une couleur : un coloriage calme et gratifiant, à faire et refaire. Cliquez sur un modèle, imprimez-le (Ctrl+P) et c'est parti.</p>
+    <div class="section-lib">
+    <h2 class="titre-section-lib">Coloriages classiques</h2>
     <div class="grille-lib"><a class="carte-lib" href="coloriage-chat.html">
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABVklEQVR4AcSSoU5DQRBFJzVYHO8PcCAwJGBQCAwCAwaCxZDwFSQgsQQDGotDIDAkgOsfvLpWVrU5m04zs29na9q0ye2bnXvndDavvc92NFmFerKiz3rAOx/X4X1qHkPhxtt/T/gCoCRMzVDnCsEb7U+e7ZxrmSKYDTuUoBFlO+Da9QK2lGYcmEDtehGYGWat78DWoH75auXo/pfSiR6ea2YHB+aXMz8dLcTWyZx95bMOPMu4x+VBI1eHjYybvSRqei5UOFTB52cncvvwKpunj7K1f5FETQ+vwJu3qmBgmhx8vwnSs/W0Z58OzHXVZDOteQJC1CqbsbP4DkxjWXLg/u5NekHA7bU5l6QZtmXWZhwYQwP8fXSQfi48MvR1hlrVAWP8Hz+nzRkcvt+llwZIRQ+PTckyk6sIJsQWDDEMxIoeHhmyJYVgDTMMxIqe+tFzITgaXNSfAgAA///6OgKgAAAABklEQVQDAM5f2z19tMsTAAAAAElFTkSuQmCC" alt="Coloriage le chat à imprimer">
     <div class="carte-lib-corps"><span class="carte-lib-titre">Le chat</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
@@ -260,6 +265,28 @@
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABSElEQVR4AayRPUpDURCFh/iHIAh2FkLqmM4yuAIbEd2CtjZZgLWN2JktaOsK3IJYBywsbbTRBM13YSYzL5Mfkice7pkzZ867mds4aJ/91YmG1Py3cmBzfzNcaaHA6/NfAWFySrFQYOdwICDL6H/8BHluID+p3RQB8DCdFHMDTzvfNua5iRUSAo9bX2VX7EtxdTKwEbjqejJjhhEJge+fe2VXDCpGnvCvOid7ZcYbQiAL7vZ25bU/tlzeDkuNBtcONV5mVOMMgQgYMDJA3euulQfhUeBo9PDgpfaYCKSJ8f5xCE1BD482/eungRiPWlscKao9H26B/iuksHBO8PC8LgAOfI/awwL9VwhnZ+yKh7h72hAAR6OHxwcpt0AV9ORGFzfb8vK2o1LhaPRMrJA0kNtyo4rXylm9NNAmZxA+mrWXDszC0GoP/AcAAP//x1FRoQAAAAZJREFUAwBYIqMxV+YxvQAAAABJRU5ErkJggg==" alt="Coloriage l'étoile à imprimer">
     <div class="carte-lib-corps"><span class="carte-lib-titre">L'étoile</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
   </a></div>
+  </div><div class="section-lib">
+    <h2 class="titre-section-lib">Coloriages de Noël</h2>
+    <div class="grille-lib"><a class="carte-lib" href="coloriage-sapin-de-noel.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABXUlEQVR4AbSTsWoCQRRFBwOpUqZKFQikTZMigXQpQoo0IV2K/ECqfEG+wMoP0EKwEBsLsbBTtLCxFawEQVAQS0GUMzDLc3wzjqALd/fNfXcOszO7ufF8sTmHcuZMVzL4avpvUOo6ksHFztKgk4Jbg7rprVdW1CnwpBU3hs2MJevMVIqD4Grtb2+a5vmhKJjXfmxPduY8XVwaPHo7DW8QBb8+fJjbfMVOAYjYazx6thG4RcHMcSsDiKRHHVIUDFQ7LDx6ISh+FHxXKpPZE1sS6rlwEMyK+i83LmeAIQy2hB4ZxpqCYA7n6zNv3u/f7DxgiAEePTKMNQXBhFkR+0kthUdPen4dBQNgwm93xsOKGrmeNZVbECz/rsLzdbbH1AiWzDCWUsG8Jn+XDLK/SHpkyErP1SqY5ujn2x4cB4XwELUTGTxNKpjT9sWnhnyfcTJYCx7rqSvWIHy3SOtp3hYAAP//vwKXhwAAAAZJREFUAwAoQeGXi7LPAgAAAABJRU5ErkJggg==" alt="Coloriage le sapin de noël à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le sapin de Noël</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-bonhomme-de-neige.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABMklEQVR4AbSRrW4CQRSFJ4iKpr6qqlWtb1Nb3xdoTW1VU13dqhoUFgzBIfBYAg+AgoQEhScIDOSb7Nls4M4dAmGTs3fu3zcnu7X3zmxzDtXCmZ4seDVoB0s5P1nwZNQPlk4C4/Tu8SVYoufBXceXz2+h9fdtit7R4I/bddwdjucx8tJZPWqWXMdP9zfWTqx5PQZcsNwJsvz9Cg/d/0AdAUjJBWsJCFDluki5FV1wc3oRd3AZD8WLi9QrSnvBBTder+PC1U89SBS46Oifl1rkgkPgScfedwSOvBkTvOuWb4pLS7uzmjHBairiDDhSLRdNcO6PV6GpWRNcXeQspzgnP0RJ8GdvUe4DRGWhOFRnilIZkmAmWJRbcokaPeVWdMEs8A2BAEOcqdHzlAVrGRhSnotbAAAA//8teg1KAAAABklEQVQDACu9zZn7UKzxAAAAAElFTkSuQmCC" alt="Coloriage le bonhomme de neige à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le bonhomme de neige</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-pere-noel.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABF0lEQVR4AeySoaoCURCGBy/C5XJB7hPcZvAJfAEFu8EgmCwms8FgMNtNPoVBH8AuGGyCURRBRBBRvoUddo9nDmuwKfw4559/vj3Omjvvt/d3KCdv+mQCX2ZTOQ4Hsms2IlHjhe4UBF/Xiwh4mkzkulophxqPB6jpFEHwcTBKAZ3ZqMfDXZ+zCQ7dhsFYt80hLlPfXjC34Oemki8evGAY+VJJYv22WlLod1PCo0/WJy84XyxLodeXn3o10tf/39MsHpnvSu2ph+EF08giVmblTHBoyIIlfROcDI3nSz0mazU9RRDMXwl1Om1h74gaD3l4aplgILwgTToFPTKOrUcTTIJB31vHo0fGUhBsDWXxP2Dd0mcVuooHAAAA//8An1J4AAAABklEQVQDAEsNqkdO/6dRAAAAAElFTkSuQmCC" alt="Coloriage le père noël à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le Père Noël</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a></div>
+  </div><div class="section-lib">
+    <h2 class="titre-section-lib">Coloriages d'anniversaire</h2>
+    <div class="grille-lib"><a class="carte-lib" href="coloriage-gateau-anniversaire.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAA2klEQVR4AeyTPwvCMBDFjwriIKK4+BeKLgqKqF/Xr+Do4uAHEHQS6q6TOAhuYlGekBKay2kqdZAWHrlc3vuRHsQLr6dHGvIopS8DR4MVR3FcLiLjfnMjSDV2wVaV7CqCq8N7FGp1AoJUo1s+qJJdRTCb+LApgsOCb8VIZwhZwZjnet6k1ez8EmpI38MDCCcrmDO79H4P7k3z1BiXRMFj+wvxxghKskHRN8B4FEkEmC4DrB9+U/8B+NKuO0+Ayxij8Gs5gtFFyMRvY4CLlREN+hMnIfMWHDck3T8BAAD//7ViXdsAAAAGSURBVAMARLi401qfrHIAAAAASUVORK5CYII=" alt="Coloriage le gâteau d'anniversaire à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Le gâteau d'anniversaire</span><span class="carte-lib-diff">Moyen — 6-8 ans</span></div>
+  </a><a class="carte-lib" href="coloriage-ballons-fete.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABBElEQVR4AeyRoQ6CUBSGr1Sd1apZN6ONYDNpxBF8BwNRJ9E3MBqcRN3YbAbewCfQYnDT4jBYRP67HcbleocowSDjv+fc/5zzARft4t+DPKWxnK9U4NA9srjSni8B/cOOXQddLoCSgJWzZMW9yYXeZF0AouExHvGebcfgMb7M6hYzW25kVYIpw0xkhIkAJFjoS7fue5IHA1BEkgAk85uoBLY3zkdcJRA01WeippIA1Ca20Ie3JKhX0oUabU4Fi1IeBWCp2mRxKP50z+gzu3HmutUWfIgWwDBDe0QBCAMN5fmagwEjDz5yQAFCJA8+SQJS4VXzOzUlkIazxj8w64nJ/b9/hk8AAAD//82smesAAAAGSURBVAMABEKWHQ4D5NIAAAAASUVORK5CYII=" alt="Coloriage les ballons de fête à imprimer">
+    <div class="carte-lib-corps"><span class="carte-lib-titre">Les ballons de fête</span><span class="carte-lib-diff">Facile — dès 4-5 ans</span></div>
+  </a></div>
+  </div>
   </div>
 </section>
 
