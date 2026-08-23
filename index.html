@@ -101,6 +101,13 @@
   .mini i{ display:block; border-radius:4px; }
   /* la photo remplit le bandeau sans se deformer, cadrage centre */
   .shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  /* Video bandeau (test 23/08) : la source large (4:1) est recadree par cover sur une boite
+     plus etroite que 4:1 des 760px, ce qui coupait l'iris (positionne a droite dans le rendu
+     source). On decale le recadrage vers la droite au-dessus de 760px ; en dessous, la source
+     carree dediee (deja recadree correctement par le fil Video/Animation) reste centree. */
+  @media (min-width:760px){
+    #hero video.shot{ object-position:65% center; }
+  }
   .cap{
     position:absolute; top:14px; right:16px; z-index:2;
     font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
@@ -1222,6 +1229,15 @@
   }
   if (document.readyState === 'complete') chargerLaSuite();
   else window.addEventListener('load', chargerLaSuite);
+
+  /* Video bandeau (test 23/08) : lecture ralentie, l'animation d'origine defile trop vite
+     pour se laisser deviner. Reglage cote site (pas besoin de re-render cote Video/Animation). */
+  const heroVideo = document.querySelector('#hero video.shot');
+  if (heroVideo){
+    const ralentir = () => { heroVideo.playbackRate = 0.6; };
+    ralentir();
+    heroVideo.addEventListener('loadedmetadata', ralentir);
+  }
 
   const slides = document.querySelectorAll('.bg-slides .slide');
   const dots = document.querySelectorAll('#dots button');
