@@ -146,6 +146,30 @@
     </div>
 
     <div class="carte">
+      <h2>Bandeau défilant (haut de l'accueil)</h2>
+      <p class="aide">Les messages en majuscules qui défilent au-dessus du menu.</p>
+      <div class="zone-fine">
+        <span class="zf-nom">Couleur de fond</span>
+        <label class="suivre"><input type="checkbox" id="bd_suivre_fond" checked> Suivre le thème</label>
+        <input type="color" id="bd_fond" class="cache-couleur">
+      </div>
+      <div class="zone-fine">
+        <span class="zf-nom">Couleur du texte</span>
+        <label class="suivre"><input type="checkbox" id="bd_suivre_texte" checked> Blanc (origine)</label>
+        <input type="color" id="bd_texte" class="cache-couleur">
+      </div>
+      <label style="margin-top:12px">Vitesse de défilement</label>
+      <select id="bd_vitesse">
+        <option value="34">Lente</option>
+        <option value="" selected>Normale (origine)</option>
+        <option value="14">Rapide</option>
+      </select>
+      <label>Messages — un par ligne (vide = messages d'origine)</label>
+      <textarea id="bd_messages" placeholder="CONCEPTION ET FABRICATION FRANÇAISES&#10;SANS COLLE, SANS DÉTÉRIORATION&#10;UNE IMPRIMANTE DE SALON SUFFIT"></textarea>
+      <div class="actions"><button class="principal" data-enregistre="bandeau">Enregistrer le bandeau</button></div>
+    </div>
+
+    <div class="carte">
       <h2>Polices</h2>
       <p class="aide">Quicksand et Karla sont les polices d'origine du site.</p>
       <div class="rang">
@@ -342,6 +366,16 @@ function remplirFormulaires(){
   chargerCouleursDansFormulaire(reglages.couleurs);
   dessinerChips();
 
+  var bd = reglages.bandeau || {};
+  $('bd_suivre_fond').checked = !bd.fond;
+  $('bd_fond').value = bd.fond || '#2b353e';
+  $('bd_fond').classList.toggle('cache-couleur', !bd.fond);
+  $('bd_suivre_texte').checked = !bd.texte;
+  $('bd_texte').value = bd.texte || '#ffffff';
+  $('bd_texte').classList.toggle('cache-couleur', !bd.texte);
+  $('bd_vitesse').value = bd.vitesse || '';
+  $('bd_messages').value = (bd.messages || []).join('\n');
+
   var p = Object.assign({}, DEFAUTS.polices, reglages.polices || {});
   $('pTitres').value = p.titres; $('pTexte').value = p.texte;
 
@@ -398,6 +432,12 @@ function construireFormulaires(){
     ligne.appendChild(nom); ligne.appendChild(lab); ligne.appendChild(col);
     $('zonesFines').appendChild(ligne);
   });
+  $('bd_suivre_fond').addEventListener('change', function(){
+    $('bd_fond').classList.toggle('cache-couleur', this.checked);
+  });
+  $('bd_suivre_texte').addEventListener('change', function(){
+    $('bd_texte').classList.toggle('cache-couleur', this.checked);
+  });
   lierCouleur('cFond','cFondHex'); lierCouleur('cTexte','cTexteHex');
   lierCouleur('cAccent','cAccentHex'); lierCouleur('cSurvol','cSurvolHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
@@ -447,6 +487,15 @@ function valeursDepuisFormulaire(cle){
       if (!$('zf_suivre_' + z[0]).checked) c[z[0]] = $('zf_couleur_' + z[0]).value;
     });
     return c;
+  }
+  if (cle === 'bandeau') {
+    var bd = {};
+    if (!$('bd_suivre_fond').checked) bd.fond = $('bd_fond').value;
+    if (!$('bd_suivre_texte').checked) bd.texte = $('bd_texte').value;
+    if ($('bd_vitesse').value) bd.vitesse = $('bd_vitesse').value;
+    var msgs = $('bd_messages').value.split('\n').map(function(m){ return m.trim(); }).filter(Boolean);
+    if (msgs.length) bd.messages = msgs;
+    return bd;
   }
   if (cle === 'polices') return { titres: $('pTitres').value, texte: $('pTexte').value };
   if (cle === 'baselines') return { produit: $('bProduit').value.trim(), categorie: $('bCategorie').value.trim() };

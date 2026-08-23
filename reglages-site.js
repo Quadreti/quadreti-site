@@ -135,6 +135,29 @@
     });
   }
 
+  function appliquerBandeau(b) {
+    if (!b) return;
+    var track = document.querySelector('.ticker-track');
+    if (!track) return; /* pages sans bandeau défilant */
+    if (b.messages && b.messages.length) {
+      track.textContent = '';
+      /* contenu doublé : nécessaire au défilement sans coupure (translation de -50 %) */
+      for (var tour = 0; tour < 2; tour++) {
+        b.messages.forEach(function (m) {
+          if (!m) return;
+          var s = document.createElement('span');
+          s.textContent = m;
+          track.appendChild(s);
+        });
+      }
+    }
+    var css = '';
+    if (b.fond) css += '.ticker{background:' + b.fond + '}';
+    if (b.texte) css += '.ticker{color:' + b.texte + '}.ticker-track span{border-right-color:' + b.texte + '38}';
+    if (b.vitesse) css += '.ticker-track{animation-duration:' + b.vitesse + 's}';
+    if (css) injecterStyle('qz-reglages-bandeau', css);
+  }
+
   function appliquerPhotos(ph) {
     if (!ph) return;
     var imgs = document.querySelectorAll('.bg-slides .shot');
@@ -162,6 +185,7 @@
       appliquerCopyright(g.copyright);
       appliquerSections(g.sections_accueil);
       appliquerPhotos(g.photos_diaporama);
+      appliquerBandeau(g.bandeau);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
     .then(function () { clearTimeout(minuteur); });
