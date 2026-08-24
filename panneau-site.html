@@ -256,6 +256,13 @@
       <label style="margin-top:12px">Disposition du menu déroulant</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnDisposition" value="verticale" style="margin:0"> Verticale (liste, une entrée par ligne)</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnDisposition" value="horizontale" style="margin:0"> Horizontale (en ligne, gagne de la place en hauteur)</label>
+      <label style="margin-top:12px">Espacement entre les entrées du menu (en pixels)</label>
+      <input type="number" id="mnEspacement" min="0" max="80" step="2">
+      <label style="margin-top:12px">Alignement du menu horizontal</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="gauche" style="margin:0"> Gauche</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="centre" style="margin:0"> Centré</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="droite" style="margin:0"> Droite</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="espace" style="margin:0"> Réparti sur toute la largeur</label>
       <div class="actions"><button class="principal" data-enregistre="menu_nav">Enregistrer le menu de navigation</button></div>
     </details>
 
@@ -686,6 +693,8 @@ function remplirFormulaires(){
   $('mnOverlay').checked = !!mn.overlay;
   document.querySelector('input[name=mnPosition][value="' + (mn.position || 'droite') + '"]').checked = true;
   document.querySelector('input[name=mnDisposition][value="' + (mn.disposition || 'verticale') + '"]').checked = true;
+  $('mnEspacement').value = (typeof mn.espacement === 'number') ? mn.espacement : 20;
+  document.querySelector('input[name=mnJustifie][value="' + (mn.justifie || 'centre') + '"]').checked = true;
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
@@ -920,12 +929,16 @@ function valeursDepuisFormulaire(cle){
     var voileVal = parseInt($('mnVoile').value, 10);
     var posEl2 = document.querySelector('input[name=mnPosition]:checked');
     var dispEl = document.querySelector('input[name=mnDisposition]:checked');
+    var justifEl = document.querySelector('input[name=mnJustifie]:checked');
+    var espacementVal = parseInt($('mnEspacement').value, 10);
     return {
       bouton: $('mnBouton').value, traits: $('mnTraits').value, fond: $('mnFond').value,
       voile: isNaN(voileVal) ? 40 : Math.max(0, Math.min(100, voileVal)),
       texte: $('mnTexte').value, sousBouton: $('mnSousBouton').value, overlay: $('mnOverlay').checked,
       position: posEl2 ? posEl2.value : 'droite',
-      disposition: dispEl ? dispEl.value : 'verticale'
+      disposition: dispEl ? dispEl.value : 'verticale',
+      espacement: isNaN(espacementVal) ? 20 : Math.max(0, Math.min(80, espacementVal)),
+      justifie: justifEl ? justifEl.value : 'centre'
     };
   }
   if (cle === 'bulle_contact') return {

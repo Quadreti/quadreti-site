@@ -297,9 +297,15 @@
     if (m.overlay) css += '\n.qz-navpanel{position:fixed;left:0;right:0}';
     if (m.position === 'gauche') css += '\n.qz-header{grid-template-columns:auto 1fr}\n.qz-header .qz-burger{order:-1}';
     else if (m.position === 'centre') css += '\n.qz-header{grid-template-columns:1fr auto 1fr}';
+    if (typeof m.espacement === 'number') css += '\n.qz-navpanel ul{gap:' + m.espacement + 'px}';
     if (m.disposition === 'horizontale') {
-      css += '\n.qz-navpanel ul{flex-direction:row;flex-wrap:wrap;justify-content:center}' +
-             '\n.qz-navpanel>ul>li{width:auto;max-width:none}';
+      var justif = { gauche: 'flex-start', centre: 'center', droite: 'flex-end', espace: 'space-between' }[m.justifie] || 'center';
+      css += '\n.qz-navpanel ul{flex-direction:row;flex-wrap:wrap;justify-content:' + justif + '}' +
+             '\n.qz-navpanel>ul>li{width:auto;max-width:none}' +
+             /* Sous-menu en volet flottant sous son bouton, plutot que de pousser
+                les autres entrees de la ligne quand il s'ouvre. */
+             '\n.qz-navpanel li.qz-hassub{position:relative}' +
+             '\n.qz-navpanel li.qz-hassub .qz-sublist{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:max-content;z-index:5}';
     }
     if (!css) return;
     injecterStyle('qz-menu-nav-style', css);
