@@ -282,12 +282,22 @@
     document.body.appendChild(a);
   }
 
+  function hexEnRgba(hex, alpha) {
+    var h = hex.replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + alpha + ')';
+  }
+
   function appliquerMenuNav(m) {
     if (!m) return;
     var css = '';
     if (m.bouton) css += '\n.qz-burger{background:' + m.bouton + '}';
     if (m.traits) css += '\n.qz-burger span{background:' + m.traits + '}';
-    if (m.fond) css += '\n.qz-navpanel{background:' + m.fond + '}';
+    if (typeof m.transparence === 'number' && m.transparence > 0) {
+      var alphaFond = (100 - Math.max(0, Math.min(100, m.transparence))) / 100;
+      css += '\n.qz-navpanel{background:' + hexEnRgba(m.fond || '#2B353E', alphaFond) + '}';
+    } else if (m.fond) css += '\n.qz-navpanel{background:' + m.fond + '}';
     if (typeof m.voile === 'number') {
       var v = Math.max(0, Math.min(100, m.voile)) / 100;
       css += '\n.qz-nav-voile{background:rgba(0,0,0,' + v + ')}';
