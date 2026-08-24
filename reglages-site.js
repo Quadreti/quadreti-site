@@ -348,11 +348,38 @@
     if (hb.couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + hb.couleur + '}';
     if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
     else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
-    if (hb.alignement === 'gauche') css += '\n.hero{justify-content:flex-start}\n.hero-copy{align-items:flex-start;text-align:left}';
-    else if (hb.alignement === 'droite') css += '\n.hero{justify-content:flex-end}\n.hero-copy{align-items:flex-end;text-align:right}';
-    else if (hb.alignement === 'centre') css += '\n.hero{justify-content:center}\n.hero-copy{align-items:center;text-align:center}';
+    if (hb.alignement || hb.position) {
+      var align = hb.alignement || 'centre';
+      var pos = hb.position || 'haut';
+      var left, right, tX;
+      if (align === 'gauche') { left = '0'; right = 'auto'; tX = ''; }
+      else if (align === 'droite') { left = 'auto'; right = '0'; tX = ''; }
+      else { left = '50%'; right = 'auto'; tX = 'translateX(-50%)'; }
+      var top, bottom, tY;
+      if (pos === 'bas') { top = 'auto'; bottom = '0'; tY = ''; }
+      else if (pos === 'centre') { top = '50%'; bottom = 'auto'; tY = 'translateY(-50%)'; }
+      else { top = '0'; bottom = 'auto'; tY = ''; }
+      var alignItems = align === 'gauche' ? 'flex-start' : align === 'droite' ? 'flex-end' : 'center';
+      var textAlign = align === 'gauche' ? 'left' : align === 'droite' ? 'right' : 'center';
+      css += '\n.hero-copy{left:' + left + ';right:' + right + ';top:' + top + ';bottom:' + bottom +
+        ';transform:' + ((tX + ' ' + tY).trim() || 'none') +
+        ';align-items:' + alignItems + ';text-align:' + textAlign + '}';
+    }
     if (!css) return;
     injecterStyle('qz-hero-baseline-style', css);
+  }
+
+  function appliquerLogo(cfg) {
+    if (!cfg || !cfg.url) return;
+    var row = document.getElementById('qzLogoRow');
+    var img = document.getElementById('qzLogoPerso');
+    if (!row || !img) return;
+    img.src = cfg.url;
+    if (cfg.hauteur) img.style.maxHeight = cfg.hauteur + 'px';
+    if (cfg.largeur) img.style.maxWidth = cfg.largeur + 'px';
+    var anim = { fondu: 'qz-logo-anim-fondu', glisse: 'qz-logo-anim-glisse' }[cfg.animation];
+    if (anim) img.classList.add(anim);
+    row.classList.add('perso-actif');
   }
 
   function appliquerReassurance(r) {
@@ -478,6 +505,7 @@
     appliquerSeo(g.seo);
     appliquerMenuNav(g.menu_nav);
     appliquerHeroBaseline(g.hero_baseline);
+    appliquerLogo(g.logo_perso);
   }
 
   /* Anti-flash : réapplique immédiatement la dernière config connue (cache

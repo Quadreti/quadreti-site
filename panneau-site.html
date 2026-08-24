@@ -204,6 +204,27 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Logo personnalisé</h2></summary>
+      <p class="aide">Remplace le logo animé du bandeau (icône + « Quadretı ») par votre propre image, à l'emplacement du logo dans le bandeau. La baseline « Support créatif modulaire » disparaît avec. « Retirer » revient au logo Quadreti d'origine.</p>
+      <label>Image du logo</label>
+      <div class="favicon-apercu">
+        <img id="logoApercu" src="" alt="" style="visibility:hidden">
+        <input type="file" id="logoFichier" accept="image/*">
+        <button class="discret" type="button" id="btnLogo">Choisir une image</button>
+        <button class="discret" type="button" id="btnLogoRetirer">Retirer</button>
+      </div>
+      <label style="margin-top:14px">Hauteur (en pixels)</label>
+      <input type="number" id="logoHauteur" min="16" max="120" step="1">
+      <label style="margin-top:12px">Largeur maximale (en pixels, facultatif)</label>
+      <input type="number" id="logoLargeur" min="16" max="400" step="1">
+      <label style="margin-top:12px">Animation à l'apparition</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="logoAnimation" value="aucune" style="margin:0"> Aucune</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="logoAnimation" value="fondu" style="margin:0"> Fondu</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="logoAnimation" value="glisse" style="margin:0"> Glissade depuis la gauche</label>
+      <div class="actions"><button class="principal" data-enregistre="logo_perso">Enregistrer les dimensions et l'animation</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Réseaux sociaux</h2></summary>
       <p class="aide">Laissez vide pour garder le bouton inactif sur le site.</p>
       <div class="rang" id="champsReseaux"></div>
@@ -360,6 +381,10 @@
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="gauche" style="margin:0"> Gauche</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="centre" style="margin:0"> Centré</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="droite" style="margin:0"> Droite</label>
+      <label style="margin-top:12px">Position verticale dans le cadre</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="haut" style="margin:0"> Haut</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="centre" style="margin:0"> Centré</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="bas" style="margin:0"> Bas</label>
       <div class="actions"><button class="principal" data-enregistre="hero_baseline">Enregistrer la baseline</button></div>
     </details>
 
@@ -739,6 +764,14 @@ function remplirFormulaires(){
   $('hbCouleur').value = hb.couleur || '#F5F5F5'; majHex('hbCouleur','hbCouleurHex');
   document.querySelector('input[name=hbPolice][value="' + (hb.police || 'texte') + '"]').checked = true;
   document.querySelector('input[name=hbAlignement][value="' + (hb.alignement || 'centre') + '"]').checked = true;
+  document.querySelector('input[name=hbPosition][value="' + (hb.position || 'haut') + '"]').checked = true;
+
+  var lp = reglages.logo_perso || {};
+  if (lp.url) { $('logoApercu').src = lp.url; $('logoApercu').style.visibility = 'visible'; }
+  else { $('logoApercu').src = ''; $('logoApercu').style.visibility = 'hidden'; }
+  $('logoHauteur').value = (typeof lp.hauteur === 'number') ? lp.hauteur : 42;
+  $('logoLargeur').value = (typeof lp.largeur === 'number') ? lp.largeur : '';
+  document.querySelector('input[name=logoAnimation][value="' + (lp.animation || 'aucune') + '"]').checked = true;
 
   var bv = reglages.bandeau_video || {};
   $('bandeauVideoActif').checked = (typeof bv.actif === 'boolean') ? bv.actif : true;
@@ -958,6 +991,16 @@ function televerserPhoto(n, fichier, btn){
 
 /* ---------- Boutons Enregistrer ---------- */
 function valeursDepuisFormulaire(cle){
+  if (cle === 'logo_perso') {
+    var hauteurVal = parseInt($('logoHauteur').value, 10);
+    var largeurVal = parseInt($('logoLargeur').value, 10);
+    var animEl = document.querySelector('input[name=logoAnimation]:checked');
+    var lpv = Object.assign({}, reglages.logo_perso || {});
+    lpv.animation = animEl ? animEl.value : 'aucune';
+    if (!isNaN(hauteurVal)) lpv.hauteur = Math.max(16, Math.min(120, hauteurVal));
+    if (!isNaN(largeurVal)) lpv.largeur = Math.max(16, Math.min(400, largeurVal)); else delete lpv.largeur;
+    return lpv;
+  }
   if (cle === 'couleurs') {
     var c = {
       theme: document.querySelector('input[name=theme]:checked').value,
@@ -973,7 +1016,8 @@ function valeursDepuisFormulaire(cle){
     var tailleVal = parseInt($('hbTaille').value, 10);
     var policeEl = document.querySelector('input[name=hbPolice]:checked');
     var alignEl = document.querySelector('input[name=hbAlignement]:checked');
-    var hbv = { couleur: $('hbCouleur').value, police: policeEl ? policeEl.value : 'texte', alignement: alignEl ? alignEl.value : 'centre' };
+    var posEl3 = document.querySelector('input[name=hbPosition]:checked');
+    var hbv = { couleur: $('hbCouleur').value, police: policeEl ? policeEl.value : 'texte', alignement: alignEl ? alignEl.value : 'centre', position: posEl3 ? posEl3.value : 'haut' };
     if (!isNaN(tailleVal)) hbv.taille = Math.max(16, Math.min(60, tailleVal));
     return hbv;
   }
@@ -1099,6 +1143,30 @@ document.addEventListener('click', function(e){
     return;
   }
   enregistrer(cle, valeurs);
+});
+
+/* ---------- Logo personnalisé ---------- */
+$('btnLogo').addEventListener('click', function(){ $('logoFichier').click(); });
+$('logoFichier').addEventListener('change', function(){
+  var f = $('logoFichier').files[0];
+  if (!f) return;
+  if (f.size > 2 * 1024 * 1024) { toast('Image trop lourde (2 Mo max).', true); return; }
+  var btn = $('btnLogo'); btn.disabled = true; btn.textContent = 'Envoi...';
+  var ext = (f.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g,'') || 'png';
+  televerserFichier(f, 'logo-site-' + Date.now() + '.' + ext).then(function(res){
+    if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+    var lp = Object.assign({}, reglages.logo_perso || {});
+    lp.url = res.d.url;
+    return enregistrer('logo_perso', lp).then(function(){
+      $('logoApercu').src = lp.url; $('logoApercu').style.visibility = 'visible';
+    });
+  }).catch(function(){ toast('Envoi impossible (réseau).', true); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Choisir une image'; });
+});
+$('btnLogoRetirer').addEventListener('click', function(){
+  var lp = Object.assign({}, reglages.logo_perso || {});
+  lp.url = '';
+  enregistrer('logo_perso', lp).then(function(){ $('logoApercu').src = ''; $('logoApercu').style.visibility = 'hidden'; });
 });
 
 /* ---------- Popup ---------- */

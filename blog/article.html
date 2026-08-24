@@ -84,16 +84,25 @@
     width:100%; background:none; border:none; cursor:pointer;
     font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2;
     padding:9px 0; display:flex; align-items:center; justify-content:center; gap:6px;
+    line-height:1.65;
   }
   .qz-subtoggle:hover{ color:var(--qz-terracotta); }
   .qz-subtoggle .qz-chev{ font-size:10px; transition:transform .2s; color:var(--qz-kraft); }
   li.qz-hassub.open .qz-subtoggle .qz-chev{ transform:rotate(180deg); }
   li.qz-hassub.open .qz-subtoggle{ color:var(--qz-creme); }
-  .qz-sublist{ list-style:none; margin:0; padding:0; max-height:0; overflow:hidden; transition:max-height .25s ease; background:#37434e; border-radius:10px; }
+  .qz-sublist{ list-style:none; margin:0; padding:0; max-height:0; overflow:hidden; transition:max-height .25s ease; background:#37434e; border-radius:10px; display:flex; flex-direction:column; justify-content:center; }
   li.qz-hassub.open .qz-sublist{ max-height:120px; margin-bottom:4px; }
   .qz-sublist li{ max-width:none !important; }
   .qz-sublist a{ font-size:12.5px; font-weight:600; color:#9aa2a9; padding:8px 0; }
   .qz-sublist a:hover{ color:var(--qz-terracotta); }
+
+  .qz-logo-perso{ display:none; max-height:42px; width:auto; object-fit:contain; }
+  .qz-logorow.perso-actif .qz-qlogo, .qz-logorow.perso-actif .qz-wm-col{ display:none; }
+  .qz-logorow.perso-actif .qz-logo-perso{ display:block; }
+  @keyframes qzLogoFondu{ from{ opacity:0; } to{ opacity:1; } }
+  .qz-logo-anim-fondu{ animation:qzLogoFondu .6s ease forwards; }
+  @keyframes qzLogoGlisse{ from{ opacity:0; transform:translateX(-14px); } to{ opacity:1; transform:translateX(0); } }
+  .qz-logo-anim-glisse{ animation:qzLogoGlisse .6s ease forwards; }
 
   .qz-nav-voile{
     position:fixed; inset:0; background:rgba(0,0,0,.4);
@@ -196,12 +205,13 @@
 </head>
 <body id="qz-top">
 <header class="qz-header">
-  <a class="qz-logorow" href="../index.html" aria-label="Quadreti — accueil">
+  <a class="qz-logorow" href="../index.html" aria-label="Quadreti — accueil" id="qzLogoRow">
     <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
     <span class="qz-wm-col">
       <span class="qz-wordmark" aria-label="Quadreti"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
       <span class="qz-cat">Support créatif modulaire</span>
     </span>
+    <img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">
   </a>
   <button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">
     <span></span><span></span><span></span>
