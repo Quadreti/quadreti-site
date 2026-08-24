@@ -348,23 +348,30 @@
     if (hb.couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + hb.couleur + '}';
     if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
     else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
-    if (hb.alignement || hb.position) {
-      var align = hb.alignement || 'centre';
-      var pos = hb.position || 'haut';
+    if (hb.zone) {
+      var parts = hb.zone === 'centre' ? ['centre', 'centre'] : hb.zone.split('-');
+      var vert = parts[0], horiz = parts[1];
       var left, right, tX;
-      if (align === 'gauche') { left = '0'; right = 'auto'; tX = ''; }
-      else if (align === 'droite') { left = 'auto'; right = '0'; tX = ''; }
+      if (horiz === 'gauche') { left = '0'; right = 'auto'; tX = ''; }
+      else if (horiz === 'droite') { left = 'auto'; right = '0'; tX = ''; }
       else { left = '50%'; right = 'auto'; tX = 'translateX(-50%)'; }
       var top, bottom, tY;
-      if (pos === 'bas') { top = 'auto'; bottom = '0'; tY = ''; }
-      else if (pos === 'centre') { top = '50%'; bottom = 'auto'; tY = 'translateY(-50%)'; }
+      if (vert === 'bas') { top = 'auto'; bottom = '0'; tY = ''; }
+      else if (vert === 'centre') { top = '50%'; bottom = 'auto'; tY = 'translateY(-50%)'; }
       else { top = '0'; bottom = 'auto'; tY = ''; }
-      var alignItems = align === 'gauche' ? 'flex-start' : align === 'droite' ? 'flex-end' : 'center';
-      var textAlign = align === 'gauche' ? 'left' : align === 'droite' ? 'right' : 'center';
+      var alignItems = horiz === 'gauche' ? 'flex-start' : horiz === 'droite' ? 'flex-end' : 'center';
+      var textAlign = horiz === 'gauche' ? 'left' : horiz === 'droite' ? 'right' : 'center';
       css += '\n.hero-copy{left:' + left + ';right:' + right + ';top:' + top + ';bottom:' + bottom +
         ';transform:' + ((tX + ' ' + tY).trim() || 'none') +
         ';align-items:' + alignItems + ';text-align:' + textAlign + '}';
     }
+    [['ligne1', 'l1'], ['ligne2', 'l2'], ['ligne3', 'l3']].forEach(function (paire) {
+      if (typeof hb[paire[0]] !== 'string') return;
+      var el = document.querySelector('.h-line.' + paire[1]);
+      if (!el) return;
+      if (hb[paire[0]]) { el.textContent = hb[paire[0]]; el.style.display = ''; }
+      else { el.style.display = 'none'; }
+    });
     if (!css) return;
     injecterStyle('qz-hero-baseline-style', css);
   }

@@ -69,6 +69,9 @@
   .theme-choix label{ flex:1; margin:0; border:2px solid var(--bord); border-radius:11px; padding:12px; cursor:pointer; font-size:13px; color:var(--charbon); text-align:center; }
   .theme-choix input{ margin-right:6px; }
   .theme-choix label.actif{ border-color:var(--terracotta); background:#e2725b14; }
+  .case-zone{ display:flex; align-items:center; justify-content:center; gap:5px; margin:0; border:2px solid var(--bord); border-radius:9px; padding:9px 4px; cursor:pointer; font-size:11.5px; color:var(--charbon); text-align:center; white-space:nowrap; }
+  .case-zone input{ margin:0; }
+  .case-zone:has(input:checked){ border-color:var(--terracotta); background:#e2725b14; }
   details.section-item{ border:1px solid var(--bord); border-radius:10px; padding:10px 14px; margin-bottom:8px; background:var(--fond); }
   details.section-item summary{ cursor:pointer; font-weight:600; font-size:13.5px; }
   .photos{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
@@ -369,22 +372,32 @@
 
     <details class="carte">
       <summary><h2>Baseline du bandeau (« Composez. Imprimez. Clipsez. »)</h2></summary>
-      <p class="aide">Le texte en haut de la photo/vidéo d'accueil. Laissez la taille vide pour garder la taille actuelle.</p>
-      <label>Taille du texte (en pixels)</label>
+      <p class="aide">Le texte en haut de la photo/vidéo d'accueil. 1 à 3 lignes : laissez la ligne 2 et/ou 3 vide pour un texte plus court. Laissez un champ vide pour garder le texte d'origine (indiqué en filigrane).</p>
+      <label>Ligne 1</label>
+      <input type="text" id="hbLigne1" placeholder="Composez.">
+      <label style="margin-top:10px">Ligne 2 (facultatif)</label>
+      <input type="text" id="hbLigne2" placeholder="Imprimez.">
+      <label style="margin-top:10px">Ligne 3 (facultatif)</label>
+      <input type="text" id="hbLigne3" placeholder="Clipsez.">
+      <label style="margin-top:14px">Taille du texte (en pixels)</label>
       <input type="number" id="hbTaille" min="16" max="60" step="1">
       <label style="margin-top:12px">Couleur du texte</label>
       <div class="couleur"><input type="color" id="hbCouleur"><code id="hbCouleurHex"></code></div>
       <label style="margin-top:12px">Police</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPolice" value="titres" style="margin:0"> Titres (Quicksand)</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPolice" value="texte" style="margin:0"> Texte courant (Karla)</label>
-      <label style="margin-top:12px">Alignement</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="gauche" style="margin:0"> Gauche</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="centre" style="margin:0"> Centré</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="droite" style="margin:0"> Droite</label>
-      <label style="margin-top:12px">Position verticale dans le cadre</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="haut" style="margin:0"> Haut</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="centre" style="margin:0"> Centré</label>
-      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPosition" value="bas" style="margin:0"> Bas</label>
+      <label style="margin-top:12px">Position dans le cadre</label>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:280px;">
+        <label class="case-zone"><input type="radio" name="hbZone" value="haut-gauche"> Haut G.</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="haut-centre"> Haut</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="haut-droite"> Haut D.</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="centre-gauche"> Gauche</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="centre"> Centre</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="centre-droite"> Droite</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="bas-gauche"> Bas G.</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="bas-centre"> Bas</label>
+        <label class="case-zone"><input type="radio" name="hbZone" value="bas-droite"> Bas D.</label>
+      </div>
       <div class="actions"><button class="principal" data-enregistre="hero_baseline">Enregistrer la baseline</button></div>
     </details>
 
@@ -760,11 +773,13 @@ function remplirFormulaires(){
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
   var hb = reglages.hero_baseline || {};
+  $('hbLigne1').value = (typeof hb.ligne1 === 'string') ? hb.ligne1 : '';
+  $('hbLigne2').value = (typeof hb.ligne2 === 'string') ? hb.ligne2 : '';
+  $('hbLigne3').value = (typeof hb.ligne3 === 'string') ? hb.ligne3 : '';
   $('hbTaille').value = (typeof hb.taille === 'number') ? hb.taille : '';
   $('hbCouleur').value = hb.couleur || '#F5F5F5'; majHex('hbCouleur','hbCouleurHex');
   document.querySelector('input[name=hbPolice][value="' + (hb.police || 'texte') + '"]').checked = true;
-  document.querySelector('input[name=hbAlignement][value="' + (hb.alignement || 'centre') + '"]').checked = true;
-  document.querySelector('input[name=hbPosition][value="' + (hb.position || 'haut') + '"]').checked = true;
+  document.querySelector('input[name=hbZone][value="' + (hb.zone || 'haut-centre') + '"]').checked = true;
 
   var lp = reglages.logo_perso || {};
   if (lp.url) { $('logoApercu').src = lp.url; $('logoApercu').style.visibility = 'visible'; }
@@ -1015,9 +1030,11 @@ function valeursDepuisFormulaire(cle){
   if (cle === 'hero_baseline') {
     var tailleVal = parseInt($('hbTaille').value, 10);
     var policeEl = document.querySelector('input[name=hbPolice]:checked');
-    var alignEl = document.querySelector('input[name=hbAlignement]:checked');
-    var posEl3 = document.querySelector('input[name=hbPosition]:checked');
-    var hbv = { couleur: $('hbCouleur').value, police: policeEl ? policeEl.value : 'texte', alignement: alignEl ? alignEl.value : 'centre', position: posEl3 ? posEl3.value : 'haut' };
+    var zoneEl = document.querySelector('input[name=hbZone]:checked');
+    var hbv = {
+      couleur: $('hbCouleur').value, police: policeEl ? policeEl.value : 'texte', zone: zoneEl ? zoneEl.value : 'haut-centre',
+      ligne1: $('hbLigne1').value.trim(), ligne2: $('hbLigne2').value.trim(), ligne3: $('hbLigne3').value.trim()
+    };
     if (!isNaN(tailleVal)) hbv.taille = Math.max(16, Math.min(60, tailleVal));
     return hbv;
   }
