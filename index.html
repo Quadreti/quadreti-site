@@ -101,12 +101,12 @@
   .mini i{ display:block; border-radius:4px; }
   /* la photo remplit le bandeau sans se deformer, cadrage centre */
   .shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-  /* Video bandeau (test 23/08) : la source large (4:1) est recadree par cover sur une boite
-     plus etroite que 4:1 des 760px, ce qui coupait l'iris (positionne a droite dans le rendu
-     source). On decale le recadrage vers la droite au-dessus de 760px ; en dessous, la source
-     carree dediee (deja recadree correctement par le fil Video/Animation) reste centree. */
+  /* Video bandeau : la source large (4:1) est recadree par cover sur une boite plus etroite
+     que 4:1 des 760px (coupe horizontale). "Changez" (24/08) est un motif symetrique sans
+     sujet decentre : cadrage centre. En dessous de 760px, la source carree dediee
+     (deja recadree correctement par le fil Video/Animation) reste centree. */
   @media (min-width:760px){
-    #hero video.shot{ object-position:65% center; }
+    #hero video.shot{ object-position:50% center; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
@@ -707,16 +707,20 @@
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
-  <!-- Test bandeau video (fil Video/Animation, 23/08/2026) : 4 carreaux qui se remplissent
-       depuis les coins pour reconstruire un oeil colore. Deux sources responsive (carree en
-       dessous de 760px, meme seuil que .hero, large au-dessus) pour un recadrage correct sur
-       mobile. Remplace temporairement le diaporama photo pour jugement en situation ;
-       l'ancien diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
+  <!-- Bandeau video (fil Video/Animation). Deux sources responsive (carree en dessous de
+       760px, meme seuil que .hero, large au-dessus) pour un recadrage correct sur mobile.
+       24/08/2026 : source desktop remplacee par "Changez" (grille vide -> oeil -> zoom
+       pupille -> depart -> aurore -> grille vide), validee par le fondateur, cadrage teste
+       avec le vrai CSS du bandeau avant export (marge 0.6). La source mobile carree reste
+       l'ancienne animation "oeil" en attendant une version carree a jour de "Changez"
+       (celle livree le 24/08 n'integre pas encore le dernier correctif couleur des angles).
+       Remplace temporairement le diaporama photo pour jugement en situation ; l'ancien
+       diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
       <video class="shot" autoplay muted playsinline>
         <source media="(max-width:759px)" src="video/quadreti-bandeau-oeil-carre.mp4" type="video/mp4">
-        <source src="video/quadreti-bandeau-oeil.mp4" type="video/mp4">
+        <source src="video/quadreti-bandeau-changez.mp4" type="video/mp4">
       </video>
       <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="">
     </div>
