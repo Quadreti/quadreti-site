@@ -118,12 +118,14 @@
       if (f !== 'Quicksand' && f !== 'Karla' && familles.indexOf(f) < 0) familles.push(f);
     });
     if (familles.length) {
-      var l = document.createElement('link');
-      l.rel = 'stylesheet';
-      l.href = 'https://fonts.googleapis.com/css2?' + familles.map(function (f) {
+      var href = 'https://fonts.googleapis.com/css2?' + familles.map(function (f) {
         return 'family=' + encodeURIComponent(f) + ':wght@400;500;600;700';
       }).join('&') + '&display=swap';
-      document.head.appendChild(l);
+      if (!document.querySelector('link[href="' + href + '"]')) {
+        var l = document.createElement('link');
+        l.rel = 'stylesheet'; l.href = href;
+        document.head.appendChild(l);
+      }
     }
     injecterStyle('qz-reglages-polices',
       'body,p,li,a,input,button,textarea{font-family:\'' + texte + '\',sans-serif}' +
@@ -290,10 +292,15 @@
       var v = Math.max(0, Math.min(100, m.voile)) / 100;
       css += '\n.qz-nav-voile{background:rgba(0,0,0,' + v + ')}';
     }
-    if (m.texte) css += '\n.qz-navpanel a{color:' + m.texte + '}\n.qz-subtoggle{color:' + m.texte + '}';
+    if (m.texte) css += '\n.qz-navpanel a{color:' + m.texte + '}';
+    if (m.sousBouton) css += '\n.qz-subtoggle{color:' + m.sousBouton + '}';
     if (m.overlay) css += '\n.qz-navpanel{position:fixed;left:0;right:0}';
     if (m.position === 'gauche') css += '\n.qz-header{grid-template-columns:auto 1fr}\n.qz-header .qz-burger{order:-1}';
     else if (m.position === 'centre') css += '\n.qz-header{grid-template-columns:1fr auto 1fr}';
+    if (m.disposition === 'horizontale') {
+      css += '\n.qz-navpanel ul{flex-direction:row;flex-wrap:wrap;justify-content:center}' +
+             '\n.qz-navpanel>ul>li{width:auto;max-width:none}';
+    }
     if (!css) return;
     injecterStyle('qz-menu-nav-style', css);
   }
@@ -400,6 +407,37 @@
     setTimeout(function () { fond_el.classList.add('qz-on'); }, apercu ? 300 : (p.delai || 4) * 1000);
   }
 
+  /* Applique tout sauf les widgets qui créent des éléments à chaque appel
+     (popup, bulle de contact, réassurance) — ceux-là ne doivent s'exécuter
+     qu'une fois, sur la réponse réseau, jamais depuis le cache (sinon doublon
+     visuel : deux bulles, deux bandeaux de réassurance...). */
+  function appliquerTout(g) {
+    appliquerCouleurs(g.couleurs);
+    appliquerPolices(g.polices);
+    appliquerBaselines(g.baselines);
+    appliquerReseaux(g.reseaux);
+    appliquerCopyright(g.copyright);
+    appliquerSections(g.sections_accueil);
+    appliquerSections(g.sections_guides);
+    appliquerPageContact(g.page_contact);
+    appliquerPageColoriages(g.page_coloriages);
+    appliquerBandeauVideo(g.bandeau_video);
+    appliquerPhotos(g.photos_diaporama);
+    appliquerBandeau(g.bandeau);
+    appliquerDisposition(g.disposition);
+    appliquerSeo(g.seo);
+    appliquerMenuNav(g.menu_nav);
+  }
+
+  /* Anti-flash : réapplique immédiatement la dernière config connue (cache
+     local), avant même la réponse réseau, pour éviter que les couleurs/textes
+     d'origine du code apparaissent brièvement le temps du fetch. */
+  var CLE_CACHE = 'quadretiReglagesCache';
+  try {
+    var enCache = localStorage.getItem(CLE_CACHE);
+    if (enCache) appliquerTout(JSON.parse(enCache));
+  } catch (e) {}
+
   var ctl = ('AbortController' in window) ? new AbortController() : null;
   var minuteur = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
   fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur', {
@@ -409,25 +447,12 @@
     .then(function (lignes) {
       var g = {};
       (lignes || []).forEach(function (l) { g[l.cle] = l.valeur; });
-      appliquerCouleurs(g.couleurs);
-      appliquerPolices(g.polices);
-      appliquerBaselines(g.baselines);
-      appliquerReseaux(g.reseaux);
-      appliquerCopyright(g.copyright);
-      appliquerSections(g.sections_accueil);
-      appliquerSections(g.sections_guides);
-      appliquerPageContact(g.page_contact);
-      appliquerPageColoriages(g.page_coloriages);
-      appliquerBandeauVideo(g.bandeau_video);
-      appliquerPhotos(g.photos_diaporama);
-      appliquerBandeau(g.bandeau);
-      appliquerDisposition(g.disposition);
-      appliquerSeo(g.seo);
+      appliquerTout(g);
       appliquerPopup(g.popup);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
       appliquerReassurance(g.reassurance);
-      appliquerMenuNav(g.menu_nav);
+      try { localStorage.setItem(CLE_CACHE, JSON.stringify(g)); } catch (e) {}
     })
-    .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
+    .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur (ou celles du cache appliquees juste avant) */ })
     .then(function () { clearTimeout(minuteur); });
 })();
