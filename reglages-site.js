@@ -17,8 +17,8 @@
      y compris le footer clair assorti au bandeau (demande fondateur). */
   var MAGAZINE = { fond: '#EFE8D8', texte: '#33302a', accent: '#c95a44', survol: '#b04a36' };
   var MAGAZINE_EXTRAS = [
-    '.cta,.qz-cta{background:var(--terracotta,#c95a44)!important;color:#F8F4E9!important}',
-    '.cta:hover,.qz-cta:hover{background:#b04a36!important}',
+    '.cta{background:var(--terracotta,#c95a44)!important;color:#F8F4E9!important}',
+    '.cta:hover{background:#b04a36!important}',
     '.qz-burger{background:#33302a}.qz-burger:hover{background:#141210}',
     '.qz-basdepage,.qz-reseaux,.qz-legal{background:#EFE8D8}',
     '.qz-basdepage{border-top:1px solid #33302a33}',
@@ -69,7 +69,7 @@
     /* Zones fines (facultatives) : absentes = suivent le thème global.
        Ajoutées EN DERNIER pour primer sur le préréglage Magazine. */
     if (c.cartouches) css += '\n.qz-legal a.qz-leg{background:' + c.cartouches + '}';
-    if (c.bouton) css += '\n.cta,.qz-cta{background:' + c.bouton + '!important}';
+    if (c.bouton) css += '\n.cta{background:' + c.bouton + '!important}';
     if (c.menu) css += '\n.qz-header{background:' + c.menu + '}';
     if (c.logo) css += '\n.qz-header .qz-qlogo i.t{background:' + c.logo + '}\n.qz-header .qz-wordmark{color:' + c.logo + '}';
     if (c.boutiqueFond && /\/boutique\//.test(location.pathname)) css += '\nbody{background:' + c.boutiqueFond + '}';
@@ -280,6 +280,20 @@
     document.body.appendChild(a);
   }
 
+  function appliquerMenuNav(m) {
+    if (!m) return;
+    var css = '';
+    if (m.bouton) css += '\n.qz-burger{background:' + m.bouton + '}';
+    if (m.traits) css += '\n.qz-burger span{background:' + m.traits + '}';
+    if (m.fond) css += '\n.qz-navpanel{background:' + m.fond + '}';
+    if (typeof m.voile === 'number') {
+      var v = Math.max(0, Math.min(100, m.voile)) / 100;
+      css += '\n.qz-nav-voile{background:rgba(0,0,0,' + v + ')}';
+    }
+    if (!css) return;
+    injecterStyle('qz-menu-nav-style', css);
+  }
+
   function appliquerReassurance(r) {
     if (!r || !r.actif) return;
     var items = [r.item1, r.item2, r.item3].filter(Boolean);
@@ -408,6 +422,7 @@
       appliquerPopup(g.popup);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
       appliquerReassurance(g.reassurance);
+      appliquerMenuNav(g.menu_nav);
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur */ })
     .then(function () { clearTimeout(minuteur); });
