@@ -307,10 +307,12 @@
     if (m.overlay) css += '\n.qz-navpanel{position:fixed;left:0;right:0}';
     if (m.position === 'gauche') css += '\n.qz-header{grid-template-columns:auto 1fr}\n.qz-header .qz-burger{order:-1}';
     else if (m.position === 'centre') css += '\n.qz-header{grid-template-columns:1fr auto 1fr}';
-    if (typeof m.espacement === 'number') css += '\n.qz-navpanel ul{gap:' + m.espacement + 'px}';
+    /* Reglages du menu principal — cibles sur .qz-navpanel>ul uniquement, pour ne
+       jamais entrainer le sous-menu (qui a ses propres reglages ci-dessous). */
+    if (typeof m.espacement === 'number') css += '\n.qz-navpanel>ul{gap:' + m.espacement + 'px}';
     if (m.disposition === 'horizontale') {
       var justif = { gauche: 'flex-start', centre: 'center', droite: 'flex-end', espace: 'space-between' }[m.justifie] || 'center';
-      css += '\n.qz-navpanel ul{flex-direction:row;flex-wrap:wrap;justify-content:' + justif + '}' +
+      css += '\n.qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:' + justif + '}' +
              '\n.qz-navpanel>ul>li{width:auto;max-width:none}' +
              /* Sous-menu en volet flottant sous son bouton, plutot que de pousser
                 les autres entrees de la ligne quand il s'ouvre. */
@@ -320,6 +322,20 @@
                 sans ca, overflow:hidden le coupait et la partie coupee tombait
                 sous le voile, qui avalait les clics (menu qui se refermait). */
              '\n.qz-navpanel.open{overflow:visible}';
+    }
+    /* Reglages propres au sous-menu (volet « Comment ca marche ») */
+    if (m.sousFond) css += '\n.qz-navpanel .qz-sublist{background:' + m.sousFond + '}';
+    if (m.sousTexte) css += '\n.qz-navpanel .qz-sublist a{color:' + m.sousTexte + '}';
+    if (m.sousDisposition === 'horizontale') {
+      css += '\n.qz-navpanel .qz-sublist{flex-direction:row;flex-wrap:wrap;gap:14px;padding-left:16px;padding-right:16px}' +
+             '\n.qz-navpanel .qz-sublist li{width:auto}';
+    } else if (m.sousDisposition === 'verticale') {
+      css += '\n.qz-navpanel .qz-sublist{flex-direction:column;gap:0;padding-left:22px;padding-right:22px}';
+    }
+    if (m.sousAlignement) {
+      var alignFlex = { gauche: 'flex-start', centre: 'center', droite: 'flex-end' }[m.sousAlignement] || 'center';
+      var alignTexte = { gauche: 'left', centre: 'center', droite: 'right' }[m.sousAlignement] || 'center';
+      css += '\n.qz-navpanel .qz-sublist{justify-content:' + alignFlex + ';align-items:' + alignFlex + ';text-align:' + alignTexte + '}';
     }
     if (!css) return;
     injecterStyle('qz-menu-nav-style', css);

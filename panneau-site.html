@@ -265,6 +265,18 @@
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="centre" style="margin:0"> Centré</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="droite" style="margin:0"> Droite</label>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnJustifie" value="espace" style="margin:0"> Réparti sur toute la largeur</label>
+      <p class="aide" style="margin-top:18px"><b>Sous-menu « Comment ça marche »</b> — le petit volet avec Guide de l'app / Guide de montage.</p>
+      <label>Disposition du sous-menu</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnSsDisposition" value="verticale" style="margin:0"> Verticale (une entrée par ligne)</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnSsDisposition" value="horizontale" style="margin:0"> Horizontale (en ligne)</label>
+      <label style="margin-top:12px">Alignement du contenu du sous-menu</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnSsAlignement" value="gauche" style="margin:0"> Gauche</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnSsAlignement" value="centre" style="margin:0"> Centré</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="mnSsAlignement" value="droite" style="margin:0"> Droite</label>
+      <label style="margin-top:12px">Couleur du texte des liens du sous-menu</label>
+      <div class="couleur"><input type="color" id="mnSsTexte"><code id="mnSsTexteHex"></code></div>
+      <label style="margin-top:12px">Couleur de fond du sous-menu</label>
+      <div class="couleur"><input type="color" id="mnSsFond"><code id="mnSsFondHex"></code></div>
       <div class="actions"><button class="principal" data-enregistre="menu_nav">Enregistrer le menu de navigation</button></div>
     </details>
 
@@ -697,6 +709,10 @@ function remplirFormulaires(){
   document.querySelector('input[name=mnDisposition][value="' + (mn.disposition || 'verticale') + '"]').checked = true;
   $('mnEspacement').value = (typeof mn.espacement === 'number') ? mn.espacement : 20;
   $('mnTransparence').value = (typeof mn.transparence === 'number') ? mn.transparence : 0;
+  document.querySelector('input[name=mnSsDisposition][value="' + (mn.sousDisposition || 'verticale') + '"]').checked = true;
+  document.querySelector('input[name=mnSsAlignement][value="' + (mn.sousAlignement || 'centre') + '"]').checked = true;
+  $('mnSsTexte').value = mn.sousTexte || '#9aa2a9'; majHex('mnSsTexte','mnSsTexteHex');
+  $('mnSsFond').value = mn.sousFond || '#37434e'; majHex('mnSsFond','mnSsFondHex');
   document.querySelector('input[name=mnJustifie][value="' + (mn.justifie || 'centre') + '"]').checked = true;
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
@@ -864,6 +880,7 @@ function construireFormulaires(){
   lierCouleur('reasCouleur','reasCouleurHex'); lierCouleur('reasTexteCouleur','reasTexteCouleurHex');
   lierCouleur('mnBouton','mnBoutonHex'); lierCouleur('mnTraits','mnTraitsHex'); lierCouleur('mnFond','mnFondHex');
   lierCouleur('mnTexte','mnTexteHex'); lierCouleur('mnSousBouton','mnSousBoutonHex');
+  lierCouleur('mnSsTexte','mnSsTexteHex'); lierCouleur('mnSsFond','mnSsFondHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
     var slot = $('memSlot').value;
@@ -942,7 +959,10 @@ function valeursDepuisFormulaire(cle){
       disposition: dispEl ? dispEl.value : 'verticale',
       espacement: isNaN(espacementVal) ? 20 : Math.max(0, Math.min(80, espacementVal)),
       justifie: justifEl ? justifEl.value : 'centre',
-      transparence: (function(){ var t = parseInt($('mnTransparence').value, 10); return isNaN(t) ? 0 : Math.max(0, Math.min(100, t)); })()
+      transparence: (function(){ var t = parseInt($('mnTransparence').value, 10); return isNaN(t) ? 0 : Math.max(0, Math.min(100, t)); })(),
+      sousDisposition: (document.querySelector('input[name=mnSsDisposition]:checked') || {}).value || 'verticale',
+      sousAlignement: (document.querySelector('input[name=mnSsAlignement]:checked') || {}).value || 'centre',
+      sousTexte: $('mnSsTexte').value, sousFond: $('mnSsFond').value
     };
   }
   if (cle === 'bulle_contact') return {
