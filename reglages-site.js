@@ -341,17 +341,18 @@
     injecterStyle('qz-menu-nav-style', css);
   }
 
-  function zoneVersCss(zone) {
+  function zoneVersCss(zone, decalage) {
+    var d = (typeof decalage === 'number' ? decalage : 0) + 'px';
     var parts = zone === 'centre' ? ['centre', 'centre'] : zone.split('-');
     var vert = parts[0], horiz = parts[1];
     var left, right, tX;
-    if (horiz === 'gauche') { left = '0'; right = 'auto'; tX = ''; }
-    else if (horiz === 'droite') { left = 'auto'; right = '0'; tX = ''; }
+    if (horiz === 'gauche') { left = d; right = 'auto'; tX = ''; }
+    else if (horiz === 'droite') { left = 'auto'; right = d; tX = ''; }
     else { left = '50%'; right = 'auto'; tX = 'translateX(-50%)'; }
     var top, bottom, tY;
-    if (vert === 'bas') { top = 'auto'; bottom = '0'; tY = ''; }
+    if (vert === 'bas') { top = 'auto'; bottom = d; tY = ''; }
     else if (vert === 'centre') { top = '50%'; bottom = 'auto'; tY = 'translateY(-50%)'; }
-    else { top = '0'; bottom = 'auto'; tY = ''; }
+    else { top = d; bottom = 'auto'; tY = ''; }
     return {
       left: left, right: right, top: top, bottom: bottom,
       transform: (tX + ' ' + tY).trim() || 'none',
@@ -368,7 +369,7 @@
     if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
     else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
     if (hb.zone) {
-      var z = zoneVersCss(hb.zone);
+      var z = zoneVersCss(hb.zone, hb.decalage);
       css += '\n.hero-copy{left:' + z.left + ';right:' + z.right + ';top:' + z.top + ';bottom:' + z.bottom +
         ';transform:' + z.transform + ';align-items:' + z.alignItems + ';text-align:' + z.textAlign + '}';
     }
@@ -391,7 +392,7 @@
     if (hc.police === 'titres') css += '\n.h-line.l4{font-family:\'Quicksand\',sans-serif}';
     else if (hc.police === 'texte') css += '\n.h-line.l4{font-family:\'Karla\',sans-serif}';
     if (hc.zone) {
-      var z = zoneVersCss(hc.zone);
+      var z = zoneVersCss(hc.zone, hc.decalage);
       css += '\n.h-line.l4{left:' + z.left + ';right:' + z.right + ';top:' + z.top + ';bottom:' + z.bottom +
         ';transform:' + z.transform + ';text-align:' + z.textAlign + '}';
     }
