@@ -402,6 +402,31 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Ligne « Changez à volonté »</h2></summary>
+      <p class="aide">Le texte en bas de la photo/vidéo d'accueil, au-dessus du bouton « Composer mon mur ».</p>
+      <label>Taille du texte (en pixels)</label>
+      <input type="number" id="hcTaille" min="16" max="70" step="1">
+      <label style="margin-top:12px">Couleur du texte</label>
+      <div class="couleur"><input type="color" id="hcCouleur"><code id="hcCouleurHex"></code></div>
+      <label style="margin-top:12px">Police</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hcPolice" value="titres" style="margin:0"> Titres (Quicksand)</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hcPolice" value="texte" style="margin:0"> Texte courant (Karla)</label>
+      <label style="margin-top:12px">Position dans le cadre</label>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:280px;">
+        <label class="case-zone"><input type="radio" name="hcZone" value="haut-gauche"> Haut G.</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="haut-centre"> Haut</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="haut-droite"> Haut D.</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="centre-gauche"> Gauche</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="centre"> Centre</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="centre-droite"> Droite</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="bas-gauche"> Bas G.</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="bas-centre"> Bas</label>
+        <label class="case-zone"><input type="radio" name="hcZone" value="bas-droite"> Bas D.</label>
+      </div>
+      <div class="actions"><button class="principal" data-enregistre="hero_changez">Enregistrer</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Textes de la page d'accueil</h2></summary>
       <p class="aide">Le titre et le premier paragraphe de chaque section. Laissez vide pour garder le texte actuel du site.</p>
       <div id="listeSections"></div>
@@ -781,6 +806,12 @@ function remplirFormulaires(){
   document.querySelector('input[name=hbPolice][value="' + (hb.police || 'texte') + '"]').checked = true;
   document.querySelector('input[name=hbZone][value="' + (hb.zone || 'haut-centre') + '"]').checked = true;
 
+  var hc = reglages.hero_changez || {};
+  $('hcTaille').value = (typeof hc.taille === 'number') ? hc.taille : '';
+  $('hcCouleur').value = hc.couleur || '#F5F5F5'; majHex('hcCouleur','hcCouleurHex');
+  document.querySelector('input[name=hcPolice][value="' + (hc.police || 'texte') + '"]').checked = true;
+  document.querySelector('input[name=hcZone][value="' + (hc.zone || 'bas-centre') + '"]').checked = true;
+
   var lp = reglages.logo_perso || {};
   if (lp.url) { $('logoApercu').src = lp.url; $('logoApercu').style.visibility = 'visible'; }
   else { $('logoApercu').src = ''; $('logoApercu').style.visibility = 'hidden'; }
@@ -953,6 +984,7 @@ function construireFormulaires(){
   lierCouleur('mnTexte','mnTexteHex'); lierCouleur('mnSousBouton','mnSousBoutonHex');
   lierCouleur('mnSsTexte','mnSsTexteHex'); lierCouleur('mnSsFond','mnSsFondHex');
   lierCouleur('hbCouleur','hbCouleurHex');
+  lierCouleur('hcCouleur','hcCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
     var slot = $('memSlot').value;
@@ -1037,6 +1069,14 @@ function valeursDepuisFormulaire(cle){
     };
     if (!isNaN(tailleVal)) hbv.taille = Math.max(16, Math.min(60, tailleVal));
     return hbv;
+  }
+  if (cle === 'hero_changez') {
+    var tailleVal2 = parseInt($('hcTaille').value, 10);
+    var policeEl2 = document.querySelector('input[name=hcPolice]:checked');
+    var zoneEl2 = document.querySelector('input[name=hcZone]:checked');
+    var hcv = { couleur: $('hcCouleur').value, police: policeEl2 ? policeEl2.value : 'texte', zone: zoneEl2 ? zoneEl2.value : 'bas-centre' };
+    if (!isNaN(tailleVal2)) hcv.taille = Math.max(16, Math.min(70, tailleVal2));
+    return hcv;
   }
   if (cle === 'menu_nav') {
     var voileVal = parseInt($('mnVoile').value, 10);
