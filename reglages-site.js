@@ -305,7 +305,11 @@
              /* Sous-menu en volet flottant sous son bouton, plutot que de pousser
                 les autres entrees de la ligne quand il s'ouvre. */
              '\n.qz-navpanel li.qz-hassub{position:relative}' +
-             '\n.qz-navpanel li.qz-hassub .qz-sublist{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:max-content;z-index:5}';
+             '\n.qz-navpanel li.qz-hassub .qz-sublist{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:max-content;z-index:5;box-shadow:0 8px 18px #00000045}' +
+             /* Une fois ouvert, le panneau laisse le volet du sous-menu deborder :
+                sans ca, overflow:hidden le coupait et la partie coupee tombait
+                sous le voile, qui avalait les clics (menu qui se refermait). */
+             '\n.qz-navpanel.open{overflow:visible}';
     }
     if (!css) return;
     injecterStyle('qz-menu-nav-style', css);
