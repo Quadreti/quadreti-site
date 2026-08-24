@@ -347,6 +347,23 @@
     </details>
 
     <details class="carte">
+      <summary><h2>Baseline du bandeau (« Composez. Imprimez. Clipsez. »)</h2></summary>
+      <p class="aide">Le texte en haut de la photo/vidéo d'accueil. Laissez la taille vide pour garder la taille actuelle.</p>
+      <label>Taille du texte (en pixels)</label>
+      <input type="number" id="hbTaille" min="16" max="60" step="1">
+      <label style="margin-top:12px">Couleur du texte</label>
+      <div class="couleur"><input type="color" id="hbCouleur"><code id="hbCouleurHex"></code></div>
+      <label style="margin-top:12px">Police</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPolice" value="titres" style="margin:0"> Titres (Quicksand)</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbPolice" value="texte" style="margin:0"> Texte courant (Karla)</label>
+      <label style="margin-top:12px">Alignement</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="gauche" style="margin:0"> Gauche</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="centre" style="margin:0"> Centré</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:4px 0;"><input type="radio" name="hbAlignement" value="droite" style="margin:0"> Droite</label>
+      <div class="actions"><button class="principal" data-enregistre="hero_baseline">Enregistrer la baseline</button></div>
+    </details>
+
+    <details class="carte">
       <summary><h2>Textes de la page d'accueil</h2></summary>
       <p class="aide">Le titre et le premier paragraphe de chaque section. Laissez vide pour garder le texte actuel du site.</p>
       <div id="listeSections"></div>
@@ -717,6 +734,12 @@ function remplirFormulaires(){
 
   $('dispHeroCta').value = (reglages.disposition || {}).heroCta || 'centre';
 
+  var hb = reglages.hero_baseline || {};
+  $('hbTaille').value = (typeof hb.taille === 'number') ? hb.taille : '';
+  $('hbCouleur').value = hb.couleur || '#F5F5F5'; majHex('hbCouleur','hbCouleurHex');
+  document.querySelector('input[name=hbPolice][value="' + (hb.police || 'texte') + '"]').checked = true;
+  document.querySelector('input[name=hbAlignement][value="' + (hb.alignement || 'centre') + '"]').checked = true;
+
   var bv = reglages.bandeau_video || {};
   $('bandeauVideoActif').checked = (typeof bv.actif === 'boolean') ? bv.actif : true;
   $('voileActif').checked = !!bv.voile;
@@ -881,6 +904,7 @@ function construireFormulaires(){
   lierCouleur('mnBouton','mnBoutonHex'); lierCouleur('mnTraits','mnTraitsHex'); lierCouleur('mnFond','mnFondHex');
   lierCouleur('mnTexte','mnTexteHex'); lierCouleur('mnSousBouton','mnSousBoutonHex');
   lierCouleur('mnSsTexte','mnSsTexteHex'); lierCouleur('mnSsFond','mnSsFondHex');
+  lierCouleur('hbCouleur','hbCouleurHex');
   document.querySelectorAll('input[name=theme]').forEach(function(r){ r.addEventListener('change', majChoixTheme); });
   $('btnMemoriser').addEventListener('click', function(){
     var slot = $('memSlot').value;
@@ -945,6 +969,14 @@ function valeursDepuisFormulaire(cle){
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
+  if (cle === 'hero_baseline') {
+    var tailleVal = parseInt($('hbTaille').value, 10);
+    var policeEl = document.querySelector('input[name=hbPolice]:checked');
+    var alignEl = document.querySelector('input[name=hbAlignement]:checked');
+    var hbv = { couleur: $('hbCouleur').value, police: policeEl ? policeEl.value : 'texte', alignement: alignEl ? alignEl.value : 'centre' };
+    if (!isNaN(tailleVal)) hbv.taille = Math.max(16, Math.min(60, tailleVal));
+    return hbv;
+  }
   if (cle === 'menu_nav') {
     var voileVal = parseInt($('mnVoile').value, 10);
     var posEl2 = document.querySelector('input[name=mnPosition]:checked');

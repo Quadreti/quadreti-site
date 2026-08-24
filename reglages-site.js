@@ -341,6 +341,20 @@
     injecterStyle('qz-menu-nav-style', css);
   }
 
+  function appliquerHeroBaseline(hb) {
+    if (!hb) return;
+    var css = '';
+    if (hb.taille) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-size:' + hb.taille + 'px}';
+    if (hb.couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + hb.couleur + '}';
+    if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
+    else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
+    if (hb.alignement === 'gauche') css += '\n.hero{justify-content:flex-start}\n.hero-copy{align-items:flex-start;text-align:left}';
+    else if (hb.alignement === 'droite') css += '\n.hero{justify-content:flex-end}\n.hero-copy{align-items:flex-end;text-align:right}';
+    else if (hb.alignement === 'centre') css += '\n.hero{justify-content:center}\n.hero-copy{align-items:center;text-align:center}';
+    if (!css) return;
+    injecterStyle('qz-hero-baseline-style', css);
+  }
+
   function appliquerReassurance(r) {
     if (!r || !r.actif) return;
     var items = [r.item1, r.item2, r.item3].filter(Boolean);
@@ -463,6 +477,7 @@
     appliquerDisposition(g.disposition);
     appliquerSeo(g.seo);
     appliquerMenuNav(g.menu_nav);
+    appliquerHeroBaseline(g.hero_baseline);
   }
 
   /* Anti-flash : réapplique immédiatement la dernière config connue (cache
