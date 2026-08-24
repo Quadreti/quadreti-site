@@ -1140,6 +1140,10 @@
   if(btn && panel){
     btn.addEventListener('click', function(){
       var willOpen = !panel.classList.contains('open');
+      if(willOpen && getComputedStyle(panel).position === 'fixed'){
+        var hdr = document.querySelector('.qz-header');
+        if(hdr) panel.style.top = hdr.getBoundingClientRect().bottom + 'px';
+      }
       panel.classList.toggle('open', willOpen);
       btn.classList.toggle('active', willOpen);
       btn.setAttribute('aria-expanded', String(willOpen));

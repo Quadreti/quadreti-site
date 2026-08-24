@@ -290,6 +290,10 @@
       var v = Math.max(0, Math.min(100, m.voile)) / 100;
       css += '\n.qz-nav-voile{background:rgba(0,0,0,' + v + ')}';
     }
+    if (m.texte) css += '\n.qz-navpanel a{color:' + m.texte + '}\n.qz-subtoggle{color:' + m.texte + '}';
+    if (m.overlay) css += '\n.qz-navpanel{position:fixed;left:0;right:0}';
+    if (m.position === 'gauche') css += '\n.qz-header{grid-template-columns:auto 1fr}\n.qz-header .qz-burger{order:-1}';
+    else if (m.position === 'centre') css += '\n.qz-header{grid-template-columns:1fr auto 1fr}';
     if (!css) return;
     injecterStyle('qz-menu-nav-style', css);
   }
