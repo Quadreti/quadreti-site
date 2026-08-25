@@ -535,7 +535,27 @@
       }).catch(function () { btn.disabled = false; });
     });
 
-    setTimeout(function () { fond_el.classList.add('qz-on'); }, apercu ? 300 : (p.delai || 4) * 1000);
+    /* Declenchement : au centre de l'ecran (souris) si l'utilisateur y passe avant,
+       sinon apres le delai regle au panneau (filet de securite, utile aussi sur
+       mobile ou il n'y a pas de souris). */
+    var declenche = false;
+    function ouvrirPopup() {
+      if (declenche) return;
+      declenche = true;
+      fond_el.classList.add('qz-on');
+    }
+    var minuteurPopup = setTimeout(ouvrirPopup, apercu ? 300 : (p.delai || 4) * 1000);
+    if (!apercu) {
+      document.addEventListener('mousemove', function verifCentre(e) {
+        var xPct = e.clientX / window.innerWidth;
+        var yPct = e.clientY / window.innerHeight;
+        if (xPct > 0.35 && xPct < 0.65 && yPct > 0.35 && yPct < 0.65) {
+          document.removeEventListener('mousemove', verifCentre);
+          clearTimeout(minuteurPopup);
+          ouvrirPopup();
+        }
+      });
+    }
   }
 
   /* Applique tout sauf les widgets qui créent des éléments à chaque appel
