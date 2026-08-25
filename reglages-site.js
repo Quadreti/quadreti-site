@@ -480,7 +480,7 @@
       '.qz-popup-fond.qz-on{opacity:1;pointer-events:auto}',
       '.qz-popup-carte{position:relative;max-width:420px;width:100%;background:' + fond + ';color:' + texte + ';border-radius:16px;padding:28px 26px 26px;box-shadow:0 20px 50px #00000055;transform:translateY(12px);transition:transform .25s ease;font-family:\'Karla\',sans-serif}',
       '.qz-popup-fond.qz-on .qz-popup-carte{transform:translateY(0)}',
-      '.qz-popup-fermer{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;border:none;background:#00000014;color:' + texte + ';font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}',
+      '.qz-popup-fermer{position:absolute;top:6px;right:6px;width:44px;height:44px;border-radius:50%;border:none;background:#00000014;color:' + texte + ';font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}',
       '.qz-popup-fermer:hover{background:#00000028}',
       '.qz-popup-img{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px}',
       '.qz-popup-titre{font-family:\'Quicksand\',sans-serif;font-weight:700;font-size:19px;margin:0 0 8px}',
