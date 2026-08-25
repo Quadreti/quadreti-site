@@ -107,13 +107,18 @@
   @media (min-width:760px){
     #hero video.shot{ object-position:50% center; }
   }
-  /* 25/08/2026 : source unique 4:1 "grilles cote a cote" (motif repete 4x sur la largeur),
-     reprise telle quelle sur mobile plutot que d'attendre une version carree dediee. La
-     boite mobile (portrait) ne laisse voir qu'une tranche etroite (~18% de la largeur
-     source) : recadree sur l'une des repetitions du motif. 58% (echantillonnage de pixels)
-     pas assez a droite sur telephone reel -> +50 (retour terrain), plafonne a 100%. */
+  /* 25/08/2026 : source unique 4:1 (grille -> UN SEUL oeil tres large, tesselles arrivant
+     des deux bords vers le centre -> zoom pupille au centre -> depart -> aurore -> grille).
+     Pas 4 repetitions comme suppose au premier essai (58%, puis 100% : aucun des deux ne
+     marchait, le sujet n'y est jamais). La boite mobile (portrait) ne montre qu'une tranche
+     etroite (~18% de la largeur) : la position du sujet varie enormement selon la phase
+     (large a l'arrivee des tesselles, centre lors du zoom pupille qui remplit tout le
+     cadre) -- aucun reglage fixe n'est parfait partout. Centre (confirme visuellement sur
+     une image de la pupille zoomee, proche de 50%) = meilleur compromis sur toute la
+     boucle : les phases "grille" ne dependent pas du cadrage, la phase pupille (celle qui
+     compte le plus, la plus longue a l'ecran) est bien cadree. */
   @media (max-width:759px){
-    #hero video.shot{ object-position:100% 50%; }
+    #hero video.shot{ object-position:52% 50%; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
