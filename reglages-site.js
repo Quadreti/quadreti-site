@@ -330,8 +330,13 @@
        jamais entrainer le sous-menu (qui a ses propres reglages ci-dessous). */
     if (typeof m.espacement === 'number') css += '\n.qz-navpanel>ul{gap:' + m.espacement + 'px}';
     if (m.disposition === 'horizontale') {
+      /* Reserve au desktop/tablette (>=760px, meme seuil que le reste du site) :
+         8 entrees en ligne sur un ecran mobile de 375px ne peuvent que mal
+         s'enrouler (pagaille constatee) -- le mobile garde toujours la liste
+         verticale, quel que soit ce reglage. */
       var justif = { gauche: 'flex-start', centre: 'center', droite: 'flex-end', espace: 'space-between' }[m.justifie] || 'center';
-      css += '\n.qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:' + justif + '}' +
+      css += '\n@media (min-width:760px){' +
+             '\n.qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:' + justif + '}' +
              '\n.qz-navpanel>ul>li{width:auto;max-width:none}' +
              /* Sous-menu en volet flottant sous son bouton, plutot que de pousser
                 les autres entrees de la ligne quand il s'ouvre. */
@@ -340,7 +345,8 @@
              /* Une fois ouvert, le panneau laisse le volet du sous-menu deborder :
                 sans ca, overflow:hidden le coupait et la partie coupee tombait
                 sous le voile, qui avalait les clics (menu qui se refermait). */
-             '\n.qz-navpanel.open{overflow:visible}';
+             '\n.qz-navpanel.open{overflow:visible}' +
+             '\n}';
     }
     /* Reglages propres au sous-menu (volet « Comment ca marche ») */
     var sousFond = suit && palette ? plusFonce(palette) : m.sousFond;

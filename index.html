@@ -103,10 +103,17 @@
   .shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
   /* Video bandeau : la source large (4:1) est recadree par cover sur une boite plus etroite
      que 4:1 des 760px (coupe horizontale). "Changez" (24/08) est un motif symetrique sans
-     sujet decentre : cadrage centre. En dessous de 760px, la source carree dediee
-     (deja recadree correctement par le fil Video/Animation) reste centree. */
+     sujet decentre : cadrage centre. */
   @media (min-width:760px){
     #hero video.shot{ object-position:50% center; }
+  }
+  /* En dessous de 760px, la source carree (oeil) est recadree horizontalement par cover
+     (boite mobile plus etroite et haute que le carre source) : au centre (50%), la pupille
+     tombe pres du bord droit de la fenetre visible. Verifie par echantillonnage de pixels
+     (25/08) : la pupille est a ~70% de la largeur de la source, pas au centre -> decale le
+     cadrage vers la droite pour la ramener au centre de la fenetre visible. */
+  @media (max-width:759px){
+    #hero video.shot{ object-position:100% 46%; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
@@ -675,7 +682,7 @@
 </style>
 <script src="reglages-site.js" defer></script>
 </head>
-<body>
+<body id="qz-top">
 <!-- ============================================================
   REGISTRE DES LIENS — adresses officielles arretees le 17/08/2026
   SITE     : https://quadreti.fr                 sans www — conforme au fichier CNAME du depot
