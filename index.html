@@ -113,7 +113,7 @@
      (25/08) : la pupille est a ~70% de la largeur de la source, pas au centre -> decale le
      cadrage vers la droite pour la ramener au centre de la fenetre visible. */
   @media (max-width:759px){
-    #hero video.shot{ object-position:100% 46%; }
+    #hero video.shot{ object-position:85% 46%; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
@@ -164,6 +164,12 @@
   }
   .badge .dot{ width:15px; height:15px; border-radius:50%; background:var(--olive); color:#fff; font-size:9.5px; display:flex; align-items:center; justify-content:center; }
   .hero-cta{ position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:4; }
+  /* Sur mobile, le padding/taille du .cta d'origine (pense pour desktop) fait passer
+     "Composer mon mur" sur 2 lignes : bouton trop haut, qui recouvre le bouton pause
+     juste a cote. Version compacte, une seule ligne, verifiee sur 375px. */
+  @media (max-width:759px){
+    .hero-cta{ padding:13px 22px; font-size:13.5px; white-space:nowrap; }
+  }
   .dots{ position:absolute; bottom:32px; right:20px; z-index:4; display:flex; gap:6px; }
   .dots button{ width:9px; height:9px; border-radius:50%; background:rgba(43,53,62,.3); border:none; padding:0; }
   .dots button.on{ background:var(--charbon); width:22px; border-radius:5px; transition:all .25s; }
