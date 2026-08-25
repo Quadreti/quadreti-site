@@ -107,19 +107,11 @@
   @media (min-width:760px){
     #hero video.shot{ object-position:50% center; }
   }
-  /* 25/08/2026 : source unique 4:1 (grille -> UN SEUL oeil tres large, tesselles arrivant
-     des deux bords vers le centre -> zoom pupille au centre -> depart -> aurore -> grille).
-     Pas 4 repetitions comme suppose au premier essai (58%, puis 100% : aucun des deux ne
-     marchait, le sujet n'y est jamais). La boite mobile (portrait) ne montre qu'une tranche
-     etroite (~18% de la largeur) : la position du sujet varie enormement selon la phase
-     (large a l'arrivee des tesselles, centre lors du zoom pupille qui remplit tout le
-     cadre) -- aucun reglage fixe n'est parfait partout. Centre (confirme visuellement sur
-     une image de la pupille zoomee, proche de 50%) = meilleur compromis sur toute la
-     boucle : les phases "grille" ne dependent pas du cadrage, la phase pupille (celle qui
-     compte le plus, la plus longue a l'ecran) est bien cadree. */
-  @media (max-width:759px){
-    #hero video.shot{ object-position:52% 50%; }
-  }
+  /* 25/08/2026 : version carree mobile dediee livree (Changez-carre.mp4, 1400x1400,
+     re-rendue avec le correctif couleur des angles) -- remplace le bricolage precedent
+     (reutilisation de la source desktop 4:1, jamais bien cadree sur toutes les phases de
+     l'animation). Pupille verifiee visuellement au centre sur une vraie capture pendant la
+     phase de zoom : object-position par defaut (centre) convient, pas de decalage requis. */
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
   .hero.video-inactive video.shot{ display:none; }
@@ -753,16 +745,15 @@
 <div class="hero" id="hero">
   <!-- Bandeau video (fil Video/Animation). 24/08/2026 : source desktop remplacee par
        "Changez" (grille vide -> oeil -> zoom pupille -> depart -> aurore -> grille vide),
-       validee par le fondateur. 25/08/2026 : meme source utilisee sur mobile (une seule
-       video 4:1, "grilles cote a cote" repetant le motif) plutot que d'attendre une
-       version carree dediee -- le mobile n'affiche qu'une tranche etroite (~18% de la
-       largeur) via object-fit:cover, recadree sur une des repetitions du motif (voir
-       media query mobile de #hero video.shot dans le <style>). Remplace temporairement le
-       diaporama photo pour jugement en situation ; l'ancien diaporama (8 photos) reste
-       dans l'historique git si on revient en arriere. -->
+       validee par le fondateur. 25/08/2026 : version carree dediee mobile livree (le 4:1
+       ne s'adapte pas au mobile, meme limite que BandeauEye en son temps) -- deux sources
+       de nouveau, comme BandeauEye2x2/BandeauEye. Remplace temporairement le diaporama
+       photo pour jugement en situation ; l'ancien diaporama (8 photos) reste dans
+       l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
       <video class="shot" autoplay muted playsinline>
+        <source media="(max-width:759px)" src="video/quadreti-bandeau-changez-carre.mp4" type="video/mp4">
         <source src="video/quadreti-bandeau-changez.mp4" type="video/mp4">
       </video>
       <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="">
