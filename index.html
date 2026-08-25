@@ -161,6 +161,17 @@
   .dots button{ width:9px; height:9px; border-radius:50%; background:rgba(43,53,62,.3); border:none; padding:0; }
   .dots button.on{ background:var(--charbon); width:22px; border-radius:5px; transition:all .25s; }
 
+  .hero-pause{
+    position:absolute; bottom:32px; left:20px; z-index:4;
+    width:38px; height:38px; border-radius:50%; padding:0;
+    background:#2b353e99; border:1px solid #ffffff33; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, border-color .15s;
+  }
+  .hero-pause:hover, .hero-pause:focus-visible{ background:var(--terracotta); border-color:var(--terracotta); }
+  .hero-pause svg{ width:14px; height:14px; fill:var(--blanc); }
+  .hero.video-inactive .hero-pause{ display:none; }
+
   .cta{
     display:inline-block; text-decoration:none;
     font-weight:700; font-size:15.5px; border-radius:99px; padding:15px 34px; border:none;
@@ -749,6 +760,11 @@
 
   <div class="dots" id="dots"></div>
 
+  <button class="hero-pause" id="heroPauseBtn" type="button" aria-label="Mettre la vidéo en pause">
+    <svg class="ico-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+    <svg class="ico-play" viewBox="0 0 24 24" style="display:none"><path d="M8 5.5v13l11-6.5z"></path></svg>
+  </button>
+
 </div>
 
 <div class="ticker" aria-hidden="true">
@@ -1286,6 +1302,22 @@
         heroVideo.style.objectPosition = (typeof posX === 'number' ? posX : 50) + '% ' + (typeof posY === 'number' ? posY : 50) + '%';
       }
     };
+    const pauseBtn = document.getElementById('heroPauseBtn');
+    if (pauseBtn) {
+      const iconePause = pauseBtn.querySelector('.ico-pause');
+      const iconePlay = pauseBtn.querySelector('.ico-play');
+      pauseBtn.addEventListener('click', () => {
+        if (heroVideo.paused) {
+          heroVideo.play();
+          iconePause.style.display = ''; iconePlay.style.display = 'none';
+          pauseBtn.setAttribute('aria-label', 'Mettre la vidéo en pause');
+        } else {
+          heroVideo.pause();
+          iconePause.style.display = 'none'; iconePlay.style.display = '';
+          pauseBtn.setAttribute('aria-label', 'Relancer la vidéo');
+        }
+      });
+    }
   }
 
   const slides = document.querySelectorAll('.bg-slides .slide');
