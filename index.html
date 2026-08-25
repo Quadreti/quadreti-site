@@ -107,13 +107,14 @@
   @media (min-width:760px){
     #hero video.shot{ object-position:50% center; }
   }
-  /* En dessous de 760px, la source carree (oeil) est recadree horizontalement par cover
-     (boite mobile plus etroite et haute que le carre source) : au centre (50%), la pupille
-     tombe pres du bord droit de la fenetre visible. Verifie par echantillonnage de pixels
-     (25/08) : la pupille est a ~70% de la largeur de la source, pas au centre -> decale le
-     cadrage vers la droite pour la ramener au centre de la fenetre visible. */
+  /* 25/08/2026 : source unique 4:1 "grilles cote a cote" (motif repete 4x sur la largeur),
+     reprise telle quelle sur mobile plutot que d'attendre une version carree dediee. La
+     boite mobile (portrait) ne laisse voir qu'une tranche etroite (~18% de la largeur
+     source) : recadree sur l'une des repetitions du motif via echantillonnage de pixels
+     (zone la plus sombre et compacte = pupille). Premier reglage, a confirmer/affiner sur
+     un vrai telephone (comme pour l'ancienne source carree). */
   @media (max-width:759px){
-    #hero video.shot{ object-position:85% 46%; }
+    #hero video.shot{ object-position:58% 50%; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
@@ -742,19 +743,18 @@
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
-  <!-- Bandeau video (fil Video/Animation). Deux sources responsive (carree en dessous de
-       760px, meme seuil que .hero, large au-dessus) pour un recadrage correct sur mobile.
-       24/08/2026 : source desktop remplacee par "Changez" (grille vide -> oeil -> zoom
-       pupille -> depart -> aurore -> grille vide), validee par le fondateur, cadrage teste
-       avec le vrai CSS du bandeau avant export (marge 0.6). La source mobile carree reste
-       l'ancienne animation "oeil" en attendant une version carree a jour de "Changez"
-       (celle livree le 24/08 n'integre pas encore le dernier correctif couleur des angles).
-       Remplace temporairement le diaporama photo pour jugement en situation ; l'ancien
-       diaporama (8 photos) reste dans l'historique git si on revient en arriere. -->
+  <!-- Bandeau video (fil Video/Animation). 24/08/2026 : source desktop remplacee par
+       "Changez" (grille vide -> oeil -> zoom pupille -> depart -> aurore -> grille vide),
+       validee par le fondateur. 25/08/2026 : meme source utilisee sur mobile (une seule
+       video 4:1, "grilles cote a cote" repetant le motif) plutot que d'attendre une
+       version carree dediee -- le mobile n'affiche qu'une tranche etroite (~18% de la
+       largeur) via object-fit:cover, recadree sur une des repetitions du motif (voir
+       media query mobile de #hero video.shot dans le <style>). Remplace temporairement le
+       diaporama photo pour jugement en situation ; l'ancien diaporama (8 photos) reste
+       dans l'historique git si on revient en arriere. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
       <video class="shot" autoplay muted playsinline>
-        <source media="(max-width:759px)" src="video/quadreti-bandeau-oeil-carre.mp4" type="video/mp4">
         <source src="video/quadreti-bandeau-changez.mp4" type="video/mp4">
       </video>
       <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="">
