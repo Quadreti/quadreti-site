@@ -110,11 +110,10 @@
   /* 25/08/2026 : source unique 4:1 "grilles cote a cote" (motif repete 4x sur la largeur),
      reprise telle quelle sur mobile plutot que d'attendre une version carree dediee. La
      boite mobile (portrait) ne laisse voir qu'une tranche etroite (~18% de la largeur
-     source) : recadree sur l'une des repetitions du motif via echantillonnage de pixels
-     (zone la plus sombre et compacte = pupille). Premier reglage, a confirmer/affiner sur
-     un vrai telephone (comme pour l'ancienne source carree). */
+     source) : recadree sur l'une des repetitions du motif. 58% (echantillonnage de pixels)
+     pas assez a droite sur telephone reel -> +50 (retour terrain), plafonne a 100%. */
   @media (max-width:759px){
-    #hero video.shot{ object-position:58% 50%; }
+    #hero video.shot{ object-position:100% 50%; }
   }
   /* Vidéo désactivée depuis le panneau : bascule vers la photo de repli (1re photo du diaporama). */
   .repli-video{ display:none; }
@@ -169,14 +168,18 @@
      "Composer mon mur" sur 2 lignes : bouton trop haut, qui recouvre le bouton pause
      juste a cote. Version compacte, une seule ligne, verifiee sur 375px. */
   @media (max-width:759px){
-    .hero-cta{ padding:13px 22px; font-size:13.5px; white-space:nowrap; }
+    .hero-cta.cta{ padding:9px 20px; font-size:12.5px; white-space:nowrap; }
   }
   .dots{ position:absolute; bottom:32px; right:20px; z-index:4; display:flex; gap:6px; }
   .dots button{ width:9px; height:9px; border-radius:50%; background:rgba(43,53,62,.3); border:none; padding:0; }
   .dots button.on{ background:var(--charbon); width:22px; border-radius:5px; transition:all .25s; }
 
+  /* Deplace du coin bas-gauche (25/08) : entrait en concurrence avec la bulle de
+     contact flottante (WhatsApp), positionnee au meme endroit sur toutes les pages.
+     Coin bas-droit a la place -- #dots n'affiche plus rien depuis le passage de la
+     photo a la video (une seule .slide), la place est libre. */
   .hero-pause{
-    position:absolute; bottom:32px; left:20px; z-index:4;
+    position:absolute; bottom:32px; right:20px; z-index:4;
     width:38px; height:38px; border-radius:50%; padding:0;
     background:#2b353e99; border:1px solid #ffffff33; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
