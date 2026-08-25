@@ -44,7 +44,7 @@
   }
 
   function appliquerCouleurs(c) {
-    if (!c) return;
+    if (!c) return DEFAUTS.couleurs;
     var v = {};
     if (c.theme === 'magazine') {
       v = { fond: MAGAZINE.fond, texte: MAGAZINE.texte, accent: MAGAZINE.accent, survol: MAGAZINE.survol };
@@ -53,11 +53,12 @@
     ['fond', 'texte', 'accent', 'survol'].forEach(function (k) {
       if (c[k] && c[k] !== DEFAUTS.couleurs[k]) v[k] = c[k];
     });
-    if (!Object.keys(v).length && c.theme !== 'magazine') return;
     var fond = v.fond || DEFAUTS.couleurs.fond;
     var texte = v.texte || DEFAUTS.couleurs.texte;
     var accent = v.accent || DEFAUTS.couleurs.accent;
     var survol = v.survol || DEFAUTS.couleurs.survol;
+    var palette = { fond: fond, texte: texte, accent: accent, survol: survol };
+    if (!Object.keys(v).length && c.theme !== 'magazine' && !c.titres && !c.texteDoux) return palette;
     var css = ':root{' +
       '--fond:' + fond + ';--charbon:' + texte + ';--terracotta:' + accent + ';' +
       '--qz-clair:' + fond + ';--qz-charbon:' + texte + ';--qz-terracotta:' + accent + ';' +
@@ -81,6 +82,7 @@
     if (c.texteDoux) css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
       '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + c.texteDoux + '}';
     injecterStyle('qz-reglages-couleurs', css);
+    return palette;
   }
 
   function appliquerSeo(s) {
@@ -289,21 +291,38 @@
     return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + alpha + ')';
   }
 
-  function appliquerMenuNav(m) {
+  /* Luminance approximative — sert a choisir automatiquement, dans la palette,
+     laquelle de fond/texte joue le role « clair » et laquelle joue le role
+     « fonce », quel que soit le sens du theme (classique ou invers en clair-sur-fonce). */
+  function luminance(hex) {
+    var h = hex.replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return 0.2126 * (n >> 16 & 255) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255);
+  }
+  function plusClair(p) { return luminance(p.fond) >= luminance(p.texte) ? p.fond : p.texte; }
+  function plusFonce(p) { return luminance(p.fond) < luminance(p.texte) ? p.fond : p.texte; }
+
+  function appliquerMenuNav(m, palette, suit) {
     if (!m) return;
     var css = '';
-    if (m.bouton) css += '\n.qz-burger{background:' + m.bouton + '}';
-    if (m.traits) css += '\n.qz-burger span{background:' + m.traits + '}';
+    var bouton = suit && palette ? plusFonce(palette) : m.bouton;
+    var traits = suit && palette ? plusClair(palette) : m.traits;
+    var fond = suit && palette ? plusFonce(palette) : m.fond;
+    var texte = suit && palette ? plusClair(palette) : m.texte;
+    var sousBouton = suit && palette ? plusClair(palette) : m.sousBouton;
+    if (bouton) css += '\n.qz-burger{background:' + bouton + '}';
+    if (traits) css += '\n.qz-burger span{background:' + traits + '}';
     if (typeof m.transparence === 'number' && m.transparence > 0) {
       var alphaFond = (100 - Math.max(0, Math.min(100, m.transparence))) / 100;
-      css += '\n.qz-navpanel{background:' + hexEnRgba(m.fond || '#2B353E', alphaFond) + '}';
-    } else if (m.fond) css += '\n.qz-navpanel{background:' + m.fond + '}';
+      css += '\n.qz-navpanel{background:' + hexEnRgba(fond || '#2B353E', alphaFond) + '}';
+    } else if (fond) css += '\n.qz-navpanel{background:' + fond + '}';
     if (typeof m.voile === 'number') {
       var v = Math.max(0, Math.min(100, m.voile)) / 100;
       css += '\n.qz-nav-voile{background:rgba(0,0,0,' + v + ')}';
     }
-    if (m.texte) css += '\n.qz-navpanel a{color:' + m.texte + '}';
-    if (m.sousBouton) css += '\n.qz-subtoggle{color:' + m.sousBouton + '}';
+    if (texte) css += '\n.qz-navpanel a{color:' + texte + '}';
+    if (sousBouton) css += '\n.qz-subtoggle{color:' + sousBouton + '}';
     if (m.overlay) css += '\n.qz-navpanel{position:fixed;left:0;right:0}';
     if (m.position === 'gauche') css += '\n.qz-header{grid-template-columns:auto 1fr}\n.qz-header .qz-burger{order:-1}';
     else if (m.position === 'centre') css += '\n.qz-header{grid-template-columns:1fr auto 1fr}';
@@ -324,8 +343,10 @@
              '\n.qz-navpanel.open{overflow:visible}';
     }
     /* Reglages propres au sous-menu (volet « Comment ca marche ») */
-    if (m.sousFond) css += '\n.qz-navpanel .qz-sublist{background:' + m.sousFond + '}';
-    if (m.sousTexte) css += '\n.qz-navpanel .qz-sublist a{color:' + m.sousTexte + '}';
+    var sousFond = suit && palette ? plusFonce(palette) : m.sousFond;
+    var sousTexte = suit && palette ? plusClair(palette) : m.sousTexte;
+    if (sousFond) css += '\n.qz-navpanel .qz-sublist{background:' + sousFond + '}';
+    if (sousTexte) css += '\n.qz-navpanel .qz-sublist a{color:' + sousTexte + '}';
     if (m.sousDisposition === 'horizontale') {
       css += '\n.qz-navpanel .qz-sublist{flex-direction:row;flex-wrap:wrap;gap:14px;padding-left:16px;padding-right:16px}' +
              '\n.qz-navpanel .qz-sublist li{width:auto}';
@@ -361,11 +382,12 @@
     };
   }
 
-  function appliquerHeroBaseline(hb) {
+  function appliquerHeroBaseline(hb, palette, suit) {
     if (!hb) return;
     var css = '';
+    var couleur = suit && palette ? plusClair(palette) : hb.couleur;
     if (hb.taille) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-size:' + hb.taille + 'px}';
-    if (hb.couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + hb.couleur + '}';
+    if (couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + couleur + '}';
     if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
     else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
     if (hb.zone) {
@@ -384,11 +406,12 @@
     injecterStyle('qz-hero-baseline-style', css);
   }
 
-  function appliquerHeroChangez(hc) {
+  function appliquerHeroChangez(hc, palette, suit) {
     if (!hc) return;
     var css = '';
+    var couleur = suit && palette ? plusClair(palette) : hc.couleur;
     if (hc.taille) css += '\n.h-line.l4{font-size:' + hc.taille + 'px}';
-    if (hc.couleur) css += '\n.h-line.l4{color:' + hc.couleur + '}';
+    if (couleur) css += '\n.h-line.l4{color:' + couleur + '}';
     if (hc.police === 'titres') css += '\n.h-line.l4{font-family:\'Quicksand\',sans-serif}';
     else if (hc.police === 'texte') css += '\n.h-line.l4{font-family:\'Karla\',sans-serif}';
     if (hc.zone) {
@@ -413,14 +436,14 @@
     row.classList.add('perso-actif');
   }
 
-  function appliquerReassurance(r) {
+  function appliquerReassurance(r, palette, suit) {
     if (!r || !r.actif) return;
     var items = [r.item1, r.item2, r.item3].filter(Boolean);
     if (!items.length) return;
     var ancre = document.querySelector('.ticker') || document.querySelector('.qz-header');
     if (!ancre) return;
-    var fond = r.couleur || '#F2EEDF';
-    var texte = r.texte_couleur || '#2b353e';
+    var fond = suit && palette ? palette.fond : (r.couleur || '#F2EEDF');
+    var texte = suit && palette ? palette.texte : (r.texte_couleur || '#2b353e');
     injecterStyle('qz-reassurance-style', [
       '.qz-reassurance{width:100%;background:' + fond + ';color:' + texte + ';padding:10px 16px;',
       'display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;font-size:12px;font-weight:700;',
@@ -440,7 +463,7 @@
 
   var CLE_POPUP_VUE = 'quadretiPopupVue';
 
-  function appliquerPopup(p) {
+  function appliquerPopup(p, palette, suit) {
     if (!p || !p.actif) return;
     if (!p.titre && !p.texte) return; /* rien à montrer */
     var apercu = /[?&]apercu_popup=1\b/.test(location.search);
@@ -448,9 +471,9 @@
       try { if (localStorage.getItem(CLE_POPUP_VUE)) return; } catch (e) {}
     }
 
-    var fond = p.fond || '#F2EEDF';
-    var texte = p.texte_couleur || '#2b353e';
-    var bouton = p.bouton || '#e2725b';
+    var fond = suit && palette ? palette.fond : (p.fond || '#F2EEDF');
+    var texte = suit && palette ? palette.texte : (p.texte_couleur || '#2b353e');
+    var bouton = suit && palette ? palette.accent : (p.bouton || '#e2725b');
 
     injecterStyle('qz-popup-style', [
       '.qz-popup-fond{position:fixed;inset:0;background:#000000a6;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .25s ease;pointer-events:none}',
@@ -520,7 +543,12 @@
      qu'une fois, sur la réponse réseau, jamais depuis le cache (sinon doublon
      visuel : deux bulles, deux bandeaux de réassurance...). */
   function appliquerTout(g) {
-    appliquerCouleurs(g.couleurs);
+    var c = g.couleurs || {};
+    var sec = c.sections || {};
+    var palette = appliquerCouleurs(c);
+    appliquerMenuNav(g.menu_nav, palette, sec.bandeau !== false);
+    appliquerHeroBaseline(g.hero_baseline, palette, sec.accueil !== false);
+    appliquerHeroChangez(g.hero_changez, palette, sec.accueil !== false);
     appliquerPolices(g.polices);
     appliquerBaselines(g.baselines);
     appliquerReseaux(g.reseaux);
@@ -534,10 +562,8 @@
     appliquerBandeau(g.bandeau);
     appliquerDisposition(g.disposition);
     appliquerSeo(g.seo);
-    appliquerMenuNav(g.menu_nav);
-    appliquerHeroBaseline(g.hero_baseline);
-    appliquerHeroChangez(g.hero_changez);
     appliquerLogo(g.logo_perso);
+    return { palette: palette, suitWidgets: sec.widgets !== false };
   }
 
   /* Anti-flash : réapplique immédiatement la dernière config connue (cache
@@ -558,10 +584,10 @@
     .then(function (lignes) {
       var g = {};
       (lignes || []).forEach(function (l) { g[l.cle] = l.valeur; });
-      appliquerTout(g);
-      appliquerPopup(g.popup);
+      var etat = appliquerTout(g);
+      appliquerPopup(g.popup, etat.palette, etat.suitWidgets);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
-      appliquerReassurance(g.reassurance);
+      appliquerReassurance(g.reassurance, etat.palette, etat.suitWidgets);
       try { localStorage.setItem(CLE_CACHE, JSON.stringify(g)); } catch (e) {}
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur (ou celles du cache appliquees juste avant) */ })

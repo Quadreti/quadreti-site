@@ -168,6 +168,12 @@
         <div><label>Survol</label><div class="couleur"><input type="color" id="cSurvol"><code id="cSurvolHex"></code></div></div>
       </div>
 
+      <label style="margin-top:16px">Sections qui suivent cette palette automatiquement</label>
+      <p class="aide" style="margin-top:2px">Décochez une section pour garder ses réglages détaillés (déjà présents dans ses propres cartes du panneau) au lieu de la palette ci-dessus.</p>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:6px 0;"><input type="checkbox" id="secBandeau" style="margin:0"> Bandeau &amp; menu (fond, logo, bouton menu, sous-menu)</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:6px 0;"><input type="checkbox" id="secAccueil" style="margin:0"> Page d'accueil (baselines du bandeau photo/vidéo)</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:6px 0;"><input type="checkbox" id="secWidgets" style="margin:0"> Widgets (réassurance, popup de remise)</label>
+
       <label style="margin-top:16px">Réglages fins — décochez pour choisir une couleur à part</label>
       <div id="zonesFines"></div>
 
@@ -782,6 +788,11 @@ function remplirFormulaires(){
   chargerCouleursDansFormulaire(reglages.couleurs);
   dessinerChips();
 
+  var secReg = (reglages.couleurs || {}).sections || {};
+  $('secBandeau').checked = secReg.bandeau !== false;
+  $('secAccueil').checked = secReg.accueil !== false;
+  $('secWidgets').checked = secReg.widgets !== false;
+
   var mn = reglages.menu_nav || {};
   $('mnBouton').value = mn.bouton || '#2B353E'; majHex('mnBouton','mnBoutonHex');
   $('mnTraits').value = mn.traits || '#F2EEDF'; majHex('mnTraits','mnTraitsHex');
@@ -1063,6 +1074,7 @@ function valeursDepuisFormulaire(cle){
     ZONES_FINES.forEach(function(z){
       if (!$('zf_suivre_' + z[0]).checked) c[z[0]] = $('zf_couleur_' + z[0]).value;
     });
+    c.sections = { bandeau: $('secBandeau').checked, accueil: $('secAccueil').checked, widgets: $('secWidgets').checked };
     return c;
   }
   if (cle === 'disposition') return { heroCta: $('dispHeroCta').value };
