@@ -86,6 +86,12 @@
   .interrupteur i{ position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .15s; }
   .interrupteur.on i{ left:18px; }
 
+  .rang-couleur{ display:flex; align-items:center; gap:10px; }
+  .rang-couleur input[type=color]{ width:40px; height:36px; border:1px solid var(--bord); border-radius:8px; padding:2px; background:var(--surface); cursor:pointer; }
+  .rang-couleur code{ font-size:12px; color:var(--doux); }
+  .choix-radio{ display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px 0; font-size:13px; }
+  .choix-radio input{ accent-color:var(--terracotta); width:16px; height:16px; }
+
   .rang-image{ display:flex; align-items:center; gap:12px; }
   .miniature{ width:64px; height:64px; border-radius:9px; border:1px solid var(--bord); background:var(--fond) center/cover no-repeat; flex-shrink:0; }
   .rang-image .infos{ font-size:11.5px; color:var(--doux); flex:1; }
@@ -313,7 +319,7 @@ dimensionnerIframe();
 /* ================= Navigation (sommaire) ================= */
 var GROUPES = [
   { nom:'Identité visuelle', items:[
-    { id:'palette', label:'Palette maîtresse' },
+    { id:'palette', label:'Palette maîtresse', reel:true },
     { id:'polices', label:'Polices', reel:true },
     { id:'logo', label:'Logo', reel:true }
   ]},
@@ -369,6 +375,7 @@ function afficherSection(id){
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
   if (id === 'sections_ordre') { rendreSectionOrdre(); return; }
   if (id === 'reseaux_liste') { rendreSectionReseaux(); return; }
+  if (id === 'palette') { rendreSectionPalette(); return; }
   if (id === 'polices') { rendreSectionPolices(); return; }
   if (id === 'logo') { rendreSectionLogo(); return; }
   rendreSectionAVenir(id);
@@ -503,6 +510,73 @@ function rendreSectionReseaux(){
   }
 
   dessiner();
+}
+
+/* Palette maîtresse : coeur (thème + 4 couleurs + sections qui suivent) porté ici.
+   Les 11 "zones fines" (réglages fins par élément) et les emplacements mémorisés
+   restent gérés depuis panneau-site.html pour l'instant — pas encore portés, carte
+   trop grosse pour tout faire d'un coup. Important : on part toujours de
+   reglages.couleurs existant et on ne modifie QUE les champs ci-dessous, pour ne
+   jamais effacer un réglage fin déjà fait depuis l'ancien panneau (l'enregistrement
+   remplace l'objet entier, pas une fusion côté base). */
+function rendreSectionPalette(){
+  var c = Object.assign({ theme:'actuel', fond:'#F5F5F5', texte:'#2b353e', accent:'#e2725b', survol:'#cf6450' }, reglages.couleurs || {});
+  var sec = Object.assign({ bandeau:true, accueil:true, widgets:true }, c.sections || {});
+  var nbZonesFines = ['cartouches','bouton','menu','boutiqueFond','logo','carte','encartFond','encartTexte','enumeration','titres','texteDoux'].filter(function(k){ return !!c[k]; }).length;
+
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Palette maîtresse</b></p>' +
+    '<h1 class="titre-section">Palette maîtresse</h1>' +
+    '<p class="aide-section">S\'applique à tout le site. Les couleurs individuelles (réglages fins, pas encore ici) priment sur cette palette.' +
+      (nbZonesFines ? ' <b>' + nbZonesFines + ' réglage(s) fin(s)</b> déjà en place depuis le panneau actuel restent inchangés tant que vous ne les touchez pas là-bas.' : '') +
+    '</p>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Thème</h2></div>' +
+      '<label class="choix-radio"><input type="radio" name="cTheme" value="actuel"' + (c.theme !== 'magazine' ? ' checked' : '') + '> Actuel (crème / charbon)</label>' +
+      '<label class="choix-radio"><input type="radio" name="cTheme" value="magazine"' + (c.theme === 'magazine' ? ' checked' : '') + '> Magazine Déco (lin / terracotta)</label>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs</h2></div>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="cFond" value="' + c.fond + '"><code id="cFondHex">' + c.fond + '</code></div></div>' +
+        '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="cTexte" value="' + c.texte + '"><code id="cTexteHex">' + c.texte + '</code></div></div>' +
+        '<div class="champ"><label>Accent</label><div class="rang-couleur"><input type="color" id="cAccent" value="' + c.accent + '"><code id="cAccentHex">' + c.accent + '</code></div></div>' +
+        '<div class="champ"><label>Survol</label><div class="rang-couleur"><input type="color" id="cSurvol" value="' + c.survol + '"><code id="cSurvolHex">' + c.survol + '</code></div></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Sections qui suivent cette palette</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:6px">Désactivez une section pour garder ses réglages détaillés (déjà présents dans sa propre carte) au lieu de la palette ci-dessus.</p>' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Bandeau &amp; menu</b><span>Fond, logo, bouton menu, sous-menu</span></div><button class="interrupteur' + (sec.bandeau !== false ? ' on' : '') + '" id="secBandeau"><i></i></button></div>' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Page d\'accueil</b><span>Baselines du bandeau photo/vidéo</span></div><button class="interrupteur' + (sec.accueil !== false ? ' on' : '') + '" id="secAccueil"><i></i></button></div>' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Widgets</b><span>Réassurance, popup de remise</span></div><button class="interrupteur' + (sec.widgets !== false ? ' on' : '') + '" id="secWidgets"><i></i></button></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-couleurs"></div><button class="btn-enregistrer" id="cEnregistrer">Enregistrer les couleurs</button></div>' +
+    '</div>';
+
+  function draft(){
+    var out = Object.assign({}, reglages.couleurs || {});
+    out.theme = document.querySelector('input[name=cTheme]:checked').value;
+    out.fond = $('cFond').value; out.texte = $('cTexte').value; out.accent = $('cAccent').value; out.survol = $('cSurvol').value;
+    out.sections = { bandeau: $('secBandeau').classList.contains('on'), accueil: $('secAccueil').classList.contains('on'), widgets: $('secWidgets').classList.contains('on') };
+    return out;
+  }
+  function previsualiser(){ envoyerApercu('couleurs', draft()); }
+
+  document.querySelectorAll('input[name=cTheme]').forEach(function(r){ r.onchange = previsualiser; });
+  ['cFond','cTexte','cAccent','cSurvol'].forEach(function(id){
+    $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
+  });
+  ['secBandeau','secAccueil','secWidgets'].forEach(function(id){
+    $(id).onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  });
+  $('cEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('couleurs', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les couleurs'; chargerHistorique('couleurs', 'histo-couleurs', rendreSectionPalette); });
+  };
+  chargerHistorique('couleurs', 'histo-couleurs', rendreSectionPalette);
 }
 
 var POLICES_DISPONIBLES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
