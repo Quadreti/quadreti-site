@@ -1734,7 +1734,7 @@ function rendreSectionMenu(){
         controles +
       '</div></div>';
     }).join('');
-    return lignes + '<button class="btn-texte-ajout" id="menuAjouter">+ Ajouter un lien</button>';
+    return lignes + '<button class="btn-texte-ajout" id="menuAjouter">+ Ajouter un lien</button> <button class="btn-texte-ajout" id="menuAjouterGroupe">+ Ajouter un groupe (avec sous-menu)</button>';
   }
 
   function dessiner(){
@@ -1753,6 +1753,8 @@ function rendreSectionMenu(){
     if (reprendre) reprendre.onclick = function(){ etat = JSON.parse(JSON.stringify(MENU_PAR_DEFAUT)); dessiner(); };
     var ajouter = $('menuAjouter');
     if (ajouter) ajouter.onclick = function(){ etat.push({ texte:'Nouveau lien', lien:'/' }); dessiner(); };
+    var ajouterGroupe = $('menuAjouterGroupe');
+    if (ajouterGroupe) ajouterGroupe.onclick = function(){ etat.push({ texte:'Nouveau groupe', sousMenu:[{ texte:'Sous-lien', lien:'/' }] }); dessiner(); };
     document.querySelectorAll('[data-monter]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.monter; var t = etat[i-1]; etat[i-1] = etat[i]; etat[i] = t; dessiner(); }; });
     document.querySelectorAll('[data-descendre]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.descendre; var t = etat[i+1]; etat[i+1] = etat[i]; etat[i] = t; dessiner(); }; });
     document.querySelectorAll('[data-suppr]').forEach(function(b){ b.onclick = function(){ etat.splice(+b.dataset.suppr, 1); dessiner(); }; });
