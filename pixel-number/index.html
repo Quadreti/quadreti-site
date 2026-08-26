@@ -405,7 +405,7 @@
       <h3 id="pontTitre">Ce motif vous plaît ?</h3>
       <p id="pontTexte">La même logique — une case, une couleur, un numéro — c'est exactement comment se compose un mur QuadretI. Passez de l'aperçu papier à la vraie mosaïque.</p>
     </div>
-    <a class="btn principal" id="pontLien" href="../boutique/">Composer en mosaïque</a>
+    <a class="btn principal" id="pontLien" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer en mosaïque</a>
   </div>
 </section>
 
@@ -771,7 +771,7 @@
     if (reglagesPN.pont_titre) $('pontTitre').textContent = reglagesPN.pont_titre;
     if (reglagesPN.pont_texte) $('pontTexte').textContent = reglagesPN.pont_texte;
     if (reglagesPN.pont_lien) $('pontLien').href = reglagesPN.pont_lien;
-    $('lienMosaique').href = reglagesPN.pont_lien || '../boutique/';
+    $('lienMosaique').href = reglagesPN.pont_lien || 'https://designer.quadreti.fr';
     if (typeof reglagesPN.largeur_defaut === 'number') { $('largeurRange').value = reglagesPN.largeur_defaut; $('largeurVal').textContent = reglagesPN.largeur_defaut + ' cases'; }
     if (typeof reglagesPN.couleurs_defaut === 'number') { $('couleursRange').value = reglagesPN.couleurs_defaut; $('couleursVal').textContent = reglagesPN.couleurs_defaut; }
 
