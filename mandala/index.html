@@ -180,9 +180,21 @@
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
   .carte .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
 
-  .rang-actif{ display:flex; align-items:center; gap:10px; }
-  .pastille-active{ width:36px; height:36px; border-radius:50%; border:2px solid var(--surface); box-shadow:0 0 0 1.5px var(--bord); flex-shrink:0; }
-  .rang-actif .hex-actuel{ font-family:ui-monospace,monospace; font-size:13px; color:var(--doux); }
+  /* --- Selecteur de couleur avance (facon Canva) : carre saturation/luminosite
+     + curseur de teinte + champ hex + pipette, au-dessus de la palette et de
+     la memoire deja en place. --- */
+  .zone-sv{ position:relative; width:100%; aspect-ratio:16/10; border-radius:10px; overflow:hidden; cursor:crosshair; touch-action:none; }
+  .zone-sv canvas{ width:100%; height:100%; display:block; }
+  .curseur-sv{ position:absolute; width:14px; height:14px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #00000040, 0 1px 4px #00000059; transform:translate(-50%,-50%); pointer-events:none; }
+  .rang-teinte{ position:relative; height:14px; border-radius:99px; margin-top:12px; touch-action:none; cursor:pointer; background:linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+  .curseur-teinte{ position:absolute; top:50%; width:16px; height:16px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #00000040, 0 1px 4px #00000059; transform:translate(-50%,-50%); pointer-events:none; background:transparent; }
+  .rang-hex-picker{ display:flex; align-items:center; gap:8px; margin-top:12px; }
+  .apercu-couleur{ width:34px; height:34px; border-radius:9px; border:1.5px solid var(--bord); flex-shrink:0; }
+  .champ-hex-picker{ flex:1; font-family:ui-monospace,monospace; font-size:13px; font-weight:600; padding:8px 10px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte); min-width:0; }
+  .btn-pipette-mini{ width:36px; height:36px; border-radius:9px; border:1.5px solid var(--bord); background:var(--papier); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--doux); }
+  .btn-pipette-mini:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-pipette-mini svg{ width:16px; height:16px; }
+  .btn-pipette-mini:disabled{ opacity:.4; cursor:not-allowed; }
 
   .grille-palette{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
   .swatch{ aspect-ratio:1; border-radius:8px; border:2px solid transparent; cursor:pointer; padding:0; }
@@ -191,15 +203,6 @@
   .rang-memoire{ display:flex; gap:6px; flex-wrap:wrap; min-height:26px; }
   .rang-memoire .swatch{ width:26px; height:26px; flex:0 0 auto; }
   .memoire-vide{ font-size:11px; color:var(--doux); font-style:italic; }
-
-  .rang-hex{ display:flex; gap:6px; }
-  .rang-hex input{ flex:1; min-width:0; font:inherit; font-family:ui-monospace,monospace; font-size:13px; padding:8px 10px; border:1.5px solid var(--bord); border-radius:8px; background:var(--papier); color:var(--texte); }
-  .rang-hex input:invalid{ border-color:#b04a36; }
-
-  .btn-pipette{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; padding:10px; border-radius:10px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte); cursor:pointer; }
-  .btn-pipette:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .btn-pipette:disabled{ opacity:.4; cursor:default; }
-  .btn-pipette svg{ width:16px; height:16px; }
 
   .rang-scrollable{ display:flex; align-items:center; gap:6px; }
   .fleche-scroll{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; padding:0; }
@@ -219,6 +222,17 @@
 
   .rang-fichier{ display:flex; flex-direction:column; gap:8px; }
   .rang-fichier input[type=file]{ font-family:'Karla',sans-serif; font-size:11.5px; color:var(--doux); }
+
+  .btn-import{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; padding:12px; border-radius:10px; border:1.5px dashed var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); cursor:pointer; text-align:center; display:block; }
+  .btn-import:hover{ background:#e2725b20; }
+  .btn-import input{ display:none; }
+  .note-import{ font-size:10.5px; color:var(--doux); margin:4px 0 0; line-height:1.4; }
+  .etat-import{ font-size:11px; font-weight:700; margin-top:6px; }
+  .etat-import.ok{ color:#2DC653; }
+  .etat-import.attente{ color:var(--terracotta); }
+  .etat-import.erreur{ color:var(--terracotta); }
+  .encart-svg{ background:var(--teinte-actif); border:1px dashed var(--terracotta); border-radius:12px; padding:10px 12px; font-size:11px; color:var(--charbon); line-height:1.5; margin-top:10px; }
+  .encart-svg b{ color:var(--terracotta); }
 
   .note{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
 
@@ -325,16 +339,41 @@
       <div class="points-scroll" id="pointsMotif"></div>
     </div>
     <div class="carte" id="carteImport" style="display:none">
-      <div class="label">Votre motif</div>
+      <div class="label">Convertir un fichier</div>
+      <p class="note-import" style="margin:0 0 10px">Tant que rien n'est importé, le motif de la bibliothèque reste affiché — vous pouvez aussi en choisir un autre dans l'onglet Bibliothèque.</p>
       <div class="rang-fichier">
-        <p class="note" style="margin:0 0 6px">Bientôt : import d'un motif personnalisé. En attendant, la bibliothèque reste disponible.</p>
+        <label class="btn-import">Choisir un fichier<input type="file" id="fichierConvertir" accept="image/*"></label>
+        <p class="note-import">Photo, dessin scanné, capture... le fichier est analysé et transformé en zones colorables.</p>
+        <p class="etat-import" id="etatConvertir"></p>
       </div>
+      <div class="label" style="margin-top:12px">Précision du tracé</div>
+      <div class="rang-scrollable">
+        <button class="fleche-scroll" type="button" id="flecheTraceGauche" aria-label="Précédent">‹</button>
+        <div class="choix-motif" id="rangTrace">
+          <button class="btn-motif" data-taille="24">Simple</button>
+          <button class="btn-motif actif" data-taille="42">Moyenne</button>
+          <button class="btn-motif" data-taille="60">Détaillée</button>
+        </div>
+        <button class="fleche-scroll" type="button" id="flecheTraceDroite" aria-label="Suivant">›</button>
+      </div>
+      <div class="points-scroll" id="pointsTrace"></div>
+      <div class="encart-svg"><b>Pourquoi le SVG ?</b> C'est aussi le format que peut produire l'app Designer — un pont naturel entre les deux outils, dans les deux sens.</div>
     </div>
     <div class="carte">
-      <div class="label">Couleur active</div>
-      <div class="rang-actif">
-        <div class="pastille-active" id="pastilleActive" style="background:#E63946"></div>
-        <span class="hex-actuel" id="hexActuel">#E63946</span>
+      <div class="label">Couleur</div>
+      <div class="zone-sv" id="zoneSv">
+        <canvas id="canvasSv" width="200" height="125"></canvas>
+        <div class="curseur-sv" id="curseurSv"></div>
+      </div>
+      <div class="rang-teinte" id="rangTeinte">
+        <div class="curseur-teinte" id="curseurTeinte"></div>
+      </div>
+      <div class="rang-hex-picker">
+        <div class="apercu-couleur" id="pastilleActive" style="background:#E63946"></div>
+        <input type="text" class="champ-hex-picker" id="hexActuel" value="#E63946" maxlength="7">
+        <button class="btn-pipette-mini" id="btnPipette" title="Pipette" aria-label="Pipette">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
+        </button>
       </div>
     </div>
     <div class="carte">
@@ -345,19 +384,9 @@
       <div class="label">Mémoire des couleurs</div>
       <div class="rang-memoire" id="rangMemoire"><span class="memoire-vide">Les couleurs utilisées apparaîtront ici</span></div>
     </div>
-    <div class="carte">
-      <div class="label">Code hex</div>
-      <div class="rang-hex">
-        <input type="text" id="champHex" placeholder="#E2725B" maxlength="7">
-      </div>
-    </div>
-    <button class="btn-pipette" id="btnPipette">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
-      <span id="texteFleche">Pipette</span>
-    </button>
     <button class="btn secondaire" id="btnEffacer">Tout effacer</button>
     <button class="btn principal" id="btnImprimer">Imprimer ce motif</button>
-    <p class="note">Cliquez une région pour la colorier avec la couleur active.</p>
+    <p class="note">Cliquez une région pour la colorier avec la couleur active — en ligne, ou imprimé pour le crayon.</p>
   </div>
 </div>
 
@@ -472,6 +501,7 @@
   var couleurActive = '#E63946';
   var memoire = [];
   var MEMOIRE_MAX = 10;
+  var resolutionTracé = 42;
 
   /* Palette couleur primaire : vif et reconnaissable (comme une vraie boite de
      crayons), plutot que la palette de marque Quadreti -- le hex et la pipette
@@ -588,13 +618,130 @@
     if (flecheDroite) flecheDroite.addEventListener('click', function(){ rang.scrollBy({ left: pasDefilement(), behavior: 'smooth' }); });
   }
 
-  function majActive(hex){
-    couleurActive = hex;
-    $('pastilleActive').style.background = hex;
-    $('hexActuel').textContent = hex.toUpperCase();
-    $('champHex').value = hex.toUpperCase();
-    document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('actif', s.dataset.hex === hex.toUpperCase()); });
+  function hexVersRgb(hex){
+    var v = parseInt(hex.slice(1), 16);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
   }
+  function rgbVersHex(r, g, b){
+    return '#' + [r, g, b].map(function(v){ return Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0'); }).join('').toUpperCase();
+  }
+  function rgbVersHsv(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    var h = 0;
+    if (d !== 0){
+      if (max === r) h = ((g - b) / d) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60; if (h < 0) h += 360;
+    }
+    var s = max === 0 ? 0 : d / max;
+    return [h, s, max];
+  }
+  function hsvVersRgb(h, s, v){
+    var c = v * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = v - c;
+    var r, g, b;
+    if (h < 60){ r = c; g = x; b = 0; }
+    else if (h < 120){ r = x; g = c; b = 0; }
+    else if (h < 180){ r = 0; g = c; b = x; }
+    else if (h < 240){ r = 0; g = x; b = c; }
+    else if (h < 300){ r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+  }
+  var PALETTE_RGB = PALETTE.map(hexVersRgb);
+  function couleurLaPlusProche(r, g, b){
+    var meilleur = 0, distMin = Infinity;
+    for (var i = 0; i < PALETTE_RGB.length; i++){
+      var p = PALETTE_RGB[i];
+      var d = (r - p[0]) * (r - p[0]) + (g - p[1]) * (g - p[1]) + (b - p[2]) * (b - p[2]);
+      if (d < distMin){ distMin = d; meilleur = i; }
+    }
+    return meilleur;
+  }
+
+  /* --- Selecteur de couleur avance, meme principe que Canva : un carre
+     saturation x luminosite (pour la teinte courante) + un curseur de teinte
+     a part + un champ hex editable + une pipette. Le carre est redessine a
+     chaque changement de teinte ; les deux curseurs restent en phase avec
+     l'etat HSV courant, quelle que soit la source du changement (glisser,
+     hex tape, swatch cliquee, pipette). --- */
+  var teinteActuelle = 0, saturationActuelle = 1, luminositeActuelle = 1;
+
+  function dessinerCarreSv(){
+    var canvas = $('canvasSv');
+    var ctx = canvas.getContext('2d');
+    var l = canvas.width, h = canvas.height;
+    var rgbPur = hsvVersRgb(teinteActuelle, 1, 1);
+    ctx.fillStyle = 'rgb(' + rgbPur.map(Math.round).join(',') + ')';
+    ctx.fillRect(0, 0, l, h);
+    var degradeBlanc = ctx.createLinearGradient(0, 0, l, 0);
+    degradeBlanc.addColorStop(0, '#fff'); degradeBlanc.addColorStop(1, '#fff0');
+    ctx.fillStyle = degradeBlanc; ctx.fillRect(0, 0, l, h);
+    var degradeNoir = ctx.createLinearGradient(0, 0, 0, h);
+    degradeNoir.addColorStop(0, '#0000'); degradeNoir.addColorStop(1, '#000');
+    ctx.fillStyle = degradeNoir; ctx.fillRect(0, 0, l, h);
+  }
+
+  function positionnerCurseurs(){
+    $('curseurSv').style.left = (saturationActuelle * 100) + '%';
+    $('curseurSv').style.top = ((1 - luminositeActuelle) * 100) + '%';
+    $('curseurTeinte').style.left = (teinteActuelle / 360 * 100) + '%';
+  }
+
+  function majDepuisHsv(){
+    var rgb = hsvVersRgb(teinteActuelle, saturationActuelle, luminositeActuelle);
+    majActive(rgbVersHex(rgb[0], rgb[1], rgb[2]), true);
+  }
+
+  function majActive(hex, depuisPicker){
+    couleurActive = hex.toUpperCase();
+    $('pastilleActive').style.background = couleurActive;
+    $('hexActuel').value = couleurActive;
+    document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('actif', s.dataset.hex === couleurActive); });
+    if (!depuisPicker){
+      var rgb = hexVersRgb(couleurActive);
+      var hsv = rgbVersHsv(rgb[0], rgb[1], rgb[2]);
+      teinteActuelle = hsv[0]; saturationActuelle = hsv[1]; luminositeActuelle = hsv[2];
+      dessinerCarreSv();
+    }
+    positionnerCurseurs();
+  }
+
+  function glisserDans(zone, callback){
+    function gerer(e){
+      var rect = zone.getBoundingClientRect();
+      var x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      var y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+      callback(x, y);
+    }
+    zone.addEventListener('pointerdown', function(e){
+      try { zone.setPointerCapture(e.pointerId); } catch (err) {}
+      gerer(e);
+      function surDeplacement(ev){ gerer(ev); }
+      function surRelachement(){
+        zone.removeEventListener('pointermove', surDeplacement);
+        zone.removeEventListener('pointerup', surRelachement);
+      }
+      zone.addEventListener('pointermove', surDeplacement);
+      zone.addEventListener('pointerup', surRelachement);
+    });
+  }
+  glisserDans($('zoneSv'), function(x, y){
+    saturationActuelle = x; luminositeActuelle = 1 - y;
+    majDepuisHsv();
+  });
+  glisserDans($('rangTeinte'), function(x){
+    teinteActuelle = x * 360;
+    dessinerCarreSv();
+    majDepuisHsv();
+  });
+  $('hexActuel').addEventListener('change', function(){
+    var v = this.value.trim();
+    if (!v.startsWith('#')) v = '#' + v;
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) majActive(v);
+    else this.value = couleurActive;
+  });
 
   function ajouterMemoire(hex){
     hex = hex.toUpperCase();
@@ -629,17 +776,6 @@
     });
   }
 
-  $('champHex').addEventListener('input', function(){
-    var v = this.value.trim();
-    if (!v.startsWith('#')) v = '#' + v;
-    if (/^#[0-9A-Fa-f]{6}$/.test(v)){
-      this.setCustomValidity('');
-      majActive(v);
-    } else {
-      this.setCustomValidity('invalide');
-    }
-  });
-
   $('btnPipette').addEventListener('click', function(){
     if (!window.EyeDropper){ return; }
     var dropper = new EyeDropper();
@@ -650,7 +786,7 @@
   });
   if (!window.EyeDropper){
     $('btnPipette').disabled = true;
-    $('texteFleche').textContent = 'Pipette (non supportée ici)';
+    $('btnPipette').title = 'Pipette (non supportée ici)';
   }
 
   $('btnEffacer').addEventListener('click', function(){
@@ -677,9 +813,154 @@
     window.print();
   });
 
-  document.querySelectorAll('.btn-motif').forEach(function(b){
+  /* --- Conversion fichier -> SVG ---
+     1. La photo est ramenee a une grille basse resolution (moyenne des
+        pixels par case, recadrage carre centre).
+     2. Chaque case est ramenee a la couleur la plus proche dans PALETTE
+        (plus proche voisin -- deterministe, pas de k-means).
+     3. Les cases de meme couleur qui se touchent sont regroupees en
+        "blobs" (recherche de composantes connexes).
+     4. Le contour de chaque blob est trace (parcours des aretes de la
+        grille) pour produire un vrai <path> vectoriel -- pas un carre
+        par case. --- */
+  function convertirImageEnSVG(img, taille){
+    var canvas = document.createElement('canvas');
+    canvas.width = taille; canvas.height = taille;
+    var ctx = canvas.getContext('2d');
+    var cote = Math.min(img.naturalWidth, img.naturalHeight);
+    var sx = (img.naturalWidth - cote) / 2, sy = (img.naturalHeight - cote) / 2;
+    ctx.drawImage(img, sx, sy, cote, cote, 0, 0, taille, taille);
+    var data = ctx.getImageData(0, 0, taille, taille).data;
+
+    var etiquettes = new Array(taille * taille);
+    for (var y = 0; y < taille; y++){
+      for (var x = 0; x < taille; x++){
+        var idx = (y * taille + x) * 4;
+        etiquettes[y * taille + x] = couleurLaPlusProche(data[idx], data[idx + 1], data[idx + 2]);
+      }
+    }
+
+    var visite = new Array(taille * taille).fill(false);
+    var composantes = [];
+    for (var y2 = 0; y2 < taille; y2++){
+      for (var x2 = 0; x2 < taille; x2++){
+        var pos = y2 * taille + x2;
+        if (visite[pos]) continue;
+        var label = etiquettes[pos];
+        var pile = [[x2, y2]];
+        visite[pos] = true;
+        var cellules = [];
+        while (pile.length){
+          var c = pile.pop();
+          cellules.push(c);
+          [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){
+            var nx = c[0] + d[0], ny = c[1] + d[1];
+            if (nx < 0 || ny < 0 || nx >= taille || ny >= taille) return;
+            var npos = ny * taille + nx;
+            if (visite[npos] || etiquettes[npos] !== label) return;
+            visite[npos] = true;
+            pile.push([nx, ny]);
+          });
+        }
+        composantes.push({ label: label, cellules: cellules });
+      }
+    }
+
+    function traceComposante(cellules){
+      var appartient = {};
+      cellules.forEach(function(c){ appartient[c[0] + ',' + c[1]] = true; });
+      var aretes = [];
+      cellules.forEach(function(c){
+        var x = c[0], y = c[1];
+        if (!appartient[x + ',' + (y - 1)]) aretes.push([[x, y], [x + 1, y]]);
+        if (!appartient[(x + 1) + ',' + y]) aretes.push([[x + 1, y], [x + 1, y + 1]]);
+        if (!appartient[x + ',' + (y + 1)]) aretes.push([[x + 1, y + 1], [x, y + 1]]);
+        if (!appartient[(x - 1) + ',' + y]) aretes.push([[x, y + 1], [x, y]]);
+      });
+      var parDepart = {};
+      aretes.forEach(function(a){
+        var k = a[0][0] + ',' + a[0][1];
+        (parDepart[k] = parDepart[k] || []).push(a);
+      });
+      var utilisee = new Array(aretes.length).fill(false);
+      var boucles = [];
+      aretes.forEach(function(a, i){
+        if (utilisee[i]) return;
+        var boucle = [a[0]];
+        var courant = a[0], depart = a[0];
+        var securite = 0;
+        while (securite++ < aretes.length + 5){
+          var k = courant[0] + ',' + courant[1];
+          var candidats = (parDepart[k] || []);
+          var trouve = null, idxTrouve = -1;
+          for (var j = 0; j < candidats.length; j++){
+            var idx = aretes.indexOf(candidats[j]);
+            if (!utilisee[idx]){ trouve = candidats[j]; idxTrouve = idx; break; }
+          }
+          if (!trouve) break;
+          utilisee[idxTrouve] = true;
+          courant = trouve[1];
+          boucle.push(courant);
+          if (courant[0] === depart[0] && courant[1] === depart[1]) break;
+        }
+        if (boucle.length > 2) boucles.push(boucle);
+      });
+      return boucles.map(function(b){
+        return 'M ' + b.map(function(p){ return p[0] + ' ' + p[1]; }).join(' L ') + ' Z';
+      }).join(' ');
+    }
+
+    var toile = $('toileSvg');
+    toile.innerHTML = '';
+    toile.setAttribute('viewBox', '0 0 ' + taille + ' ' + taille);
+    var regions = 0;
+    composantes.forEach(function(comp){
+      if (comp.cellules.length < 2) return; // bruit d'une seule case isolee
+      var d = traceComposante(comp.cellules);
+      if (!d) return;
+      var path = document.createElementNS(NS, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill-rule', 'evenodd');
+      path.classList.add('region');
+      path.setAttribute('fill', PALETTE[comp.label]);
+      path.addEventListener('click', function(){
+        this.setAttribute('fill', couleurActive);
+        ajouterMemoire(couleurActive);
+      });
+      toile.appendChild(path);
+      regions++;
+    });
+    return { ok:true, regions: regions };
+  }
+
+  $('fichierConvertir').addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if (!f) return;
+    var etat = $('etatConvertir');
+    etat.textContent = 'Conversion en cours…'; etat.className = 'etat-import attente';
+    var lecteur = new FileReader();
+    lecteur.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var resultat = convertirImageEnSVG(img, resolutionTracé);
+        etat.textContent = resultat.regions + ' zones tracées.'; etat.className = 'etat-import ok';
+      };
+      img.src = ev.target.result;
+    };
+    lecteur.readAsDataURL(f);
+  });
+
+  document.querySelectorAll('#rangTrace .btn-motif').forEach(function(b){
     b.addEventListener('click', function(){
-      document.querySelectorAll('.btn-motif').forEach(function(x){ x.classList.remove('actif'); });
+      document.querySelectorAll('#rangTrace .btn-motif').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      resolutionTracé = parseInt(b.dataset.taille, 10);
+    });
+  });
+
+  document.querySelectorAll('#rangMotif .btn-motif').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#rangMotif .btn-motif').forEach(function(x){ x.classList.remove('actif'); });
       b.classList.add('actif');
       genererMotif(b.dataset.motif);
     });
@@ -694,12 +975,15 @@
     });
   });
 
-  construirePalette();
   genererMotif('classique');
   majActive(couleurActive);
   initialiserRangDefilante($('rangMotif'), $('pointsMotif'), $('flecheMotifGauche'), $('flecheMotifDroite'));
+  initialiserRangDefilante($('rangTrace'), $('pointsTrace'), $('flecheTraceGauche'), $('flecheTraceDroite'));
 
-  /* Reglages depuis le panneau (hero, pont, baseline d'impression). */
+  /* Reglages depuis le panneau (hero, pont, baseline d'impression, palette).
+     La palette (si personnalisee) est appliquee AVANT de construire la
+     grille de swatches, pour ne jamais l'afficher une premiere fois avec
+     les couleurs par defaut puis la reconstruire aussitot. */
   fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=in.(mandala_app,baselines)', {
     headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
   }).then(function(r){ return r.ok ? r.json() : []; }).then(function(lignes){
@@ -711,7 +995,12 @@
     if (reglages.pont_titre) $('pontTitre').textContent = reglages.pont_titre;
     if (reglages.pont_texte) $('pontTexte').textContent = reglages.pont_texte;
     if (reglages.pont_lien) $('pontLien').href = reglages.pont_lien;
-  }).catch(function(){});
+    if (reglages.palette && reglages.palette.length === PALETTE.length){
+      PALETTE = reglages.palette;
+      PALETTE_RGB = PALETTE.map(hexVersRgb);
+    }
+    construirePalette();
+  }).catch(function(){ construirePalette(); });
 })();
 </script>
 </body>

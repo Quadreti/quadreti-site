@@ -1328,18 +1328,35 @@ function rendreSectionMosaiqueRevelee(){
   chargerHistorique('mosaique_revelee_app', 'histo-mosaique_revelee_app', rendreSectionMosaiqueRevelee);
 }
 
+var PALETTE_MANDALA_DEFAUT = [
+  '#E63946','#F77F00','#FFD60A','#2DC653','#2A9DF4','#6A4C93',
+  '#FF6B9D','#06AED5','#8B5A2B','#000000','#7A7A7A','#FFFFFF',
+  '#FFADAD','#FFD6A5','#FDFFB6','#CAFFBF','#A0C4FF','#BDB2FF'
+];
+
 function rendreSectionMandala(){
-  var md = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'' }, reglages.mandala_app || {});
+  var md = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'', palette:[] }, reglages.mandala_app || {});
+  var paletteMandala = md.palette && md.palette.length === PALETTE_MANDALA_DEFAUT.length ? md.palette : PALETTE_MANDALA_DEFAUT;
 
   $('editeur').innerHTML =
     '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Mandala</b></p>' +
     '<h1 class="titre-section">Mandala (jeu)</h1>' +
-    '<p class="aide-section">Le mandala à colorier (3 motifs, palette, mémoire, hex, pipette). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+    '<p class="aide-section">Le mandala à colorier (3 motifs, import de fichier converti en SVG, palette, mémoire, sélecteur de couleur, pipette). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
 
     '<div class="carte">' +
       '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (md.actif ? ' on' : '') + '" id="mdActif"><i></i></button></div>' +
       '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="mdTitre" value="' + escHtml(md.titre) + '" placeholder="Un mandala à colorier, à l\'écran ou sur papier."></div>' +
       '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="mdAccroche" placeholder="Choisissez un motif, une couleur, et coloriez région par région.">' + escHtml(md.accroche) + '</textarea></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs de la palette</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Les 18 couleurs proposées pour colorier — aussi utilisées pour convertir une photo importée (chaque zone est ramenée à la plus proche de ces teintes).</p>' +
+      '<div class="grille-champs">' +
+        paletteMandala.map(function(hex, i){
+          return '<div class="champ"><label>Couleur ' + (i + 1) + '</label><div class="rang-couleur"><input type="color" id="mdPal_' + i + '" value="' + hex + '"><code id="mdPal_' + i + 'Hex">' + hex + '</code></div></div>';
+        }).join('') +
+      '</div>' +
     '</div>' +
 
     '<div class="carte">' +
@@ -1352,12 +1369,17 @@ function rendreSectionMandala(){
     '</div>';
 
   function draft(){
+    var palette = paletteMandala.map(function(_, i){ return $('mdPal_' + i).value; });
     return {
       actif: $('mdActif').classList.contains('on'), titre: $('mdTitre').value.trim(), accroche: $('mdAccroche').value.trim(),
-      pont_titre: $('mdPontTitre').value.trim(), pont_texte: $('mdPontTexte').value.trim(), pont_lien: $('mdPontLien').value.trim()
+      pont_titre: $('mdPontTitre').value.trim(), pont_texte: $('mdPontTexte').value.trim(), pont_lien: $('mdPontLien').value.trim(),
+      palette: palette
     };
   }
   $('mdActif').onclick = function(){ this.classList.toggle('on'); };
+  paletteMandala.forEach(function(_, i){
+    $('mdPal_' + i).oninput = function(){ $('mdPal_' + i + 'Hex').textContent = this.value; };
+  });
   $('mdEnregistrer').onclick = function(){
     var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
     enregistrer('mandala_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('mandala_app', 'histo-mandala_app', rendreSectionMandala); });
