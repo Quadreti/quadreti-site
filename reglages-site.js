@@ -224,6 +224,19 @@
     }
   }
 
+  /* Mécanisme générique de remplacement d'image, section par section : toute balise
+     portant data-image-zone="xxx" prend l'URL g.images.xxx si elle existe, sinon garde
+     l'image codée en dur dans le HTML. Additif — aucune zone taguée aujourd'hui à part
+     le repli photo du bandeau, on en tague d'autres au fil des besoins (panneau V2). */
+  function appliquerImages(images) {
+    if (!images) return;
+    var noeuds = document.querySelectorAll('[data-image-zone]');
+    for (var i = 0; i < noeuds.length; i++) {
+      var zone = noeuds[i].getAttribute('data-image-zone');
+      if (images[zone]) noeuds[i].src = images[zone];
+    }
+  }
+
   function appliquerBandeau(b) {
     if (!b) return;
     var track = document.querySelector('.ticker-track');
@@ -584,6 +597,7 @@
     appliquerPageContact(g.page_contact);
     appliquerPageColoriages(g.page_coloriages);
     appliquerBandeauVideo(g.bandeau_video);
+    appliquerImages(g.images);
     appliquerPhotos(g.photos_diaporama);
     appliquerBandeau(g.bandeau);
     appliquerDisposition(g.disposition);
@@ -603,6 +617,30 @@
 
   var ctl = ('AbortController' in window) ? new AbortController() : null;
   var minuteur = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
+  /* Aperçu en direct (panneau V2) : quand cette page tourne dans l'iframe du panneau
+     avec ?apercu_panneau=1, elle écoute des correctifs postMessage {cle, valeur} —
+     brouillons non enregistrés — les fusionne dans les derniers réglages connus et
+     réapplique tout. Aucun effet sur le site public normal (le flag n'y est jamais présent). */
+  var estApercuPanneau = false;
+  try { estApercuPanneau = window.self !== window.top && /[?&]apercu_panneau=1\b/.test(location.search); } catch (e) {}
+  var derniersReglages = null;
+
+  function reappliquerTout() {
+    var etat = appliquerTout(derniersReglages);
+    appliquerPopup(derniersReglages.popup, etat.palette, etat.suitWidgets);
+    appliquerBulleContact(derniersReglages.bulle_contact, derniersReglages.reseaux);
+    appliquerReassurance(derniersReglages.reassurance, etat.palette, etat.suitWidgets);
+  }
+
+  if (estApercuPanneau) {
+    window.addEventListener('message', function (ev) {
+      if (ev.origin !== location.origin || !ev.data || ev.data.type !== 'qz-apercu-patch' || !derniersReglages) return;
+      derniersReglages = Object.assign({}, derniersReglages);
+      derniersReglages[ev.data.cle] = ev.data.valeur;
+      reappliquerTout();
+    });
+  }
+
   fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur', {
     headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
     signal: ctl ? ctl.signal : undefined
@@ -610,11 +648,13 @@
     .then(function (lignes) {
       var g = {};
       (lignes || []).forEach(function (l) { g[l.cle] = l.valeur; });
+      derniersReglages = g;
       var etat = appliquerTout(g);
       appliquerPopup(g.popup, etat.palette, etat.suitWidgets);
       appliquerBulleContact(g.bulle_contact, g.reseaux);
       appliquerReassurance(g.reassurance, etat.palette, etat.suitWidgets);
       try { localStorage.setItem(CLE_CACHE, JSON.stringify(g)); } catch (e) {}
+      if (estApercuPanneau) { try { window.parent.postMessage({ type: 'qz-apercu-pret' }, location.origin); } catch (e) {} }
     })
     .catch(function () { /* hors ligne ou lent : la page garde ses valeurs en dur (ou celles du cache appliquees juste avant) */ })
     .then(function () { clearTimeout(minuteur); });

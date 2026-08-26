@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Panneau V2 — Quadreti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93;
+    --fond:#F5F5F5; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c;
+    --teinte-actif:#e2725b12; --live-dot:#4CAF6D;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--fond); color:var(--texte); font-family:'Karla',sans-serif; font-size:14px; }
+  h1,h2,h3,.qz{ font-family:'Quicksand',sans-serif; }
+  .cache{ display:none !important; }
+
+  /* ---------- connexion ---------- */
+  #blocConnexion{ min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .carte-connexion{ background:var(--surface); border:1px solid var(--bord); border-radius:16px; padding:32px; width:300px; text-align:center; }
+  .carte-connexion h1{ font-size:17px; margin:0 0 4px; }
+  .carte-connexion p{ font-size:12px; color:var(--doux); margin:0 0 18px; }
+  .carte-connexion input{ width:100%; font:inherit; padding:10px 12px; border:1px solid var(--bord); border-radius:8px; margin-bottom:10px; }
+  .carte-connexion button{ width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:11px; cursor:pointer; }
+
+  /* ---------- barre haute ---------- */
+  .barre-haut{ display:flex; align-items:center; gap:14px; padding:12px 20px; border-bottom:1px solid var(--bord); background:var(--surface); }
+  .barre-haut .qlogo{ display:grid; grid-template-columns:repeat(4,5px); grid-template-rows:repeat(4,5px); gap:1.2px; }
+  .barre-haut .qlogo i{ border-radius:1.2px; background:var(--bord); }
+  .barre-haut .qlogo i.t{ background:var(--charbon); }
+  .barre-haut .qlogo i.a{ background:var(--terracotta); }
+  .barre-haut .marque{ font-weight:700; font-size:15px; }
+  .barre-haut .sous-marque{ font-size:10.5px; color:var(--doux); margin-top:1px; }
+  .badge-v2{ font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; background:var(--teinte-actif); color:var(--terracotta); border-radius:99px; padding:4px 10px; }
+  .barre-haut .droite{ margin-left:auto; display:flex; align-items:center; gap:14px; font-size:12px; color:var(--doux); }
+  .barre-haut button.lien{ font:inherit; border:none; background:none; color:var(--doux); cursor:pointer; text-decoration:underline; padding:0; }
+  #toast{ position:fixed; top:14px; right:20px; z-index:50; background:var(--charbon); color:var(--creme); font-size:12.5px; padding:9px 16px; border-radius:8px; opacity:0; transform:translateY(-6px); transition:opacity .2s,transform .2s; pointer-events:none; }
+  #toast.on{ opacity:1; transform:translateY(0); }
+  #toast.erreur{ background:#8a3324; }
+
+  .disposition{ display:grid; grid-template-columns:230px 1fr 340px; height:calc(100vh - 53px); min-height:640px; }
+  @media (max-width:1100px){ .disposition{ grid-template-columns:200px 1fr 300px; } }
+
+  nav.sommaire{ border-right:1px solid var(--bord); overflow-y:auto; padding:14px 10px 30px; }
+  .groupe-nom{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--doux); margin:16px 8px 6px; }
+  .groupe-nom:first-child{ margin-top:4px; }
+  .item-nav{ display:flex; align-items:center; gap:9px; width:100%; text-align:left; border:none; background:none; color:var(--texte); font:inherit; font-size:13px; padding:8px 9px; border-radius:8px; cursor:pointer; }
+  .item-nav:hover:not(:disabled){ background:var(--fond); }
+  .item-nav.actif{ background:var(--teinte-actif); color:var(--terracotta); font-weight:600; }
+  .item-nav .puce{ width:6px; height:6px; border-radius:50%; background:var(--bord); flex-shrink:0; }
+  .item-nav.actif .puce{ background:var(--terracotta); }
+  .item-nav:disabled{ color:var(--doux); cursor:default; opacity:.55; }
+  .item-nav .bientot{ margin-left:auto; font-size:9px; color:var(--doux); background:var(--fond); border-radius:99px; padding:2px 6px; font-weight:700; }
+
+  .editeur{ overflow-y:auto; padding:24px 30px 60px; }
+  .fil{ font-size:11.5px; color:var(--doux); margin-bottom:6px; }
+  .fil b{ color:var(--texte); }
+  h1.titre-section{ font-size:21px; font-weight:600; margin:0 0 4px; }
+  .aide-section{ font-size:12.5px; color:var(--doux); max-width:60ch; margin:0 0 22px; line-height:1.55; }
+
+  .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .carte-entete{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+  .carte-entete h2{ font-size:14.5px; font-weight:600; margin:0; }
+
+  .grille-champs{ display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; }
+  .champ label{ display:block; font-size:11px; font-weight:600; color:var(--doux); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+  .champ input[type=number], .champ input[type=range]{ width:100%; font:inherit; font-size:13px; padding:8px 10px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--texte); }
+  .champ input[type=range]{ padding:0; accent-color:var(--terracotta); height:34px; }
+  .champ .valeur-inline{ font-size:11px; color:var(--doux); margin-top:4px; }
+
+  .toggle-ligne{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--bord); }
+  .toggle-ligne:first-of-type{ border-top:none; padding-top:2px; }
+  .toggle-txt b{ display:block; font-size:12.5px; font-weight:600; }
+  .toggle-txt span{ font-size:11px; color:var(--doux); }
+  .interrupteur{ width:36px; height:20px; border-radius:99px; background:var(--bord); position:relative; flex-shrink:0; border:none; cursor:pointer; padding:0; }
+  .interrupteur.on{ background:var(--terracotta); }
+  .interrupteur i{ position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .15s; }
+  .interrupteur.on i{ left:18px; }
+
+  .rang-image{ display:flex; align-items:center; gap:12px; }
+  .miniature{ width:64px; height:64px; border-radius:9px; border:1px solid var(--bord); background:var(--fond) center/cover no-repeat; flex-shrink:0; }
+  .rang-image .infos{ font-size:11.5px; color:var(--doux); flex:1; }
+  .rang-image label.btn-fichier{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:var(--fond); border:1px solid var(--bord); border-radius:8px; padding:7px 12px; cursor:pointer; display:inline-block; }
+  .rang-image input[type=file]{ display:none; }
+
+  .pied-carte{ display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+  .btn-enregistrer{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:10px 18px; cursor:pointer; }
+  .btn-enregistrer:disabled{ opacity:.5; cursor:default; }
+
+  .placeholder-section{ display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:30px 0; color:var(--doux); font-size:13px; max-width:46ch; line-height:1.6; }
+
+  .colonne-apercu{ border-left:1px solid var(--bord); display:flex; flex-direction:column; background:var(--surface); }
+  .apercu-entete{ display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--bord); }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--bord); flex-shrink:0; }
+  .live-dot.pret{ background:var(--live-dot); box-shadow:0 0 0 3px #4CAF6D30; }
+  .apercu-entete b{ font-size:12.5px; }
+  .apercu-entete .sous{ font-size:10.5px; color:var(--doux); }
+  .bascule-vue{ margin-left:auto; display:flex; gap:4px; background:var(--fond); border-radius:8px; padding:3px; }
+  .bascule-vue button{ border:none; background:none; font-size:14px; padding:5px 9px; border-radius:6px; cursor:pointer; color:var(--doux); }
+  .bascule-vue button.actif{ background:var(--surface); color:var(--terracotta); box-shadow:0 1px 2px #0000001a; }
+  .cadre-apercu{ flex:1; overflow:auto; padding:18px 14px; display:flex; justify-content:center; align-items:flex-start; }
+  .porte-iframe{ overflow:hidden; border-radius:12px; box-shadow:0 8px 26px #00000022; background:#fff; }
+  .porte-iframe iframe{ border:none; display:block; transform-origin:top left; }
+  .apercu-pied{ padding:12px 16px; border-top:1px solid var(--bord); font-size:11px; color:var(--doux); line-height:1.5; }
+  .apercu-pied button.lien{ font:inherit; border:none; background:none; color:var(--terracotta); cursor:pointer; text-decoration:underline; padding:0; font-size:11px; }
+</style>
+</head>
+<body>
+
+<div id="blocConnexion">
+  <div class="carte-connexion">
+    <div class="qlogo" aria-hidden="true" style="display:grid;grid-template-columns:repeat(4,6px);grid-template-rows:repeat(4,6px);gap:1.5px;margin:0 auto 14px;width:fit-content">
+      <i style="background:var(--charbon)"></i><i style="background:var(--charbon)"></i><i style="background:var(--bord)"></i><i style="background:var(--charbon)"></i>
+      <i style="background:var(--bord)"></i><i style="background:var(--charbon)"></i><i style="background:var(--bord)"></i><i style="background:var(--charbon)"></i>
+      <i style="background:var(--charbon)"></i><i style="background:var(--bord)"></i><i style="background:var(--charbon)"></i><i style="background:var(--bord)"></i>
+      <i style="background:var(--charbon)"></i><i style="background:var(--bord)"></i><i style="background:var(--charbon)"></i><i style="background:var(--terracotta)"></i>
+    </div>
+    <h1>Panneau V2</h1>
+    <p>Même phrase secrète que le panneau actuel.</p>
+    <input type="password" id="champPhrase" placeholder="Phrase secrète" autocomplete="current-password">
+    <button onclick="connexionPhrase()">Entrer</button>
+  </div>
+</div>
+
+<div id="blocPanneau" class="cache">
+  <div class="barre-haut">
+    <div class="qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="a"></i></div>
+    <div>
+      <div class="marque qz">Panneau de contrôle</div>
+      <div class="sous-marque">Quadreti — site &amp; boutique</div>
+    </div>
+    <span class="badge-v2">V2</span>
+    <div class="droite">
+      <span>Chantier en construction, section par section</span>
+      <button class="lien" onclick="deconnexion()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <div class="disposition">
+    <nav class="sommaire" id="sommaire"></nav>
+
+    <main class="editeur" id="editeur"></main>
+
+    <aside class="colonne-apercu">
+      <div class="apercu-entete">
+        <span class="live-dot" id="liveDot"></span>
+        <div><b>Aperçu en direct</b><div class="sous" id="apercuStatut">Chargement…</div></div>
+        <div class="bascule-vue">
+          <button class="actif" id="vueMobile" onclick="basculerVue('mobile')">📱</button>
+          <button id="vueDesktop" onclick="basculerVue('desktop')">🖥</button>
+        </div>
+      </div>
+      <div class="cadre-apercu">
+        <div class="porte-iframe" id="porteIframe">
+          <iframe id="apercuFrame" src="index.html?apercu_panneau=1" title="Aperçu du site"></iframe>
+        </div>
+      </div>
+      <div class="apercu-pied">Reflète les changements avant même d'enregistrer. <button class="lien" onclick="ouvrirGrand()">Ouvrir en plein écran →</button></div>
+    </aside>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ================= Backend (même base que panneau-site.html) ================= */
+var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
+var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
+var FN_UPLOAD = SB_URL + '/functions/v1/televerser-fichier';
+var CLE_SESSION = 'quadretiPanneauV2Session';
+var $ = function(id){ return document.getElementById(id); };
+var phrase = null;
+var reglages = {};
+
+function toast(msg, erreur){
+  var t = $('toast'); t.textContent = msg;
+  t.className = 'on' + (erreur ? ' erreur' : '');
+  clearTimeout(t._m); t._m = setTimeout(function(){ t.className=''; }, 3200);
+}
+function enteteAnon(){ return { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' }; }
+function rpc(nom, corps){
+  return fetch(SB_URL + '/rest/v1/rpc/' + nom, { method:'POST', headers: enteteAnon(), body: JSON.stringify(corps) })
+    .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); });
+}
+function televerserFichier(fichier, chemin){
+  var fd = new FormData();
+  fd.append('phrase', phrase); fd.append('chemin', chemin); fd.append('fichier', fichier);
+  return fetch(FN_UPLOAD, { method:'POST', body: fd })
+    .then(function(r){ return r.json().then(function(d){ return { ok:r.ok, d:d }; }); });
+}
+
+function connexionPhrase(){
+  var p = $('champPhrase').value;
+  if (!p) { toast('Entrez la phrase secrète.', true); return; }
+  rpc('verifier_phrase_panneau', { p_phrase: p }).then(function(res){
+    if (!res.ok || res.d !== true) { toast('Phrase incorrecte.', true); return; }
+    phrase = p; sessionStorage.setItem(CLE_SESSION, p);
+    entrerDansPanneau();
+  }).catch(function(){ toast('Connexion impossible.', true); });
+}
+function deconnexion(){
+  phrase = null; sessionStorage.removeItem(CLE_SESSION);
+  $('blocPanneau').classList.add('cache'); $('blocConnexion').classList.remove('cache'); $('champPhrase').value = '';
+}
+function entrerDansPanneau(){
+  $('blocConnexion').classList.add('cache'); $('blocPanneau').classList.remove('cache');
+  chargerReglages();
+}
+function chargerReglages(){
+  return fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur', { headers: enteteAnon() })
+    .then(function(r){ return r.json(); })
+    .then(function(lignes){
+      reglages = {};
+      (lignes||[]).forEach(function(l){ reglages[l.cle] = l.valeur; });
+      construireSommaire();
+      afficherSection('bandeau_video');
+    });
+}
+function enregistrer(cle, valeur){
+  return rpc('enregistrer_reglage_admin', { p_cle: cle, p_valeur: valeur, p_phrase: phrase }).then(function(res){
+    if (res.ok && res.d === true) { reglages[cle] = valeur; toast('Enregistré — en ligne immédiatement.'); }
+    else if (res.ok && res.d === false) { toast('Session expirée : reconnectez-vous.', true); deconnexion(); }
+    else toast('Échec de l\'enregistrement.', true);
+  }).catch(function(){ toast('Échec de l\'enregistrement (réseau).', true); });
+}
+
+/* ================= Aperçu en direct (iframe + postMessage) ================= */
+var apercuPret = false;
+var VUES = {
+  mobile:  { largeur:375,  hauteur:700, echelleCol:296 },
+  desktop: { largeur:1280, hauteur:760, echelleCol:296 }
+};
+var vueActuelle = 'mobile';
+function dimensionnerIframe(){
+  var v = VUES[vueActuelle];
+  var echelle = v.echelleCol / v.largeur;
+  var f = $('apercuFrame');
+  f.style.width = v.largeur + 'px';
+  f.style.height = v.hauteur + 'px';
+  f.style.transform = 'scale(' + echelle + ')';
+  $('porteIframe').style.width = Math.round(v.largeur * echelle) + 'px';
+  $('porteIframe').style.height = Math.round(v.hauteur * echelle) + 'px';
+}
+function basculerVue(v){
+  vueActuelle = v;
+  $('vueMobile').classList.toggle('actif', v === 'mobile');
+  $('vueDesktop').classList.toggle('actif', v === 'desktop');
+  dimensionnerIframe();
+}
+function ouvrirGrand(){ window.open('index.html', '_blank'); }
+window.addEventListener('message', function(ev){
+  if (ev.source !== $('apercuFrame').contentWindow) return;
+  if (ev.data && ev.data.type === 'qz-apercu-pret') {
+    apercuPret = true;
+    $('liveDot').classList.add('pret');
+    $('apercuStatut').textContent = 'Se met à jour à chaque changement';
+  }
+});
+function envoyerApercu(cle, valeur){
+  if (!apercuPret) return;
+  try { $('apercuFrame').contentWindow.postMessage({ type:'qz-apercu-patch', cle:cle, valeur:valeur }, location.origin); } catch(e){}
+}
+dimensionnerIframe();
+
+/* ================= Navigation (sommaire) ================= */
+var GROUPES = [
+  { nom:'Identité visuelle', items:[
+    { id:'palette', label:'Palette maîtresse' },
+    { id:'polices', label:'Polices' },
+    { id:'logo', label:'Logo' }
+  ]},
+  { nom:'Bandeau & menu', items:[
+    { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
+    { id:'menu_nav', label:'Menu' }
+  ]},
+  { nom:'Page d\'accueil', items:[
+    { id:'hero_baseline', label:'Baseline' },
+    { id:'reassurance', label:'Réassurance' }
+  ]},
+  { nom:'Widgets', items:[
+    { id:'popup', label:'Popup de remise' },
+    { id:'bulle_contact', label:'Bulle de contact' }
+  ]},
+  { nom:'Footer & légal', items:[
+    { id:'reseaux', label:'Réseaux sociaux' },
+    { id:'copyright', label:'Copyright' }
+  ]}
+];
+function construireSommaire(){
+  var nav = $('sommaire'); nav.innerHTML = '';
+  GROUPES.forEach(function(groupe){
+    var titre = document.createElement('div'); titre.className = 'groupe-nom'; titre.textContent = groupe.nom;
+    nav.appendChild(titre);
+    groupe.items.forEach(function(item){
+      var b = document.createElement('button');
+      b.className = 'item-nav'; b.id = 'nav-' + item.id;
+      b.innerHTML = '<span class="puce"></span>' + item.label + (item.reel ? '' : '<span class="bientot">bientôt</span>');
+      if (!item.reel) { b.disabled = true; }
+      else { b.onclick = function(){ afficherSection(item.id); }; }
+      nav.appendChild(b);
+    });
+  });
+}
+function marquerNavActif(id){
+  document.querySelectorAll('.item-nav').forEach(function(b){ b.classList.remove('actif'); });
+  var b = $('nav-' + id); if (b) b.classList.add('actif');
+}
+
+/* ================= Sections ================= */
+function afficherSection(id){
+  marquerNavActif(id);
+  if (id === 'bandeau_video') { rendreSectionBandeau(); return; }
+  rendreSectionAVenir(id);
+}
+function rendreSectionAVenir(id){
+  $('editeur').innerHTML =
+    '<p class="fil">Panneau V2</p>' +
+    '<h1 class="titre-section">Section pas encore construite</h1>' +
+    '<div class="placeholder-section">Cette section existe déjà dans le panneau actuel — elle sera portée ici au fil de l\'eau, sur le même modèle que « Bandeau : vidéo ou image ». En attendant, elle reste modifiable normalement depuis <code>panneau-site.html</code>.</div>';
+}
+
+function rendreSectionBandeau(){
+  var bv = Object.assign({ actif:true, voile:false, vitesse:0.6, pause_ms:1500 }, reglages.bandeau_video || {});
+  var img = Object.assign({}, reglages.images || {});
+  var repli = img.bandeau || 'img/bandeau-1-impression.jpg';
+
+  $('editeur').innerHTML =
+    '<p class="fil">Bandeau &amp; menu <span style="opacity:.5">/</span> <b>Bandeau : vidéo ou image</b></p>' +
+    '<h1 class="titre-section">Bandeau : vidéo ou image</h1>' +
+    '<p class="aide-section">Le bandeau d\'accueil peut tourner en vidéo ou rester sur une photo fixe. La photo de repli est aussi celle qui s\'affiche si la vidéo ne charge pas — vous pouvez la changer ici, quel que soit le mode choisi.</p>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Mode d\'affichage</h2></div>' +
+      '<div class="toggle-ligne">' +
+        '<div class="toggle-txt"><b>Vidéo active</b><span>Désactivé = le bandeau affiche la photo de repli ci-dessous</span></div>' +
+        '<button class="interrupteur' + (bv.actif ? ' on' : '') + '" id="bvActif"><i></i></button>' +
+      '</div>' +
+      '<div class="toggle-ligne">' +
+        '<div class="toggle-txt"><b>Voile sombre</b><span>Assombrit légèrement la vidéo pour que le texte ressorte</span></div>' +
+        '<button class="interrupteur' + (bv.voile ? ' on' : '') + '" id="bvVoile"><i></i></button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Photo de repli</h2></div>' +
+      '<div class="rang-image">' +
+        '<div class="miniature" id="bvMiniature" style="background-image:url(\'' + repli + '\')"></div>' +
+        '<div class="infos">Utilisée quand la vidéo est désactivée, et en secours si elle ne charge pas.<br><label class="btn-fichier">Changer la photo<input type="file" id="bvFichier" accept="image/*"></label></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Lecture de la vidéo</h2></div>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Vitesse de lecture</label><input type="range" id="bvVitesse" min="0.1" max="2" step="0.1" value="' + bv.vitesse + '"><div class="valeur-inline" id="bvVitesseVal">' + bv.vitesse + '×</div></div>' +
+        '<div class="champ"><label>Pause avant redémarrage</label><input type="number" id="bvPause" min="0" step="100" value="' + bv.pause_ms + '"><div class="valeur-inline">millisecondes</div></div>' +
+      '</div>' +
+      '<div class="pied-carte"><button class="btn-enregistrer" id="bvEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      actif: $('bvActif').classList.contains('on'),
+      voile: $('bvVoile').classList.contains('on'),
+      vitesse: parseFloat($('bvVitesse').value) || 0.6,
+      pause_ms: parseInt($('bvPause').value, 10) || 0
+    };
+  }
+  function previsualiser(){ envoyerApercu('bandeau_video', draft()); }
+
+  $('bvActif').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  $('bvVoile').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  $('bvVitesse').oninput = function(){ $('bvVitesseVal').textContent = parseFloat(this.value).toFixed(1) + '×'; previsualiser(); };
+  $('bvPause').oninput = previsualiser;
+
+  $('bvEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('bandeau_video', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; });
+  };
+
+  $('bvFichier').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    if (f.size > 4 * 1024 * 1024) { toast('Photo trop lourde (4 Mo max).', true); return; }
+    var ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    var chemin = 'bandeau-repli-' + Date.now() + '.' + ext;
+    toast('Envoi de la photo…');
+    televerserFichier(f, chemin).then(function(res){
+      if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+      $('bvMiniature').style.backgroundImage = "url('" + res.d.url + "')";
+      var nouvelles = Object.assign({}, reglages.images || {});
+      nouvelles.bandeau = res.d.url;
+      envoyerApercu('images', nouvelles);
+      return enregistrer('images', nouvelles);
+    }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+  });
+}
+
+/* ================= Démarrage : reprise de session si déjà connecté ================= */
+try {
+  var p0 = sessionStorage.getItem(CLE_SESSION);
+  if (p0) {
+    rpc('verifier_phrase_panneau', { p_phrase: p0 }).then(function(res){
+      if (res.ok && res.d === true) { phrase = p0; entrerDansPanneau(); }
+      else sessionStorage.removeItem(CLE_SESSION);
+    });
+  }
+} catch(e){}
+</script>
+</body>
+</html>
