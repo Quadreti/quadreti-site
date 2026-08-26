@@ -322,7 +322,8 @@ var GROUPES = [
     { id:'palette', label:'Palette maîtresse', reel:true },
     { id:'polices', label:'Polices', reel:true },
     { id:'logo', label:'Logo', reel:true },
-    { id:'baselines', label:'Baselines', reel:true }
+    { id:'baselines', label:'Baselines', reel:true },
+    { id:'seo', label:'Favicon & SEO', reel:true }
   ]},
   { nom:'Bandeau & menu', items:[
     { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
@@ -340,8 +341,13 @@ var GROUPES = [
   ]},
   { nom:'Widgets', items:[
     { id:'reassurance', label:'Réassurance', reel:true },
-    { id:'popup', label:'Popup de remise' },
+    { id:'popup', label:'Popup de remise', reel:true },
     { id:'bulle_contact', label:'Bulle de contact', reel:true }
+  ]},
+  { nom:'Contenu des pages', items:[
+    { id:'page_contact', label:'Page Contact', reel:true },
+    { id:'page_coloriages', label:'Page Pixel Number', reel:true },
+    { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
     { id:'reseaux_liste', label:'Réseaux sociaux', reel:true },
@@ -385,6 +391,11 @@ function afficherSection(id){
   if (id === 'reassurance') { rendreSectionReassurance(); return; }
   if (id === 'bulle_contact') { rendreSectionBulleContact(); return; }
   if (id === 'copyright') { rendreSectionCopyright(); return; }
+  if (id === 'seo') { rendreSectionSeo(); return; }
+  if (id === 'popup') { rendreSectionPopup(); return; }
+  if (id === 'page_contact') { rendreSectionPageContact(); return; }
+  if (id === 'page_coloriages') { rendreSectionPageColoriages(); return; }
+  if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -794,6 +805,211 @@ function rendreSectionReassurance(){
     enregistrer('reassurance', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('reassurance', 'histo-reassurance', rendreSectionReassurance); });
   };
   chargerHistorique('reassurance', 'histo-reassurance', rendreSectionReassurance);
+}
+
+function rendreSectionSeo(){
+  var s = Object.assign({ titre:'', description:'', favicon:'' }, reglages.seo || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Favicon &amp; SEO</b></p>' +
+    '<h1 class="titre-section">Favicon &amp; SEO</h1>' +
+    '<p class="aide-section">Le titre/description sont visibles dans l\'onglet et pour Google, mais <b>pas</b> pour les aperçus de partage (WhatsApp, Facebook...) qui lisent le code source directement.</p>' +
+    '<div class="carte">' +
+      '<div class="rang-image">' +
+        '<div class="miniature" id="favMiniature" style="' + (s.favicon ? "background-image:url('" + s.favicon + "')" : '') + '"></div>' +
+        '<div class="infos">Favicon (onglet du navigateur).<br><label class="btn-fichier">Remplacer<input type="file" id="favFichier" accept="image/png,image/x-icon,image/svg+xml"></label></div>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:16px"><label>Titre de la page (onglet + Google)</label><input type="text" id="seoTitre" value="' + escHtml(s.titre) + '"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Description (Google)</label><textarea id="seoDescription">' + escHtml(s.description) + '</textarea></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-seo"></div><button class="btn-enregistrer" id="seoEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  var faviconActuel = s.favicon;
+  function draft(){ return { titre: $('seoTitre').value.trim(), description: $('seoDescription').value.trim(), favicon: faviconActuel }; }
+  ['seoTitre','seoDescription'].forEach(function(id){ $(id).oninput = function(){ envoyerApercu('seo', draft()); }; });
+  $('favFichier').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    if (f.size > 4 * 1024 * 1024) { toast('Fichier trop lourd (4 Mo max).', true); return; }
+    var ext = (f.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g,'') || 'png';
+    televerserFichier(f, 'favicon-site-' + Date.now() + '.' + ext).then(function(res){
+      if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+      faviconActuel = res.d.url;
+      $('favMiniature').style.backgroundImage = "url('" + res.d.url + "')";
+      envoyerApercu('seo', draft());
+    }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+  });
+  $('seoEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('seo', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('seo', 'histo-seo', rendreSectionSeo); });
+  };
+  chargerHistorique('seo', 'histo-seo', rendreSectionSeo);
+}
+
+function rendreSectionPopup(){
+  var p = Object.assign({ actif:false, titre:'', texte:'', bouton_texte:'', delai:4, image:'', fond:'#f2eedf', texte_couleur:'#2b353e', bouton:'#e2725b' }, reglages.popup || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Widgets <span style="opacity:.5">/</span> <b>Popup de remise</b></p>' +
+    '<h1 class="titre-section">Popup de remise</h1>' +
+    '<p class="aide-section">Apparaît une seule fois par visiteur, avec un champ email pour s\'inscrire. Une fois fermée, elle ne réapparaît plus sur cet appareil — normal, pas un bug.</p>' +
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Diffusion active</b></div><button class="interrupteur' + (p.actif ? ' on' : '') + '" id="popActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Titre</label><input type="text" id="popTitre" value="' + escHtml(p.titre) + '"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="popTexte">' + escHtml(p.texte) + '</textarea></div>' +
+      '<div class="grille-champs" style="margin-top:10px">' +
+        '<div class="champ"><label>Texte du bouton</label><input type="text" id="popBoutonTexte" value="' + escHtml(p.bouton_texte) + '"></div>' +
+        '<div class="champ"><label>Délai avant apparition (s)</label><input type="number" id="popDelai" min="0" value="' + p.delai + '"></div>' +
+      '</div>' +
+      '<div class="rang-image" style="margin-top:14px">' +
+        '<div class="miniature" id="popMiniature" style="' + (p.image ? "background-image:url('" + p.image + "')" : '') + '"></div>' +
+        '<div class="infos">Image (facultative).<br><label class="btn-fichier">Choisir une image<input type="file" id="popImgFichier" accept="image/*"></label></div>' +
+      '</div>' +
+      '<div class="grille-champs" style="margin-top:14px">' +
+        '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="popFond" value="' + p.fond + '"><code id="popFondHex">' + p.fond + '</code></div></div>' +
+        '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="popTexteCouleur" value="' + p.texte_couleur + '"><code id="popTexteCouleurHex">' + p.texte_couleur + '</code></div></div>' +
+        '<div class="champ"><label>Bouton</label><div class="rang-couleur"><input type="color" id="popBouton" value="' + p.bouton + '"><code id="popBoutonHex">' + p.bouton + '</code></div></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-popup"></div><button class="btn-enregistrer" id="popEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  var imageActuelle = p.image;
+  function draft(){
+    return {
+      actif: $('popActif').classList.contains('on'),
+      titre: $('popTitre').value.trim(), texte: $('popTexte').value.trim(), bouton_texte: $('popBoutonTexte').value.trim(),
+      delai: parseInt($('popDelai').value, 10) || undefined, image: imageActuelle,
+      fond: $('popFond').value, texte_couleur: $('popTexteCouleur').value, bouton: $('popBouton').value
+    };
+  }
+  function previsualiser(){ envoyerApercu('popup', draft()); }
+  $('popActif').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  ['popTitre','popTexte','popBoutonTexte','popDelai'].forEach(function(id){ $(id).oninput = previsualiser; });
+  ['popFond','popTexteCouleur','popBouton'].forEach(function(id){ $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); }; });
+  $('popImgFichier').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    if (f.size > 4 * 1024 * 1024) { toast('Photo trop lourde (4 Mo max).', true); return; }
+    var ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    televerserFichier(f, 'popup-remise-' + Date.now() + '.' + ext).then(function(res){
+      if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+      imageActuelle = res.d.url;
+      $('popMiniature').style.backgroundImage = "url('" + res.d.url + "')";
+      previsualiser();
+    }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+  });
+  $('popEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    var d = draft();
+    if (d.actif && !d.titre && !d.texte) { toast('Diffusion active mais titre et texte vides : la popup ne s\'affichera pas. Ajoutez au moins l\'un des deux.', true); }
+    enregistrer('popup', d).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('popup', 'histo-popup', rendreSectionPopup); });
+  };
+  chargerHistorique('popup', 'histo-popup', rendreSectionPopup);
+}
+
+var RAISONS_CONTACT = [
+  ['raison1', 'Une commande en cours', 'Suivi, délai, modification, annulation.'],
+  ['raison2', 'Avant d\'acheter', 'Format, montage, compatibilité imprimante.'],
+  ['raison3', 'Montage ou SAV', 'Pièce abîmée, question de pose, remplacement.'],
+  ['raison4', 'Presse & partenariats', 'Journalistes, collaborations, revendeurs.']
+];
+function rendreSectionPageContact(){
+  var pc = reglages.page_contact || {};
+  var blocsRaisons = RAISONS_CONTACT.map(function(def){
+    var id = def[0], titreDefaut = def[1];
+    var d = pc[id] || {};
+    return '<div class="bloc-repete"><h3>' + titreDefaut + '</h3>' +
+      '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" data-pc-id="' + id + '" data-pc-champ="titre" placeholder="' + titreDefaut.replace(/"/g,'&quot;') + '" value="' + escHtml(d.titre) + '"></div>' +
+      '<div class="champ"><label>Texte</label><textarea data-pc-id="' + id + '" data-pc-champ="texte" placeholder="' + def[2].replace(/"/g,'&quot;') + '">' + escHtml(d.texte) + '</textarea></div>' +
+    '</div>';
+  }).join('');
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Page Contact</b></p>' +
+    '<h1 class="titre-section">Page Contact</h1>' +
+    '<div class="carte">' +
+      '<div class="champ" style="margin-bottom:10px"><label>Titre d\'en-tête</label><input type="text" id="pcTitre" value="' + escHtml(pc.titre) + '"></div>' +
+      '<div class="champ"><label>Accroche</label><textarea id="pcAccroche">' + escHtml(pc.accroche) + '</textarea></div>' +
+    '</div>' +
+    '<div class="carte">' + blocsRaisons + '</div>' +
+    '<div class="pied-carte"><div class="historique" id="histo-page_contact"></div><button class="btn-enregistrer" id="pcEnregistrer">Enregistrer</button></div>';
+
+  function draft(){
+    var out = { titre: $('pcTitre').value.trim(), accroche: $('pcAccroche').value.trim() };
+    document.querySelectorAll('[data-pc-id]').forEach(function(champ){
+      var id = champ.getAttribute('data-pc-id'), cle = champ.getAttribute('data-pc-champ');
+      if (!out[id]) out[id] = {};
+      out[id][cle] = champ.value;
+    });
+    return out;
+  }
+  ['pcTitre','pcAccroche'].forEach(function(id){ $(id).oninput = function(){ envoyerApercu('page_contact', draft()); }; });
+  document.querySelectorAll('[data-pc-id]').forEach(function(champ){ champ.addEventListener('input', function(){ envoyerApercu('page_contact', draft()); }); });
+  $('pcEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('page_contact', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('page_contact', 'histo-page_contact', rendreSectionPageContact); });
+  };
+  chargerHistorique('page_contact', 'histo-page_contact', rendreSectionPageContact);
+}
+
+function rendreSectionPageColoriages(){
+  var pc = Object.assign({ titre:'', accroche:'' }, reglages.page_coloriages || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Page Pixel Number</b></p>' +
+    '<h1 class="titre-section">Page Pixel Number</h1>' +
+    '<div class="carte">' +
+      '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" id="colTitre" value="' + escHtml(pc.titre) + '"></div>' +
+      '<div class="champ"><label>Accroche</label><textarea id="colAccroche">' + escHtml(pc.accroche) + '</textarea></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-page_coloriages"></div><button class="btn-enregistrer" id="colEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ return { titre: $('colTitre').value.trim(), accroche: $('colAccroche').value.trim() }; }
+  ['colTitre','colAccroche'].forEach(function(id){ $(id).oninput = function(){ envoyerApercu('page_coloriages', draft()); }; });
+  $('colEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('page_coloriages', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('page_coloriages', 'histo-page_coloriages', rendreSectionPageColoriages); });
+  };
+  chargerHistorique('page_coloriages', 'histo-page_coloriages', rendreSectionPageColoriages);
+}
+
+var SECTIONS_GUIDES = [
+  ['guideInteractifHero', 'Guide de l\'app — titre d\'accueil'],
+  ['guideCodifHero', 'Guide de montage — titre d\'accueil'],
+  ['guideCodifGlossaire', 'Guide de montage — Les quatre mots du mur'],
+  ['guideCodifPrincipe', 'Guide de montage — Le principe (lettre + chiffre)'],
+  ['guideCodifMur', 'Guide de montage — Du carreau au mur'],
+  ['guideCodifRepere', 'Guide de montage — De l\'app au dos du visuel'],
+  ['guideCodifQuiz', 'Guide de montage — Vrai ou faux ?'],
+  ['guideCodifAlbum', 'Guide de montage — L\'album']
+];
+function rendreSectionSectionsGuides(){
+  var s = reglages.sections_guides || {};
+  var blocs = SECTIONS_GUIDES.map(function(def){
+    var id = def[0], titreDefaut = def[1];
+    var d = s[id] || {};
+    return '<div class="bloc-repete"><h3>' + titreDefaut + '</h3>' +
+      '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" data-secg-id="' + id + '" data-secg-champ="titre" value="' + escHtml(d.titre) + '"></div>' +
+      '<div class="champ"><label>Texte</label><textarea data-secg-id="' + id + '" data-secg-champ="texte">' + escHtml(d.texte) + '</textarea></div>' +
+    '</div>';
+  }).join('');
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Textes des guides</b></p>' +
+    '<h1 class="titre-section">Textes des guides</h1>' +
+    '<p class="aide-section">Titre principal de chaque guide, et titre + premier paragraphe de chaque étape du guide de montage. Laissez vide pour garder le texte actuel.</p>' +
+    '<div class="carte">' + blocs + '</div>' +
+    '<div class="pied-carte"><div class="historique" id="histo-sections_guides"></div><button class="btn-enregistrer" id="secgEnregistrer">Enregistrer</button></div>';
+
+  function draft(){
+    var out = {};
+    document.querySelectorAll('[data-secg-id]').forEach(function(champ){
+      var id = champ.getAttribute('data-secg-id'), cle = champ.getAttribute('data-secg-champ');
+      if (!out[id]) out[id] = {};
+      out[id][cle] = champ.value;
+    });
+    return out;
+  }
+  document.querySelectorAll('[data-secg-id]').forEach(function(champ){ champ.addEventListener('input', function(){ envoyerApercu('sections_guides', draft()); }); });
+  $('secgEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('sections_guides', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('sections_guides', 'histo-sections_guides', rendreSectionSectionsGuides); });
+  };
+  chargerHistorique('sections_guides', 'histo-sections_guides', rendreSectionSectionsGuides);
 }
 
 function rendreSectionOrdre(){
