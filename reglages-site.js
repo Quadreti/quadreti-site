@@ -237,6 +237,20 @@
     }
   }
 
+  /* Même principe que appliquerImages, pour le texte et le lien des boutons :
+     data-bouton-zone="xxx" + g.boutons.xxx = {texte, lien}. Additif, un bouton non
+     tagué ou non renseigné garde son texte/lien codé en dur dans le HTML. */
+  function appliquerBoutons(boutons) {
+    if (!boutons) return;
+    var noeuds = document.querySelectorAll('[data-bouton-zone]');
+    for (var i = 0; i < noeuds.length; i++) {
+      var b = boutons[noeuds[i].getAttribute('data-bouton-zone')];
+      if (!b) continue;
+      if (b.texte) noeuds[i].textContent = b.texte;
+      if (b.lien) noeuds[i].setAttribute('href', b.lien);
+    }
+  }
+
   function appliquerBandeau(b) {
     if (!b) return;
     var track = document.querySelector('.ticker-track');
@@ -598,6 +612,7 @@
     appliquerPageColoriages(g.page_coloriages);
     appliquerBandeauVideo(g.bandeau_video);
     appliquerImages(g.images);
+    appliquerBoutons(g.boutons);
     appliquerPhotos(g.photos_diaporama);
     appliquerBandeau(g.bandeau);
     appliquerDisposition(g.disposition);

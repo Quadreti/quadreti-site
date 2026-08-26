@@ -71,6 +71,11 @@
   .champ input[type=number], .champ input[type=range]{ width:100%; font:inherit; font-size:13px; padding:8px 10px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--texte); }
   .champ input[type=range]{ padding:0; accent-color:var(--terracotta); height:34px; }
   .champ .valeur-inline{ font-size:11px; color:var(--doux); margin-top:4px; }
+  .champ input[type=text], .champ textarea{ width:100%; font:inherit; font-size:13px; padding:8px 10px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--texte); }
+  .champ textarea{ resize:vertical; min-height:56px; font-family:inherit; }
+  .bloc-repete{ padding:14px 0; border-top:1px solid var(--bord); }
+  .bloc-repete:first-of-type{ border-top:none; padding-top:2px; }
+  .bloc-repete h3{ font-size:12.5px; font-weight:700; margin:0 0 10px; }
 
   .toggle-ligne{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--bord); }
   .toggle-ligne:first-of-type{ border-top:none; padding-top:2px; }
@@ -279,7 +284,11 @@ var GROUPES = [
   ]},
   { nom:'Page d\'accueil', items:[
     { id:'hero_baseline', label:'Baseline' },
+    { id:'sections_accueil', label:'Textes des sections', reel:true },
     { id:'reassurance', label:'Réassurance' }
+  ]},
+  { nom:'Boutons', items:[
+    { id:'boutons', label:'Textes & liens', reel:true }
   ]},
   { nom:'Widgets', items:[
     { id:'popup', label:'Popup de remise' },
@@ -314,6 +323,8 @@ function marquerNavActif(id){
 function afficherSection(id){
   marquerNavActif(id);
   if (id === 'bandeau_video') { rendreSectionBandeau(); return; }
+  if (id === 'sections_accueil') { rendreSectionTextes(); return; }
+  if (id === 'boutons') { rendreSectionBoutons(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -321,6 +332,103 @@ function rendreSectionAVenir(id){
     '<p class="fil">Panneau V2</p>' +
     '<h1 class="titre-section">Section pas encore construite</h1>' +
     '<div class="placeholder-section">Cette section existe déjà dans le panneau actuel — elle sera portée ici au fil de l\'eau, sur le même modèle que « Bandeau : vidéo ou image ». En attendant, elle reste modifiable normalement depuis <code>panneau-site.html</code>.</div>';
+}
+
+/* Mêmes sections que « Textes de la page d'accueil » dans le panneau actuel
+   (panneau-site.html, var SECTIONS) — même clé sections_accueil, donc les deux
+   panneaux lisent/écrivent exactement la même donnée. */
+var SECTIONS_ACCUEIL = [
+  ['histoire','La mosaïque pixel, revisitée.'],
+  ['comment','Trois gestes. Pas de colle, pas d\'outils, pas d\'attente.'],
+  ['app','De l\'app au mur.'],
+  ['styles','Tout ce que le marché vend séparément.'],
+  ['grandir','Commencez petit. Le mur suivra.'],
+  ['changer','Changer d\'avis n\'est plus un défaut. C\'est une fonctionnalité.'],
+  ['gamme','La seule décision qui n\'est pas définitive : la taille.'],
+  ['cadeau','Un cadeau qui continue.'],
+  ['faq','Tout ce que vous vous demandez.'],
+  ['livraison','Commandez en confiance.']
+];
+var BOUTONS = [
+  ['hero_cta', 'Bouton du bandeau d\'accueil', 'Composer mon mur'],
+  ['app_cta', 'Bouton « Essayer l\'app »', 'Essayer l\'app — c\'est gratuit'],
+  ['boutique_cta', 'Bouton kit (page Comment ça marche)', 'Commander mon kit']
+];
+
+function rendreSectionTextes(){
+  var s = reglages.sections_accueil || {};
+  var blocs = SECTIONS_ACCUEIL.map(function(def){
+    var id = def[0], titreDefaut = def[1];
+    var d = s[id] || {};
+    return '<div class="bloc-repete">' +
+      '<h3>' + titreDefaut + '</h3>' +
+      '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" data-sec-id="' + id + '" data-sec-champ="titre" placeholder="' + titreDefaut.replace(/"/g,'&quot;') + '" value="' + (d.titre || '').replace(/"/g,'&quot;') + '"></div>' +
+      '<div class="champ"><label>Texte</label><textarea data-sec-id="' + id + '" data-sec-champ="texte" placeholder="(garde le texte actuel du site)">' + (d.texte || '') + '</textarea></div>' +
+    '</div>';
+  }).join('');
+
+  $('editeur').innerHTML =
+    '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Textes des sections</b></p>' +
+    '<h1 class="titre-section">Textes des sections</h1>' +
+    '<p class="aide-section">Le titre et le premier paragraphe de chaque section de la page d\'accueil. Laissez un champ vide pour garder le texte actuel du site.</p>' +
+    '<div class="carte">' + blocs + '</div>' +
+    '<div class="pied-carte"><button class="btn-enregistrer" id="secEnregistrer">Enregistrer les textes</button></div>';
+
+  function draft(){
+    var out = {};
+    document.querySelectorAll('[data-sec-id]').forEach(function(champ){
+      var id = champ.getAttribute('data-sec-id'), cle = champ.getAttribute('data-sec-champ');
+      if (!out[id]) out[id] = {};
+      out[id][cle] = champ.value;
+    });
+    return out;
+  }
+  document.querySelectorAll('[data-sec-id]').forEach(function(champ){
+    champ.addEventListener('input', function(){ envoyerApercu('sections_accueil', draft()); });
+  });
+  $('secEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('sections_accueil', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les textes'; });
+  };
+}
+
+function rendreSectionBoutons(){
+  var b = reglages.boutons || {};
+  var blocs = BOUTONS.map(function(def){
+    var id = def[0], label = def[1], texteDefaut = def[2];
+    var d = b[id] || {};
+    return '<div class="bloc-repete">' +
+      '<h3>' + label + '</h3>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Texte</label><input type="text" data-bt-id="' + id + '" data-bt-champ="texte" placeholder="' + texteDefaut.replace(/"/g,'&quot;') + '" value="' + (d.texte || '').replace(/"/g,'&quot;') + '"></div>' +
+        '<div class="champ"><label>Lien</label><input type="text" data-bt-id="' + id + '" data-bt-champ="lien" placeholder="(garde le lien actuel)" value="' + (d.lien || '').replace(/"/g,'&quot;') + '"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  $('editeur').innerHTML =
+    '<p class="fil">Boutons <span style="opacity:.5">/</span> <b>Textes &amp; liens</b></p>' +
+    '<h1 class="titre-section">Boutons</h1>' +
+    '<p class="aide-section">Le texte affiché et le lien de destination des boutons principaux du site. Laissez un champ vide pour garder la valeur actuelle.</p>' +
+    '<div class="carte">' + blocs + '</div>' +
+    '<div class="pied-carte"><button class="btn-enregistrer" id="btEnregistrer">Enregistrer les boutons</button></div>';
+
+  function draft(){
+    var out = {};
+    document.querySelectorAll('[data-bt-id]').forEach(function(champ){
+      var id = champ.getAttribute('data-bt-id'), cle = champ.getAttribute('data-bt-champ');
+      if (!out[id]) out[id] = {};
+      out[id][cle] = champ.value;
+    });
+    return out;
+  }
+  document.querySelectorAll('[data-bt-id]').forEach(function(champ){
+    champ.addEventListener('input', function(){ envoyerApercu('boutons', draft()); });
+  });
+  $('btEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('boutons', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les boutons'; });
+  };
 }
 
 function rendreSectionBandeau(){
