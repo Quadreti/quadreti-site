@@ -325,6 +325,7 @@ var GROUPES = [
   { nom:'Page d\'accueil', items:[
     { id:'hero_baseline', label:'Baseline' },
     { id:'sections_accueil', label:'Textes des sections', reel:true },
+    { id:'sections_ordre', label:'Visibilité & ordre', reel:true },
     { id:'reassurance', label:'Réassurance' }
   ]},
   { nom:'Boutons', items:[
@@ -366,6 +367,7 @@ function afficherSection(id){
   if (id === 'sections_accueil') { rendreSectionTextes(); return; }
   if (id === 'boutons') { rendreSectionBoutons(); return; }
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
+  if (id === 'sections_ordre') { rendreSectionOrdre(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -432,6 +434,51 @@ function rendreSectionTextes(){
     enregistrer('sections_accueil', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les textes'; chargerHistorique('sections_accueil', 'histo-sections_accueil', rendreSectionTextes); });
   };
   chargerHistorique('sections_accueil', 'histo-sections_accueil', rendreSectionTextes);
+}
+
+function rendreSectionOrdre(){
+  var titres = {}; SECTIONS_ACCUEIL.forEach(function(d){ titres[d[0]] = d[1]; });
+  var ordreSauve = (reglages.sections_ordre && reglages.sections_ordre.length) ? reglages.sections_ordre : SECTIONS_ACCUEIL.map(function(d){ return d[0]; });
+  var visSauve = reglages.sections_visibilite || {};
+  var etat = ordreSauve.filter(function(id){ return titres[id]; }).map(function(id){ return { id:id, visible: visSauve[id] !== false }; });
+  SECTIONS_ACCUEIL.forEach(function(d){ if (!etat.some(function(e){ return e.id === d[0]; })) etat.push({ id:d[0], visible: visSauve[d[0]] !== false }); });
+
+  function ordreActuel(){ return etat.map(function(e){ return e.id; }); }
+  function visActuelle(){ var v = {}; etat.forEach(function(e){ v[e.id] = e.visible; }); return v; }
+  function previsualiser(){ envoyerApercu('sections_ordre', ordreActuel()); envoyerApercu('sections_visibilite', visActuelle()); }
+
+  function dessiner(){
+    var lignes = etat.map(function(item, i){
+      return '<div class="bloc-repete"><div class="rang-menu" style="grid-template-columns:1fr auto auto auto">' +
+        '<div><div style="font-size:13px;font-weight:600">' + escHtml(titres[item.id]) + '</div><div style="font-size:11px;color:var(--doux)">' + item.id + (item.visible ? '' : ' · masquée') + '</div></div>' +
+        '<button class="interrupteur' + (item.visible ? ' on' : '') + '" data-vis="' + i + '" title="Visible sur le site"><i></i></button>' +
+        '<button class="btn-icone" data-monter="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+        '<button class="btn-icone" data-descendre="' + i + '"' + (i === etat.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
+      '</div></div>';
+    }).join('');
+
+    $('editeur').innerHTML =
+      '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Visibilité &amp; ordre</b></p>' +
+      '<h1 class="titre-section">Visibilité &amp; ordre des sections</h1>' +
+      '<p class="aide-section">L\'ordre d\'affichage des sections de la page d\'accueil, et lesquelles sont visibles. Le contenu de chaque section reste inchangé — seuls la place et l\'affichage bougent.</p>' +
+      '<div class="carte">' + lignes + '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-sections_ordre"></div><button class="btn-enregistrer" id="ordreEnregistrer">Enregistrer</button></div>';
+
+    document.querySelectorAll('[data-vis]').forEach(function(b){ b.onclick = function(){ etat[+b.dataset.vis].visible = !etat[+b.dataset.vis].visible; dessiner(); previsualiser(); }; });
+    document.querySelectorAll('[data-monter]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.monter; var t = etat[i-1]; etat[i-1] = etat[i]; etat[i] = t; dessiner(); previsualiser(); }; });
+    document.querySelectorAll('[data-descendre]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.descendre; var t = etat[i+1]; etat[i+1] = etat[i]; etat[i] = t; dessiner(); previsualiser(); }; });
+    $('ordreEnregistrer').onclick = function(){
+      var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+      Promise.all([enregistrer('sections_ordre', ordreActuel()), enregistrer('sections_visibilite', visActuelle())]).then(function(){
+        btn.disabled = false; btn.textContent = 'Enregistrer';
+        chargerHistorique('sections_ordre', 'histo-sections_ordre', rendreSectionOrdre);
+      });
+    };
+    chargerHistorique('sections_ordre', 'histo-sections_ordre', rendreSectionOrdre);
+  }
+
+  dessiner();
+  previsualiser();
 }
 
 function rendreSectionBoutons(){

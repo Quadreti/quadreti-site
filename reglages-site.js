@@ -13,6 +13,10 @@
     polices: { titres: 'Quicksand', texte: 'Karla' }
   };
 
+  /* Sections de la page d'accueil, dans leur ordre du code — sert de liste de
+     référence pour la visibilité et le réordonnancement (panneau V2). */
+  var SECTIONS_ACCUEIL_IDS = ['histoire', 'comment', 'app', 'styles', 'grandir', 'changer', 'gamme', 'cadeau', 'faq', 'livraison'];
+
   /* Préréglage « Magazine Déco » : mêmes valeurs que le test validé visuellement,
      y compris le footer clair assorti au bandeau (demande fondateur). */
   var MAGAZINE = { fond: '#EFE8D8', texte: '#33302a', accent: '#c95a44', survol: '#b04a36' };
@@ -205,6 +209,38 @@
       var d = s[id] || {};
       if (d.titre) { var h = sec.querySelector('h2') || sec.querySelector('h1'); if (h) h.textContent = d.titre; }
       if (d.texte) { var p = sec.querySelector('p'); if (p) p.textContent = d.texte; }
+    });
+  }
+
+  function appliquerVisibiliteSections(vis) {
+    if (!vis) return;
+    Object.keys(vis).forEach(function (id) {
+      var sec = document.getElementById(id);
+      if (sec) sec.style.display = vis[id] === false ? 'none' : '';
+    });
+  }
+
+  /* Réordonne les sections d'accueil en déplaçant les noeuds existants (aucun contenu
+     recréé) puis réaligne la bande alternée claire/foncée (.alt) sur la nouvelle
+     position — sinon le motif en rayures suivrait l'ancien ordre. Ids inconnus ignorés
+     par sécurité (ex. réglage plus ancien qu'une section renommée). */
+  function appliquerOrdreSections(ordre) {
+    if (!ordre || !ordre.length) return;
+    var parent = null;
+    ordre.forEach(function (id) {
+      if (SECTIONS_ACCUEIL_IDS.indexOf(id) === -1) return;
+      var sec = document.getElementById(id);
+      if (!sec) return;
+      parent = sec.parentNode;
+      parent.appendChild(sec);
+    });
+    if (!parent) return;
+    var i = 0;
+    ordre.forEach(function (id) {
+      var sec = document.getElementById(id);
+      if (!sec) return;
+      sec.classList.toggle('alt', i % 2 === 1);
+      i++;
     });
   }
 
@@ -646,6 +682,8 @@
     appliquerCopyright(g.copyright);
     appliquerSections(g.sections_accueil);
     appliquerSections(g.sections_guides);
+    appliquerOrdreSections(g.sections_ordre);
+    appliquerVisibiliteSections(g.sections_visibilite);
     appliquerPageContact(g.page_contact);
     appliquerPageColoriages(g.page_coloriages);
     appliquerBandeauVideo(g.bandeau_video);
