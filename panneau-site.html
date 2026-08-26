@@ -382,6 +382,7 @@ var GROUPES = [
     { id:'page_contact', label:'Page Contact', reel:true },
     { id:'page_coloriages', label:'Pixel Number — bibliothèque actuelle', reel:true },
     { id:'pixel_number_app', label:'Pixel Number App (à venir)', reel:true },
+    { id:'taquin_app', label:'Taquin (jeu)', reel:true },
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
@@ -433,6 +434,7 @@ function afficherSection(id){
   if (id === 'page_contact') { rendreSectionPageContact(); return; }
   if (id === 'page_coloriages') { rendreSectionPageColoriages(); return; }
   if (id === 'pixel_number_app') { rendreSectionPixelNumberApp(); return; }
+  if (id === 'taquin_app') { rendreSectionTaquinApp(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
   if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
@@ -1242,6 +1244,43 @@ function rendreSectionPixelNumberApp(){
   }
 
   dessiner();
+}
+
+function rendreSectionTaquinApp(){
+  var tq = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'' }, reglages.taquin_app || {});
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Taquin</b></p>' +
+    '<h1 class="titre-section">Taquin (jeu)</h1>' +
+    '<p class="aide-section">Le puzzle de glissement gratuit (mode Nombres + mode Photo). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (tq.actif ? ' on' : '') + '" id="tqActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="tqTitre" value="' + escHtml(tq.titre) + '" placeholder="Un vrai taquin, aux couleurs Quadreti."></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="tqAccroche" placeholder="Le classique jeu de glissement, en mode Nombres ou en mode Photo.">' + escHtml(tq.accroche) + '</textarea></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Affiché sous le jeu, une fois la photo reconstituée (mode Photo).</p>' +
+      '<div class="champ"><label>Titre</label><input type="text" id="tqPontTitre" value="' + escHtml(tq.pont_titre) + '" placeholder="Envie de la garder, cette photo ?"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="tqPontTexte" placeholder="Une fois reconstituée, transformez-la en vrai mur QuadretI.">' + escHtml(tq.pont_texte) + '</textarea></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Lien</label><input type="text" id="tqPontLien" value="' + escHtml(tq.pont_lien) + '" placeholder="/boutique/"></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-taquin_app"></div><button class="btn-enregistrer" id="tqEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      actif: $('tqActif').classList.contains('on'), titre: $('tqTitre').value.trim(), accroche: $('tqAccroche').value.trim(),
+      pont_titre: $('tqPontTitre').value.trim(), pont_texte: $('tqPontTexte').value.trim(), pont_lien: $('tqPontLien').value.trim()
+    };
+  }
+  $('tqActif').onclick = function(){ this.classList.toggle('on'); };
+  $('tqEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('taquin_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('taquin_app', 'histo-taquin_app', rendreSectionTaquinApp); });
+  };
+  chargerHistorique('taquin_app', 'histo-taquin_app', rendreSectionTaquinApp);
 }
 
 var SECTIONS_GUIDES = [
