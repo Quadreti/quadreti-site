@@ -383,6 +383,7 @@ var GROUPES = [
     { id:'page_coloriages', label:'Pixel Number — bibliothèque actuelle', reel:true },
     { id:'pixel_number_app', label:'Pixel Number App (à venir)', reel:true },
     { id:'taquin_app', label:'Taquin (jeu)', reel:true },
+    { id:'mosaique_revelee_app', label:'Mosaïque Révélée (jeu)', reel:true },
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
@@ -435,6 +436,7 @@ function afficherSection(id){
   if (id === 'page_coloriages') { rendreSectionPageColoriages(); return; }
   if (id === 'pixel_number_app') { rendreSectionPixelNumberApp(); return; }
   if (id === 'taquin_app') { rendreSectionTaquinApp(); return; }
+  if (id === 'mosaique_revelee_app') { rendreSectionMosaiqueRevelee(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
   if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
@@ -1283,6 +1285,43 @@ function rendreSectionTaquinApp(){
   chargerHistorique('taquin_app', 'histo-taquin_app', rendreSectionTaquinApp);
 }
 
+function rendreSectionMosaiqueRevelee(){
+  var mr = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'' }, reglages.mosaique_revelee_app || {});
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Mosaïque Révélée</b></p>' +
+    '<h1 class="titre-section">Mosaïque Révélée (jeu)</h1>' +
+    '<p class="aide-section">L\'image cachée à révéler (tesselles, pixelisé, flouté, zoom arrière, contours). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (mr.actif ? ' on' : '') + '" id="mrActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="mrTitre" value="' + escHtml(mr.titre) + '" placeholder="Loin, c\'est une image. Près, ce sont des tesselles."></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="mrAccroche" placeholder="Lancez la révélation : les tesselles se détachent seules, à votre rythme.">' + escHtml(mr.accroche) + '</textarea></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Affiché sous le jeu, une fois l\'image révélée.</p>' +
+      '<div class="champ"><label>Titre</label><input type="text" id="mrPontTitre" value="' + escHtml(mr.pont_titre) + '" placeholder="Et si c\'était votre photo ?"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="mrPontTexte" placeholder="Le vrai mur Quadreti fonctionne sur ce même principe.">' + escHtml(mr.pont_texte) + '</textarea></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Lien</label><input type="text" id="mrPontLien" value="' + escHtml(mr.pont_lien) + '" placeholder="https://designer.quadreti.fr (par défaut)"></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-mosaique_revelee_app"></div><button class="btn-enregistrer" id="mrEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      actif: $('mrActif').classList.contains('on'), titre: $('mrTitre').value.trim(), accroche: $('mrAccroche').value.trim(),
+      pont_titre: $('mrPontTitre').value.trim(), pont_texte: $('mrPontTexte').value.trim(), pont_lien: $('mrPontLien').value.trim()
+    };
+  }
+  $('mrActif').onclick = function(){ this.classList.toggle('on'); };
+  $('mrEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('mosaique_revelee_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('mosaique_revelee_app', 'histo-mosaique_revelee_app', rendreSectionMosaiqueRevelee); });
+  };
+  chargerHistorique('mosaique_revelee_app', 'histo-mosaique_revelee_app', rendreSectionMosaiqueRevelee);
+}
+
 var SECTIONS_GUIDES = [
   ['guideInteractifHero', 'Guide de l\'app — titre d\'accueil'],
   ['guideCodifHero', 'Guide de montage — titre d\'accueil'],
@@ -1700,6 +1739,7 @@ var MENU_PAR_DEFAUT = [
   { texte:'Pixel Number App', lien:'/pixel-number/' },
   { texte:'Coloriages (bibliothèque)', lien:'/coloriages/' },
   { texte:'Taquin', lien:'/taquin/' },
+  { texte:'Mosaïque Révélée', lien:'/mosaique-revelee/' },
   { texte:'Livraison & paiement', lien:'/index.html#livraison' },
   { texte:'FAQ', lien:'/index.html#faq' },
   { texte:'Contact', lien:'/contact.html' }

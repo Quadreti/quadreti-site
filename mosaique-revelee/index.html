@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosaïque Révélée — Révélez l'image cachée | Quadreti</title>
+<meta name="description" content="Loin, une image. Près, des tesselles. Révélez une mosaïque cachée à votre rythme — tesselles, pixelisé, flouté, zoom arrière ou contours. Gratuit, par Quadreti.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style id="qz-bloc-commun">
+  :root{
+    --qz-charbon:#2B353E;
+    --qz-creme:#F2EEDF;
+    --qz-terracotta:#E2725B;
+    --qz-kraft:#CBBD93;
+    --qz-clair:#F5F5F5;
+    --qz-sombre:#1f272e;
+  }
+  .qz-header{
+    width:100%; background:var(--qz-clair); border-bottom:1px solid #2b353e14;
+    padding:14px 32px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px;
+    position:relative; z-index:60; box-sizing:border-box;
+  }
+  .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
+  .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
+  .qz-qlogo i{ border-radius:1.4px; background:transparent; }
+  .qz-qlogo i.t{ background:var(--qz-charbon); }
+  .qz-qlogo i.a{ background:var(--qz-terracotta); }
+  .qz-wordmark{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:16px; color:var(--qz-charbon); white-space:nowrap; }
+  .qz-doti{ position:relative; display:inline-block; }
+  .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
+  .qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }
+  .qz-wordmark b:nth-child(1){ animation-delay:.40s; }
+  .qz-wordmark b:nth-child(2){ animation-delay:.62s; }
+  .qz-wordmark b:nth-child(3){ animation-delay:.84s; }
+  .qz-wordmark b:nth-child(4){ animation-delay:1.06s; }
+  .qz-wordmark b:nth-child(5){ animation-delay:1.28s; }
+  .qz-wordmark b:nth-child(6){ animation-delay:1.50s; }
+  .qz-wordmark b:nth-child(7){ animation-delay:1.72s; }
+  .qz-wordmark b:nth-child(8){ animation-delay:1.94s; }
+  .qz-wordmark .qz-dot{ opacity:0; animation:qzLettre .05s steps(1) forwards; animation-delay:2.30s; }
+  .qz-qlogo{ opacity:0; animation:qzLettre .4s ease forwards; animation-delay:.15s; }
+  @keyframes qzLettre{ to{ opacity:1; } }
+  .qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
+  .qz-cat{
+    font-family:'Quicksand',sans-serif; font-weight:600; font-size:8.5px; letter-spacing:.08em;
+    color:var(--qz-terracotta); white-space:nowrap;
+    opacity:0; animation:qzLettre .45s ease forwards; animation-delay:2.55s;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .qz-wordmark b, .qz-wordmark .qz-dot, .qz-qlogo, .qz-cat{ animation:none; opacity:1; }
+  }
+  .qz-burger{
+    justify-self:center; width:42px; height:42px; border-radius:22%;
+    background:var(--qz-charbon); border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    transition:background .15s;
+  }
+  .qz-burger:hover, .qz-burger:focus-visible{ background:#1f272e; }
+  .qz-burger span{ width:18px; height:2px; border-radius:1px; background:var(--qz-creme); transition:transform .2s, opacity .2s; }
+  .qz-burger.active span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+  .qz-burger.active span:nth-child(2){ opacity:0; }
+  .qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+  .qz-navpanel{ width:100%; background:var(--qz-charbon); max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
+  .qz-navpanel.open{ max-height:600px; }
+  .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
+  .qz-navpanel a{ font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
+  .qz-navpanel a:hover{ color:var(--qz-terracotta); }
+  .qz-subtoggle{
+    width:100%; background:none; border:none; cursor:pointer;
+    font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2;
+    padding:9px 0; display:flex; align-items:center; justify-content:center; gap:6px;
+    line-height:1.65;
+  }
+  .qz-subtoggle:hover{ color:var(--qz-terracotta); }
+  .qz-subtoggle .qz-chev{ font-size:10px; transition:transform .2s; color:var(--qz-kraft); }
+  li.qz-hassub.open .qz-subtoggle .qz-chev{ transform:rotate(180deg); }
+  li.qz-hassub.open .qz-subtoggle{ color:var(--qz-creme); }
+  .qz-sublist{ list-style:none; margin:0; padding:0; max-height:0; overflow:hidden; transition:max-height .25s ease; background:#37434e; border-radius:10px; display:flex; flex-direction:column; justify-content:center; }
+  li.qz-hassub.open .qz-sublist{ max-height:120px; margin-bottom:4px; }
+  .qz-sublist li{ max-width:none !important; }
+  .qz-sublist a{ font-size:12.5px; font-weight:600; color:#9aa2a9; padding:8px 0; }
+  .qz-sublist a:hover{ color:var(--qz-terracotta); }
+  .qz-logo-perso{ display:none; max-height:42px; width:auto; object-fit:contain; }
+  .qz-logorow.perso-actif .qz-qlogo, .qz-logorow.perso-actif .qz-wm-col{ display:none; }
+  .qz-logorow.perso-actif .qz-logo-perso{ display:block; }
+  .qz-nav-voile{
+    position:fixed; inset:0; background:rgba(0,0,0,.4);
+    opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:58;
+  }
+  .qz-nav-voile.open{ opacity:1; pointer-events:auto; }
+  footer.qz-footer{
+    display:block; width:100%; max-width:none; box-sizing:border-box;
+    padding:0; margin:0; background:transparent; border:none; text-align:initial;
+  }
+  .qz-basdepage{
+    width:100%; background:var(--qz-charbon); box-sizing:border-box;
+    padding:36px 32px 30px; display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .qz-basdepage .qz-qlogo{ grid-template-columns:repeat(4,8px); grid-template-rows:repeat(4,8px); gap:1.6px; opacity:1; animation:none; }
+  .qz-basdepage .qz-qlogo i{ border-radius:1.6px; }
+  .qz-basdepage .qz-qlogo i.t{ background:var(--qz-creme); }
+  .qz-basdepage .qz-wordmark{ color:var(--qz-creme); }
+  .qz-basdepage .qz-wordmark b, .qz-basdepage .qz-wordmark .qz-dot{ opacity:1; animation:none; }
+  .qz-baseline{ font-family:'Quicksand',sans-serif; font-weight:500; font-size:12px; color:#c9c3b2; }
+  .qz-reseaux{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:56px 32px; text-align:center; }
+  .qz-reseaux .qz-accroche{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:20px; color:var(--qz-creme); margin:0 0 4px; }
+  .qz-reseaux .qz-sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 32px; font-family:'Karla',sans-serif; }
+  .qz-reseaux .qz-grid{ display:inline-grid; grid-template-columns:repeat(5,58px); gap:32px; }
+  .qz-reseaux .qz-grid a{
+    width:58px; height:58px; border-radius:12.8px;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:transform .15s, box-shadow .15s, background .15s;
+    background:var(--qz-kraft); color:var(--qz-charbon);
+  }
+  .qz-reseaux .qz-grid a:hover, .qz-reseaux .qz-grid a:focus-visible{
+    transform:translateY(-4px) scale(1.04); box-shadow:0 10px 18px #00000055;
+    background:var(--qz-terracotta); color:var(--qz-creme);
+  }
+  .qz-reseaux .qz-ico{ width:22px; height:22px; display:block; fill:currentColor; }
+  @media (max-width:640px){
+    .qz-reseaux{ padding:44px 20px; }
+    .qz-reseaux .qz-grid{ display:grid; width:100%; max-width:320px; margin:0 auto; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+    .qz-reseaux .qz-grid a{ width:100%; max-width:58px; height:auto; aspect-ratio:1/1; margin:0 auto; }
+  }
+  .qz-legal{ width:100%; background:var(--qz-sombre); box-sizing:border-box; padding:0 32px 32px; }
+  .qz-legal .qz-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:820px; margin:0 auto; }
+  .qz-legal a.qz-leg{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    background:#37434e; border:1px solid #ffffff1a; border-radius:12px;
+    padding:16px 10px; text-align:center; text-decoration:none; transition:.15s;
+  }
+  .qz-legal a.qz-leg:hover, .qz-legal a.qz-leg:focus-visible{ background:var(--qz-terracotta); border-color:var(--qz-terracotta); }
+  .qz-legal .qz-picto{ width:22px; height:22px; color:var(--qz-kraft); transition:.15s; }
+  .qz-legal a.qz-leg:hover .qz-picto{ color:var(--qz-creme); }
+  .qz-legal a.qz-leg span{ font-size:11.5px; font-weight:600; color:#e5e1e1; font-family:'Karla',sans-serif; line-height:1.3; }
+  .qz-copy{ max-width:820px; margin:22px auto 0; text-align:center; font-size:11px; color:#7a828b; }
+  @media (max-width:640px){
+    .qz-legal{ padding:0 20px 28px; }
+    .qz-legal .qz-row{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .qz-legal a.qz-leg:last-child{ grid-column:1/-1; }
+    .qz-basdepage{ padding:30px 20px 26px; }
+  }
+  .qz-fab{
+    position:fixed; right:18px; bottom:18px; z-index:70;
+    width:38px; height:38px; border-radius:50%;
+    background:#37434e; border:1px solid #ffffff1f;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:background .15s, border-color .15s;
+  }
+  .qz-fab:hover, .qz-fab:focus-visible{ background:var(--qz-terracotta); border-color:var(--qz-terracotta); }
+  .qz-fab svg{ width:14px; height:14px; stroke:var(--qz-kraft); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  .qz-fab:hover svg{ stroke:var(--qz-creme); }
+</style>
+<style>
+  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; --tesselle:#2B353E; --tesselle-alt:#333f4a; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
+  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+
+  .hero{ max-width:1000px; margin:0 auto; padding:48px 24px 6px; text-align:center; }
+  .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 12px; font-weight:600; }
+  h1.titre{ font-size:clamp(28px,4.6vw,44px); line-height:1.08; margin:0 0 14px; letter-spacing:-.01em; }
+  p.accroche{ font-size:15.5px; color:var(--doux); max-width:52ch; margin:0 auto; line-height:1.6; }
+
+  .onglets-mode{ display:flex; gap:8px; justify-content:center; margin:24px 0 0; }
+  .onglet-mode{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:10px 22px; cursor:pointer; }
+  .onglet-mode.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
+
+  .jeu-cadre{ max-width:900px; margin:20px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 260px; gap:32px; align-items:start; justify-content:center; }
+  @media (max-width:760px){ .jeu-cadre{ grid-template-columns:1fr; justify-items:center; } }
+
+  .rang-fichier{ display:flex; flex-direction:column; gap:8px; }
+  .rang-fichier input[type=file]{ font-family:'Karla',sans-serif; font-size:11.5px; color:var(--doux); }
+  .miniature-photo{ width:100%; aspect-ratio:1; border-radius:9px; border:1px solid var(--bord); background:var(--papier) center/cover no-repeat; display:none; }
+  .miniature-photo.actif{ display:block; }
+  .placeholder-photo{ display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--doux); text-align:center; padding:30px 20px; }
+  .placeholder-photo.actif{ display:flex; }
+  .placeholder-photo svg{ width:44px; height:44px; opacity:.35; }
+
+  .plateau-carte{ background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:20px; box-shadow:0 20px 50px -30px #2b353e55; }
+  .plateau-fond{ position:relative; border-radius:12px; overflow:hidden; background:var(--tesselle); }
+  .plateau-fond img, .plateau-fond canvas{ display:block; width:100%; height:100%; object-fit:cover; }
+  #canvasEffet, #imgSketch{ position:absolute; inset:0; display:none; }
+  #imgFond.en-transition{ transition:filter var(--duree-revelation,.3s) linear, transform var(--duree-revelation,.3s) ease-out; }
+  #imgSketch.en-transition{ transition:opacity var(--duree-revelation,.3s) linear; }
+  .grille{ position:absolute; inset:0; display:grid; }
+  .tesselle{
+    background:var(--tesselle); border:none; padding:0;
+    box-shadow:inset 0 0 0 1px var(--papier);
+    transition:transform .45s cubic-bezier(.4,0,.2,1), opacity .45s ease;
+  }
+  .tesselle:nth-child(odd){ background:var(--tesselle-alt); }
+  .tesselle.revele{ transform:scale(.72); opacity:0; }
+  @media (prefers-reduced-motion: reduce){ .tesselle{ transition:opacity .2s ease; } }
+
+  .btn.principal:disabled{ opacity:.55; cursor:default; }
+
+  input.curseur{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:99px; background:var(--bord); outline:none; margin:4px 0 6px; }
+  input.curseur::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--terracotta); cursor:pointer; border:3px solid var(--surface); box-shadow:0 1px 4px #00000033; }
+  input.curseur::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--terracotta); cursor:pointer; border:3px solid var(--surface); box-shadow:0 1px 4px #00000033; }
+  .repere-curseur{ display:flex; justify-content:space-between; font-size:10px; color:var(--doux); margin-bottom:6px; }
+  .valeur-curseur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); text-align:center; }
+
+  .jauge-tesselles{ display:flex; gap:2px; margin-top:2px; }
+  .jauge-tesselles span{ flex:1; height:15px; border-radius:2.5px; background:var(--bord); transition:background .2s ease; }
+  .jauge-tesselles span.remplie{ background:var(--terracotta); }
+
+  .rang-scrollable{ display:flex; align-items:center; gap:6px; }
+  .fleche-scroll{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; padding:0; }
+  .fleche-scroll:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .choix-taille.rang-options{ flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
+  .choix-taille.rang-options::-webkit-scrollbar{ display:none; }
+  .rang-options .btn-style, .rang-options .btn-taille{ scroll-snap-align:start; flex:0 0 auto; min-width:88px; }
+  .points-scroll{ display:flex; justify-content:center; gap:6px; margin-top:8px; }
+  .points-scroll span{ width:6px; height:6px; border-radius:50%; background:var(--bord); display:block; }
+  .points-scroll span.actif{ background:var(--terracotta); width:16px; border-radius:99px; transition:width .15s ease; }
+
+  .panneau-jeu{ display:flex; flex-direction:column; gap:16px; }
+  .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
+  .carte-stat .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
+  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:22px; }
+  .carte-taille{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
+  .carte-taille .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
+  .choix-taille{ display:flex; flex-wrap:wrap; gap:6px; }
+  .btn-taille, .btn-style{ flex:1 1 28%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; padding:8px 0; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-taille.actif, .btn-style.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:13px 22px; cursor:pointer; text-align:center; width:100%; }
+  .btn.principal{ background:var(--charbon); color:var(--creme); }
+  .btn.principal:hover{ background:#1c232a; }
+  .note{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .victoire.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
+  @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .victoire.actif{ animation:none; } }
+
+  .defi-social{ display:none; text-align:center; margin-top:10px; }
+  .defi-social.actif{ display:block; }
+  .defi-texte{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); margin:0 0 8px; }
+  .partage-rangee{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
+  .btn-partage{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:7px 12px; border-radius:99px; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; text-decoration:none; }
+  .btn-partage:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+
+  .pont{ max-width:1000px; margin:0 auto 70px; padding:0 24px; }
+  .carte-pont{ background:var(--charbon); color:var(--creme); border-radius:20px; padding:34px 38px; display:flex; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap; }
+  .carte-pont h3{ font-size:18px; margin:0 0 6px; color:var(--creme); }
+  .carte-pont p{ font-size:13px; color:#d9d4c4; margin:0; max-width:48ch; }
+  .carte-pont p.estimation-pont{ color:var(--terracotta); font-weight:700; margin-top:8px; }
+  .carte-pont .btn.principal{ background:var(--terracotta); color:#fff; flex-shrink:0; width:auto; }
+</style>
+</head>
+<body id="qz-top">
+<header class="qz-header">
+  <a class="qz-logorow" href="../index.html" aria-label="Quadreti — accueil" id="qzLogoRow">
+    <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
+    <span class="qz-wm-col">
+      <span class="qz-wordmark" aria-label="Quadreti"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
+      <span class="qz-cat">Support créatif modulaire</span>
+    </span>
+    <img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">
+  </a>
+  <button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="qz-navpanel" id="qzNavPanel" aria-label="Menu principal">
+  <ul>
+    <li><a href="../index.html">Accueil</a></li>
+    <li class="qz-hassub" id="qzCcmItem">
+      <button class="qz-subtoggle" id="qzCcmToggle" aria-expanded="false">
+        Comment ça marche <span class="qz-chev">▾</span>
+      </button>
+      <ul class="qz-sublist">
+        <li><a href="../quadreti-guide-interactif.html">Guide de l'app</a></li>
+        <li><a href="../quadreti-guide-codification.html">Guide de montage</a></li>
+      </ul>
+    </li>
+    <li><a href="../boutique/">Boutique</a></li>
+    <li><a href="../blog/">Blog</a></li>
+    <li><a href="../pixel-number/">Pixel Number App</a></li>
+    <li><a href="../coloriages/">Coloriages (bibliothèque)</a></li>
+    <li><a href="../taquin/">Taquin</a></li>
+    <li><a href="index.html">Mosaïque Révélée</a></li>
+    <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
+    <li><a href="../index.html#faq">FAQ</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+</nav>
+<div class="qz-nav-voile" id="qzNavVoile"></div>
+<!-- ===== BANDEAU COMMUN — FIN ===== -->
+
+<section class="hero">
+  <p class="eyebrow">Gratuit · Quadreti</p>
+  <h1 class="titre" id="heroTitre">Loin, c'est une image. Près, ce sont des tesselles.</h1>
+  <p class="accroche" id="heroAccroche">Lancez la révélation : les tesselles se détachent seules, à votre rythme. Réglez la vitesse pour plus ou moins de suspense.</p>
+</section>
+
+<div class="onglets-mode">
+  <button class="onglet-mode actif" data-mode="bibliotheque">Bibliothèque</button>
+  <button class="onglet-mode" data-mode="photo">Votre photo</button>
+</div>
+
+<div class="jeu-cadre">
+  <div class="plateau-carte">
+    <div class="plateau-fond" id="plateauFond">
+      <img id="imgFond" alt="Image à révéler">
+      <canvas id="canvasEffet" width="480" height="480"></canvas>
+      <img id="imgSketch" alt="">
+      <div class="grille" id="grille"></div>
+    </div>
+    <div class="placeholder-photo" id="placeholderPhoto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="8.5" cy="9" r="1.6"/><path d="M21 14l-5-5-9 9"/></svg>
+      <span>Chargez une photo pour commencer</span>
+    </div>
+  </div>
+  <div class="panneau-jeu">
+    <div class="carte-taille" id="cartePhoto" style="display:none">
+      <div class="label">Votre photo</div>
+      <div class="rang-fichier">
+        <div class="miniature-photo" id="miniaturePhoto"></div>
+        <input type="file" id="champPhoto" accept="image/*">
+      </div>
+    </div>
+    <div class="carte-taille">
+      <div class="label">Style de révélation</div>
+      <div class="rang-scrollable">
+        <button class="fleche-scroll" type="button" id="flecheStyleGauche" aria-label="Précédent">‹</button>
+        <div class="choix-taille rang-options" id="rangStyle">
+          <button class="btn-style actif" data-style="tesselles">Tesselles</button>
+          <button class="btn-style" data-style="pixelise">Pixelisé</button>
+          <button class="btn-style" data-style="flou">Flouté</button>
+          <button class="btn-style" data-style="zoom">Zoom arrière</button>
+          <button class="btn-style" data-style="contours">Contours</button>
+        </div>
+        <button class="fleche-scroll" type="button" id="flecheStyleDroite" aria-label="Suivant">›</button>
+      </div>
+      <div class="points-scroll" data-pour="style"></div>
+    </div>
+    <div class="carte-taille" id="carteTaille">
+      <div class="label">Taille de grille</div>
+      <div class="rang-scrollable">
+        <button class="fleche-scroll" type="button" id="flecheTailleGauche" aria-label="Précédent">‹</button>
+        <div class="choix-taille rang-options" id="rangTaille">
+          <button class="btn-taille" data-taille="4">4×4</button>
+          <button class="btn-taille actif" data-taille="8">8×8</button>
+          <button class="btn-taille" data-taille="16">16×16</button>
+          <button class="btn-taille" data-taille="32">32×32</button>
+          <button class="btn-taille" data-taille="64">64×64</button>
+        </div>
+        <button class="fleche-scroll" type="button" id="flecheTailleDroite" aria-label="Suivant">›</button>
+      </div>
+      <div class="points-scroll" data-pour="taille"></div>
+    </div>
+    <div class="carte-taille">
+      <div class="label">Vitesse de révélation</div>
+      <input type="range" id="curseurVitesse" class="curseur" min="3" max="30" step="1" value="10">
+      <div class="repere-curseur"><span>Rapide</span><span>Lent</span></div>
+      <div class="valeur-curseur" id="valeurVitesse">Modéré</div>
+    </div>
+    <div class="carte-stat"><div class="label">Progression</div><div class="jauge-tesselles" id="jaugeTesselles"></div></div>
+    <div class="carte-stat"><div class="label">Temps</div><div class="valeur" id="statTemps">00:00</div></div>
+    <button class="btn principal" id="btnLancer">Lancer la révélation</button>
+    <button class="btn principal" id="btnNouvelle" style="background:var(--papier);color:var(--doux);border:1.5px solid var(--bord)">Nouvelle image</button>
+    <div class="victoire" id="victoire">Révélé ! Loin, une image. Près, des tesselles. C'est ça, Quadreti.</div>
+    <div class="defi-social" id="defiSocial">
+      <p class="defi-texte" id="defiTexte">Révélé en 8s !</p>
+      <div class="partage-rangee">
+        <a class="btn-partage" id="partageWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn-partage" id="partageFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
+        <button class="btn-partage" id="partageCopier" type="button">Copier le lien</button>
+      </div>
+    </div>
+    <p class="note">Cinq façons de découvrir l'image, un seul principe : loin la vue d'ensemble, près le détail.</p>
+  </div>
+</div>
+
+<section class="pont">
+  <div class="carte-pont">
+    <div>
+      <h3 id="pontTitre">Et si c'était votre photo ?</h3>
+      <p id="pontTexte">Le vrai mur Quadreti fonctionne sur ce même principe, avec vos propres souvenirs à la place.</p>
+      <p class="estimation-pont" id="estimationPont"></p>
+    </div>
+    <a class="btn principal" id="pontLien" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer ma mosaïque</a>
+  </div>
+</section>
+
+<footer class="qz-footer">
+  <div class="qz-basdepage">
+    <div class="qz-logorow">
+      <div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>
+      <span class="qz-wordmark"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>
+    </div>
+    <div class="qz-baseline">Composez, imprimez, clipsez, changez à volonté.</div>
+  </div>
+
+  <div class="qz-reseaux">
+    <p class="qz-accroche">Nos réseaux, à leur tour clipsés</p>
+    <p class="qz-sub">Facebook · Snapchat · TikTok · YouTube · WhatsApp</p>
+    <div class="qz-grid">
+      <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9H16l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z"/></svg></a>
+      <a href="#" aria-label="Snapchat" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M12.031.002c-.947 0-4.298.259-5.977 3.583-.783 1.55-.632 4.315-.51 6.532.006.104.011.204.011.3-.114.058-.319.129-.665.129-.386-.007-.848-.096-1.361-.267a1.06 1.06 0 0 0-.336-.058c-.361 0-.653.214-.756.535-.09.286-.048.828.652 1.28.13.083.32.184.55.293.6.283 1.397.652 1.397 1.3 0 .12-.024.31-.146.61-.02.05-.048.11-.08.174-.08.166-.17.35-.24.548-.16.44-.164.87.106 1.24.35.483 1.06.727 2.11.727.176 0 .366-.011.567-.031.036.316.12.665.31.976.393.638 1.14.958 2.216.958.176 0 .35-.008.51-.024.056.106.116.212.18.316.554.9 1.507 1.393 2.68 1.393h.007c1.173 0 2.126-.493 2.68-1.393.064-.104.124-.21.18-.316.16.016.334.024.51.024 1.077 0 1.823-.244 2.216-.958.19-.311.274-.66.31-.976.201.02.391.031.567.031 1.05 0 1.76-.244 2.11-.727.27-.37.266-.8.106-1.24-.07-.198-.16-.382-.24-.548-.032-.064-.06-.124-.08-.174-.122-.3-.146-.49-.146-.61 0-.648.797-1.017 1.397-1.3.23-.109.42-.21.55-.293.7-.452.742-.994.652-1.28-.103-.321-.395-.535-.756-.535a1.06 1.06 0 0 0-.336.058c-.513.171-.975.26-1.361.267-.346 0-.551-.071-.665-.129 0-.096.005-.196.011-.3.122-2.217.273-4.982-.51-6.532C16.298.261 12.978.002 12.031.002z"/></svg></a>
+      <a href="#" aria-label="TikTok" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M16.6 5.82c-.9-.98-1.45-2.24-1.5-3.62h-3.2v13.63c0 1.7-1.38 3.08-3.08 3.08a3.08 3.08 0 0 1-1.15-5.94A3.08 3.08 0 0 1 9 12.7V9.44c-.3-.04-.6-.06-.9-.06-3.5 0-6.34 2.84-6.34 6.34S4.6 22.06 8.1 22.06s6.34-2.84 6.34-6.34V8.85a8.3 8.3 0 0 0 4.85 1.55V7.2a5.28 5.28 0 0 1-2.69-1.38z"/></svg></a>
+      <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M23.5 6.19a2.97 2.97 0 0 0-2.09-2.09C19.65 3.5 12 3.5 12 3.5s-7.65 0-9.41.6A2.97 2.97 0 0 0 .5 6.19 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.81 2.97 2.97 0 0 0 2.09 2.09c1.76.6 9.41.6 9.41.6s7.65 0 9.41-.6a2.97 2.97 0 0 0 2.09-2.09A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+      <a href="https://wa.me/" aria-label="WhatsApp" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z M12.05 0C5.49 0 .16 5.34.15 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.9-11.89A11.82 11.82 0 0 0 20.53 3.47 11.82 11.82 0 0 0 12.05 0z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="qz-legal">
+    <div class="qz-row">
+      <a class="qz-leg" href="../mentions-legales.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
+        <span>Mentions<br>légales</span>
+      </a>
+      <a class="qz-leg" href="../cgv.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
+        <span>CGV</span>
+      </a>
+      <a class="qz-leg" href="../cgu.html">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r=".6" fill="currentColor" stroke="none"/></svg>
+        <span>CGU &amp;<br>RGPD</span>
+      </a>
+      <a class="qz-leg" href="../index.html#livraison">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8h11v9H2z"/><path d="M13 11h4l4 3v3h-8z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+        <span>Livraison &amp;<br>paiement</span>
+      </a>
+      <a class="qz-leg" href="mailto:contact@quadreti.fr">
+        <svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+        <span>Contact</span>
+      </a>
+    </div>
+    <div class="qz-copy">© 2026 Quadreti — Tous droits réservés · Brevet déposé · Conçu et fabriqué en France</div>
+  </div>
+</footer>
+
+<a class="qz-fab" href="#qz-top" aria-label="Retour en haut de page" title="Retour en haut de page">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('qzMenuBtn');
+  var panel = document.getElementById('qzNavPanel');
+  var voile = document.getElementById('qzNavVoile');
+  if(btn && panel){
+    btn.addEventListener('click', function(){
+      var willOpen = !panel.classList.contains('open');
+      if(willOpen && getComputedStyle(panel).position === 'fixed'){
+        var hdr = document.querySelector('.qz-header');
+        if(hdr) panel.style.top = hdr.getBoundingClientRect().bottom + 'px';
+      }
+      panel.classList.toggle('open', willOpen);
+      btn.classList.toggle('active', willOpen);
+      btn.setAttribute('aria-expanded', String(willOpen));
+      btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+      if(voile) voile.classList.toggle('open', willOpen);
+      var item = document.getElementById('qzCcmItem');
+      var tog = document.getElementById('qzCcmToggle');
+      if(!willOpen && item && tog){ item.classList.remove('open'); tog.setAttribute('aria-expanded','false'); }
+    });
+  }
+  if(voile){ voile.addEventListener('click', function(){ if(btn) btn.click(); }); }
+  var ccmToggle = document.getElementById('qzCcmToggle');
+  var ccmItem = document.getElementById('qzCcmItem');
+  if(ccmToggle && ccmItem){
+    ccmToggle.addEventListener('click', function(){
+      var open = !ccmItem.classList.contains('open');
+      ccmItem.classList.toggle('open', open);
+      ccmToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+})();
+</script>
+<script src="../reglages-site.js" defer></script>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){ return document.getElementById(id); };
+  var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
+  var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
+
+  var taille = 8, revelees = 0, secondes = 0, chrono = null;
+  var BOARD_PX = 0;
+  var modeActuel = 'bibliotheque', sceneIndex = 0, styleActuel = 'tesselles';
+  var photoChargee = null;
+  var dureeRevelationSec = 10, reveleInterval = null, ordreRevelation = [];
+  var TICK_MIN_MS = 20;
+  var imageSourceChargee = null, sketchPret = false;
+
+  /* Scenes dessinees en Canvas (autonome, pas de fetch externe) -- palette
+     Quadreti elle-meme utilisee dans les motifs, pour que le jeu montre aussi
+     le "style" d'image que produit l'outil reel. Bibliotheque geree depuis le
+     panneau a venir ; ce pool est le point de depart. */
+  var SCENES = [dessinerChat, dessinerEtoile, dessinerBouquet, dessinerGeoAdo, dessinerLeverSoleil, dessinerMontagnes];
+
+  function coul(varName){ return getComputedStyle(document.documentElement).getPropertyValue(varName).trim(); }
+
+  function dessinerLeverSoleil(ctx, w, h){
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, coul('--kraft')); g.addColorStop(1, coul('--creme'));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = coul('--terracotta');
+    ctx.beginPath(); ctx.arc(w * 0.52, h * 0.42, w * 0.16, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = coul('--charbon');
+    ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(w * 0.28, h * 0.55); ctx.lineTo(w * 0.52, h); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w * 0.38, h); ctx.lineTo(w * 0.72, h * 0.4); ctx.lineTo(w, h * 0.85); ctx.lineTo(w, h); ctx.closePath(); ctx.fill();
+  }
+  function dessinerChat(ctx, w, h){
+    ctx.fillStyle = coul('--papier'); ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = coul('--charbon');
+    ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.62, w * 0.28, h * 0.32, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(w * 0.5, h * 0.32, w * 0.19, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w * 0.36, h * 0.2); ctx.lineTo(w * 0.32, h * 0.02); ctx.lineTo(w * 0.46, h * 0.16); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w * 0.64, h * 0.2); ctx.lineTo(w * 0.68, h * 0.02); ctx.lineTo(w * 0.54, h * 0.16); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w * 0.74, h * 0.7); ctx.quadraticCurveTo(w * 0.98, h * 0.55, w * 0.9, h * 0.2); ctx.lineWidth = w * 0.06; ctx.strokeStyle = coul('--charbon'); ctx.lineCap = 'round'; ctx.stroke();
+    ctx.fillStyle = coul('--terracotta');
+    ctx.beginPath(); ctx.arc(w * 0.5, h * 0.46, w * 0.028, 0, Math.PI * 2); ctx.fill();
+  }
+  function dessinerBouquet(ctx, w, h){
+    ctx.fillStyle = coul('--papier'); ctx.fillRect(0, 0, w, h);
+    var tiges = [[0.5, 0.95, 0.5, 0.55], [0.4, 0.95, 0.42, 0.6], [0.6, 0.95, 0.58, 0.6]];
+    ctx.strokeStyle = coul('--charbon'); ctx.lineWidth = w * 0.012; ctx.lineCap = 'round';
+    tiges.forEach(function(t){ ctx.beginPath(); ctx.moveTo(w * t[0], h * t[1]); ctx.lineTo(w * t[2], h * t[3]); ctx.stroke(); });
+    var fleurs = [[0.5, 0.42, 1], [0.38, 0.5, 0.75], [0.62, 0.5, 0.75], [0.46, 0.32, 0.6], [0.56, 0.34, 0.62]];
+    fleurs.forEach(function(f, i){
+      ctx.fillStyle = i % 2 === 0 ? coul('--terracotta') : coul('--kraft');
+      ctx.beginPath(); ctx.arc(w * f[0], h * f[1], w * 0.09 * f[2], 0, Math.PI * 2); ctx.fill();
+    });
+  }
+  function dessinerEtoile(ctx, w, h){
+    ctx.fillStyle = coul('--papier'); ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = coul('--kraft');
+    ctx.beginPath(); ctx.arc(w * 0.5, h * 0.5, w * 0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = coul('--terracotta');
+    ctx.beginPath();
+    for (var i = 0; i < 10; i++){
+      var rayon = i % 2 === 0 ? w * 0.26 : w * 0.1;
+      var angle = (Math.PI / 5) * i - Math.PI / 2;
+      var x = w * 0.5 + Math.cos(angle) * rayon, y = h * 0.5 + Math.sin(angle) * rayon;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+  function dessinerGeoAdo(ctx, w, h){
+    var g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, coul('--creme')); g.addColorStop(1, coul('--kraft'));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = coul('--charbon'); ctx.lineWidth = w * 0.015;
+    ctx.beginPath(); ctx.arc(w * 0.36, h * 0.4, w * 0.2, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = coul('--terracotta');
+    ctx.beginPath(); ctx.moveTo(w * 0.62, h * 0.22); ctx.lineTo(w * 0.9, h * 0.68); ctx.lineTo(w * 0.34, h * 0.68); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = coul('--papier'); ctx.lineWidth = w * 0.02;
+    ctx.strokeRect(w * 0.55, h * 0.55, w * 0.28, h * 0.28);
+  }
+  function dessinerMontagnes(ctx, w, h){
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, coul('--charbon')); g.addColorStop(1, coul('--kraft'));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    var bandes = [
+      { points:[[0,1],[0.3,0.55],[0.55,0.78],[0.8,0.5],[1,0.7],[1,1]], teinte:'--charbon' },
+      { points:[[0,1],[0.22,0.72],[0.5,0.9],[0.75,0.65],[1,0.85],[1,1]], teinte:'--terracotta' }
+    ];
+    bandes.forEach(function(b){
+      ctx.fillStyle = coul(b.teinte);
+      ctx.beginPath();
+      b.points.forEach(function(p, i){ var x = w * p[0], y = h * p[1]; if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); });
+      ctx.closePath(); ctx.fill();
+    });
+  }
+
+  function genererImage(callback){
+    var src;
+    if (modeActuel === 'photo' && photoChargee){
+      src = photoChargee;
+    } else {
+      var canvas = document.createElement('canvas');
+      canvas.width = 480; canvas.height = 480;
+      SCENES[sceneIndex % SCENES.length](canvas.getContext('2d'), 480, 480);
+      src = canvas.toDataURL();
+    }
+    $('imgFond').src = src;
+    sketchPret = false;
+    var img = new Image();
+    img.onload = function(){
+      imageSourceChargee = img;
+      if (callback) callback();
+    };
+    img.src = src;
+  }
+
+  /* --- Pixelise : basse resolution recopiee a l'echelle, sans lissage --- */
+  function dessinerPixelise(ctxCible, blocs){
+    if (!imageSourceChargee) return;
+    blocs = Math.max(2, Math.round(blocs));
+    var petit = document.createElement('canvas');
+    petit.width = blocs; petit.height = blocs;
+    petit.getContext('2d').drawImage(imageSourceChargee, 0, 0, blocs, blocs);
+    ctxCible.imageSmoothingEnabled = false;
+    ctxCible.clearRect(0, 0, 480, 480);
+    ctxCible.drawImage(petit, 0, 0, blocs, blocs, 0, 0, 480, 480);
+  }
+
+  /* --- Contours : detection de contours (Sobel) sur la luminance, calculee
+     une seule fois par image (pas par frame). --- */
+  function genererSketch(){
+    if (!imageSourceChargee) return;
+    var W = 240, H = 240;
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var ctx = c.getContext('2d');
+    ctx.drawImage(imageSourceChargee, 0, 0, W, H);
+    var d = ctx.getImageData(0, 0, W, H).data;
+    var lum = new Float32Array(W * H);
+    for (var i = 0, p = 0; i < d.length; i += 4, p++) lum[p] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    var sortie = ctx.createImageData(W, H);
+    var od = sortie.data;
+    var gx = [-1, 0, 1, -2, 0, 2, -1, 0, 1], gy = [-1, -2, -1, 0, 0, 0, 1, 2, 1];
+    for (var y = 1; y < H - 1; y++){
+      for (var x = 1; x < W - 1; x++){
+        var sx = 0, sy = 0, k = 0;
+        for (var ky = -1; ky <= 1; ky++){
+          for (var kx = -1; kx <= 1; kx++){ sx += lum[(y + ky) * W + (x + kx)] * gx[k]; sy += lum[(y + ky) * W + (x + kx)] * gy[k]; k++; }
+        }
+        var val = 255 - Math.min(255, Math.sqrt(sx * sx + sy * sy));
+        var idx = (y * W + x) * 4;
+        od[idx] = od[idx + 1] = od[idx + 2] = val; od[idx + 3] = 255;
+      }
+    }
+    ctx.putImageData(sortie, 0, 0);
+    var grand = document.createElement('canvas'); grand.width = 480; grand.height = 480;
+    var gctx = grand.getContext('2d');
+    gctx.fillStyle = coul('--papier'); gctx.fillRect(0, 0, 480, 480);
+    gctx.drawImage(c, 0, 0, 480, 480);
+    $('imgSketch').src = grand.toDataURL();
+    sketchPret = true;
+  }
+
+  function reinitialiserVisuel(){
+    var img = $('imgFond'), canvas = $('canvasEffet'), sketch = $('imgSketch'), grille = $('grille');
+    img.classList.remove('en-transition'); sketch.classList.remove('en-transition');
+    img.style.filter = 'none'; img.style.transform = 'none';
+    img.style.display = 'block'; canvas.style.display = 'none'; sketch.style.display = 'none'; grille.style.display = 'none';
+    sketch.style.opacity = '1';
+    if (styleActuel === 'tesselles'){
+      grille.style.display = 'grid';
+    } else if (styleActuel === 'flou'){
+      img.style.filter = 'blur(26px)';
+    } else if (styleActuel === 'zoom'){
+      img.style.transform = 'scale(2.6)';
+    } else if (styleActuel === 'pixelise'){
+      img.style.display = 'none';
+      canvas.style.display = 'block';
+      dessinerPixelise(canvas.getContext('2d'), 2);
+    } else if (styleActuel === 'contours'){
+      sketch.style.display = 'block';
+      if (!sketchPret) genererSketch();
+    }
+  }
+  function construire(){
+    if (chrono) clearInterval(chrono);
+    if (reveleInterval) clearInterval(reveleInterval);
+    BOARD_PX = Math.min(340, Math.round(window.innerWidth * 0.72));
+    var fond = $('plateauFond');
+    fond.style.width = BOARD_PX + 'px'; fond.style.height = BOARD_PX + 'px';
+    document.documentElement.style.setProperty('--duree-revelation', dureeRevelationSec + 's');
+    var grille = $('grille');
+    grille.style.gridTemplateColumns = 'repeat(' + taille + ', 1fr)';
+    grille.style.gridTemplateRows = 'repeat(' + taille + ', 1fr)';
+    grille.innerHTML = '';
+    revelees = 0; secondes = 0;
+    majProgression(0);
+    $('statTemps').textContent = '00:00';
+    $('victoire').classList.remove('actif');
+    $('defiSocial').classList.remove('actif');
+    $('btnLancer').disabled = false;
+    $('btnLancer').textContent = 'Lancer la révélation';
+    if (styleActuel === 'tesselles'){
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < taille * taille; i++){
+        var d = document.createElement('div');
+        d.className = 'tesselle';
+        fragment.appendChild(d);
+      }
+      grille.appendChild(fragment);
+      ordreRevelation = [];
+      for (var j = 0; j < taille * taille; j++) ordreRevelation.push(j);
+      for (var k = ordreRevelation.length - 1; k > 0; k--){
+        var r = Math.floor(Math.random() * (k + 1));
+        var tmp = ordreRevelation[k]; ordreRevelation[k] = ordreRevelation[r]; ordreRevelation[r] = tmp;
+      }
+    }
+    reinitialiserVisuel();
+  }
+  /* --- Une rangee d'options par categorie, en scroll-snap horizontal plutot
+     qu'une grille qui s'enroule sur 2 lignes. Le swipe est natif ; les fleches
+     aident surtout au clavier/souris/trackpad (PC, tablette avec pointeur),
+     qui n'ont pas de geste swipe naturel comme le doigt. --- */
+  function initialiserRangDefilante(rang, conteneurPoints, flecheGauche, flecheDroite){
+    var boutons = [].slice.call(rang.children);
+    var points = boutons.map(function(){
+      var s = document.createElement('span');
+      conteneurPoints.appendChild(s);
+      return s;
+    });
+    function majPoints(){
+      var rectRang = rang.getBoundingClientRect();
+      var centreRang = rectRang.left + rectRang.width / 2;
+      var indexProche = 0, distanceMin = Infinity;
+      boutons.forEach(function(b, i){
+        var rectB = b.getBoundingClientRect();
+        var centreBouton = rectB.left + rectB.width / 2;
+        var d = Math.abs(centreBouton - centreRang);
+        if (d < distanceMin){ distanceMin = d; indexProche = i; }
+      });
+      points.forEach(function(p, i){ p.classList.toggle('actif', i === indexProche); });
+    }
+    rang.addEventListener('scroll', majPoints, { passive: true });
+    majPoints();
+    var pasDefilement = function(){ return boutons[0].getBoundingClientRect().width + 6; };
+    if (flecheGauche) flecheGauche.addEventListener('click', function(){ rang.scrollBy({ left: -pasDefilement(), behavior: 'smooth' }); });
+    if (flecheDroite) flecheDroite.addEventListener('click', function(){ rang.scrollBy({ left: pasDefilement(), behavior: 'smooth' }); });
+  }
+
+  var JAUGE_SEGMENTS = 20;
+  function construireJauge(){
+    var jauge = $('jaugeTesselles');
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < JAUGE_SEGMENTS; i++) fragment.appendChild(document.createElement('span'));
+    jauge.appendChild(fragment);
+  }
+  var segmentsJauge = null;
+  function majProgression(pct){
+    if (!segmentsJauge) segmentsJauge = document.querySelectorAll('#jaugeTesselles span');
+    var actives = Math.round(pct / 100 * JAUGE_SEGMENTS);
+    segmentsJauge.forEach(function(s, i){ s.classList.toggle('remplie', i < actives); });
+  }
+  function majEstimationPont(){
+    var total = taille * taille;
+    var cote = Math.round(taille * 2.55);
+    $('estimationPont').textContent = '≈ ' + total + ' tesselles, format ' + cote + '×' + cote + 'cm chez Quadreti (estimation illustrative)';
+  }
+  function terminerRevelation(){
+    if (reveleInterval){ clearInterval(reveleInterval); reveleInterval = null; }
+    if (chrono){ clearInterval(chrono); chrono = null; }
+    majProgression(100);
+    $('victoire').classList.add('actif');
+    $('btnLancer').textContent = 'Terminé';
+    var texteDefi = 'Révélé en ' + secondes + 's !';
+    $('defiTexte').textContent = texteDefi;
+    $('defiSocial').classList.add('actif');
+    var messagePartage = encodeURIComponent(texteDefi + ' Mosaïque Révélée, par Quadreti.');
+    $('partageWhatsapp').href = 'https://wa.me/?text=' + messagePartage;
+    $('partageFacebook').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(location.href);
+  }
+  function suivreProgressionParTemps(){
+    var debut = performance.now();
+    var dureeMs = dureeRevelationSec * 1000;
+    reveleInterval = setInterval(function(){
+      var t = Math.min(1, (performance.now() - debut) / dureeMs);
+      majProgression(t * 100);
+      if (t >= 1) terminerRevelation();
+    }, 100);
+  }
+  function lancerTesselles(){
+    var tesselles = document.querySelectorAll('.tesselle');
+    var total = taille * taille;
+    var dureeMs = dureeRevelationSec * 1000;
+    var tickMs, parTick;
+    var tickIdeal = dureeMs / total;
+    if (tickIdeal >= TICK_MIN_MS){ tickMs = tickIdeal; parTick = 1; }
+    else { tickMs = TICK_MIN_MS; parTick = Math.max(1, Math.ceil(total / (dureeMs / TICK_MIN_MS))); }
+    reveleInterval = setInterval(function(){
+      for (var n = 0; n < parTick && revelees < total; n++){
+        var idx = ordreRevelation[revelees];
+        tesselles[idx].classList.add('revele');
+        revelees++;
+      }
+      majProgression(revelees / total * 100);
+      if (revelees >= total) terminerRevelation();
+    }, tickMs);
+  }
+  function lancerFlou(){
+    var img = $('imgFond');
+    img.classList.add('en-transition');
+    void img.offsetWidth;
+    img.style.filter = 'blur(0px)';
+    suivreProgressionParTemps();
+  }
+  function lancerZoom(){
+    var img = $('imgFond');
+    img.classList.add('en-transition');
+    void img.offsetWidth;
+    img.style.transform = 'scale(1)';
+    suivreProgressionParTemps();
+  }
+  function lancerContours(){
+    var sketch = $('imgSketch');
+    sketch.classList.add('en-transition');
+    void sketch.offsetWidth;
+    sketch.style.opacity = '0';
+    suivreProgressionParTemps();
+  }
+  function lancerPixelise(){
+    var canvas = $('canvasEffet'), ctx = canvas.getContext('2d');
+    var debut = performance.now();
+    var dureeMs = dureeRevelationSec * 1000;
+    reveleInterval = setInterval(function(){
+      var t = Math.min(1, (performance.now() - debut) / dureeMs);
+      dessinerPixelise(ctx, 2 + t * (taille - 2));
+      majProgression(t * 100);
+      if (t >= 1) terminerRevelation();
+    }, 120);
+  }
+  function lancerRevelation(){
+    if (reveleInterval) return;
+    $('btnLancer').disabled = true;
+    $('btnLancer').textContent = 'Révélation en cours…';
+    chrono = setInterval(function(){
+      secondes++;
+      var m = String(Math.floor(secondes / 60)).padStart(2, '0'), s = String(secondes % 60).padStart(2, '0');
+      $('statTemps').textContent = m + ':' + s;
+    }, 1000);
+    if (styleActuel === 'tesselles') lancerTesselles();
+    else if (styleActuel === 'flou') lancerFlou();
+    else if (styleActuel === 'zoom') lancerZoom();
+    else if (styleActuel === 'pixelise') lancerPixelise();
+    else if (styleActuel === 'contours') lancerContours();
+  }
+  function majLabelVitesse(){
+    var descriptif = dureeRevelationSec < 8 ? 'Rapide' : dureeRevelationSec < 18 ? 'Modéré' : 'Lent';
+    $('valeurVitesse').textContent = descriptif + ' · ≈ ' + dureeRevelationSec + 's pour tout révéler';
+    document.documentElement.style.setProperty('--duree-revelation', dureeRevelationSec + 's');
+  }
+
+  document.querySelectorAll('.btn-taille').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.btn-taille').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      taille = parseInt(b.dataset.taille, 10);
+      construire();
+      majEstimationPont();
+    });
+  });
+  $('curseurVitesse').addEventListener('input', function(){
+    dureeRevelationSec = parseInt(this.value, 10);
+    majLabelVitesse();
+  });
+  document.querySelectorAll('.onglet-mode').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.onglet-mode').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      modeActuel = b.dataset.mode;
+      var enBibliotheque = modeActuel === 'bibliotheque';
+      $('cartePhoto').style.display = enBibliotheque ? 'none' : '';
+      $('btnNouvelle').style.display = enBibliotheque ? '' : 'none';
+      var attenteSansPhoto = !enBibliotheque && !photoChargee;
+      $('placeholderPhoto').classList.toggle('actif', attenteSansPhoto);
+      $('plateauFond').style.display = attenteSansPhoto ? 'none' : '';
+      if (attenteSansPhoto) return;
+      genererImage(construire);
+    });
+  });
+  $('champPhoto').addEventListener('change', function(e){
+    var f = e.target.files[0]; if (!f) return;
+    photoChargee = URL.createObjectURL(f);
+    var mini = $('miniaturePhoto');
+    mini.style.backgroundImage = 'url(' + photoChargee + ')';
+    mini.classList.add('actif');
+    $('placeholderPhoto').classList.remove('actif');
+    $('plateauFond').style.display = '';
+    genererImage(construire);
+  });
+  document.querySelectorAll('.btn-style').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.btn-style').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      styleActuel = b.dataset.style;
+      var montreTaille = styleActuel === 'tesselles' || styleActuel === 'pixelise';
+      $('carteTaille').style.display = montreTaille ? '' : 'none';
+      construire();
+    });
+  });
+  $('btnLancer').addEventListener('click', lancerRevelation);
+  $('partageCopier').addEventListener('click', function(){
+    var btn = this;
+    navigator.clipboard.writeText(location.href).then(function(){
+      var texteOrigine = btn.textContent;
+      btn.textContent = 'Copié !';
+      setTimeout(function(){ btn.textContent = texteOrigine; }, 1800);
+    }).catch(function(){});
+  });
+  $('btnNouvelle').addEventListener('click', function(){
+    sceneIndex = (sceneIndex + 1) % SCENES.length;
+    genererImage(construire);
+  });
+
+  construireJauge();
+  initialiserRangDefilante($('rangStyle'), document.querySelector('[data-pour="style"]'), $('flecheStyleGauche'), $('flecheStyleDroite'));
+  initialiserRangDefilante($('rangTaille'), document.querySelector('[data-pour="taille"]'), $('flecheTailleGauche'), $('flecheTailleDroite'));
+  majEstimationPont();
+
+  /* Reglages depuis le panneau (hero, pont) -- cle mosaique_revelee_app. */
+  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=eq.mosaique_revelee_app', {
+    headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+  }).then(function(r){ return r.ok ? r.json() : []; }).then(function(lignes){
+    var g = (lignes && lignes[0] && lignes[0].valeur) || {};
+    if (g.titre) $('heroTitre').textContent = g.titre;
+    if (g.accroche) $('heroAccroche').textContent = g.accroche;
+    if (g.pont_titre) $('pontTitre').textContent = g.pont_titre;
+    if (g.pont_texte) $('pontTexte').textContent = g.pont_texte;
+    if (g.pont_lien) $('pontLien').href = g.pont_lien;
+  }).catch(function(){});
+
+  genererImage(construire);
+  majLabelVitesse();
+})();
+</script>
+</body>
+</html>
