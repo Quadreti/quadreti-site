@@ -336,7 +336,7 @@ var GROUPES = [
     { id:'bulle_contact', label:'Bulle de contact' }
   ]},
   { nom:'Footer & légal', items:[
-    { id:'reseaux', label:'Réseaux sociaux' },
+    { id:'reseaux_liste', label:'Réseaux sociaux', reel:true },
     { id:'copyright', label:'Copyright' }
   ]}
 ];
@@ -368,6 +368,7 @@ function afficherSection(id){
   if (id === 'boutons') { rendreSectionBoutons(); return; }
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
   if (id === 'sections_ordre') { rendreSectionOrdre(); return; }
+  if (id === 'reseaux_liste') { rendreSectionReseaux(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -434,6 +435,72 @@ function rendreSectionTextes(){
     enregistrer('sections_accueil', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les textes'; chargerHistorique('sections_accueil', 'histo-sections_accueil', rendreSectionTextes); });
   };
   chargerHistorique('sections_accueil', 'histo-sections_accueil', rendreSectionTextes);
+}
+
+/* Même liste d'icônes vérifiées que reglages-site.js (ICONES_RESEAUX) — juste les
+   noms ici, les tracés SVG restent uniquement côté site. */
+var RESEAUX_DISPONIBLES = [
+  ['facebook', 'Facebook'], ['snapchat', 'Snapchat'], ['tiktok', 'TikTok'],
+  ['youtube', 'YouTube'], ['whatsapp', 'WhatsApp']
+];
+var RESEAUX_PAR_DEFAUT = [
+  { plateforme:'facebook', lien:'#' },
+  { plateforme:'snapchat', lien:'#' },
+  { plateforme:'tiktok', lien:'#' },
+  { plateforme:'youtube', lien:'#' },
+  { plateforme:'whatsapp', lien:'https://wa.me/' }
+];
+
+function rendreSectionReseaux(){
+  var etat = JSON.parse(JSON.stringify((reglages.reseaux_liste && reglages.reseaux_liste.length) ? reglages.reseaux_liste : []));
+  var nomsReseaux = {}; RESEAUX_DISPONIBLES.forEach(function(d){ nomsReseaux[d[0]] = d[1]; });
+
+  function dessinerListe(){
+    if (!etat.length) {
+      return '<div class="placeholder-section">La grille suit encore les 5 icônes codées dans le site (un lien vide garde quand même son icône affichée). <button class="lien" id="rsReprendre">Reprendre les réseaux actuels comme point de départ</button></div>';
+    }
+    var options = function(sel){ return RESEAUX_DISPONIBLES.map(function(d){ return '<option value="' + d[0] + '"' + (d[0] === sel ? ' selected' : '') + '>' + d[1] + '</option>'; }).join(''); };
+    var lignes = etat.map(function(item, i){
+      return '<div class="bloc-repete"><div class="rang-menu">' +
+        '<div class="champ"><label>Réseau</label><select data-rs-plateforme="' + i + '">' + options(item.plateforme) + '</select></div>' +
+        '<div class="champ"><label>Lien</label><input type="text" data-rs-lien="' + i + '" value="' + escHtml(item.lien) + '"></div>' +
+        '<button class="btn-icone" data-monter="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+        '<button class="btn-icone" data-descendre="' + i + '"' + (i === etat.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
+        '<button class="btn-icone suppr" data-suppr="' + i + '" title="Retirer">✕</button>' +
+      '</div></div>';
+    }).join('');
+    return lignes + '<button class="btn-texte-ajout" id="rsAjouter">+ Ajouter un réseau</button>';
+  }
+
+  function dessiner(){
+    $('editeur').innerHTML =
+      '<p class="fil">Footer &amp; légal <span style="opacity:.5">/</span> <b>Réseaux sociaux</b></p>' +
+      '<h1 class="titre-section">Réseaux sociaux</h1>' +
+      '<p class="aide-section">La liste des réseaux affichés en bas de page, dans l\'ordre. Un réseau retiré ici disparaît de la grille (contrairement à avant, où un lien vide gardait quand même son icône).</p>' +
+      '<div class="carte" id="rsCarte">' + dessinerListe() + '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-reseaux_liste"></div><button class="btn-enregistrer" id="rsEnregistrer">Enregistrer</button></div>';
+    lier();
+    envoyerApercu('reseaux_liste', etat);
+  }
+
+  function lier(){
+    var reprendre = $('rsReprendre');
+    if (reprendre) reprendre.onclick = function(){ etat = JSON.parse(JSON.stringify(RESEAUX_PAR_DEFAUT)); dessiner(); };
+    var ajouter = $('rsAjouter');
+    if (ajouter) ajouter.onclick = function(){ etat.push({ plateforme:'facebook', lien:'' }); dessiner(); };
+    document.querySelectorAll('[data-monter]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.monter; var t = etat[i-1]; etat[i-1] = etat[i]; etat[i] = t; dessiner(); }; });
+    document.querySelectorAll('[data-descendre]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.descendre; var t = etat[i+1]; etat[i+1] = etat[i]; etat[i] = t; dessiner(); }; });
+    document.querySelectorAll('[data-suppr]').forEach(function(b){ b.onclick = function(){ etat.splice(+b.dataset.suppr, 1); dessiner(); }; });
+    document.querySelectorAll('[data-rs-plateforme]').forEach(function(c){ c.onchange = function(){ etat[+c.dataset.rsPlateforme].plateforme = c.value; envoyerApercu('reseaux_liste', etat); }; });
+    document.querySelectorAll('[data-rs-lien]').forEach(function(c){ c.oninput = function(){ etat[+c.dataset.rsLien].lien = c.value; envoyerApercu('reseaux_liste', etat); }; });
+    $('rsEnregistrer').onclick = function(){
+      var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+      enregistrer('reseaux_liste', etat).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('reseaux_liste', 'histo-reseaux_liste', rendreSectionReseaux); });
+    };
+    chargerHistorique('reseaux_liste', 'histo-reseaux_liste', rendreSectionReseaux);
+  }
+
+  dessiner();
 }
 
 function rendreSectionOrdre(){
