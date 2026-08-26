@@ -369,7 +369,8 @@ var GROUPES = [
     { id:'sections_accueil', label:'Textes des sections', reel:true },
     { id:'sections_ordre', label:'Visibilité & ordre', reel:true },
     { id:'styles_sections', label:'Style par section', reel:true },
-    { id:'disposition', label:'Disposition du bouton CTA', reel:true }
+    { id:'disposition', label:'Disposition du bouton CTA', reel:true },
+    { id:'tesselles_fond', label:'Tesselles fuyantes (fond animé)', reel:true }
   ]},
   { nom:'Boutons', items:[
     { id:'boutons', label:'Textes & liens', reel:true }
@@ -420,6 +421,7 @@ function marquerNavActif(id){
 function afficherSection(id){
   marquerNavActif(id);
   if (id === 'bandeau_video') { rendreSectionBandeau(); return; }
+  if (id === 'tesselles_fond') { rendreSectionTessellesFond(); return; }
   if (id === 'sections_accueil') { rendreSectionTextes(); return; }
   if (id === 'boutons') { rendreSectionBoutons(); return; }
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
@@ -2159,6 +2161,65 @@ function rendreSectionBandeau(){
       return enregistrer('images', nouvelles);
     }).catch(function(){ toast('Envoi impossible (réseau).', true); });
   });
+}
+
+var COULEURS_TESSELLES_DEFAUT = [['charbon', '#2B353E'], ['terracotta', '#E2725B'], ['kraft', '#CBBD93']];
+
+function rendreSectionTessellesFond(){
+  var tf = Object.assign({ actif:true, vitesse:1, quantite:70, taille:1, couleurs:[] }, reglages.tesselles_fond || {});
+  var couleursTess = tf.couleurs && tf.couleurs.length === 3 ? tf.couleurs : COULEURS_TESSELLES_DEFAUT.map(function(p){ return p[1]; });
+
+  $('editeur').innerHTML =
+    '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Tesselles fuyantes</b></p>' +
+    '<h1 class="titre-section">Tesselles fuyantes (fond animé)</h1>' +
+    '<p class="aide-section">De petites tesselles flottent en arrière-plan de la page d\'accueil, entre le bandeau et le pied de page, et s\'écartent quand le curseur approche. Pas d\'aperçu en direct — la page d\'accueil est trop lourde pour l\'iframe de prévisualisation, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Animation active</b><span>Visible sur la page d\'accueil</span></div><button class="interrupteur' + (tf.actif ? ' on' : '') + '" id="tfActif"><i></i></button></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Réglages</h2></div>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Vitesse</label><input type="range" id="tfVitesse" min="0.3" max="2.5" step="0.1" value="' + tf.vitesse + '"><div class="valeur-inline" id="tfVitesseVal">' + parseFloat(tf.vitesse).toFixed(1) + '×</div></div>' +
+        '<div class="champ"><label>Quantité</label><input type="range" id="tfQuantite" min="20" max="150" step="1" value="' + tf.quantite + '"><div class="valeur-inline" id="tfQuantiteVal">' + tf.quantite + '</div></div>' +
+        '<div class="champ"><label>Taille</label><input type="range" id="tfTaille" min="0.5" max="2.5" step="0.1" value="' + tf.taille + '"><div class="valeur-inline" id="tfTailleVal">' + parseFloat(tf.taille).toFixed(1) + '×</div></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs</h2></div>' +
+      '<div class="grille-champs">' +
+        COULEURS_TESSELLES_DEFAUT.map(function(paire, i){
+          var nom = paire[0], val = couleursTess[i];
+          return '<div class="champ"><label>' + nom.charAt(0).toUpperCase() + nom.slice(1) + '</label><div class="rang-couleur"><input type="color" id="tfCoul_' + i + '" value="' + val + '"><code id="tfCoul_' + i + 'Hex">' + val + '</code></div></div>';
+        }).join('') +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-tesselles_fond"></div><button class="btn-enregistrer" id="tfEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    var couleurs = [0, 1, 2].map(function(i){ return $('tfCoul_' + i).value; });
+    return {
+      actif: $('tfActif').classList.contains('on'),
+      vitesse: parseFloat($('tfVitesse').value),
+      quantite: parseInt($('tfQuantite').value, 10),
+      taille: parseFloat($('tfTaille').value),
+      couleurs: couleurs
+    };
+  }
+  $('tfActif').onclick = function(){ this.classList.toggle('on'); };
+  $('tfVitesse').oninput = function(){ $('tfVitesseVal').textContent = parseFloat(this.value).toFixed(1) + '×'; };
+  $('tfQuantite').oninput = function(){ $('tfQuantiteVal').textContent = this.value; };
+  $('tfTaille').oninput = function(){ $('tfTailleVal').textContent = parseFloat(this.value).toFixed(1) + '×'; };
+  [0, 1, 2].forEach(function(i){
+    $('tfCoul_' + i).oninput = function(){ $('tfCoul_' + i + 'Hex').textContent = this.value; };
+  });
+  $('tfEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('tesselles_fond', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('tesselles_fond', 'histo-tesselles_fond', rendreSectionTessellesFond); });
+  };
+  chargerHistorique('tesselles_fond', 'histo-tesselles_fond', rendreSectionTessellesFond);
 }
 
 /* ================= Démarrage : reprise de session si déjà connecté ================= */

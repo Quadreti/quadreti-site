@@ -29,7 +29,17 @@
     html{ scroll-behavior:auto; }
     *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
   }
-  body{ font-family:'Quicksand', sans-serif; color:var(--charbon); background:var(--fond); font-size:16px; line-height:1.65; }
+  body{ position:relative; font-family:'Quicksand', sans-serif; color:var(--charbon); background:var(--fond); font-size:16px; line-height:1.65; }
+
+  /* ===== Tesselles fuyantes (fond anime, bandeau -> pied de page) =====
+     z-index NEGATIF (pas 0) : le contenu de la page (sections, footer...) est
+     en flux normal, sans z-index propre -- avec z-index:0 il se peint AVANT
+     les elements positionnes de meme empilement et se retrouverait dessous.
+     En negatif, il descend dans la couche qui se peint avant le flux normal,
+     donc en-dessous. Le bandeau (.qz-header, z-index:60) et les autres
+     elements deja positionnes gardent leur propre empilement, inchange. */
+  .champ-tesselles-fond{ position:absolute; left:0; width:100%; z-index:-1; overflow:hidden; pointer-events:none; }
+  .tesselle-fond{ position:absolute; border-radius:22%; will-change:transform; }
   button{ font-family:inherit; cursor:pointer; }
   :focus-visible{ outline:3px solid var(--charbon); outline-offset:2px; }
   ::-webkit-scrollbar{ width:11px; }
@@ -690,6 +700,7 @@
 <script src="reglages-site.js" defer></script>
 </head>
 <body id="qz-top">
+<div class="champ-tesselles-fond" id="champTessellesFond" aria-hidden="true"></div>
 <!-- ============================================================
   REGISTRE DES LIENS — adresses officielles arretees le 17/08/2026
   SITE     : https://quadreti.fr                 sans www — conforme au fichier CNAME du depot
@@ -1432,6 +1443,164 @@
       }
     }
   }
+})();
+</script>
+
+<script>
+/* ===== Tesselles fuyantes : fond anime entre le bandeau et le pied de page.
+   JS maison tres leger (position + vitesse), pas de librairie Lottie -- une
+   derive ambiante lente s'ecarte du curseur quand il approche, avec rebond
+   sur les bords. Reglable en direct depuis le panneau (vitesse, quantite,
+   taille, 3 couleurs) via window.__reglerTessellesFond, appele par
+   reglages-site.js. Respecte prefers-reduced-motion : aucune animation dans
+   ce cas, juste un semis statique. ===== */
+(function(){
+  'use strict';
+  var reduireMouvement = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var champ = document.getElementById('champTessellesFond');
+  var entete = document.querySelector('.qz-header');
+  var piedDePage = document.querySelector('footer.qz-footer');
+  if (!champ || !entete || !piedDePage) return;
+
+  var COULEURS = [
+    { hex:'#2B353E', poids:5 },
+    { hex:'#E2725B', poids:2 },
+    { hex:'#CBBD93', poids:3 }
+  ];
+  var PALETTE_PONDEREE = [];
+  function recalculerPalette(){
+    PALETTE_PONDEREE = [];
+    COULEURS.forEach(function(c){ for (var i = 0; i < c.poids; i++) PALETTE_PONDEREE.push(c.hex); });
+  }
+  recalculerPalette();
+
+  var NB_TESSELLES = 70;
+  var TAILLE_MULTIPLICATEUR = 1;
+  var RAYON_FUITE = 130;
+  var VITESSE_AMBIANTE_MAX = 1.1;
+  var VITESSE_FUITE_MAX = 4.5;
+  var FROTTEMENT = 0.985;
+  var multiplicateurVitesse = 1;
+  var actif = true;
+
+  var tesselles = [];
+  var largeur = 0, hauteur = 0, sommetDocument = 0;
+  var sourisX = -9999, sourisY = -9999;
+  var sourisActive = false;
+  var animationId = null;
+
+  function redimensionner(){
+    sommetDocument = entete.getBoundingClientRect().bottom + window.scrollY;
+    var basDocument = piedDePage.getBoundingClientRect().top + window.scrollY;
+    largeur = champ.parentElement.clientWidth;
+    hauteur = Math.max(0, basDocument - sommetDocument);
+    champ.style.top = sommetDocument + 'px';
+    champ.style.height = hauteur + 'px';
+  }
+
+  function creerTesselles(){
+    champ.innerHTML = '';
+    tesselles = [];
+    if (!actif) return;
+    for (var i = 0; i < NB_TESSELLES; i++){
+      var taille = (12 + Math.random() * 22) * TAILLE_MULTIPLICATEUR;
+      var el = document.createElement('div');
+      el.className = 'tesselle-fond';
+      el.style.width = taille + 'px';
+      el.style.height = taille + 'px';
+      el.style.background = PALETTE_PONDEREE[Math.floor(Math.random() * PALETTE_PONDEREE.length)];
+      el.style.opacity = (0.18 + Math.random() * 0.3).toFixed(2);
+      champ.appendChild(el);
+      tesselles.push({
+        el: el, taille: taille,
+        x: Math.random() * largeur, y: Math.random() * hauteur,
+        vx: (Math.random() - 0.5) * VITESSE_AMBIANTE_MAX,
+        vy: (Math.random() - 0.5) * VITESSE_AMBIANTE_MAX
+      });
+    }
+  }
+
+  function pas(){
+    tesselles.forEach(function(t){
+      t.vx += (Math.random() - 0.5) * 0.09 * multiplicateurVitesse;
+      t.vy += (Math.random() - 0.5) * 0.09 * multiplicateurVitesse;
+
+      if (sourisActive){
+        var cx = t.x + t.taille / 2, cy = t.y + t.taille / 2;
+        var dx = cx - sourisX, dy = cy - sourisY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < RAYON_FUITE && dist > 0.001){
+          var force = (1 - dist / RAYON_FUITE);
+          t.vx += (dx / dist) * force * 0.9 * multiplicateurVitesse;
+          t.vy += (dy / dist) * force * 0.9 * multiplicateurVitesse;
+        }
+      }
+
+      t.vx *= FROTTEMENT;
+      t.vy *= FROTTEMENT;
+      var vitesse = Math.sqrt(t.vx * t.vx + t.vy * t.vy);
+      var plafond = (sourisActive ? VITESSE_FUITE_MAX : VITESSE_AMBIANTE_MAX * 2.2) * multiplicateurVitesse;
+      if (vitesse > plafond){ t.vx = (t.vx / vitesse) * plafond; t.vy = (t.vy / vitesse) * plafond; }
+
+      t.x += t.vx; t.y += t.vy;
+
+      if (t.x < -t.taille){ t.x = -t.taille; t.vx *= -1; }
+      if (t.x > largeur){ t.x = largeur; t.vx *= -1; }
+      if (t.y < -t.taille){ t.y = -t.taille; t.vy *= -1; }
+      if (t.y > hauteur){ t.y = hauteur; t.vy *= -1; }
+
+      t.el.style.transform = 'translate(' + t.x.toFixed(1) + 'px,' + t.y.toFixed(1) + 'px)';
+    });
+  }
+
+  function boucle(){
+    pas();
+    animationId = requestAnimationFrame(boucle);
+  }
+
+  function positionSouris(e){
+    var gaucheDocument = champ.getBoundingClientRect().left + window.scrollX;
+    sourisX = e.pageX - gaucheDocument;
+    sourisY = e.pageY - sommetDocument;
+    sourisActive = true;
+  }
+  function sourisPartie(){ sourisActive = false; }
+
+  /* Recalcule aussi apres chargement complet (images, polices) et une fois
+     de plus a retardement -- au moment ou ce script tourne, une image sans
+     dimensions codees en dur peut ne pas encore avoir decale le pied de
+     page a sa position finale, ce qui fausserait la hauteur du champ. */
+  window.addEventListener('resize', redimensionner);
+  window.addEventListener('load', redimensionner);
+  setTimeout(redimensionner, 600);
+  redimensionner();
+  creerTesselles();
+
+  if (!reduireMouvement){
+    window.addEventListener('pointermove', positionSouris, { passive: true });
+    window.addEventListener('pointerleave', sourisPartie);
+    boucle();
+  }
+
+  /* Reglages depuis le panneau (vitesse, quantite, taille, couleurs, actif).
+     Applique par reglages-site.js -> appliquerTessellesFond -> ici. */
+  window.__reglerTessellesFond = function(cfg){
+    cfg = cfg || {};
+    var etaitActif = actif;
+    if (typeof cfg.actif === 'boolean') actif = cfg.actif;
+    if (typeof cfg.vitesse === 'number') multiplicateurVitesse = cfg.vitesse;
+    if (typeof cfg.quantite === 'number') NB_TESSELLES = cfg.quantite;
+    if (typeof cfg.taille === 'number') TAILLE_MULTIPLICATEUR = cfg.taille;
+    if (cfg.couleurs && cfg.couleurs.length === 3){
+      COULEURS.forEach(function(c, i){ c.hex = cfg.couleurs[i]; });
+      recalculerPalette();
+    }
+    creerTesselles();
+    if (!reduireMouvement){
+      if (actif && !etaitActif && !animationId) boucle();
+      if (!actif && animationId){ cancelAnimationFrame(animationId); animationId = null; }
+    }
+  };
 })();
 </script>
 

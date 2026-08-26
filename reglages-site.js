@@ -360,6 +360,13 @@
     appliquerPositionTicker(cfg.position_ticker);
   }
 
+  /* Fond anime "tesselles fuyantes" (accueil uniquement) -- la logique vit dans
+     le script inline d'index.html (window.__reglerTessellesFond), absente
+     sur les autres pages : appel sans effet ailleurs. */
+  function appliquerTessellesFond(cfg) {
+    if (window.__reglerTessellesFond) window.__reglerTessellesFond(cfg || {});
+  }
+
   function appliquerPositionTicker(position) {
     var ticker = document.querySelector('.ticker');
     if (!ticker || !position) return; /* pages sans bandeau defilant, ou reglage absent = position deja correcte dans le HTML */
@@ -767,6 +774,7 @@
     appliquerPageContact(g.page_contact);
     appliquerPageColoriages(g.page_coloriages);
     appliquerBandeauVideo(g.bandeau_video);
+    appliquerTessellesFond(g.tesselles_fond);
     appliquerImages(g.images);
     appliquerBoutons(g.boutons);
     appliquerPhotos(g.photos_diaporama);
