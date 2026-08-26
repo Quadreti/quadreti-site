@@ -144,6 +144,11 @@
   .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:end; margin-bottom:8px; }
   .btn-texte-ajout{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
 
+  .grille-zones{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:280px; }
+  .case-zone{ display:flex; align-items:center; justify-content:center; gap:5px; margin:0; border:2px solid var(--bord); border-radius:9px; padding:9px 4px; cursor:pointer; font-size:11.5px; color:var(--texte); text-align:center; white-space:nowrap; }
+  .case-zone input{ margin:0; accent-color:var(--terracotta); }
+  .case-zone:has(input:checked){ border-color:var(--terracotta); background:var(--teinte-actif); }
+
   .colonne-apercu{ border-left:1px solid var(--bord); display:flex; flex-direction:column; background:var(--surface); }
   .apercu-entete{ display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--bord); }
   .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--bord); flex-shrink:0; }
@@ -356,10 +361,12 @@ var GROUPES = [
   { nom:'Bandeau & menu', items:[
     { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
     { id:'menu_liens', label:'Liens du menu', reel:true },
-    { id:'menu_nav', label:'Menu (couleurs)' }
+    { id:'menu_nav', label:'Menu (couleurs & disposition)', reel:true },
+    { id:'bandeau_defilant', label:'Bandeau défilant', reel:true }
   ]},
   { nom:'Page d\'accueil', items:[
-    { id:'hero_baseline', label:'Baseline' },
+    { id:'hero_baseline', label:'Baseline', reel:true },
+    { id:'hero_changez', label:'Ligne « Changez à volonté »', reel:true },
     { id:'sections_accueil', label:'Textes des sections', reel:true },
     { id:'sections_ordre', label:'Visibilité & ordre', reel:true },
     { id:'styles_sections', label:'Style par section', reel:true },
@@ -379,7 +386,8 @@ var GROUPES = [
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
-    { id:'reseaux_liste', label:'Réseaux sociaux', reel:true },
+    { id:'reseaux_liste', label:'Réseaux sociaux (icônes du footer)', reel:true },
+    { id:'reseaux', label:'Réseaux : liens (bulle de contact)', reel:true },
     { id:'copyright', label:'Copyright', reel:true }
   ]}
 ];
@@ -426,6 +434,11 @@ function afficherSection(id){
   if (id === 'page_contact') { rendreSectionPageContact(); return; }
   if (id === 'page_coloriages') { rendreSectionPageColoriages(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
+  if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
+  if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
+  if (id === 'reseaux') { rendreSectionReseauxLiens(); return; }
+  if (id === 'bandeau_defilant') { rendreSectionBandeauDefilant(); return; }
+  if (id === 'menu_nav') { rendreSectionMenuNav(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -1216,6 +1229,214 @@ function rendreSectionStyles(){
   }
 
   dessiner();
+}
+
+var ZONES_POSITION = [
+  ['haut-gauche','Haut G.'], ['haut-centre','Haut'], ['haut-droite','Haut D.'],
+  ['centre-gauche','Gauche'], ['centre','Centre'], ['centre-droite','Droite'],
+  ['bas-gauche','Bas G.'], ['bas-centre','Bas'], ['bas-droite','Bas D.']
+];
+/* hero_baseline et hero_changez partagent la même forme (police/taille/couleur/zone/
+   décalage) — hero_baseline a en plus 3 lignes de texte (paramètre prefixe='hb'). */
+function rendreSectionZone(cle, prefixe, titre, groupe, aide, tailleRange, decalageRange, zoneDefaut){
+  var d = reglages[cle] || {};
+  var zoneActuelle = d.zone || zoneDefaut;
+  var avecLignes = cle === 'hero_baseline';
+
+  var lignesHtml = avecLignes ?
+    '<div class="champ" style="margin-bottom:10px"><label>Ligne 1</label><input type="text" id="' + prefixe + 'Ligne1" placeholder="Composez." value="' + escHtml(d.ligne1) + '"></div>' +
+    '<div class="champ" style="margin-bottom:10px"><label>Ligne 2 (facultatif)</label><input type="text" id="' + prefixe + 'Ligne2" placeholder="Imprimez." value="' + escHtml(d.ligne2) + '"></div>' +
+    '<div class="champ" style="margin-bottom:10px"><label>Ligne 3 (facultatif)</label><input type="text" id="' + prefixe + 'Ligne3" placeholder="Clipsez." value="' + escHtml(d.ligne3) + '"></div>'
+    : '';
+
+  $('editeur').innerHTML =
+    '<p class="fil">' + groupe + ' <span style="opacity:.5">/</span> <b>' + titre + '</b></p>' +
+    '<h1 class="titre-section">' + titre + '</h1>' +
+    '<p class="aide-section">' + aide + '</p>' +
+    '<div class="carte">' +
+      lignesHtml +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Taille du texte (px)</label><input type="number" id="' + prefixe + 'Taille" min="' + tailleRange.min + '" max="' + tailleRange.max + '" value="' + (d.taille || tailleRange.defaut) + '"></div>' +
+        '<div class="champ"><label>Couleur du texte</label><div class="rang-couleur"><input type="color" id="' + prefixe + 'Couleur" value="' + (d.couleur || '#f5f5f5') + '"><code id="' + prefixe + 'CouleurHex">' + (d.couleur || '#f5f5f5') + '</code></div></div>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px"><label>Police</label>' +
+        '<label class="choix-radio"><input type="radio" name="' + prefixe + 'Police" value="titres"' + (d.police !== 'texte' ? ' checked' : '') + '> Titres (Quicksand)</label>' +
+        '<label class="choix-radio"><input type="radio" name="' + prefixe + 'Police" value="texte"' + (d.police === 'texte' ? ' checked' : '') + '> Texte courant (Karla)</label>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px"><label>Position dans le cadre</label>' +
+        '<div class="grille-zones">' + ZONES_POSITION.map(function(z){ return '<label class="case-zone"><input type="radio" name="' + prefixe + 'Zone" value="' + z[0] + '"' + (z[0] === zoneActuelle ? ' checked' : '') + '>' + z[1] + '</label>'; }).join('') + '</div>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px;max-width:280px"><label>Décalage depuis le bord (px, 0 = collé au bord)</label><input type="number" id="' + prefixe + 'Decalage" min="' + decalageRange.min + '" max="' + decalageRange.max + '" value="' + (typeof d.decalage === 'number' ? d.decalage : decalageRange.defaut) + '"></div>' +
+      (cle === 'hero_changez' ? '<p class="aide-section" style="margin-top:6px">Le bouton « Composer mon mur » est ancré ~80px du bas — un décalage inférieur à ~100px les fait se chevaucher.</p>' : '') +
+      '<div class="pied-carte"><div class="historique" id="histo-' + cle + '"></div><button class="btn-enregistrer" id="' + prefixe + 'Enregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    var out = {
+      couleur: $(prefixe + 'Couleur').value,
+      police: document.querySelector('input[name=' + prefixe + 'Police]:checked').value,
+      zone: document.querySelector('input[name=' + prefixe + 'Zone]:checked').value,
+      taille: parseInt($(prefixe + 'Taille').value, 10) || tailleRange.defaut,
+      decalage: parseInt($(prefixe + 'Decalage').value, 10) || 0
+    };
+    if (avecLignes) { out.ligne1 = $(prefixe + 'Ligne1').value.trim(); out.ligne2 = $(prefixe + 'Ligne2').value.trim(); out.ligne3 = $(prefixe + 'Ligne3').value.trim(); }
+    return out;
+  }
+  function previsualiser(){ envoyerApercu(cle, draft()); }
+
+  if (avecLignes) [prefixe + 'Ligne1', prefixe + 'Ligne2', prefixe + 'Ligne3'].forEach(function(id){ $(id).oninput = previsualiser; });
+  $(prefixe + 'Taille').oninput = previsualiser;
+  $(prefixe + 'Couleur').oninput = function(){ $(prefixe + 'CouleurHex').textContent = this.value; previsualiser(); };
+  $(prefixe + 'Decalage').oninput = previsualiser;
+  document.querySelectorAll('input[name=' + prefixe + 'Police]').forEach(function(r){ r.onchange = previsualiser; });
+  document.querySelectorAll('input[name=' + prefixe + 'Zone]').forEach(function(r){ r.onchange = previsualiser; });
+  $(prefixe + 'Enregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer(cle, draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique(cle, 'histo-' + cle, function(){ afficherSection(cle); }); });
+  };
+  chargerHistorique(cle, 'histo-' + cle, function(){ afficherSection(cle); });
+}
+
+function rendreSectionReseauxLiens(){
+  var RESEAUX_NOMS = [['facebook','Facebook'],['snapchat','Snapchat'],['tiktok','TikTok'],['youtube','YouTube'],['whatsapp','WhatsApp']];
+  var r = reglages.reseaux || {};
+  $('editeur').innerHTML =
+    '<p class="fil">Footer &amp; légal <span style="opacity:.5">/</span> <b>Réseaux : liens</b></p>' +
+    '<h1 class="titre-section">Réseaux : liens (bulle de contact)</h1>' +
+    '<p class="aide-section">Ces liens alimentent la bulle de contact flottante (WhatsApp/Facebook) et servent de repli aux icônes du footer si la liste de réseaux ci-dessus est vide. Laissez vide pour garder le bouton inactif.</p>' +
+    '<div class="carte">' +
+      RESEAUX_NOMS.map(function(n){ return '<div class="champ" style="margin-bottom:10px"><label>' + n[1] + '</label><input type="text" data-reseau="' + n[0] + '" value="' + escHtml(r[n[0]]) + '"></div>'; }).join('') +
+      '<div class="pied-carte"><div class="historique" id="histo-reseaux"></div><button class="btn-enregistrer" id="rlEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ var o = {}; document.querySelectorAll('[data-reseau]').forEach(function(c){ o[c.dataset.reseau] = c.value.trim(); }); return o; }
+  document.querySelectorAll('[data-reseau]').forEach(function(c){ c.oninput = function(){ envoyerApercu('reseaux', draft()); }; });
+  $('rlEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('reseaux', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('reseaux', 'histo-reseaux', rendreSectionReseauxLiens); });
+  };
+  chargerHistorique('reseaux', 'histo-reseaux', rendreSectionReseauxLiens);
+}
+
+function rendreSectionBandeauDefilant(){
+  var b = reglages.bandeau || {};
+  $('editeur').innerHTML =
+    '<p class="fil">Bandeau &amp; menu <span style="opacity:.5">/</span> <b>Bandeau défilant</b></p>' +
+    '<h1 class="titre-section">Bandeau défilant</h1>' +
+    '<p class="aide-section">Les messages en majuscules qui défilent au-dessus du menu, sur toutes les pages.</p>' +
+    '<div class="carte">' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Couleur de fond</label><div class="rang-couleur"><input type="color" id="bdFond" value="' + (b.fond || '#8b6f85') + '"><code id="bdFondHex">' + (b.fond || '(thème)') + '</code></div></div>' +
+        '<div class="champ"><label>Couleur du texte</label><div class="rang-couleur"><input type="color" id="bdTexte" value="' + (b.texte || '#fcfcfc') + '"><code id="bdTexteHex">' + (b.texte || '(blanc, origine)') + '</code></div></div>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px;max-width:260px"><label>Vitesse de défilement</label><select id="bdVitesse">' +
+        '<option value="34"' + (b.vitesse === '34' ? ' selected' : '') + '>Lente</option>' +
+        '<option value=""' + (!b.vitesse ? ' selected' : '') + '>Normale (origine)</option>' +
+        '<option value="14"' + (b.vitesse === '14' ? ' selected' : '') + '>Rapide</option>' +
+      '</select></div>' +
+      '<div class="champ" style="margin-top:14px"><label>Messages — un par ligne (vide = messages d\'origine)</label><textarea id="bdMessages" placeholder="CONCEPTION ET FABRICATION FRANÇAISES">' + ((b.messages || []).join('\n')) + '</textarea></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-bandeau"></div><button class="btn-enregistrer" id="bdEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){
+    var out = { fond: $('bdFond').value, texte: $('bdTexte').value };
+    if ($('bdVitesse').value) out.vitesse = $('bdVitesse').value;
+    var msgs = $('bdMessages').value.split('\n').map(function(m){ return m.trim(); }).filter(Boolean);
+    if (msgs.length) out.messages = msgs;
+    return out;
+  }
+  function previsualiser(){ envoyerApercu('bandeau', draft()); }
+  $('bdFond').oninput = function(){ $('bdFondHex').textContent = this.value; previsualiser(); };
+  $('bdTexte').oninput = function(){ $('bdTexteHex').textContent = this.value; previsualiser(); };
+  $('bdVitesse').onchange = previsualiser;
+  $('bdMessages').oninput = previsualiser;
+  $('bdEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('bandeau', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('bandeau', 'histo-bandeau', rendreSectionBandeauDefilant); });
+  };
+  chargerHistorique('bandeau', 'histo-bandeau', rendreSectionBandeauDefilant);
+}
+
+function rendreSectionMenuNav(){
+  var mn = reglages.menu_nav || {};
+  $('editeur').innerHTML =
+    '<p class="fil">Bandeau &amp; menu <span style="opacity:.5">/</span> <b>Menu (couleurs &amp; disposition)</b></p>' +
+    '<h1 class="titre-section">Menu de navigation</h1>' +
+    '<p class="aide-section">Le bouton sandwich (en haut) et le menu déroulant qu\'il ouvre. Laissez vide pour garder les couleurs actuelles.</p>' +
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs</h2></div>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Bouton menu</label><div class="rang-couleur"><input type="color" id="mnBouton" value="' + (mn.bouton || '#c95a44') + '"><code id="mnBoutonHex">' + (mn.bouton || '') + '</code></div></div>' +
+        '<div class="champ"><label>Traits du bouton</label><div class="rang-couleur"><input type="color" id="mnTraits" value="' + (mn.traits || '#ffffff') + '"><code id="mnTraitsHex">' + (mn.traits || '') + '</code></div></div>' +
+        '<div class="champ"><label>Fond du menu déroulant</label><div class="rang-couleur"><input type="color" id="mnFond" value="' + (mn.fond || '#917fa4') + '"><code id="mnFondHex">' + (mn.fond || '') + '</code></div></div>' +
+        '<div class="champ"><label>Texte des liens</label><div class="rang-couleur"><input type="color" id="mnTexte" value="' + (mn.texte || '#c9c3b2') + '"><code id="mnTexteHex">' + (mn.texte || '') + '</code></div></div>' +
+        '<div class="champ"><label>Bouton « Comment ça marche »</label><div class="rang-couleur"><input type="color" id="mnSousBouton" value="' + (mn.sousBouton || '#c9c3b2') + '"><code id="mnSousBoutonHex">' + (mn.sousBouton || '') + '</code></div></div>' +
+      '</div>' +
+      '<div class="grille-champs" style="margin-top:14px">' +
+        '<div class="champ"><label>Transparence du fond (0-100)</label><input type="number" id="mnTransparence" min="0" max="100" step="5" value="' + (mn.transparence || 0) + '"></div>' +
+        '<div class="champ"><label>Voile derrière le menu (0-100)</label><input type="number" id="mnVoile" min="0" max="100" step="5" value="' + (mn.voile || 40) + '"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Disposition</h2></div>' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Le menu flotte par-dessus la page</b><span>Au lieu de pousser le contenu vers le bas</span></div><button class="interrupteur' + (mn.overlay ? ' on' : '') + '" id="mnOverlay"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Position du bouton menu dans le bandeau</label>' +
+        ['gauche','centre','droite'].map(function(v){ return '<label class="choix-radio"><input type="radio" name="mnPosition" value="' + v + '"' + ((mn.position || 'droite') === v ? ' checked' : '') + '> ' + v.charAt(0).toUpperCase() + v.slice(1) + '</label>'; }).join('') +
+      '</div>' +
+      '<div class="champ" style="margin-top:10px"><label>Disposition du menu déroulant</label>' +
+        '<label class="choix-radio"><input type="radio" name="mnDisposition" value="verticale"' + ((mn.disposition || 'verticale') === 'verticale' ? ' checked' : '') + '> Verticale (une entrée par ligne)</label>' +
+        '<label class="choix-radio"><input type="radio" name="mnDisposition" value="horizontale"' + (mn.disposition === 'horizontale' ? ' checked' : '') + '> Horizontale</label>' +
+      '</div>' +
+      '<div class="grille-champs" style="margin-top:10px">' +
+        '<div class="champ"><label>Espacement entre entrées (px)</label><input type="number" id="mnEspacement" min="0" max="80" step="2" value="' + (mn.espacement || 20) + '"></div>' +
+        '<div class="champ"><label>Alignement horizontal</label><select id="mnJustifie">' +
+          ['gauche','centre','droite','espace'].map(function(v){ return '<option value="' + v + '"' + ((mn.justifie || 'centre') === v ? ' selected' : '') + '>' + (v === 'espace' ? 'Réparti sur toute la largeur' : v.charAt(0).toUpperCase() + v.slice(1)) + '</option>'; }).join('') +
+        '</select></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Sous-menu « Comment ça marche »</h2></div>' +
+      '<div class="champ"><label>Disposition</label>' +
+        '<label class="choix-radio"><input type="radio" name="mnSsDisposition" value="verticale"' + ((mn.sousDisposition || 'verticale') === 'verticale' ? ' checked' : '') + '> Verticale</label>' +
+        '<label class="choix-radio"><input type="radio" name="mnSsDisposition" value="horizontale"' + (mn.sousDisposition === 'horizontale' ? ' checked' : '') + '> Horizontale</label>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:10px"><label>Alignement du contenu</label>' +
+        ['gauche','centre','droite'].map(function(v){ return '<label class="choix-radio"><input type="radio" name="mnSsAlignement" value="' + v + '"' + ((mn.sousAlignement || 'centre') === v ? ' checked' : '') + '> ' + v.charAt(0).toUpperCase() + v.slice(1) + '</label>'; }).join('') +
+      '</div>' +
+      '<div class="grille-champs" style="margin-top:10px">' +
+        '<div class="champ"><label>Texte des liens</label><div class="rang-couleur"><input type="color" id="mnSsTexte" value="' + (mn.sousTexte || '#9aa2a9') + '"><code id="mnSsTexteHex">' + (mn.sousTexte || '') + '</code></div></div>' +
+        '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="mnSsFond" value="' + (mn.sousFond || '#37434e') + '"><code id="mnSsFondHex">' + (mn.sousFond || '') + '</code></div></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-menu_nav"></div><button class="btn-enregistrer" id="mnEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      bouton: $('mnBouton').value, traits: $('mnTraits').value, fond: $('mnFond').value,
+      voile: parseInt($('mnVoile').value, 10) || 0,
+      texte: $('mnTexte').value, sousBouton: $('mnSousBouton').value, overlay: $('mnOverlay').classList.contains('on'),
+      position: document.querySelector('input[name=mnPosition]:checked').value,
+      disposition: document.querySelector('input[name=mnDisposition]:checked').value,
+      espacement: parseInt($('mnEspacement').value, 10) || 0,
+      justifie: document.querySelector('input[name=mnJustifie]:checked') ? document.querySelector('input[name=mnJustifie]:checked').value : $('mnJustifie').value,
+      transparence: parseInt($('mnTransparence').value, 10) || 0,
+      sousDisposition: document.querySelector('input[name=mnSsDisposition]:checked').value,
+      sousAlignement: document.querySelector('input[name=mnSsAlignement]:checked').value,
+      sousTexte: $('mnSsTexte').value, sousFond: $('mnSsFond').value
+    };
+  }
+  function previsualiser(){ envoyerApercu('menu_nav', draft()); }
+
+  ['mnBouton','mnTraits','mnFond','mnTexte','mnSousBouton','mnSsTexte','mnSsFond'].forEach(function(id){
+    $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
+  });
+  ['mnTransparence','mnVoile','mnEspacement'].forEach(function(id){ $(id).oninput = previsualiser; });
+  $('mnJustifie').onchange = previsualiser;
+  $('mnOverlay').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  document.querySelectorAll('input[name=mnPosition], input[name=mnDisposition], input[name=mnSsDisposition], input[name=mnSsAlignement]').forEach(function(r){ r.onchange = previsualiser; });
+  $('mnEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('menu_nav', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('menu_nav', 'histo-menu_nav', rendreSectionMenuNav); });
+  };
+  chargerHistorique('menu_nav', 'histo-menu_nav', rendreSectionMenuNav);
 }
 
 function rendreSectionOrdre(){
