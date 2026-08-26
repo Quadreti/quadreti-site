@@ -321,7 +321,8 @@ var GROUPES = [
   { nom:'Identité visuelle', items:[
     { id:'palette', label:'Palette maîtresse', reel:true },
     { id:'polices', label:'Polices', reel:true },
-    { id:'logo', label:'Logo', reel:true }
+    { id:'logo', label:'Logo', reel:true },
+    { id:'baselines', label:'Baselines', reel:true }
   ]},
   { nom:'Bandeau & menu', items:[
     { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
@@ -332,18 +333,19 @@ var GROUPES = [
     { id:'hero_baseline', label:'Baseline' },
     { id:'sections_accueil', label:'Textes des sections', reel:true },
     { id:'sections_ordre', label:'Visibilité & ordre', reel:true },
-    { id:'reassurance', label:'Réassurance' }
+    { id:'disposition', label:'Disposition du bouton CTA', reel:true }
   ]},
   { nom:'Boutons', items:[
     { id:'boutons', label:'Textes & liens', reel:true }
   ]},
   { nom:'Widgets', items:[
+    { id:'reassurance', label:'Réassurance', reel:true },
     { id:'popup', label:'Popup de remise' },
-    { id:'bulle_contact', label:'Bulle de contact' }
+    { id:'bulle_contact', label:'Bulle de contact', reel:true }
   ]},
   { nom:'Footer & légal', items:[
     { id:'reseaux_liste', label:'Réseaux sociaux', reel:true },
-    { id:'copyright', label:'Copyright' }
+    { id:'copyright', label:'Copyright', reel:true }
   ]}
 ];
 function construireSommaire(){
@@ -378,6 +380,11 @@ function afficherSection(id){
   if (id === 'palette') { rendreSectionPalette(); return; }
   if (id === 'polices') { rendreSectionPolices(); return; }
   if (id === 'logo') { rendreSectionLogo(); return; }
+  if (id === 'baselines') { rendreSectionBaselines(); return; }
+  if (id === 'disposition') { rendreSectionDisposition(); return; }
+  if (id === 'reassurance') { rendreSectionReassurance(); return; }
+  if (id === 'bulle_contact') { rendreSectionBulleContact(); return; }
+  if (id === 'copyright') { rendreSectionCopyright(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -666,6 +673,127 @@ function rendreSectionLogo(){
     enregistrer('logo_perso', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('logo_perso', 'histo-logo_perso', rendreSectionLogo); });
   };
   chargerHistorique('logo_perso', 'histo-logo_perso', rendreSectionLogo);
+}
+
+function rendreSectionBaselines(){
+  var b = Object.assign({ produit:'', categorie:'' }, reglages.baselines || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Baselines</b></p>' +
+    '<h1 class="titre-section">Baselines</h1>' +
+    '<div class="carte">' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Baseline produit (footer)</label><input type="text" id="bProduit" value="' + escHtml(b.produit) + '"></div>' +
+        '<div class="champ"><label>Baseline catégorie (sous le logo)</label><input type="text" id="bCategorie" value="' + escHtml(b.categorie) + '"></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-baselines"></div><button class="btn-enregistrer" id="bEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ return { produit: $('bProduit').value.trim(), categorie: $('bCategorie').value.trim() }; }
+  ['bProduit','bCategorie'].forEach(function(id){ $(id).oninput = function(){ envoyerApercu('baselines', draft()); }; });
+  $('bEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('baselines', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('baselines', 'histo-baselines', rendreSectionBaselines); });
+  };
+  chargerHistorique('baselines', 'histo-baselines', rendreSectionBaselines);
+}
+
+function rendreSectionCopyright(){
+  var c = Object.assign({ texte:'' }, reglages.copyright || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Footer &amp; légal <span style="opacity:.5">/</span> <b>Copyright</b></p>' +
+    '<h1 class="titre-section">Copyright</h1>' +
+    '<div class="carte">' +
+      '<div class="champ"><label>Texte du pied de page</label><input type="text" id="copyTexte" value="' + escHtml(c.texte) + '"></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-copyright"></div><button class="btn-enregistrer" id="copyEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ return { texte: $('copyTexte').value.trim() }; }
+  $('copyTexte').oninput = function(){ envoyerApercu('copyright', draft()); };
+  $('copyEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('copyright', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('copyright', 'histo-copyright', rendreSectionCopyright); });
+  };
+  chargerHistorique('copyright', 'histo-copyright', rendreSectionCopyright);
+}
+
+function rendreSectionDisposition(){
+  var d = Object.assign({ heroCta:'centre' }, reglages.disposition || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Disposition du bouton CTA</b></p>' +
+    '<h1 class="titre-section">Disposition du bouton CTA</h1>' +
+    '<p class="aide-section">Position du bouton « Composer mon mur », en bas de la photo/vidéo d\'accueil.</p>' +
+    '<div class="carte">' +
+      '<div class="champ" style="max-width:260px"><label>Position</label><select id="dispHeroCta">' +
+        '<option value="gauche"' + (d.heroCta === 'gauche' ? ' selected' : '') + '>Gauche</option>' +
+        '<option value="centre"' + (d.heroCta !== 'gauche' && d.heroCta !== 'droite' ? ' selected' : '') + '>Centre (origine)</option>' +
+        '<option value="droite"' + (d.heroCta === 'droite' ? ' selected' : '') + '>Droite</option>' +
+      '</select></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-disposition"></div><button class="btn-enregistrer" id="dEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ return { heroCta: $('dispHeroCta').value }; }
+  $('dispHeroCta').onchange = function(){ envoyerApercu('disposition', draft()); };
+  $('dEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('disposition', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('disposition', 'histo-disposition', rendreSectionDisposition); });
+  };
+  chargerHistorique('disposition', 'histo-disposition', rendreSectionDisposition);
+}
+
+function rendreSectionBulleContact(){
+  var b = Object.assign({ choix:'aucun', couleur:'#25d366' }, reglages.bulle_contact || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Widgets <span style="opacity:.5">/</span> <b>Bulle de contact</b></p>' +
+    '<h1 class="titre-section">Bulle de contact flottante</h1>' +
+    '<p class="aide-section">Une seule à la fois. Utilise le lien déjà renseigné dans Réseaux sociaux.</p>' +
+    '<div class="carte">' +
+      '<label class="choix-radio"><input type="radio" name="bcChoix" value="aucun"' + (b.choix === 'aucun' ? ' checked' : '') + '> Aucune</label>' +
+      '<label class="choix-radio"><input type="radio" name="bcChoix" value="whatsapp"' + (b.choix === 'whatsapp' ? ' checked' : '') + '> WhatsApp</label>' +
+      '<label class="choix-radio"><input type="radio" name="bcChoix" value="facebook"' + (b.choix === 'facebook' ? ' checked' : '') + '> Facebook</label>' +
+      '<div class="champ" style="margin-top:14px;max-width:220px"><label>Couleur</label><div class="rang-couleur"><input type="color" id="bcCouleur" value="' + b.couleur + '"><code id="bcCouleurHex">' + b.couleur + '</code></div></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-bulle_contact"></div><button class="btn-enregistrer" id="bcEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){ return { choix: document.querySelector('input[name=bcChoix]:checked').value, couleur: $('bcCouleur').value }; }
+  document.querySelectorAll('input[name=bcChoix]').forEach(function(r){ r.onchange = function(){ envoyerApercu('bulle_contact', draft()); }; });
+  $('bcCouleur').oninput = function(){ $('bcCouleurHex').textContent = this.value; envoyerApercu('bulle_contact', draft()); };
+  $('bcEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('bulle_contact', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('bulle_contact', 'histo-bulle_contact', rendreSectionBulleContact); });
+  };
+  chargerHistorique('bulle_contact', 'histo-bulle_contact', rendreSectionBulleContact);
+}
+
+function rendreSectionReassurance(){
+  var r = Object.assign({ actif:false, item1:'', item2:'', item3:'', couleur:'#f2eedf', texte_couleur:'#2b353e' }, reglages.reassurance || {});
+  $('editeur').innerHTML =
+    '<p class="fil">Widgets <span style="opacity:.5">/</span> <b>Réassurance</b></p>' +
+    '<h1 class="titre-section">Bandeau de réassurance</h1>' +
+    '<p class="aide-section">Affiché juste sous le bandeau défilant, sur toutes les pages. 3 messages courts, uniquement des faits vrais.</p>' +
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Diffusion active</b></div><button class="interrupteur' + (r.actif ? ' on' : '') + '" id="reasActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Message 1</label><input type="text" id="reasItem1" placeholder="Conception et fabrication françaises" value="' + escHtml(r.item1) + '"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Message 2</label><input type="text" id="reasItem2" placeholder="Sans colle, sans détérioration" value="' + escHtml(r.item2) + '"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Message 3</label><input type="text" id="reasItem3" placeholder="Une imprimante de salon suffit" value="' + escHtml(r.item3) + '"></div>' +
+      '<div class="grille-champs" style="margin-top:14px">' +
+        '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="reasCouleur" value="' + r.couleur + '"><code id="reasCouleurHex">' + r.couleur + '</code></div></div>' +
+        '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="reasTexteCouleur" value="' + r.texte_couleur + '"><code id="reasTexteCouleurHex">' + r.texte_couleur + '</code></div></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-reassurance"></div><button class="btn-enregistrer" id="reasEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+  function draft(){
+    return {
+      actif: $('reasActif').classList.contains('on'),
+      item1: $('reasItem1').value.trim(), item2: $('reasItem2').value.trim(), item3: $('reasItem3').value.trim(),
+      couleur: $('reasCouleur').value, texte_couleur: $('reasTexteCouleur').value
+    };
+  }
+  function previsualiser(){ envoyerApercu('reassurance', draft()); }
+  $('reasActif').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  ['reasItem1','reasItem2','reasItem3'].forEach(function(id){ $(id).oninput = previsualiser; });
+  $('reasCouleur').oninput = function(){ $('reasCouleurHex').textContent = this.value; previsualiser(); };
+  $('reasTexteCouleur').oninput = function(){ $('reasTexteCouleurHex').textContent = this.value; previsualiser(); };
+  $('reasEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('reassurance', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('reassurance', 'histo-reassurance', rendreSectionReassurance); });
+  };
+  chargerHistorique('reassurance', 'histo-reassurance', rendreSectionReassurance);
 }
 
 function rendreSectionOrdre(){
