@@ -273,6 +273,7 @@
     <li><a href="../mosaique-revelee/">Mosaïque Révélée</a></li>
     <li><a href="../mandala/">Mandala</a></li>
     <li><a href="index.html">Mémo</a></li>
+    <li><a href="../set/">SET</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -695,9 +696,11 @@
   $('btnNouvelle').addEventListener('click', construireJeu);
 
   initialiserRangDefilante($('rangTaille'), $('pointsTaille'), $('flecheTailleGauche'), $('flecheTailleDroite'));
-  construireJeu();
 
-  /* Reglages depuis le panneau (hero, pont). */
+  /* Reglages depuis le panneau (hero, pont, couleurs des icones). Le jeu ne
+     demarre qu'une fois ces reglages recus, pour ne jamais construire une
+     premiere fois avec les couleurs par defaut puis reconstruire aussitot
+     avec les couleurs personnalisees (evite un flash/reconstruction). */
   fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=eq.memo_app', {
     headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
   }).then(function(r){ return r.ok ? r.json() : []; }).then(function(lignes){
@@ -707,7 +710,13 @@
     if (g.pont_titre) $('pontTitre').textContent = g.pont_titre;
     if (g.pont_texte) $('pontTexte').textContent = g.pont_texte;
     if (g.pont_lien) $('pontLien').href = g.pont_lien;
-  }).catch(function(){});
+    if (g.couleurs_icones){
+      ICONES.forEach(function(icone){
+        if (g.couleurs_icones[icone.nom]) icone.couleur = g.couleurs_icones[icone.nom];
+      });
+    }
+    construireJeu();
+  }).catch(function(){ construireJeu(); });
 })();
 </script>
 </body>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mandala Quadreti — À colorier en ligne ou à imprimer | Quadreti</title>
-<meta name="description" content="Un mandala à colorier, à l'écran ou sur papier. Palette de couleurs, mémoire, code hex, pipette. Gratuit, par Quadreti.">
+<title>SET Quadreti — Jeu d'observation gratuit | Quadreti</title>
+<meta name="description" content="SET revisité aux couleurs Quadreti : repérez trois tesselles où nombre, couleur, forme et remplissage sont tous pareils ou tous différents. Gratuit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
@@ -63,7 +63,7 @@
   .qz-burger.active span:nth-child(2){ opacity:0; }
   .qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
   .qz-navpanel{ width:100%; background:var(--qz-charbon); max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
-  .qz-navpanel.open{ max-height:640px; }
+  .qz-navpanel.open{ max-height:680px; }
   .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
   .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
   .qz-navpanel a{ font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
@@ -155,70 +155,50 @@
   .qz-fab:hover svg{ stroke:var(--qz-creme); }
 </style>
 <style>
-  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
+  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; --vert-ok:#2DC653; }
   body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
   h1,h2,h3{ font-family:'Quicksand',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:48px 24px 6px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 12px; font-weight:600; }
-  h1.titre{ font-size:clamp(26px,4.2vw,38px); line-height:1.12; margin:0 0 12px; letter-spacing:-.01em; }
-  p.accroche{ font-size:15px; color:var(--doux); max-width:52ch; margin:0 auto; line-height:1.6; }
+  h1.titre{ font-size:clamp(26px,4.2vw,38px); line-height:1.12; margin:0 0 12px; letter-spacing:-.01em; text-wrap:balance; }
+  p.accroche{ font-size:15px; color:var(--doux); max-width:56ch; margin:0 auto; line-height:1.6; }
 
-  .onglets-mode{ display:flex; gap:8px; justify-content:center; margin:22px 0 0; }
-  .onglet-mode{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:9px 20px; cursor:pointer; }
-  .onglet-mode.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
+  .cadre{ max-width:1020px; margin:24px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 260px; gap:28px; align-items:start; justify-content:center; }
+  @media (max-width:860px){ .cadre{ grid-template-columns:1fr; justify-items:center; } }
 
-  .cadre{ max-width:960px; margin:20px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 270px; gap:28px; align-items:start; justify-content:center; }
-  @media (max-width:800px){ .cadre{ grid-template-columns:1fr; justify-items:center; } }
-
-  .toile-carte{ background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:18px; box-shadow:0 20px 50px -30px #2b353e55; }
-  .toile{ width:min(420px,80vw); height:min(420px,80vw); display:block; }
-  .region{ stroke:var(--charbon); stroke-width:1; cursor:pointer; transition:filter .1s ease; }
-  .region:hover{ filter:brightness(0.94); }
+  .plateau-carte{ background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:20px; box-shadow:0 20px 50px -30px #2b353e55; }
+  .grille-set{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:min(480px,82vw); }
+  .carte-set{ aspect-ratio:5/7; background:var(--papier); border:2px solid var(--bord); border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6%; padding:10%; transition:border-color .15s ease, transform .12s ease, box-shadow .15s ease; }
+  .carte-set:hover{ border-color:var(--doux); }
+  .carte-set.selectionnee{ border-color:var(--terracotta); box-shadow:0 0 0 3px var(--teinte-actif); transform:translateY(-3px); }
+  .carte-set.trouvee{ border-color:var(--vert-ok); box-shadow:0 0 0 3px #2dc65322; }
+  .carte-set.secouee{ animation:secousse .22s ease; }
+  .carte-set.indice{ border-color:var(--terracotta); border-style:dashed; }
+  @keyframes secousse{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-5px); } 75%{ transform:translateX(5px); } }
+  @media (prefers-reduced-motion: reduce){ .carte-set{ transition:none; } .carte-set.secouee{ animation:none; } }
+  .carte-set svg{ width:100%; height:100%; }
 
   .panneau{ display:flex; flex-direction:column; gap:14px; }
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
   .carte .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
+  .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
+  .carte-stat .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
+  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:20px; }
 
-  .rang-actif{ display:flex; align-items:center; gap:10px; }
-  .pastille-active{ width:36px; height:36px; border-radius:50%; border:2px solid var(--surface); box-shadow:0 0 0 1.5px var(--bord); flex-shrink:0; }
-  .rang-actif .hex-actuel{ font-family:ui-monospace,monospace; font-size:13px; color:var(--doux); }
-
-  .grille-palette{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
-  .swatch{ aspect-ratio:1; border-radius:8px; border:2px solid transparent; cursor:pointer; padding:0; }
-  .swatch.actif{ border-color:var(--charbon); }
-
-  .rang-memoire{ display:flex; gap:6px; flex-wrap:wrap; min-height:26px; }
-  .rang-memoire .swatch{ width:26px; height:26px; flex:0 0 auto; }
-  .memoire-vide{ font-size:11px; color:var(--doux); font-style:italic; }
-
-  .rang-hex{ display:flex; gap:6px; }
-  .rang-hex input{ flex:1; min-width:0; font:inherit; font-family:ui-monospace,monospace; font-size:13px; padding:8px 10px; border:1.5px solid var(--bord); border-radius:8px; background:var(--papier); color:var(--texte); }
-  .rang-hex input:invalid{ border-color:#b04a36; }
-
-  .btn-pipette{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; padding:10px; border-radius:10px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte); cursor:pointer; }
-  .btn-pipette:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .btn-pipette:disabled{ opacity:.4; cursor:default; }
-  .btn-pipette svg{ width:16px; height:16px; }
-
-  .rang-scrollable{ display:flex; align-items:center; gap:6px; }
-  .fleche-scroll{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; padding:0; }
-  .fleche-scroll:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .choix-motif{ display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
-  .choix-motif::-webkit-scrollbar{ display:none; }
-  .btn-motif{ scroll-snap-align:start; flex:0 0 auto; min-width:84px; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11.5px; padding:8px 4px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
-  .btn-motif.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
-  .points-scroll{ display:flex; justify-content:center; gap:6px; margin-top:8px; }
-  .points-scroll span{ width:6px; height:6px; border-radius:50%; background:var(--bord); display:block; }
-  .points-scroll span.actif{ background:var(--terracotta); width:16px; border-radius:99px; transition:width .15s ease; }
+  .legende{ display:flex; flex-direction:column; gap:8px; font-size:11.5px; color:var(--doux); }
+  .legende b{ color:var(--texte); }
 
   .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; border:none; border-radius:99px; padding:12px 20px; cursor:pointer; text-align:center; width:100%; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
+  .btn.principal:hover{ filter:brightness(1.1); }
   .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
-  .btn.principal:hover{ background:#1c232a; }
+  .btn.secondaire:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 
-  .rang-fichier{ display:flex; flex-direction:column; gap:8px; }
-  .rang-fichier input[type=file]{ font-family:'Karla',sans-serif; font-size:11.5px; color:var(--doux); }
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .victoire.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
+  @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .victoire.actif{ animation:none; } }
 
   .note{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
 
@@ -227,28 +207,6 @@
   .carte-pont h3{ font-size:18px; margin:0 0 6px; color:var(--creme); }
   .carte-pont p{ font-size:13px; color:#d9d4c4; margin:0; max-width:48ch; }
   .carte-pont .btn.principal{ background:var(--terracotta); color:#fff; flex-shrink:0; width:auto; }
-
-  #zoneImpression{ display:none; }
-  @media print{
-    body > *:not(#zoneImpression){ display:none !important; }
-    #zoneImpression{ display:block !important; }
-    .page-imp{ width:100%; box-sizing:border-box; }
-    .imp-entete{ display:flex; align-items:center; gap:9px; border-bottom:2px solid #1A1611; padding-bottom:10px; margin-bottom:14px; }
-    .imp-logo{ display:grid; grid-template-columns:repeat(4,3.2px); grid-template-rows:repeat(4,3.2px); gap:0.9px; flex-shrink:0; }
-    .imp-logo i{ border-radius:0.8px; background:transparent; }
-    .imp-logo i.t{ background:#1A1611; }
-    .imp-logo i.a{ background:#E2725B; }
-    .imp-marque{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:#1A1611; }
-    .imp-baseline{ font-size:9.5px; color:#6b6355; flex:1; text-align:right; }
-    .imp-titre{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; margin:0 0 14px; color:#1A1611; text-align:center; }
-    .imp-svg-cadre{ display:flex; justify-content:center; }
-    .imp-svg-cadre svg{ width:160mm; height:160mm; }
-    .imp-svg-cadre svg .region{ stroke:#1A1611; }
-    .imp-pied{ display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid #1A161122; padding-top:9px; margin-top:16px; }
-    .imp-url{ font-family:ui-monospace,monospace; font-size:9.5px; color:#6b6355; }
-    .imp-qr{ width:20mm; height:20mm; border:1.3px dashed #6b6355; border-radius:2mm; display:flex; align-items:center; justify-content:center; font-size:7px; color:#6b6355; text-align:center; }
-    @page{ margin:14mm; }
-  }
 </style>
 </head>
 <body id="qz-top">
@@ -284,9 +242,9 @@
     <li><a href="../coloriages/">Coloriages (bibliothèque)</a></li>
     <li><a href="../taquin/">Taquin</a></li>
     <li><a href="../mosaique-revelee/">Mosaïque Révélée</a></li>
-    <li><a href="index.html">Mandala</a></li>
+    <li><a href="../mandala/">Mandala</a></li>
     <li><a href="../memo/">Mémo</a></li>
-    <li><a href="../set/">SET</a></li>
+    <li><a href="index.html">SET</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -295,83 +253,44 @@
 <div class="qz-nav-voile" id="qzNavVoile"></div>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
+<svg width="0" height="0" style="position:absolute">
+  <defs id="defsRayures"></defs>
+</svg>
+
 <section class="hero">
   <p class="eyebrow">Gratuit · Quadreti</p>
-  <h1 class="titre" id="heroTitre">Un mandala à colorier, à l'écran ou sur papier.</h1>
-  <p class="accroche" id="heroAccroche">Choisissez un motif, une couleur — clic, hex, ou pipette — et coloriez région par région. Ou imprimez-le vierge pour le crayon.</p>
+  <h1 class="titre" id="heroTitre">SET, revisité aux couleurs Quadreti.</h1>
+  <p class="accroche" id="heroAccroche">Repérez trois tesselles où, pour chaque caractéristique — nombre, couleur, forme, remplissage — les trois cartes sont soit toutes identiques, soit toutes différentes.</p>
 </section>
 
-<div class="onglets-mode">
-  <button class="onglet-mode actif" data-mode="bibliotheque">Bibliothèque</button>
-  <button class="onglet-mode" data-mode="motif">Votre motif</button>
-</div>
-
 <div class="cadre">
-  <div class="toile-carte">
-    <svg class="toile" id="toileSvg" viewBox="0 0 440 440"></svg>
+  <div class="plateau-carte">
+    <div class="grille-set" id="grilleSet"></div>
   </div>
   <div class="panneau">
-    <div class="carte" id="carteMotif">
-      <div class="label">Motif</div>
-      <div class="rang-scrollable">
-        <button class="fleche-scroll" type="button" id="flecheMotifGauche" aria-label="Précédent">‹</button>
-        <div class="choix-motif" id="rangMotif">
-          <button class="btn-motif actif" data-motif="classique">Classique</button>
-          <button class="btn-motif" data-motif="fleur">Fleur</button>
-          <button class="btn-motif" data-motif="etoile">Étoile</button>
-        </div>
-        <button class="fleche-scroll" type="button" id="flecheMotifDroite" aria-label="Suivant">›</button>
-      </div>
-      <div class="points-scroll" id="pointsMotif"></div>
+    <div class="carte-stat"><div class="label">Sets trouvés</div><div class="valeur" id="statSets">0</div></div>
+    <div class="carte-stat"><div class="label">Cartes restantes</div><div class="valeur" id="statPioche">69</div></div>
+    <div class="carte-stat"><div class="label">Temps</div><div class="valeur" id="statTemps">00:00</div></div>
+    <button class="btn secondaire" id="btnIndice">Indice</button>
+    <button class="btn principal" id="btnNouvelle">Nouvelle partie</button>
+    <div class="victoire" id="victoire">Terminé ! Tous les sets trouvés.</div>
+    <div class="carte legende">
+      <div class="label">Rappel</div>
+      <div><b>Un set</b> = 3 cartes où chaque caractéristique est toute pareille ou toute différente — jamais 2 pareilles + 1 différente.</div>
     </div>
-    <div class="carte" id="carteImport" style="display:none">
-      <div class="label">Votre motif</div>
-      <div class="rang-fichier">
-        <p class="note" style="margin:0 0 6px">Bientôt : import d'un motif personnalisé. En attendant, la bibliothèque reste disponible.</p>
-      </div>
-    </div>
-    <div class="carte">
-      <div class="label">Couleur active</div>
-      <div class="rang-actif">
-        <div class="pastille-active" id="pastilleActive" style="background:#E63946"></div>
-        <span class="hex-actuel" id="hexActuel">#E63946</span>
-      </div>
-    </div>
-    <div class="carte">
-      <div class="label">Palette</div>
-      <div class="grille-palette" id="grillePalette"></div>
-    </div>
-    <div class="carte">
-      <div class="label">Mémoire des couleurs</div>
-      <div class="rang-memoire" id="rangMemoire"><span class="memoire-vide">Les couleurs utilisées apparaîtront ici</span></div>
-    </div>
-    <div class="carte">
-      <div class="label">Code hex</div>
-      <div class="rang-hex">
-        <input type="text" id="champHex" placeholder="#E2725B" maxlength="7">
-      </div>
-    </div>
-    <button class="btn-pipette" id="btnPipette">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
-      <span id="texteFleche">Pipette</span>
-    </button>
-    <button class="btn secondaire" id="btnEffacer">Tout effacer</button>
-    <button class="btn principal" id="btnImprimer">Imprimer ce motif</button>
-    <p class="note">Cliquez une région pour la colorier avec la couleur active.</p>
+    <p class="note">Cliquez 3 cartes pour tenter un set.</p>
   </div>
 </div>
 
 <section class="pont">
   <div class="carte-pont">
     <div>
-      <h3 id="pontTitre">Envie de le porter sur un vrai mur ?</h3>
-      <p id="pontTexte">Composez une mosaïque Quadreti à partir de vos propres photos, avec la même logique de couleurs et de régions.</p>
+      <h3 id="pontTitre">Envie de vraies tesselles ?</h3>
+      <p id="pontTexte">Composez une mosaïque Quadreti à partir de vos propres photos.</p>
     </div>
     <a class="btn principal" id="pontLien" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer ma mosaïque</a>
   </div>
 </section>
-
-<div id="zoneImpression"></div>
 
 <footer class="qz-footer">
   <div class="qz-basdepage">
@@ -469,249 +388,234 @@
   var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
   var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
 
-  var couleurActive = '#E63946';
-  var memoire = [];
-  var MEMOIRE_MAX = 10;
-
-  /* Palette couleur primaire : vif et reconnaissable (comme une vraie boite de
-     crayons), plutot que la palette de marque Quadreti -- le hex et la pipette
-     restent la pour aller plus loin que ces 18 teintes de depart. */
-  var PALETTE = [
-    '#E63946','#F77F00','#FFD60A','#2DC653','#2A9DF4','#6A4C93',
-    '#FF6B9D','#06AED5','#8B5A2B','#000000','#7A7A7A','#FFFFFF',
-    '#FFADAD','#FFD6A5','#FDFFB6','#CAFFBF','#A0C4FF','#BDB2FF'
+  var NOMBRES = [1, 2, 3];
+  /* Couleurs vives et bien distinctes (pas la palette de marque, trop proche
+     en teinte pour un jeu qui depend de la distinguer vite) -- meme logique
+     que le Memo et le Mandala : la marque habille le site, le jeu a besoin
+     de lisibilite avant tout. Modifiables depuis le panneau (set_app.couleurs). */
+  var COULEURS = [
+    { nom:'rouge', hex:'#E63946' },
+    { nom:'vert', hex:'#2DC653' },
+    { nom:'bleu', hex:'#2A9DF4' }
   ];
+  var FORMES = ['cercle', 'carre', 'losange'];
+  var REMPLISSAGES = ['plein', 'raye', 'contour'];
 
-  function pointPolaire(cx, cy, r, angleDeg){
-    var a = (angleDeg - 90) * Math.PI / 180;
-    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  var jeuComplet = [];
+  var pioche = [];
+  var cartesVisibles = [];
+  var selection = [];
+  var setsTrouves = 0, secondes = 0, chrono = null;
+  var verrou = false;
+  var idCompteur = 0;
+
+  function construireDefsRayures(){
+    var defs = $('defsRayures');
+    defs.innerHTML = '';
+    COULEURS.forEach(function(c){
+      var motif = document.createElementNS(NS, 'pattern');
+      motif.setAttribute('id', 'rayures-' + c.nom);
+      motif.setAttribute('patternUnits', 'userSpaceOnUse');
+      motif.setAttribute('width', '6');
+      motif.setAttribute('height', '6');
+      motif.setAttribute('patternTransform', 'rotate(45)');
+      motif.innerHTML = '<line x1="0" y1="0" x2="0" y2="6" stroke="' + c.hex + '" stroke-width="3"/>';
+      defs.appendChild(motif);
+    });
   }
-  function cheminSecteur(cx, cy, rInner, rOuter, aDebut, aFin){
-    var p1 = pointPolaire(cx, cy, rOuter, aDebut);
-    var p2 = pointPolaire(cx, cy, rOuter, aFin);
-    var p3 = pointPolaire(cx, cy, rInner, aFin);
-    var p4 = pointPolaire(cx, cy, rInner, aDebut);
-    var grandArc = (aFin - aDebut) > 180 ? 1 : 0;
-    return 'M ' + p1[0] + ' ' + p1[1] +
-      ' A ' + rOuter + ' ' + rOuter + ' 0 ' + grandArc + ' 1 ' + p2[0] + ' ' + p2[1] +
-      ' L ' + p3[0] + ' ' + p3[1] +
-      ' A ' + rInner + ' ' + rInner + ' 0 ' + grandArc + ' 0 ' + p4[0] + ' ' + p4[1] + ' Z';
-  }
 
-  /* --- 3 motifs, meme generateur (anneaux de secteurs), configs differentes.
-     Anneau exterieur en dents (rayon alterne) pour un bord festonne façon
-     petale, sans avoir a calculer de vraies courbes de Bezier. --- */
-  var MOTIFS = {
-    classique: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:36, segments:1 },
-      { rInner:40, rOuter:95, segments:8 },
-      { rInner:100, rOuter:160, segments:16 },
-      { rInner:165, rOuter:205, segments:8 }
-    ]},
-    fleur: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:30, segments:1 },
-      { rInner:34, rOuter:120, segments:6, feston:18 },
-      { rInner:126, rOuter:170, segments:12 },
-      { rInner:175, rOuter:210, segments:6, feston:14 }
-    ]},
-    etoile: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:24, segments:1 },
-      { rInner:28, rOuter:80, segments:10 },
-      { rInner:84, rOuter:130, segments:20 },
-      { rInner:134, rOuter:170, segments:10 },
-      { rInner:174, rOuter:208, segments:20 }
-    ]}
-  };
-
-  function genererMotif(cle){
-    var svg = $('toileSvg');
-    svg.innerHTML = '';
-    var config = MOTIFS[cle];
-    var cx = config.cx, cy = config.cy;
-    config.anneaux.forEach(function(anneau, ai){
-      var n = anneau.segments;
-      var pas = 360 / n;
-      for (var i = 0; i < n; i++){
-        var aDebut = i * pas, aFin = (i + 1) * pas;
-        var rOuter = anneau.rOuter;
-        if (anneau.feston && i % 2 === 0) rOuter -= anneau.feston;
-        var d;
-        if (anneau.rInner === 0){
-          var p1 = pointPolaire(cx, cy, rOuter, aDebut);
-          var p2 = pointPolaire(cx, cy, rOuter, aFin);
-          var grandArc = (aFin - aDebut) > 180 ? 1 : 0;
-          d = 'M ' + cx + ' ' + cy + ' L ' + p1[0] + ' ' + p1[1] + ' A ' + rOuter + ' ' + rOuter + ' 0 ' + grandArc + ' 1 ' + p2[0] + ' ' + p2[1] + ' Z';
-        } else {
-          d = cheminSecteur(cx, cy, anneau.rInner, rOuter, aDebut, aFin);
-        }
-        var path = document.createElementNS(NS, 'path');
-        path.setAttribute('d', d);
-        path.setAttribute('class', 'region');
-        path.setAttribute('fill', '#FFFFFF');
-        path.dataset.anneau = ai;
-        path.addEventListener('click', function(){
-          this.setAttribute('fill', couleurActive);
-          ajouterMemoire(couleurActive);
+  function genererJeu(){
+    var jeu = [];
+    NOMBRES.forEach(function(n){
+      COULEURS.forEach(function(c){
+        FORMES.forEach(function(f){
+          REMPLISSAGES.forEach(function(r){
+            jeu.push({ id: idCompteur++, nombre:n, couleur:c.nom, forme:f, remplissage:r });
+          });
         });
-        svg.appendChild(path);
-      }
-    });
-  }
-
-  /* Meme aide que Mosaïque Révélée : points de position calcules depuis le
-     defilement (getBoundingClientRect, pas offsetLeft) + fleches utiles au
-     clavier/souris/trackpad (PC, tablette), qui n'ont pas de geste swipe
-     naturel comme le doigt. */
-  function initialiserRangDefilante(rang, conteneurPoints, flecheGauche, flecheDroite){
-    var boutons = [].slice.call(rang.children);
-    var points = boutons.map(function(){
-      var s = document.createElement('span');
-      conteneurPoints.appendChild(s);
-      return s;
-    });
-    function majPoints(){
-      var rectRang = rang.getBoundingClientRect();
-      var centreRang = rectRang.left + rectRang.width / 2;
-      var indexProche = 0, distanceMin = Infinity;
-      boutons.forEach(function(b, i){
-        var rectB = b.getBoundingClientRect();
-        var centreBouton = rectB.left + rectB.width / 2;
-        var d = Math.abs(centreBouton - centreRang);
-        if (d < distanceMin){ distanceMin = d; indexProche = i; }
       });
-      points.forEach(function(p, i){ p.classList.toggle('actif', i === indexProche); });
+    });
+    return jeu;
+  }
+
+  function melangerTableau(t){
+    for (var i = t.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = t[i]; t[i] = t[j]; t[j] = tmp;
     }
-    rang.addEventListener('scroll', majPoints, { passive: true });
-    majPoints();
-    var pasDefilement = function(){ return boutons[0].getBoundingClientRect().width + 6; };
-    if (flecheGauche) flecheGauche.addEventListener('click', function(){ rang.scrollBy({ left: -pasDefilement(), behavior: 'smooth' }); });
-    if (flecheDroite) flecheDroite.addEventListener('click', function(){ rang.scrollBy({ left: pasDefilement(), behavior: 'smooth' }); });
+    return t;
   }
 
-  function majActive(hex){
-    couleurActive = hex;
-    $('pastilleActive').style.background = hex;
-    $('hexActuel').textContent = hex.toUpperCase();
-    $('champHex').value = hex.toUpperCase();
-    document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('actif', s.dataset.hex === hex.toUpperCase()); });
-  }
-
-  function ajouterMemoire(hex){
-    hex = hex.toUpperCase();
-    memoire = memoire.filter(function(c){ return c !== hex; });
-    memoire.unshift(hex);
-    if (memoire.length > MEMOIRE_MAX) memoire = memoire.slice(0, MEMOIRE_MAX);
-    dessinerMemoire();
-  }
-  function dessinerMemoire(){
-    var conteneur = $('rangMemoire');
-    if (!memoire.length){ conteneur.innerHTML = '<span class="memoire-vide">Les couleurs utilisées apparaîtront ici</span>'; return; }
-    conteneur.innerHTML = '';
-    memoire.forEach(function(hex){
-      var b = document.createElement('button');
-      b.className = 'swatch'; b.style.background = hex; b.dataset.hex = hex;
-      b.title = hex;
-      b.addEventListener('click', function(){ majActive(hex); });
-      conteneur.appendChild(b);
+  /* --- Une caracteristique valide un set si les 3 cartes sont toutes
+     identiques OU toutes differentes sur cette caracteristique -- jamais
+     2 pareilles + 1 differente. Verifie sur les 4 caracteristiques. --- */
+  function estUnSet(a, b, c){
+    return ['nombre', 'couleur', 'forme', 'remplissage'].every(function(attr){
+      var v1 = a[attr], v2 = b[attr], v3 = c[attr];
+      return (v1 === v2 && v2 === v3) || (v1 !== v2 && v2 !== v3 && v1 !== v3);
     });
   }
 
-  function construirePalette(){
-    var grille = $('grillePalette');
+  function trouverUnSet(cartes){
+    for (var i = 0; i < cartes.length - 2; i++){
+      for (var j = i + 1; j < cartes.length - 1; j++){
+        for (var k = j + 1; k < cartes.length; k++){
+          if (estUnSet(cartes[i], cartes[j], cartes[k])) return [cartes[i], cartes[j], cartes[k]];
+        }
+      }
+    }
+    return null;
+  }
+
+  function formeChemin(forme){
+    if (forme === 'cercle') return '<circle cx="50" cy="50" r="38"/>';
+    if (forme === 'carre') return '<rect x="14" y="14" width="72" height="72" rx="10"/>';
+    return '<polygon points="50,8 92,50 50,92 8,50"/>';
+  }
+
+  function svgCarteSymbole(couleurNom, forme, remplissage){
+    var couleurHex = COULEURS.find(function(c){ return c.nom === couleurNom; }).hex;
+    var remplissageAttr = remplissage === 'plein' ? couleurHex : remplissage === 'raye' ? 'url(#rayures-' + couleurNom + ')' : 'none';
+    var contourAttr = remplissage === 'contour' ? ' stroke="' + couleurHex + '" stroke-width="6"' : '';
+    var chemin = formeChemin(forme).replace(/\/>$/, ' fill="' + remplissageAttr + '"' + contourAttr + '/>');
+    return '<svg viewBox="0 0 100 100">' + chemin + '</svg>';
+  }
+
+  function construireCarteDom(carte){
+    var el = document.createElement('div');
+    el.className = 'carte-set';
+    el.dataset.id = carte.id;
+    var symbole = svgCarteSymbole(carte.couleur, carte.forme, carte.remplissage);
+    for (var i = 0; i < carte.nombre; i++) el.innerHTML += symbole;
+    el.addEventListener('click', function(){ selectionnerCarte(carte, el); });
+    return el;
+  }
+
+  function majStats(){
+    $('statSets').textContent = setsTrouves;
+    $('statPioche').textContent = pioche.length;
+  }
+  function majAffichageTemps(){
+    var m = String(Math.floor(secondes / 60)).padStart(2, '0'), s = String(secondes % 60).padStart(2, '0');
+    $('statTemps').textContent = m + ':' + s;
+  }
+
+  function dessinerPlateau(){
+    var grille = $('grilleSet');
     grille.innerHTML = '';
-    PALETTE.forEach(function(hex){
-      var b = document.createElement('button');
-      b.className = 'swatch'; b.style.background = hex; b.dataset.hex = hex;
-      b.title = hex;
-      if (hex === couleurActive.toUpperCase()) b.classList.add('actif');
-      b.addEventListener('click', function(){ majActive(hex); });
-      grille.appendChild(b);
+    var cols = cartesVisibles.length <= 12 ? 3 : cartesVisibles.length <= 15 ? 3 : 4;
+    grille.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    cartesVisibles.forEach(function(carte){
+      grille.appendChild(construireCarteDom(carte));
     });
   }
 
-  $('champHex').addEventListener('input', function(){
-    var v = this.value.trim();
-    if (!v.startsWith('#')) v = '#' + v;
-    if (/^#[0-9A-Fa-f]{6}$/.test(v)){
-      this.setCustomValidity('');
-      majActive(v);
-    } else {
-      this.setCustomValidity('invalide');
+  /* Si aucun set n'existe sur le plateau visible, on distribue 3 cartes de
+     plus depuis la pioche -- vraie regle du jeu SET, pas une simplification. */
+  function completerSiNecessaire(){
+    while (!trouverUnSet(cartesVisibles) && pioche.length > 0){
+      for (var i = 0; i < 3 && pioche.length > 0; i++) cartesVisibles.push(pioche.shift());
     }
-  });
-
-  $('btnPipette').addEventListener('click', function(){
-    if (!window.EyeDropper){ return; }
-    var dropper = new EyeDropper();
-    dropper.open().then(function(resultat){
-      majActive(resultat.sRGBHex);
-      ajouterMemoire(resultat.sRGBHex);
-    }).catch(function(){});
-  });
-  if (!window.EyeDropper){
-    $('btnPipette').disabled = true;
-    $('texteFleche').textContent = 'Pipette (non supportée ici)';
+    majStats();
   }
 
-  $('btnEffacer').addEventListener('click', function(){
-    document.querySelectorAll('.region').forEach(function(r){ r.setAttribute('fill', '#FFFFFF'); });
-  });
+  function finDePartieEventuelle(){
+    if (pioche.length === 0 && !trouverUnSet(cartesVisibles)){
+      if (chrono) clearInterval(chrono);
+      $('victoire').classList.add('actif');
+      $('btnIndice').disabled = true;
+    }
+  }
 
-  $('btnImprimer').addEventListener('click', function(){
-    var clone = $('toileSvg').cloneNode(true);
-    clone.querySelectorAll('.region').forEach(function(r){ r.setAttribute('fill', '#FFFFFF'); });
-    clone.removeAttribute('class');
-    var baseline = window.__baselineImpression || 'Composez. Imprimez. Clipsez. Changez quand vous voulez.';
-    var urlAffichee = window.__urlImpression || 'quadreti.fr/mandala';
-    var html = '<div class="page-imp">' +
-      '<div class="imp-entete">' +
-        '<div class="imp-logo"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>' +
-        '<span class="imp-marque">Quadretı</span>' +
-        '<span class="imp-baseline">' + baseline + '</span>' +
-      '</div>' +
-      '<h1 class="imp-titre">Mandala Quadreti — à colorier</h1>' +
-      '<div class="imp-svg-cadre">' + clone.outerHTML + '</div>' +
-      '<div class="imp-pied"><span class="imp-url">' + urlAffichee + '</span><div class="imp-qr">QR<br>code</div></div>' +
-    '</div>';
-    $('zoneImpression').innerHTML = html;
-    window.print();
-  });
+  function selectionnerCarte(carte, el){
+    if (verrou) return;
+    if (el.classList.contains('selectionnee')){
+      el.classList.remove('selectionnee');
+      selection = selection.filter(function(s){ return s.carte.id !== carte.id; });
+      return;
+    }
+    if (selection.length >= 3) return;
+    el.classList.add('selectionnee');
+    selection.push({ carte:carte, el:el });
+    if (selection.length === 3){
+      verrou = true;
+      var estValide = estUnSet(selection[0].carte, selection[1].carte, selection[2].carte);
+      if (estValide){
+        selection.forEach(function(s){ s.el.classList.remove('selectionnee'); s.el.classList.add('trouvee'); });
+        setTimeout(function(){
+          var idsRetires = selection.map(function(s){ return s.carte.id; });
+          cartesVisibles = cartesVisibles.filter(function(c){ return idsRetires.indexOf(c.id) === -1; });
+          idsRetires.forEach(function(){ if (pioche.length) cartesVisibles.push(pioche.shift()); });
+          setsTrouves++;
+          selection = [];
+          verrou = false;
+          dessinerPlateau();
+          completerSiNecessaire();
+          dessinerPlateau();
+          finDePartieEventuelle();
+        }, 500);
+      } else {
+        selection.forEach(function(s){ s.el.classList.add('secouee'); });
+        setTimeout(function(){
+          selection.forEach(function(s){ s.el.classList.remove('selectionnee', 'secouee'); });
+          selection = [];
+          verrou = false;
+        }, 550);
+      }
+    }
+  }
 
-  document.querySelectorAll('.btn-motif').forEach(function(b){
-    b.addEventListener('click', function(){
-      document.querySelectorAll('.btn-motif').forEach(function(x){ x.classList.remove('actif'); });
-      b.classList.add('actif');
-      genererMotif(b.dataset.motif);
+  function indice(){
+    var trio = trouverUnSet(cartesVisibles);
+    if (!trio) return;
+    var idsIndice = trio.map(function(c){ return c.id; });
+    document.querySelectorAll('.carte-set').forEach(function(el){
+      if (idsIndice.indexOf(parseInt(el.dataset.id, 10)) !== -1) el.classList.add('indice');
     });
-  });
-  document.querySelectorAll('.onglet-mode').forEach(function(b){
-    b.addEventListener('click', function(){
-      document.querySelectorAll('.onglet-mode').forEach(function(x){ x.classList.remove('actif'); });
-      b.classList.add('actif');
-      var enBibliotheque = b.dataset.mode === 'bibliotheque';
-      $('carteMotif').style.display = enBibliotheque ? '' : 'none';
-      $('carteImport').style.display = enBibliotheque ? 'none' : '';
-    });
-  });
+    setTimeout(function(){
+      document.querySelectorAll('.carte-set.indice').forEach(function(el){ el.classList.remove('indice'); });
+    }, 1600);
+  }
 
-  construirePalette();
-  genererMotif('classique');
-  majActive(couleurActive);
-  initialiserRangDefilante($('rangMotif'), $('pointsMotif'), $('flecheMotifGauche'), $('flecheMotifDroite'));
+  function nouvellePartie(){
+    if (chrono) clearInterval(chrono);
+    jeuComplet = genererJeu();
+    pioche = melangerTableau(jeuComplet.slice());
+    cartesVisibles = [];
+    for (var i = 0; i < 12; i++) cartesVisibles.push(pioche.shift());
+    selection = []; verrou = false;
+    setsTrouves = 0; secondes = 0;
+    majAffichageTemps();
+    $('victoire').classList.remove('actif');
+    $('btnIndice').disabled = false;
+    completerSiNecessaire();
+    dessinerPlateau();
+    majStats();
+    chrono = setInterval(function(){ secondes++; majAffichageTemps(); }, 1000);
+  }
 
-  /* Reglages depuis le panneau (hero, pont, baseline d'impression). */
-  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=in.(mandala_app,baselines)', {
+  $('btnNouvelle').addEventListener('click', nouvellePartie);
+  $('btnIndice').addEventListener('click', indice);
+
+  /* Reglages depuis le panneau (hero, pont, couleurs). Les couleurs sont
+     appliquees et les defs de rayures construites AVANT la premiere partie,
+     pour ne jamais afficher les couleurs par defaut puis reconstruire (evite
+     un flash/reconstruction), meme logique que sur le Memo. */
+  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=eq.set_app', {
     headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
   }).then(function(r){ return r.ok ? r.json() : []; }).then(function(lignes){
-    var g = {}; (lignes || []).forEach(function(l){ g[l.cle] = l.valeur; });
-    var reglages = g.mandala_app || {};
-    window.__baselineImpression = (g.baselines || {}).produit || 'Composez. Imprimez. Clipsez. Changez quand vous voulez.';
-    if (reglages.titre) $('heroTitre').textContent = reglages.titre;
-    if (reglages.accroche) $('heroAccroche').textContent = reglages.accroche;
-    if (reglages.pont_titre) $('pontTitre').textContent = reglages.pont_titre;
-    if (reglages.pont_texte) $('pontTexte').textContent = reglages.pont_texte;
-    if (reglages.pont_lien) $('pontLien').href = reglages.pont_lien;
-  }).catch(function(){});
+    var g = (lignes && lignes[0] && lignes[0].valeur) || {};
+    if (g.titre) $('heroTitre').textContent = g.titre;
+    if (g.accroche) $('heroAccroche').textContent = g.accroche;
+    if (g.pont_titre) $('pontTitre').textContent = g.pont_titre;
+    if (g.pont_texte) $('pontTexte').textContent = g.pont_texte;
+    if (g.pont_lien) $('pontLien').href = g.pont_lien;
+    if (g.couleurs && g.couleurs.length === 3){
+      COULEURS.forEach(function(c, i){ if (g.couleurs[i]) c.hex = g.couleurs[i]; });
+    }
+    construireDefsRayures();
+    nouvellePartie();
+  }).catch(function(){ construireDefsRayures(); nouvellePartie(); });
 })();
 </script>
 </body>

@@ -386,6 +386,7 @@ var GROUPES = [
     { id:'mosaique_revelee_app', label:'Mosaïque Révélée (jeu)', reel:true },
     { id:'mandala_app', label:'Mandala (jeu)', reel:true },
     { id:'memo_app', label:'Mémo (jeu)', reel:true },
+    { id:'set_app', label:'SET (jeu)', reel:true },
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
@@ -441,6 +442,7 @@ function afficherSection(id){
   if (id === 'mosaique_revelee_app') { rendreSectionMosaiqueRevelee(); return; }
   if (id === 'mandala_app') { rendreSectionMandala(); return; }
   if (id === 'memo_app') { rendreSectionMemo(); return; }
+  if (id === 'set_app') { rendreSectionSet(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
   if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
@@ -1363,8 +1365,16 @@ function rendreSectionMandala(){
   chargerHistorique('mandala_app', 'histo-mandala_app', rendreSectionMandala);
 }
 
+var ICONES_MEMO_DEFAUT = [
+  ['cercle','#E2725B'], ['carre','#2B353E'], ['triangle','#CBBD93'], ['etoile','#2A9DF4'],
+  ['coeur','#FF6B9D'], ['hexagone','#2DC653'], ['croix','#6A4C93'], ['losange','#F77F00'],
+  ['plus','#FFD60A'], ['vague','#06AED5'], ['anneau','#8B5A2B'], ['feuille','#7A8B4E']
+];
+var LABELS_ICONES_MEMO = { cercle:'Cercle', carre:'Carré', triangle:'Triangle', etoile:'Étoile', coeur:'Cœur', hexagone:'Hexagone', croix:'Croix', losange:'Losange', plus:'Plus', vague:'Vague', anneau:'Anneau', feuille:'Feuille' };
+
 function rendreSectionMemo(){
-  var mm = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'' }, reglages.memo_app || {});
+  var mm = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'', couleurs_icones:{} }, reglages.memo_app || {});
+  var couleursIcones = Object.assign({}, mm.couleurs_icones);
 
   $('editeur').innerHTML =
     '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Mémo</b></p>' +
@@ -1378,6 +1388,18 @@ function rendreSectionMemo(){
     '</div>' +
 
     '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs des icônes</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Les 12 icônes de la bibliothèque (mode « Vos photos » complète avec ces mêmes icônes si des paires manquent).</p>' +
+      '<div class="grille-champs">' +
+        ICONES_MEMO_DEFAUT.map(function(paire){
+          var nom = paire[0], defaut = paire[1];
+          var val = couleursIcones[nom] || defaut;
+          return '<div class="champ"><label>' + LABELS_ICONES_MEMO[nom] + '</label><div class="rang-couleur"><input type="color" id="mmIc_' + nom + '" value="' + val + '"><code id="mmIc_' + nom + 'Hex">' + val + '</code></div></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
       '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
       '<p class="aide-section" style="margin-bottom:12px">Affiché sous le jeu.</p>' +
       '<div class="champ"><label>Titre</label><input type="text" id="mmPontTitre" value="' + escHtml(mm.pont_titre) + '" placeholder="Envie de les revoir sur un vrai mur ?"></div>' +
@@ -1387,17 +1409,80 @@ function rendreSectionMemo(){
     '</div>';
 
   function draft(){
+    var couleurs = {};
+    ICONES_MEMO_DEFAUT.forEach(function(paire){ couleurs[paire[0]] = $('mmIc_' + paire[0]).value; });
     return {
       actif: $('mmActif').classList.contains('on'), titre: $('mmTitre').value.trim(), accroche: $('mmAccroche').value.trim(),
-      pont_titre: $('mmPontTitre').value.trim(), pont_texte: $('mmPontTexte').value.trim(), pont_lien: $('mmPontLien').value.trim()
+      pont_titre: $('mmPontTitre').value.trim(), pont_texte: $('mmPontTexte').value.trim(), pont_lien: $('mmPontLien').value.trim(),
+      couleurs_icones: couleurs
     };
   }
   $('mmActif').onclick = function(){ this.classList.toggle('on'); };
+  ICONES_MEMO_DEFAUT.forEach(function(paire){
+    $('mmIc_' + paire[0]).oninput = function(){ $('mmIc_' + paire[0] + 'Hex').textContent = this.value; };
+  });
   $('mmEnregistrer').onclick = function(){
     var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
     enregistrer('memo_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('memo_app', 'histo-memo_app', rendreSectionMemo); });
   };
   chargerHistorique('memo_app', 'histo-memo_app', rendreSectionMemo);
+}
+
+var COULEURS_SET_DEFAUT = [['rouge','#E63946'], ['vert','#2DC653'], ['bleu','#2A9DF4']];
+
+function rendreSectionSet(){
+  var st = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'', couleurs:[] }, reglages.set_app || {});
+  var couleursSet = st.couleurs && st.couleurs.length === 3 ? st.couleurs : COULEURS_SET_DEFAUT.map(function(p){ return p[1]; });
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>SET</b></p>' +
+    '<h1 class="titre-section">SET (jeu)</h1>' +
+    '<p class="aide-section">Le jeu SET revisité (nombre, couleur, forme, remplissage). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (st.actif ? ' on' : '') + '" id="stActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="stTitre" value="' + escHtml(st.titre) + '" placeholder="SET, revisité aux couleurs Quadreti."></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="stAccroche" placeholder="Repérez trois tesselles où, pour chaque caractéristique — nombre, couleur, forme, remplissage — les trois cartes sont soit toutes identiques, soit toutes différentes.">' + escHtml(st.accroche) + '</textarea></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs du jeu</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Les 3 couleurs des symboles — vives et distinctes, pas la palette de marque (trop proche en teinte pour un jeu qui dépend de les distinguer vite).</p>' +
+      '<div class="grille-champs">' +
+        COULEURS_SET_DEFAUT.map(function(paire, i){
+          var nom = paire[0];
+          var val = couleursSet[i];
+          return '<div class="champ"><label>' + nom.charAt(0).toUpperCase() + nom.slice(1) + '</label><div class="rang-couleur"><input type="color" id="stCoul_' + i + '" value="' + val + '"><code id="stCoul_' + i + 'Hex">' + val + '</code></div></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Affiché sous le jeu.</p>' +
+      '<div class="champ"><label>Titre</label><input type="text" id="stPontTitre" value="' + escHtml(st.pont_titre) + '" placeholder="Envie de vraies tesselles ?"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="stPontTexte" placeholder="Composez une mosaïque Quadreti à partir de vos propres photos.">' + escHtml(st.pont_texte) + '</textarea></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Lien</label><input type="text" id="stPontLien" value="' + escHtml(st.pont_lien) + '" placeholder="https://designer.quadreti.fr (par défaut)"></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-set_app"></div><button class="btn-enregistrer" id="stEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    var couleurs = [0, 1, 2].map(function(i){ return $('stCoul_' + i).value; });
+    return {
+      actif: $('stActif').classList.contains('on'), titre: $('stTitre').value.trim(), accroche: $('stAccroche').value.trim(),
+      pont_titre: $('stPontTitre').value.trim(), pont_texte: $('stPontTexte').value.trim(), pont_lien: $('stPontLien').value.trim(),
+      couleurs: couleurs
+    };
+  }
+  $('stActif').onclick = function(){ this.classList.toggle('on'); };
+  [0, 1, 2].forEach(function(i){
+    $('stCoul_' + i).oninput = function(){ $('stCoul_' + i + 'Hex').textContent = this.value; };
+  });
+  $('stEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('set_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('set_app', 'histo-set_app', rendreSectionSet); });
+  };
+  chargerHistorique('set_app', 'histo-set_app', rendreSectionSet);
 }
 
 var SECTIONS_GUIDES = [
@@ -1820,6 +1905,7 @@ var MENU_PAR_DEFAUT = [
   { texte:'Mosaïque Révélée', lien:'/mosaique-revelee/' },
   { texte:'Mandala', lien:'/mandala/' },
   { texte:'Mémo', lien:'/memo/' },
+  { texte:'SET', lien:'/set/' },
   { texte:'Livraison & paiement', lien:'/index.html#livraison' },
   { texte:'FAQ', lien:'/index.html#faq' },
   { texte:'Contact', lien:'/contact.html' }
