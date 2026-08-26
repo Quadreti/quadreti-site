@@ -108,6 +108,34 @@
   .placeholder-section{ display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:30px 0; color:var(--doux); font-size:13px; max-width:46ch; line-height:1.6; }
   .placeholder-section button.lien{ font:inherit; border:none; background:none; color:var(--terracotta); cursor:pointer; text-decoration:underline; padding:0; }
 
+  .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px; }
+  .chip{ width:104px; border:1.5px solid var(--bord); border-radius:12px; padding:10px; cursor:pointer; background:var(--fond); transition:border-color .15s; }
+  .chip:hover{ border-color:var(--terracotta); }
+  .chip .apercu{ display:grid; grid-template-columns:repeat(4,1fr); gap:3px; height:20px; border-radius:6px; overflow:hidden; margin-bottom:8px; }
+  .chip .nom{ font-size:11.5px; font-weight:600; }
+  .chip .num{ font-size:9.5px; color:var(--doux); margin-top:1px; }
+  .chip.vide{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; border-style:dashed; color:var(--doux); min-height:66px; }
+  .chip.vide .plus{ font-size:18px; line-height:1; color:var(--doux); }
+  .chip.vide .nom{ color:var(--doux); font-weight:600; }
+  .memoriser{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--bord); }
+  .memoriser label{ display:block; font-size:11px; font-weight:600; color:var(--doux); text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; }
+  .memoriser-rang{ display:flex; gap:8px; }
+  .memoriser-rang select, .memoriser-rang input{ font:inherit; font-size:12.5px; padding:8px 10px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--texte); }
+  .memoriser-rang select{ width:120px; flex-shrink:0; }
+  .memoriser-rang input{ flex:1; min-width:0; }
+  .memoriser-rang button{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:8px; padding:8px 16px; cursor:pointer; flex-shrink:0; }
+
+  .zone-fine{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 0; border-top:1px solid var(--bord); }
+  .zone-fine:first-of-type{ border-top:none; padding-top:2px; }
+  .zone-fine .zone-txt b{ display:block; font-size:12.5px; font-weight:600; }
+  .zone-fine .zone-txt span{ font-size:11px; color:var(--doux); }
+  .zone-fine .zone-droite{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .rang-couleur-mini{ display:flex; align-items:center; gap:6px; }
+  .rang-couleur-mini input[type=color]{ width:30px; height:28px; border:1px solid var(--bord); border-radius:6px; padding:2px; background:var(--surface); cursor:pointer; }
+  .rang-couleur-mini code{ font-size:10.5px; color:var(--doux); }
+  .compteur-fines{ font-size:11px; color:var(--doux); margin:0 0 12px; }
+  .compteur-fines b{ color:var(--terracotta); }
+
   .rang-menu{ display:grid; grid-template-columns:1fr 1fr auto auto auto; gap:10px; align-items:end; margin-bottom:10px; }
   .btn-icone{ font:inherit; font-size:13px; width:32px; height:34px; border:1px solid var(--bord); background:var(--fond); border-radius:8px; cursor:pointer; color:var(--doux); }
   .btn-icone:disabled{ opacity:.35; cursor:default; }
@@ -530,24 +558,78 @@ function rendreSectionReseaux(){
   dessiner();
 }
 
-/* Palette maîtresse : coeur (thème + 4 couleurs + sections qui suivent) porté ici.
-   Les 11 "zones fines" (réglages fins par élément) et les emplacements mémorisés
-   restent gérés depuis panneau-site.html pour l'instant — pas encore portés, carte
-   trop grosse pour tout faire d'un coup. Important : on part toujours de
-   reglages.couleurs existant et on ne modifie QUE les champs ci-dessous, pour ne
-   jamais effacer un réglage fin déjà fait depuis l'ancien panneau (l'enregistrement
-   remplace l'objet entier, pas une fusion côté base). */
+/* Palette maîtresse : thème + 4 couleurs + sections qui suivent + palettes
+   mémorisées + réglages fins (11 zones). Important : on part toujours de
+   reglages.couleurs existant et on ne modifie QUE les champs édités ici, pour ne
+   jamais effacer un réglage qu'on n'a pas touché (l'enregistrement remplace l'objet
+   entier côté base, pas une fusion). */
+var ZONES_FINES = [
+  ['cartouches', 'Cartouches légales', 'Bas de page', 'accent'],
+  ['bouton', 'Boutons', 'Composer mon mur, Essayer l\'app...', 'accent'],
+  ['menu', 'Bandeau de navigation', 'Haut de page', 'fond'],
+  ['boutiqueFond', 'Arrière-plan boutique', 'Page Boutique uniquement', 'fond'],
+  ['logo', 'Logo', 'Tesselles + nom, bandeau du haut', 'texte'],
+  ['carte', 'Fond des encarts blancs', 'Ex. « Comment ça marche »', '#ffffff'],
+  ['encartFond', 'Fond des encarts pastel', 'Partout sur le site', '#E9EDDD'],
+  ['encartTexte', 'Texte des encarts pastel', 'Partout sur le site', '#556B2F'],
+  ['enumeration', 'Pastilles numérotées', '1, 2, 3...', 'texte'],
+  ['titres', 'Titres', 'Partout sur le site', 'texte'],
+  ['texteDoux', 'Texte courant', 'Paragraphes, partout', '#4a5158']
+];
+
 function rendreSectionPalette(){
   var c = Object.assign({ theme:'actuel', fond:'#F5F5F5', texte:'#2b353e', accent:'#e2725b', survol:'#cf6450' }, reglages.couleurs || {});
   var sec = Object.assign({ bandeau:true, accueil:true, widgets:true }, c.sections || {});
-  var nbZonesFines = ['cartouches','bouton','menu','boutiqueFond','logo','carte','encartFond','encartTexte','enumeration','titres','texteDoux'].filter(function(k){ return !!c[k]; }).length;
+  var palettesMemorisees = reglages.palettes || {};
+
+  function repliCouleur(repli){
+    if (repli === 'accent') return c.accent;
+    if (repli === 'fond') return c.fond;
+    if (repli === 'texte') return c.texte;
+    return repli;
+  }
+
+  var chipsHtml = [1,2,3,4,5].map(function(n){
+    var p = palettesMemorisees[n];
+    if (!p) return '<div class="chip vide" data-charger-vide="1"><div class="plus">+</div><div class="nom">Vide</div></div>';
+    var pc = p.couleurs || {};
+    return '<div class="chip" data-charger-palette="' + n + '">' +
+      '<div class="apercu"><span style="background:' + (pc.fond||'#ccc') + '"></span><span style="background:' + (pc.texte||'#ccc') + '"></span><span style="background:' + (pc.accent||'#ccc') + '"></span><span style="background:' + (pc.survol||'#ccc') + '"></span></div>' +
+      '<div class="nom">' + escHtml(p.nom || ('Emplacement ' + n)) + '</div><div class="num">Emplacement ' + n + '</div>' +
+    '</div>';
+  }).join('');
+
+  var zonesHtml = ZONES_FINES.map(function(z){
+    var cle = z[0], label = z[1], desc = z[2], repli = z[3];
+    var perso = !!c[cle];
+    var valeur = c[cle] || repliCouleur(repli);
+    return '<div class="zone-fine">' +
+      '<div class="zone-txt"><b>' + label + '</b><span>' + desc + '</span></div>' +
+      '<div class="zone-droite">' +
+        '<div class="rang-couleur-mini" id="zfCouleur_' + cle + '" style="' + (perso ? '' : 'display:none') + '"><input type="color" id="zf_' + cle + '" value="' + valeur + '"><code id="zf_' + cle + 'Hex">' + valeur + '</code></div>' +
+        '<button class="interrupteur' + (perso ? '' : ' on') + '" id="zfToggle_' + cle + '" data-zone="' + cle + '" data-repli="' + valeur + '"><i></i></button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 
   $('editeur').innerHTML =
     '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Palette maîtresse</b></p>' +
     '<h1 class="titre-section">Palette maîtresse</h1>' +
-    '<p class="aide-section">S\'applique à tout le site. Les couleurs individuelles (réglages fins, pas encore ici) priment sur cette palette.' +
-      (nbZonesFines ? ' <b>' + nbZonesFines + ' réglage(s) fin(s)</b> déjà en place depuis le panneau actuel restent inchangés tant que vous ne les touchez pas là-bas.' : '') +
-    '</p>' +
+    '<p class="aide-section">S\'applique à tout le site.</p>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Palettes mémorisées</h2></div>' +
+      '<div class="chips" id="chipsPalettes">' + chipsHtml + '</div>' +
+      '<p style="font-size:11.5px;color:var(--doux);margin:10px 0 0">Charger un emplacement remplit le formulaire ci-dessous — à enregistrer ensuite pour l\'appliquer au site.</p>' +
+      '<div class="memoriser">' +
+        '<label>Mémoriser la composition actuelle</label>' +
+        '<div class="memoriser-rang">' +
+          '<select id="memSlot">' + [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">Emplacement ' + n + '</option>'; }).join('') + '</select>' +
+          '<input type="text" id="memNom" placeholder="Nom (ex. Magazine Déco)" maxlength="24">' +
+          '<button id="btnMemoriser">Mémoriser</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
 
     '<div class="carte">' +
       '<div class="carte-entete"><h2>Thème</h2></div>' +
@@ -571,6 +653,12 @@ function rendreSectionPalette(){
       '<div class="toggle-ligne"><div class="toggle-txt"><b>Bandeau &amp; menu</b><span>Fond, logo, bouton menu, sous-menu</span></div><button class="interrupteur' + (sec.bandeau !== false ? ' on' : '') + '" id="secBandeau"><i></i></button></div>' +
       '<div class="toggle-ligne"><div class="toggle-txt"><b>Page d\'accueil</b><span>Baselines du bandeau photo/vidéo</span></div><button class="interrupteur' + (sec.accueil !== false ? ' on' : '') + '" id="secAccueil"><i></i></button></div>' +
       '<div class="toggle-ligne"><div class="toggle-txt"><b>Widgets</b><span>Réassurance, popup de remise</span></div><button class="interrupteur' + (sec.widgets !== false ? ' on' : '') + '" id="secWidgets"><i></i></button></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Réglages fins</h2></div>' +
+      '<p class="compteur-fines">Suivent la palette par défaut (interrupteur activé). Désactivez pour donner une couleur à part à cet élément précis.</p>' +
+      zonesHtml +
       '<div class="pied-carte"><div class="historique" id="histo-couleurs"></div><button class="btn-enregistrer" id="cEnregistrer">Enregistrer les couleurs</button></div>' +
     '</div>';
 
@@ -579,6 +667,12 @@ function rendreSectionPalette(){
     out.theme = document.querySelector('input[name=cTheme]:checked').value;
     out.fond = $('cFond').value; out.texte = $('cTexte').value; out.accent = $('cAccent').value; out.survol = $('cSurvol').value;
     out.sections = { bandeau: $('secBandeau').classList.contains('on'), accueil: $('secAccueil').classList.contains('on'), widgets: $('secWidgets').classList.contains('on') };
+    ZONES_FINES.forEach(function(z){
+      var cle = z[0];
+      var toggle = $('zfToggle_' + cle);
+      if (toggle.classList.contains('on')) delete out[cle];
+      else out[cle] = $('zf_' + cle).value;
+    });
     return out;
   }
   function previsualiser(){ envoyerApercu('couleurs', draft()); }
@@ -590,6 +684,37 @@ function rendreSectionPalette(){
   ['secBandeau','secAccueil','secWidgets'].forEach(function(id){
     $(id).onclick = function(){ this.classList.toggle('on'); previsualiser(); };
   });
+  ZONES_FINES.forEach(function(z){
+    var cle = z[0];
+    $('zfToggle_' + cle).onclick = function(){
+      this.classList.toggle('on');
+      $('zfCouleur_' + cle).style.display = this.classList.contains('on') ? 'none' : '';
+      previsualiser();
+    };
+    $('zf_' + cle).oninput = function(){ $('zf_' + cle + 'Hex').textContent = this.value; previsualiser(); };
+  });
+  document.querySelectorAll('[data-charger-palette]').forEach(function(chip){
+    chip.onclick = function(){
+      var p = palettesMemorisees[chip.dataset.chargerPalette];
+      if (!p || !p.couleurs) return;
+      var pc = p.couleurs;
+      if (pc.theme) document.querySelector('input[name=cTheme][value="' + pc.theme + '"]').checked = true;
+      if (pc.fond) { $('cFond').value = pc.fond; $('cFondHex').textContent = pc.fond; }
+      if (pc.texte) { $('cTexte').value = pc.texte; $('cTexteHex').textContent = pc.texte; }
+      if (pc.accent) { $('cAccent').value = pc.accent; $('cAccentHex').textContent = pc.accent; }
+      if (pc.survol) { $('cSurvol').value = pc.survol; $('cSurvolHex').textContent = pc.survol; }
+      toast('Palette « ' + (p.nom || '') + ' » chargée dans le formulaire — Enregistrer pour l\'appliquer.');
+      previsualiser();
+    };
+  });
+  $('btnMemoriser').onclick = function(){
+    var nom = $('memNom').value.trim();
+    if (!nom) { toast('Donnez un nom à cette composition.', true); return; }
+    var slot = $('memSlot').value;
+    var nouvelles = Object.assign({}, palettesMemorisees);
+    nouvelles[slot] = { nom: nom, couleurs: { theme: document.querySelector('input[name=cTheme]:checked').value, fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value } };
+    enregistrer('palettes', nouvelles).then(function(){ $('memNom').value = ''; rendreSectionPalette(); });
+  };
   $('cEnregistrer').onclick = function(){
     var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
     enregistrer('couleurs', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les couleurs'; chargerHistorique('couleurs', 'histo-couleurs', rendreSectionPalette); });
