@@ -141,7 +141,8 @@
   .btn-icone:disabled{ opacity:.35; cursor:default; }
   .btn-icone.suppr{ color:#b04a36; border-color:#b04a3640; }
   .bloc-sous{ margin:2px 0 14px 18px; padding-left:14px; border-left:2px solid var(--bord); }
-  .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:end; margin-bottom:8px; }
+  .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto auto; gap:10px; align-items:end; margin-bottom:8px; }
+  .select-deplacer{ font:inherit; font-size:12px; padding:8px 6px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--doux); height:34px; max-width:150px; }
   .btn-texte-ajout{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
 
   .grille-zones{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:280px; }
@@ -1922,12 +1923,14 @@ var MENU_PAR_DEFAUT = [
   { texte:'Boutique', lien:'/boutique/' },
   { texte:'Blog', lien:'/blog/' },
   { texte:'Pixel Number App', lien:'/pixel-number/' },
-  { texte:'Coloriages (bibliothèque)', lien:'/coloriages/' },
-  { texte:'Taquin', lien:'/taquin/' },
-  { texte:'Mosaïque Révélée', lien:'/mosaique-revelee/' },
-  { texte:'Mandala', lien:'/mandala/' },
-  { texte:'Mémo', lien:'/memo/' },
-  { texte:'SET', lien:'/set/' },
+  { texte:'Jeux & Créativité', sousMenu:[
+    { texte:'Coloriages', lien:'/coloriages/' },
+    { texte:'Taquin', lien:'/taquin/' },
+    { texte:'Mosaïque Révélée', lien:'/mosaique-revelee/' },
+    { texte:'Mandala', lien:'/mandala/' },
+    { texte:'Mémo', lien:'/memo/' },
+    { texte:'SET', lien:'/set/' }
+  ]},
   { texte:'Livraison & paiement', lien:'/index.html#livraison' },
   { texte:'FAQ', lien:'/index.html#faq' },
   { texte:'Contact', lien:'/contact.html' }
@@ -1936,20 +1939,26 @@ function escHtml(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, functi
 
 function rendreSectionMenu(){
   var etat = JSON.parse(JSON.stringify((reglages.menu_liens && reglages.menu_liens.length) ? reglages.menu_liens : []));
+  var groupes = [];
 
   function dessinerListe(){
     if (!etat.length) {
       return '<div class="placeholder-section">Le menu suit encore la version codée dans chaque page (identique partout). <button class="lien" id="menuReprendre">Reprendre le menu actuel comme point de départ</button></div>';
     }
+    groupes = etat.filter(function(it){ return !!it.sousMenu; });
     var lignes = etat.map(function(item, i){
       var controles = '<button class="btn-icone" data-monter="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
         '<button class="btn-icone" data-descendre="' + i + '"' + (i === etat.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
         '<button class="btn-icone suppr" data-suppr="' + i + '" title="Retirer">✕</button>';
       if (item.sousMenu) {
         var sousLignes = item.sousMenu.map(function(s, j){
+          var optionsSous = '<option value="">Déplacer vers…</option><option value="haut">Remonter en lien principal</option>';
+          groupes.forEach(function(g, gi){ if (g !== item) optionsSous += '<option value="g' + gi + '">' + escHtml(g.texte) + '</option>'; });
+          optionsSous += '<option value="nouveau">Nouveau groupe…</option>';
           return '<div class="rang-sous">' +
             '<div class="champ"><label>Sous-lien</label><input type="text" data-sous-texte="' + i + ',' + j + '" value="' + escHtml(s.texte) + '"></div>' +
             '<div class="champ"><label>Destination</label><input type="text" data-sous-lien="' + i + ',' + j + '" value="' + escHtml(s.lien) + '"></div>' +
+            '<select class="select-deplacer" data-deplacer-sous="' + i + ',' + j + '">' + optionsSous + '</select>' +
             '<button class="btn-icone suppr" data-suppr-sous="' + i + ',' + j + '" title="Retirer">✕</button>' +
           '</div>';
         }).join('');
@@ -1958,9 +1967,13 @@ function rendreSectionMenu(){
           controles +
         '</div><div class="bloc-sous">' + sousLignes + '<button class="btn-texte-ajout" data-ajout-sous="' + i + '">+ sous-lien</button></div></div>';
       }
-      return '<div class="bloc-repete"><div class="rang-menu">' +
+      var optionsItem = '<option value="">Déplacer vers…</option>';
+      groupes.forEach(function(g, gi){ optionsItem += '<option value="g' + gi + '">' + escHtml(g.texte) + '</option>'; });
+      optionsItem += '<option value="nouveau">Nouveau groupe…</option>';
+      return '<div class="bloc-repete"><div class="rang-menu" style="grid-template-columns:1fr 1fr auto auto auto auto">' +
         '<div class="champ"><label>Texte</label><input type="text" data-item-texte="' + i + '" value="' + escHtml(item.texte) + '"></div>' +
         '<div class="champ"><label>Destination</label><input type="text" data-item-lien="' + i + '" value="' + escHtml(item.lien) + '"></div>' +
+        '<select class="select-deplacer" data-deplacer-item="' + i + '">' + optionsItem + '</select>' +
         controles +
       '</div></div>';
     }).join('');
@@ -1990,6 +2003,36 @@ function rendreSectionMenu(){
     document.querySelectorAll('[data-suppr]').forEach(function(b){ b.onclick = function(){ etat.splice(+b.dataset.suppr, 1); dessiner(); }; });
     document.querySelectorAll('[data-ajout-sous]').forEach(function(b){ b.onclick = function(){ etat[+b.dataset.ajoutSous].sousMenu.push({ texte:'Nouveau sous-lien', lien:'/' }); dessiner(); }; });
     document.querySelectorAll('[data-suppr-sous]').forEach(function(b){ b.onclick = function(){ var p = b.dataset.supprSous.split(','); etat[+p[0]].sousMenu.splice(+p[1], 1); dessiner(); }; });
+    /* Deplacer un lien principal vers un groupe existant ou un nouveau groupe --
+       corrige un lien mal range sans devoir le retaper a la main. */
+    document.querySelectorAll('[data-deplacer-item]').forEach(function(sel){
+      sel.onchange = function(){
+        var valeur = sel.value;
+        if (!valeur) return;
+        var i = +sel.dataset.deplacerItem;
+        var item = etat[i];
+        etat.splice(i, 1);
+        if (valeur === 'nouveau') etat.push({ texte:'Nouveau groupe', sousMenu:[{ texte:item.texte, lien:item.lien }] });
+        else groupes[+valeur.slice(1)].sousMenu.push({ texte:item.texte, lien:item.lien });
+        dessiner();
+      };
+    });
+    /* Deplacer un sous-lien vers un autre groupe, ou le remonter en lien
+       principal si erreur de rangement. */
+    document.querySelectorAll('[data-deplacer-sous]').forEach(function(sel){
+      sel.onchange = function(){
+        var valeur = sel.value;
+        if (!valeur) return;
+        var p = sel.dataset.deplacerSous.split(',');
+        var i = +p[0], j = +p[1];
+        var sousItem = etat[i].sousMenu[j];
+        etat[i].sousMenu.splice(j, 1);
+        if (valeur === 'haut') etat.push({ texte: sousItem.texte, lien: sousItem.lien });
+        else if (valeur === 'nouveau') etat.push({ texte:'Nouveau groupe', sousMenu:[{ texte:sousItem.texte, lien:sousItem.lien }] });
+        else groupes[+valeur.slice(1)].sousMenu.push({ texte:sousItem.texte, lien:sousItem.lien });
+        dessiner();
+      };
+    });
     document.querySelectorAll('[data-item-texte]').forEach(function(c){ c.oninput = function(){ etat[+c.dataset.itemTexte].texte = c.value; envoyerApercu('menu_liens', etat); }; });
     document.querySelectorAll('[data-item-lien]').forEach(function(c){ c.oninput = function(){ etat[+c.dataset.itemLien].lien = c.value; envoyerApercu('menu_liens', etat); }; });
     document.querySelectorAll('[data-sous-texte]').forEach(function(c){ c.oninput = function(){ var p = c.dataset.sousTexte.split(','); etat[+p[0]].sousMenu[+p[1]].texte = c.value; envoyerApercu('menu_liens', etat); }; });

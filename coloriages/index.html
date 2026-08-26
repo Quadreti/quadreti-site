@@ -237,12 +237,19 @@
     <li><a href="../boutique/">Boutique</a></li>
     <li><a href="../blog/">Blog</a></li>
     <li><a href="../pixel-number/">Pixel Number App</a></li>
-    <li><a href="index.html">Coloriages (bibliothèque)</a></li>
-    <li><a href="../taquin/">Taquin</a></li>
-    <li><a href="../mosaique-revelee/">Mosaïque Révélée</a></li>
-    <li><a href="../mandala/">Mandala</a></li>
-    <li><a href="../memo/">Mémo</a></li>
-    <li><a href="../set/">SET</a></li>
+    <li class="qz-hassub">
+      <button class="qz-subtoggle" aria-expanded="false">
+        Jeux &amp; Créativité <span class="qz-chev">▾</span>
+      </button>
+      <ul class="qz-sublist">
+      <li><a href="index.html">Coloriages</a></li>
+      <li><a href="../taquin/">Taquin</a></li>
+      <li><a href="../mosaique-revelee/">Mosaïque Révélée</a></li>
+      <li><a href="../mandala/">Mandala</a></li>
+      <li><a href="../memo/">Mémo</a></li>
+      <li><a href="../set/">SET</a></li>
+      </ul>
+    </li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -379,9 +386,13 @@
       btn.setAttribute('aria-expanded', String(willOpen));
       btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
       if(voile) voile.classList.toggle('open', willOpen);
-      var item = document.getElementById('qzCcmItem');
-      var tog = document.getElementById('qzCcmToggle');
-      if(!willOpen && item && tog){ item.classList.remove('open'); tog.setAttribute('aria-expanded','false'); }
+      if(!willOpen){
+        document.querySelectorAll('.qz-hassub.open').forEach(function(it){
+          it.classList.remove('open');
+          var tog = it.querySelector('.qz-subtoggle');
+          if(tog) tog.setAttribute('aria-expanded','false');
+        });
+      }
     });
   }
   if(voile){
@@ -389,15 +400,15 @@
       if(btn) btn.click();
     });
   }
-  var ccmToggle = document.getElementById('qzCcmToggle');
-  var ccmItem = document.getElementById('qzCcmItem');
-  if(ccmToggle && ccmItem){
-    ccmToggle.addEventListener('click', function(){
-      var open = !ccmItem.classList.contains('open');
-      ccmItem.classList.toggle('open', open);
-      ccmToggle.setAttribute('aria-expanded', String(open));
+  document.querySelectorAll('.qz-hassub').forEach(function(item){
+    var toggle = item.querySelector('.qz-subtoggle');
+    if(!toggle) return;
+    toggle.addEventListener('click', function(){
+      var open = !item.classList.contains('open');
+      item.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
     });
-  }
+  });
 })();
 </script>
 <!-- ===== FOOTER COMMUN — FIN ===== -->
