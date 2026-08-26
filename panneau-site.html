@@ -380,7 +380,8 @@ var GROUPES = [
   ]},
   { nom:'Contenu des pages', items:[
     { id:'page_contact', label:'Page Contact', reel:true },
-    { id:'page_coloriages', label:'Page Pixel Number', reel:true },
+    { id:'page_coloriages', label:'Pixel Number — bibliothèque actuelle', reel:true },
+    { id:'pixel_number_app', label:'Pixel Number App (à venir)', reel:true },
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
@@ -431,6 +432,7 @@ function afficherSection(id){
   if (id === 'popup') { rendreSectionPopup(); return; }
   if (id === 'page_contact') { rendreSectionPageContact(); return; }
   if (id === 'page_coloriages') { rendreSectionPageColoriages(); return; }
+  if (id === 'pixel_number_app') { rendreSectionPixelNumberApp(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
   if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
@@ -1101,8 +1103,8 @@ function rendreSectionPageContact(){
 function rendreSectionPageColoriages(){
   var pc = Object.assign({ titre:'', accroche:'' }, reglages.page_coloriages || {});
   $('editeur').innerHTML =
-    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Page Pixel Number</b></p>' +
-    '<h1 class="titre-section">Page Pixel Number</h1>' +
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Pixel Number — bibliothèque actuelle</b></p>' +
+    '<h1 class="titre-section">Pixel Number — bibliothèque actuelle</h1>' +
     '<div class="carte">' +
       '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" id="colTitre" value="' + escHtml(pc.titre) + '"></div>' +
       '<div class="champ"><label>Accroche</label><textarea id="colAccroche">' + escHtml(pc.accroche) + '</textarea></div>' +
@@ -1115,6 +1117,131 @@ function rendreSectionPageColoriages(){
     enregistrer('page_coloriages', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('page_coloriages', 'histo-page_coloriages', rendreSectionPageColoriages); });
   };
   chargerHistorique('page_coloriages', 'histo-page_coloriages', rendreSectionPageColoriages);
+}
+
+/* Pixel Number App (26/08) : reglages prepares en avance du chantier de construction —
+   l'outil n'existe pas encore, donc pas d'apercu en direct possible (rien a montrer).
+   Structure calquee sur les mecanismes deja construits (listes reordonnables avec image,
+   comme menu_liens/reseaux_liste). Remplacera a terme la carte "bibliotheque actuelle"
+   ci-dessus, gardee active tant que l'app n'est pas en ligne. */
+var TRANCHES_PIXEL_NUMBER = [['enfant','Enfant (-6 ans)'], ['ado','Ado'], ['adulte','Adulte']];
+function rendreSectionPixelNumberApp(){
+  var pn = Object.assign({ actif:false, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'', largeur_defaut:28, couleurs_defaut:7, url_impression:'', qr_code_url:'', exemples:{} }, reglages.pixel_number_app || {});
+  var trancheActuelle = 'enfant';
+
+  function dessiner(){
+    var exemplesTranche = (pn.exemples && pn.exemples[trancheActuelle]) || [];
+    var lignesExemples = exemplesTranche.map(function(ex, i){
+      return '<div class="bloc-repete"><div class="rang-image">' +
+        '<div class="miniature" style="' + (ex.image ? "background-image:url('" + ex.image + "')" : '') + '"></div>' +
+        '<div class="infos"><input type="text" data-ex-nom="' + i + '" value="' + escHtml(ex.nom) + '" placeholder="Nom du sujet" style="margin-bottom:6px;width:100%;font:inherit;padding:6px 8px;border:1px solid var(--bord);border-radius:6px;background:var(--fond);color:var(--texte)">' +
+          '<label class="btn-fichier">Changer l\'image<input type="file" data-ex-fichier="' + i + '" accept="image/*"></label>' +
+        '</div>' +
+        '<button class="btn-icone" data-ex-monter="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+        '<button class="btn-icone" data-ex-descendre="' + i + '"' + (i === exemplesTranche.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
+        '<button class="btn-icone suppr" data-ex-suppr="' + i + '" title="Retirer">✕</button>' +
+      '</div></div>';
+    }).join('');
+
+    $('editeur').innerHTML =
+      '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Pixel Number App</b></p>' +
+      '<h1 class="titre-section">Pixel Number App <span style="font-weight:400;font-size:13px;color:var(--doux)">(à venir)</span></h1>' +
+      '<p class="aide-section">Réglages préparés avant la construction de l\'outil — pas d\'aperçu en direct possible tant qu\'il n\'existe pas. Remplacera la bibliothèque Pixel Number actuelle une fois en ligne.</p>' +
+
+      '<div class="carte">' +
+        '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (pn.actif ? ' on' : '') + '" id="pnActif"><i></i></button></div>' +
+        '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="pnTitre" value="' + escHtml(pn.titre) + '"></div>' +
+        '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="pnAccroche">' + escHtml(pn.accroche) + '</textarea></div>' +
+      '</div>' +
+
+      '<div class="carte">' +
+        '<div class="carte-entete"><h2>Réglages par défaut de la grille</h2></div>' +
+        '<div class="grille-champs">' +
+          '<div class="champ"><label>Largeur (cases)</label><input type="number" id="pnLargeur" min="8" max="64" value="' + pn.largeur_defaut + '"></div>' +
+          '<div class="champ"><label>Nombre de couleurs</label><input type="number" id="pnCouleurs" min="2" max="20" value="' + pn.couleurs_defaut + '"></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="carte">' +
+        '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
+        '<div class="champ"><label>Titre</label><input type="text" id="pnPontTitre" value="' + escHtml(pn.pont_titre) + '"></div>' +
+        '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="pnPontTexte">' + escHtml(pn.pont_texte) + '</textarea></div>' +
+        '<div class="champ" style="margin-top:10px"><label>Lien</label><input type="text" id="pnPontLien" value="' + escHtml(pn.pont_lien) + '" placeholder="/boutique/ ou https://designer.quadreti.fr"></div>' +
+      '</div>' +
+
+      '<div class="carte">' +
+        '<div class="carte-entete"><h2>Impression</h2></div>' +
+        '<p class="aide-section" style="margin-bottom:12px">La baseline imprimée reprend automatiquement celle du footer (réglage « Baselines ») — pas de champ séparé.</p>' +
+        '<div class="champ"><label>Adresse web affichée en pied de page</label><input type="text" id="pnUrlImpression" value="' + escHtml(pn.url_impression) + '" placeholder="www.quadreti.fr/pixel-number"></div>' +
+        '<div class="champ" style="margin-top:10px"><label>Destination du QR code</label><input type="text" id="pnQrUrl" value="' + escHtml(pn.qr_code_url) + '" placeholder="https://quadreti.fr/pixel-number/"></div>' +
+      '</div>' +
+
+      '<div class="carte">' +
+        '<div class="carte-entete"><h2>Bibliothèque d\'exemples</h2></div>' +
+        '<p class="aide-section" style="margin-bottom:10px">Sujets proposés sans avoir à charger sa propre photo, par tranche d\'âge.</p>' +
+        TRANCHES_PIXEL_NUMBER.map(function(t){ return '<label class="choix-radio"><input type="radio" name="pnTranche" value="' + t[0] + '"' + (t[0] === trancheActuelle ? ' checked' : '') + '> ' + t[1] + '</label>'; }).join('') +
+        '<div id="pnListeExemples" style="margin-top:14px">' + lignesExemples + '</div>' +
+        '<button type="button" class="btn-texte-ajout" id="pnAjouterExemple">+ Ajouter un exemple</button>' +
+        '<div class="pied-carte"><div class="historique" id="histo-pixel_number_app"></div><button class="btn-enregistrer" id="pnEnregistrer">Enregistrer</button></div>' +
+      '</div>';
+
+    function draft(){
+      return {
+        actif: $('pnActif').classList.contains('on'), titre: $('pnTitre').value.trim(), accroche: $('pnAccroche').value.trim(),
+        pont_titre: $('pnPontTitre').value.trim(), pont_texte: $('pnPontTexte').value.trim(), pont_lien: $('pnPontLien').value.trim(),
+        largeur_defaut: parseInt($('pnLargeur').value, 10) || 28, couleurs_defaut: parseInt($('pnCouleurs').value, 10) || 7,
+        url_impression: $('pnUrlImpression').value.trim(), qr_code_url: $('pnQrUrl').value.trim(),
+        exemples: pn.exemples || {}
+      };
+    }
+
+    $('pnActif').onclick = function(){ this.classList.toggle('on'); };
+    document.querySelectorAll('input[name=pnTranche]').forEach(function(r){ r.onchange = function(){ pn = draft(); trancheActuelle = this.value; dessiner(); }; });
+    $('pnAjouterExemple').onclick = function(){
+      pn = draft();
+      pn.exemples = Object.assign({}, pn.exemples);
+      pn.exemples[trancheActuelle] = (pn.exemples[trancheActuelle] || []).concat([{ nom:'Nouveau sujet', image:'' }]);
+      dessiner();
+    };
+    document.querySelectorAll('[data-ex-monter]').forEach(function(b){ b.onclick = function(){
+      pn = draft(); var i = +b.dataset.exMonter; var liste = pn.exemples[trancheActuelle];
+      var t = liste[i-1]; liste[i-1] = liste[i]; liste[i] = t; dessiner();
+    }; });
+    document.querySelectorAll('[data-ex-descendre]').forEach(function(b){ b.onclick = function(){
+      pn = draft(); var i = +b.dataset.exDescendre; var liste = pn.exemples[trancheActuelle];
+      var t = liste[i+1]; liste[i+1] = liste[i]; liste[i] = t; dessiner();
+    }; });
+    document.querySelectorAll('[data-ex-suppr]').forEach(function(b){ b.onclick = function(){
+      pn = draft(); pn.exemples[trancheActuelle].splice(+b.dataset.exSuppr, 1); dessiner();
+    }; });
+    document.querySelectorAll('[data-ex-nom]').forEach(function(champ){ champ.oninput = function(){
+      pn = draft(); pn.exemples[trancheActuelle][+champ.dataset.exNom].nom = champ.value;
+    }; });
+    document.querySelectorAll('[data-ex-fichier]').forEach(function(input){
+      input.addEventListener('change', function(){
+        var f = this.files[0]; if (!f) return;
+        if (f.size > 4 * 1024 * 1024) { toast('Image trop lourde (4 Mo max).', true); return; }
+        var i = +this.dataset.exFichier;
+        var ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+        toast('Envoi de l\'image…');
+        televerserFichier(f, 'pixel-number-exemple-' + Date.now() + '.' + ext).then(function(res){
+          if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+          pn = draft();
+          pn.exemples[trancheActuelle][i].image = res.d.url;
+          dessiner();
+        }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+      });
+    });
+
+    $('pnEnregistrer').onclick = function(){
+      var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+      pn = draft();
+      enregistrer('pixel_number_app', pn).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('pixel_number_app', 'histo-pixel_number_app', function(){ rendreSectionPixelNumberApp(); }); });
+    };
+    chargerHistorique('pixel_number_app', 'histo-pixel_number_app', function(){ rendreSectionPixelNumberApp(); });
+  }
+
+  dessiner();
 }
 
 var SECTIONS_GUIDES = [
