@@ -334,6 +334,19 @@
     var hero = document.getElementById('hero');
     if (hero) {
       hero.classList.toggle('voile-actif', !!cfg.voile);
+      var video = hero.querySelector('video.shot');
+      if (video && (cfg.video_url || cfg.video_url_mobile)) {
+        /* source[0] = variante mobile (media max-width:759px), source[1] = desktop
+           (voir index.html) — remplace juste l'attribut src, .load() force le
+           navigateur à ressélectionner la bonne source et redéclenche
+           loadedmetadata (les écouteurs vitesse/pause déjà posés restent valables,
+           ils sont sur l'élément video, pas sur la source). */
+        var sources = video.querySelectorAll('source');
+        if (cfg.video_url_mobile && sources[0]) sources[0].src = cfg.video_url_mobile;
+        if (cfg.video_url && sources[1]) sources[1].src = cfg.video_url;
+        video.load();
+        video.play().catch(function () {});
+      }
       if (window.__reglerBandeauVideo) {
         window.__reglerBandeauVideo(
           typeof cfg.vitesse === 'number' ? cfg.vitesse : undefined,

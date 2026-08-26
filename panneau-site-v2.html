@@ -1419,6 +1419,19 @@ function rendreSectionBandeau(){
     '</div>' +
 
     '<div class="carte">' +
+      '<div class="carte-entete"><h2>Fichiers vidéo</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">35 Mo max par fichier, format MP4. Le remplacement est visible immédiatement, sans republier sur GitHub.</p>' +
+      '<div class="rang-image">' +
+        '<video class="miniature" id="bvVideoDesktopApercu" muted autoplay loop playsinline style="object-fit:cover"' + (bv.video_url ? ' src="' + bv.video_url + '"' : '') + '></video>' +
+        '<div class="infos">Vidéo grand écran (desktop/tablette).<br><label class="btn-fichier">Changer la vidéo<input type="file" id="bvVideoDesktopFichier" accept="video/mp4"></label></div>' +
+      '</div>' +
+      '<div class="rang-image" style="margin-top:14px">' +
+        '<video class="miniature" id="bvVideoMobileApercu" muted autoplay loop playsinline style="object-fit:cover"' + (bv.video_url_mobile ? ' src="' + bv.video_url_mobile + '"' : '') + '></video>' +
+        '<div class="infos">Vidéo carrée (mobile, écrans étroits).<br><label class="btn-fichier">Changer la vidéo<input type="file" id="bvVideoMobileFichier" accept="video/mp4"></label></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="carte">' +
       '<div class="carte-entete"><h2>Lecture de la vidéo</h2></div>' +
       '<div class="grille-champs">' +
         '<div class="champ"><label>Vitesse de lecture</label><input type="range" id="bvVitesse" min="0.1" max="2" step="0.1" value="' + bv.vitesse + '"><div class="valeur-inline" id="bvVitesseVal">' + bv.vitesse + '×</div></div>' +
@@ -1427,15 +1440,38 @@ function rendreSectionBandeau(){
       '<div class="pied-carte"><div class="historique" id="histo-bandeau_video"></div><button class="btn-enregistrer" id="bvEnregistrer">Enregistrer</button></div>' +
     '</div>';
 
+  var videoDesktopActuelle = bv.video_url || '';
+  var videoMobileActuelle = bv.video_url_mobile || '';
   function draft(){
-    return {
+    var out = {
       actif: $('bvActif').classList.contains('on'),
       voile: $('bvVoile').classList.contains('on'),
       vitesse: parseFloat($('bvVitesse').value) || 0.6,
       pause_ms: parseInt($('bvPause').value, 10) || 0
     };
+    if (videoDesktopActuelle) out.video_url = videoDesktopActuelle;
+    if (videoMobileActuelle) out.video_url_mobile = videoMobileActuelle;
+    return out;
   }
   function previsualiser(){ envoyerApercu('bandeau_video', draft()); }
+  function televerserVideo(input, apercuId, quelle){
+    input.addEventListener('change', function(){
+      var f = this.files[0]; if (!f) return;
+      if (f.type !== 'video/mp4') { toast('Format non supporté — MP4 uniquement.', true); return; }
+      if (f.size > 35 * 1024 * 1024) { toast('Vidéo trop lourde (35 Mo max).', true); return; }
+      var chemin = 'bandeau-video-' + quelle + '-' + Date.now() + '.mp4';
+      toast('Envoi de la vidéo…');
+      televerserFichier(f, chemin).then(function(res){
+        if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+        if (quelle === 'desktop') videoDesktopActuelle = res.d.url; else videoMobileActuelle = res.d.url;
+        $(apercuId).src = res.d.url;
+        toast('Vidéo envoyée — Enregistrer pour l\'appliquer.');
+        previsualiser();
+      }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+    });
+  }
+  televerserVideo($('bvVideoDesktopFichier'), 'bvVideoDesktopApercu', 'desktop');
+  televerserVideo($('bvVideoMobileFichier'), 'bvVideoMobileApercu', 'mobile');
 
   $('bvActif').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
   $('bvVoile').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
