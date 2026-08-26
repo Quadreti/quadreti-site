@@ -141,7 +141,7 @@
   .btn-icone:disabled{ opacity:.35; cursor:default; }
   .btn-icone.suppr{ color:#b04a36; border-color:#b04a3640; }
   .bloc-sous{ margin:2px 0 14px 18px; padding-left:14px; border-left:2px solid var(--bord); }
-  .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto auto; gap:10px; align-items:end; margin-bottom:8px; }
+  .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto auto auto auto; gap:10px; align-items:end; margin-bottom:8px; }
   .select-deplacer{ font:inherit; font-size:12px; padding:8px 6px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--doux); height:34px; max-width:150px; }
   .btn-texte-ajout{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
 
@@ -1962,6 +1962,8 @@ function rendreSectionMenu(){
             '<div class="champ"><label>Sous-lien</label><input type="text" data-sous-texte="' + i + ',' + j + '" value="' + escHtml(s.texte) + '"></div>' +
             '<div class="champ"><label>Destination</label><input type="text" data-sous-lien="' + i + ',' + j + '" value="' + escHtml(s.lien) + '"></div>' +
             '<select class="select-deplacer" data-deplacer-sous="' + i + ',' + j + '">' + optionsSous + '</select>' +
+            '<button class="btn-icone" data-monter-sous="' + i + ',' + j + '"' + (j === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+            '<button class="btn-icone" data-descendre-sous="' + i + ',' + j + '"' + (j === item.sousMenu.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
             '<button class="btn-icone suppr" data-suppr-sous="' + i + ',' + j + '" title="Retirer">✕</button>' +
           '</div>';
         }).join('');
@@ -2006,6 +2008,21 @@ function rendreSectionMenu(){
     document.querySelectorAll('[data-suppr]').forEach(function(b){ b.onclick = function(){ etat.splice(+b.dataset.suppr, 1); dessiner(); }; });
     document.querySelectorAll('[data-ajout-sous]').forEach(function(b){ b.onclick = function(){ etat[+b.dataset.ajoutSous].sousMenu.push({ texte:'Nouveau sous-lien', lien:'/' }); dessiner(); }; });
     document.querySelectorAll('[data-suppr-sous]').forEach(function(b){ b.onclick = function(){ var p = b.dataset.supprSous.split(','); etat[+p[0]].sousMenu.splice(+p[1], 1); dessiner(); }; });
+    /* Monter/descendre un sous-lien DANS son groupe (meme logique que monter/descendre
+       un lien principal, juste un cran plus profond -- demande du fondateur, pour ne pas
+       devoir retirer/rajouter un sous-lien juste pour le reordonner). */
+    document.querySelectorAll('[data-monter-sous]').forEach(function(b){
+      b.onclick = function(){
+        var p = b.dataset.monterSous.split(','); var i = +p[0], j = +p[1];
+        var sm = etat[i].sousMenu; var t = sm[j-1]; sm[j-1] = sm[j]; sm[j] = t; dessiner();
+      };
+    });
+    document.querySelectorAll('[data-descendre-sous]').forEach(function(b){
+      b.onclick = function(){
+        var p = b.dataset.descendreSous.split(','); var i = +p[0], j = +p[1];
+        var sm = etat[i].sousMenu; var t = sm[j+1]; sm[j+1] = sm[j]; sm[j] = t; dessiner();
+      };
+    });
     /* Deplacer un lien principal vers un groupe existant ou un nouveau groupe --
        corrige un lien mal range sans devoir le retaper a la main. */
     document.querySelectorAll('[data-deplacer-item]').forEach(function(sel){
