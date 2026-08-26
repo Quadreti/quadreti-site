@@ -461,17 +461,22 @@ function rendreSectionTextes(){
   var blocs = SECTIONS_ACCUEIL.map(function(def){
     var id = def[0], titreDefaut = def[1];
     var d = s[id] || {};
+    var lien = d.lien || {};
     return '<div class="bloc-repete">' +
       '<h3>' + titreDefaut + '</h3>' +
       '<div class="champ" style="margin-bottom:10px"><label>Titre</label><input type="text" data-sec-id="' + id + '" data-sec-champ="titre" placeholder="' + titreDefaut.replace(/"/g,'&quot;') + '" value="' + (d.titre || '').replace(/"/g,'&quot;') + '"></div>' +
-      '<div class="champ"><label>Texte</label><textarea data-sec-id="' + id + '" data-sec-champ="texte" placeholder="(garde le texte actuel du site)">' + (d.texte || '') + '</textarea></div>' +
+      '<div class="champ" style="margin-bottom:10px"><label>Texte</label><textarea data-sec-id="' + id + '" data-sec-champ="texte" placeholder="(garde le texte actuel du site)">' + (d.texte || '') + '</textarea></div>' +
+      '<div class="bloc-sous"><div class="rang-sous">' +
+        '<div class="champ"><label>Lien : mot ou phrase (exact, dans le texte ci-dessus)</label><input type="text" data-sec-lien-mot="' + id + '" value="' + escHtml(lien.mot) + '"></div>' +
+        '<div class="champ"><label>Destination</label><input type="text" data-sec-lien-url="' + id + '" value="' + escHtml(lien.url) + '"></div>' +
+      '</div></div>' +
     '</div>';
   }).join('');
 
   $('editeur').innerHTML =
     '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Textes des sections</b></p>' +
     '<h1 class="titre-section">Textes des sections</h1>' +
-    '<p class="aide-section">Le titre et le premier paragraphe de chaque section de la page d\'accueil. Laissez un champ vide pour garder le texte actuel du site.</p>' +
+    '<p class="aide-section">Le titre et le premier paragraphe de chaque section de la page d\'accueil. Laissez un champ vide pour garder le texte actuel du site. Le lien transforme un mot ou une phrase du texte en lien cliquable — il doit correspondre exactement à ce qui est écrit, sinon il est ignoré (jamais de risque de casser la mise en page).</p>' +
     '<div class="carte">' + blocs + '</div>' +
     '<div class="pied-carte"><div class="historique" id="histo-sections_accueil"></div><button class="btn-enregistrer" id="secEnregistrer">Enregistrer les textes</button></div>';
 
@@ -482,9 +487,16 @@ function rendreSectionTextes(){
       if (!out[id]) out[id] = {};
       out[id][cle] = champ.value;
     });
+    document.querySelectorAll('[data-sec-lien-mot]').forEach(function(champ){
+      var id = champ.dataset.secLienMot;
+      if (!out[id]) out[id] = {};
+      var mot = champ.value.trim();
+      var url = document.querySelector('[data-sec-lien-url="' + id + '"]').value.trim();
+      if (mot && url) out[id].lien = { mot: mot, url: url };
+    });
     return out;
   }
-  document.querySelectorAll('[data-sec-id]').forEach(function(champ){
+  document.querySelectorAll('[data-sec-id], [data-sec-lien-mot], [data-sec-lien-url]').forEach(function(champ){
     champ.addEventListener('input', function(){ envoyerApercu('sections_accueil', draft()); });
   });
   $('secEnregistrer').onclick = function(){

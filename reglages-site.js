@@ -253,7 +253,26 @@
       if (!sec) return; /* les autres pages ignorent les sections de l'accueil */
       var d = s[id] || {};
       if (d.titre) { var h = sec.querySelector('h2') || sec.querySelector('h1'); if (h) h.textContent = d.titre; }
-      if (d.texte) { var p = sec.querySelector('p'); if (p) p.textContent = d.texte; }
+      if (d.texte) {
+        var p = sec.querySelector('p');
+        if (p) {
+          /* Lien à l'intérieur du texte : jamais de HTML libre dans un champ texte
+             (un tag mal fermé casserait la page) — un mot/phrase précis, retrouvé par
+             recherche exacte dans le texte, entouré d'un <a> construit par le DOM. */
+          var idx = (d.lien && d.lien.mot && d.lien.url) ? d.texte.indexOf(d.lien.mot) : -1;
+          if (idx === -1) {
+            p.textContent = d.texte;
+          } else {
+            p.textContent = '';
+            p.appendChild(document.createTextNode(d.texte.slice(0, idx)));
+            var a = document.createElement('a');
+            a.href = d.lien.url;
+            a.textContent = d.lien.mot;
+            p.appendChild(a);
+            p.appendChild(document.createTextNode(d.texte.slice(idx + d.lien.mot.length)));
+          }
+        }
+      }
     });
   }
 
