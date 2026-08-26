@@ -100,6 +100,15 @@
   .historique button.lien:disabled{ opacity:.5; cursor:default; text-decoration:none; }
 
   .placeholder-section{ display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:30px 0; color:var(--doux); font-size:13px; max-width:46ch; line-height:1.6; }
+  .placeholder-section button.lien{ font:inherit; border:none; background:none; color:var(--terracotta); cursor:pointer; text-decoration:underline; padding:0; }
+
+  .rang-menu{ display:grid; grid-template-columns:1fr 1fr auto auto auto; gap:10px; align-items:end; margin-bottom:10px; }
+  .btn-icone{ font:inherit; font-size:13px; width:32px; height:34px; border:1px solid var(--bord); background:var(--fond); border-radius:8px; cursor:pointer; color:var(--doux); }
+  .btn-icone:disabled{ opacity:.35; cursor:default; }
+  .btn-icone.suppr{ color:#b04a36; border-color:#b04a3640; }
+  .bloc-sous{ margin:2px 0 14px 18px; padding-left:14px; border-left:2px solid var(--bord); }
+  .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:end; margin-bottom:8px; }
+  .btn-texte-ajout{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
 
   .colonne-apercu{ border-left:1px solid var(--bord); display:flex; flex-direction:column; background:var(--surface); }
   .apercu-entete{ display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--bord); }
@@ -310,7 +319,8 @@ var GROUPES = [
   ]},
   { nom:'Bandeau & menu', items:[
     { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
-    { id:'menu_nav', label:'Menu' }
+    { id:'menu_liens', label:'Liens du menu', reel:true },
+    { id:'menu_nav', label:'Menu (couleurs)' }
   ]},
   { nom:'Page d\'accueil', items:[
     { id:'hero_baseline', label:'Baseline' },
@@ -355,6 +365,7 @@ function afficherSection(id){
   if (id === 'bandeau_video') { rendreSectionBandeau(); return; }
   if (id === 'sections_accueil') { rendreSectionTextes(); return; }
   if (id === 'boutons') { rendreSectionBoutons(); return; }
+  if (id === 'menu_liens') { rendreSectionMenu(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -461,6 +472,91 @@ function rendreSectionBoutons(){
     enregistrer('boutons', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les boutons'; chargerHistorique('boutons', 'histo-boutons', rendreSectionBoutons); });
   };
   chargerHistorique('boutons', 'histo-boutons', rendreSectionBoutons);
+}
+
+/* Menu actuel du site (les 22 pages), pour ne jamais partir d'un formulaire vide. */
+var MENU_PAR_DEFAUT = [
+  { texte:'Accueil', lien:'/index.html' },
+  { texte:'Comment ça marche', sousMenu:[
+    { texte:'Guide de l\'app', lien:'/quadreti-guide-interactif.html' },
+    { texte:'Guide de montage', lien:'/quadreti-guide-codification.html' }
+  ]},
+  { texte:'Boutique', lien:'/boutique/' },
+  { texte:'Blog', lien:'/blog/' },
+  { texte:'Pixel Number', lien:'/coloriages/' },
+  { texte:'Livraison & paiement', lien:'/index.html#livraison' },
+  { texte:'FAQ', lien:'/index.html#faq' },
+  { texte:'Contact', lien:'/contact.html' }
+];
+function escHtml(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+function rendreSectionMenu(){
+  var etat = JSON.parse(JSON.stringify((reglages.menu_liens && reglages.menu_liens.length) ? reglages.menu_liens : []));
+
+  function dessinerListe(){
+    if (!etat.length) {
+      return '<div class="placeholder-section">Le menu suit encore la version codée dans chaque page (identique partout). <button class="lien" id="menuReprendre">Reprendre le menu actuel comme point de départ</button></div>';
+    }
+    var lignes = etat.map(function(item, i){
+      var controles = '<button class="btn-icone" data-monter="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+        '<button class="btn-icone" data-descendre="' + i + '"' + (i === etat.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
+        '<button class="btn-icone suppr" data-suppr="' + i + '" title="Retirer">✕</button>';
+      if (item.sousMenu) {
+        var sousLignes = item.sousMenu.map(function(s, j){
+          return '<div class="rang-sous">' +
+            '<div class="champ"><label>Sous-lien</label><input type="text" data-sous-texte="' + i + ',' + j + '" value="' + escHtml(s.texte) + '"></div>' +
+            '<div class="champ"><label>Destination</label><input type="text" data-sous-lien="' + i + ',' + j + '" value="' + escHtml(s.lien) + '"></div>' +
+            '<button class="btn-icone suppr" data-suppr-sous="' + i + ',' + j + '" title="Retirer">✕</button>' +
+          '</div>';
+        }).join('');
+        return '<div class="bloc-repete"><div class="rang-menu" style="grid-template-columns:1fr auto auto auto">' +
+          '<div class="champ"><label>Groupe</label><input type="text" data-item-texte="' + i + '" value="' + escHtml(item.texte) + '"></div>' +
+          controles +
+        '</div><div class="bloc-sous">' + sousLignes + '<button class="btn-texte-ajout" data-ajout-sous="' + i + '">+ sous-lien</button></div></div>';
+      }
+      return '<div class="bloc-repete"><div class="rang-menu">' +
+        '<div class="champ"><label>Texte</label><input type="text" data-item-texte="' + i + '" value="' + escHtml(item.texte) + '"></div>' +
+        '<div class="champ"><label>Destination</label><input type="text" data-item-lien="' + i + '" value="' + escHtml(item.lien) + '"></div>' +
+        controles +
+      '</div></div>';
+    }).join('');
+    return lignes + '<button class="btn-texte-ajout" id="menuAjouter">+ Ajouter un lien</button>';
+  }
+
+  function dessiner(){
+    $('editeur').innerHTML =
+      '<p class="fil">Bandeau &amp; menu <span style="opacity:.5">/</span> <b>Liens du menu</b></p>' +
+      '<h1 class="titre-section">Liens du menu</h1>' +
+      '<p class="aide-section">Les entrées du menu principal, dans l\'ordre où elles apparaissent — identique sur les 22 pages du site. Les destinations commencent par « / » (ex. <code>/boutique/</code>, <code>/contact.html</code>).</p>' +
+      '<div class="carte" id="menuCarte">' + dessinerListe() + '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-menu_liens"></div><button class="btn-enregistrer" id="menuEnregistrer">Enregistrer le menu</button></div>';
+    lier();
+    envoyerApercu('menu_liens', etat);
+  }
+
+  function lier(){
+    var reprendre = $('menuReprendre');
+    if (reprendre) reprendre.onclick = function(){ etat = JSON.parse(JSON.stringify(MENU_PAR_DEFAUT)); dessiner(); };
+    var ajouter = $('menuAjouter');
+    if (ajouter) ajouter.onclick = function(){ etat.push({ texte:'Nouveau lien', lien:'/' }); dessiner(); };
+    document.querySelectorAll('[data-monter]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.monter; var t = etat[i-1]; etat[i-1] = etat[i]; etat[i] = t; dessiner(); }; });
+    document.querySelectorAll('[data-descendre]').forEach(function(b){ b.onclick = function(){ var i = +b.dataset.descendre; var t = etat[i+1]; etat[i+1] = etat[i]; etat[i] = t; dessiner(); }; });
+    document.querySelectorAll('[data-suppr]').forEach(function(b){ b.onclick = function(){ etat.splice(+b.dataset.suppr, 1); dessiner(); }; });
+    document.querySelectorAll('[data-ajout-sous]').forEach(function(b){ b.onclick = function(){ etat[+b.dataset.ajoutSous].sousMenu.push({ texte:'Nouveau sous-lien', lien:'/' }); dessiner(); }; });
+    document.querySelectorAll('[data-suppr-sous]').forEach(function(b){ b.onclick = function(){ var p = b.dataset.supprSous.split(','); etat[+p[0]].sousMenu.splice(+p[1], 1); dessiner(); }; });
+    document.querySelectorAll('[data-item-texte]').forEach(function(c){ c.oninput = function(){ etat[+c.dataset.itemTexte].texte = c.value; envoyerApercu('menu_liens', etat); }; });
+    document.querySelectorAll('[data-item-lien]').forEach(function(c){ c.oninput = function(){ etat[+c.dataset.itemLien].lien = c.value; envoyerApercu('menu_liens', etat); }; });
+    document.querySelectorAll('[data-sous-texte]').forEach(function(c){ c.oninput = function(){ var p = c.dataset.sousTexte.split(','); etat[+p[0]].sousMenu[+p[1]].texte = c.value; envoyerApercu('menu_liens', etat); }; });
+    document.querySelectorAll('[data-sous-lien]').forEach(function(c){ c.oninput = function(){ var p = c.dataset.sousLien.split(','); etat[+p[0]].sousMenu[+p[1]].lien = c.value; envoyerApercu('menu_liens', etat); }; });
+    var enr = $('menuEnregistrer');
+    if (enr) enr.onclick = function(){
+      enr.disabled = true; enr.textContent = 'Enregistrement…';
+      enregistrer('menu_liens', etat).then(function(){ enr.disabled = false; enr.textContent = 'Enregistrer le menu'; chargerHistorique('menu_liens', 'histo-menu_liens', rendreSectionMenu); });
+    };
+    chargerHistorique('menu_liens', 'histo-menu_liens', rendreSectionMenu);
+  }
+
+  dessiner();
 }
 
 function rendreSectionBandeau(){

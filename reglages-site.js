@@ -146,6 +146,43 @@
     texte('.qz-cat', b.categorie);
   }
 
+  /* Reconstruit entièrement les liens du menu (#qzNavPanel > ul) à partir d'une liste
+     réglable — absent ou vide = le menu codé en dur de la page (22 pages, chemins
+     relatifs à chacune) reste inchangé, comportement identique à aujourd'hui.
+     Les liens du réglage sont volontairement à la racine (commencent par /) : un seul
+     réglage marche pareil sur les 22 pages, pas besoin de connaître leur profondeur. */
+  function echapper(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function appliquerMenuLiens(liens) {
+    if (!liens || !liens.length) return;
+    var panel = document.getElementById('qzNavPanel');
+    var ul = panel && panel.querySelector('ul');
+    if (!ul) return;
+    ul.innerHTML = liens.map(function (item) {
+      if (item.sousMenu && item.sousMenu.length) {
+        return '<li class="qz-hassub"><button class="qz-subtoggle" aria-expanded="false">' + echapper(item.texte) +
+          ' <span class="qz-chev">▾</span></button><ul class="qz-sublist">' +
+          item.sousMenu.map(function (s) { return '<li><a href="' + echapper(s.lien) + '">' + echapper(s.texte) + '</a></li>'; }).join('') +
+          '</ul></li>';
+      }
+      return '<li><a href="' + echapper(item.lien) + '">' + echapper(item.texte) + '</a></li>';
+    }).join('');
+    if (!panel.dataset.qzMenuDelegue) {
+      panel.dataset.qzMenuDelegue = '1';
+      panel.addEventListener('click', function (e) {
+        var tog = e.target.closest && e.target.closest('.qz-subtoggle');
+        if (!tog) return;
+        var item = tog.closest('.qz-hassub');
+        var open = !item.classList.contains('open');
+        item.classList.toggle('open', open);
+        tog.setAttribute('aria-expanded', String(open));
+      });
+    }
+  }
+
   function appliquerReseaux(r) {
     if (!r) return;
     ['Facebook', 'Snapchat', 'TikTok', 'YouTube', 'WhatsApp'].forEach(function (nom) {
@@ -600,6 +637,7 @@
     var sec = c.sections || {};
     var palette = appliquerCouleurs(c);
     appliquerMenuNav(g.menu_nav, palette, sec.bandeau !== false);
+    appliquerMenuLiens(g.menu_liens);
     appliquerHeroBaseline(g.hero_baseline, palette, sec.accueil !== false);
     appliquerHeroChangez(g.hero_changez, palette, sec.accueil !== false);
     appliquerPolices(g.polices);
