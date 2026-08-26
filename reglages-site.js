@@ -563,6 +563,7 @@
     img.src = cfg.url;
     if (cfg.hauteur) img.style.maxHeight = cfg.hauteur + 'px';
     if (cfg.largeur) img.style.maxWidth = cfg.largeur + 'px';
+    img.classList.remove('qz-logo-anim-fondu', 'qz-logo-anim-glisse');
     var anim = { fondu: 'qz-logo-anim-fondu', glisse: 'qz-logo-anim-glisse' }[cfg.animation];
     if (anim) img.classList.add(anim);
     row.classList.add('perso-actif');

@@ -314,8 +314,8 @@ dimensionnerIframe();
 var GROUPES = [
   { nom:'Identité visuelle', items:[
     { id:'palette', label:'Palette maîtresse' },
-    { id:'polices', label:'Polices' },
-    { id:'logo', label:'Logo' }
+    { id:'polices', label:'Polices', reel:true },
+    { id:'logo', label:'Logo', reel:true }
   ]},
   { nom:'Bandeau & menu', items:[
     { id:'bandeau_video', label:'Bandeau : vidéo ou image', reel:true },
@@ -369,6 +369,8 @@ function afficherSection(id){
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
   if (id === 'sections_ordre') { rendreSectionOrdre(); return; }
   if (id === 'reseaux_liste') { rendreSectionReseaux(); return; }
+  if (id === 'polices') { rendreSectionPolices(); return; }
+  if (id === 'logo') { rendreSectionLogo(); return; }
   rendreSectionAVenir(id);
 }
 function rendreSectionAVenir(id){
@@ -501,6 +503,95 @@ function rendreSectionReseaux(){
   }
 
   dessiner();
+}
+
+var POLICES_DISPONIBLES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
+
+function rendreSectionPolices(){
+  var p = Object.assign({ titres:'Quicksand', texte:'Karla' }, reglages.polices || {});
+  var options = function(sel){ return POLICES_DISPONIBLES.map(function(f){ return '<option value="' + f + '"' + (f === sel ? ' selected' : '') + '>' + f + '</option>'; }).join(''); };
+
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Polices</b></p>' +
+    '<h1 class="titre-section">Polices</h1>' +
+    '<p class="aide-section">Quicksand et Karla sont les polices d\'origine du site.</p>' +
+    '<div class="carte">' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Titres</label><select id="pTitres">' + options(p.titres) + '</select></div>' +
+        '<div class="champ"><label>Texte courant</label><select id="pTexte">' + options(p.texte) + '</select></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-polices"></div><button class="btn-enregistrer" id="pEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){ return { titres: $('pTitres').value, texte: $('pTexte').value }; }
+  function previsualiser(){ envoyerApercu('polices', draft()); }
+  $('pTitres').onchange = previsualiser;
+  $('pTexte').onchange = previsualiser;
+  $('pEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('polices', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('polices', 'histo-polices', rendreSectionPolices); });
+  };
+  chargerHistorique('polices', 'histo-polices', rendreSectionPolices);
+}
+
+function rendreSectionLogo(){
+  var lp = Object.assign({ url:'', hauteur:42, largeur:'', animation:'aucune' }, reglages.logo_perso || {});
+
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Logo</b></p>' +
+    '<h1 class="titre-section">Logo personnalisé</h1>' +
+    '<p class="aide-section">Remplace le logo animé du bandeau (icône + « Quadretı ») par votre propre image, au même emplacement. « Retirer » revient au logo Quadreti d\'origine.</p>' +
+    '<div class="carte">' +
+      '<div class="rang-image">' +
+        '<div class="miniature" id="logoMiniature" style="' + (lp.url ? "background-image:url('" + lp.url + "')" : '') + '"></div>' +
+        '<div class="infos">' + (lp.url ? 'Logo personnalisé actif.' : 'Aucun logo personnalisé — le logo Quadreti d\'origine est affiché.') +
+          '<br><label class="btn-fichier">Choisir une image<input type="file" id="logoFichier" accept="image/*"></label>' +
+          (lp.url ? ' <button class="btn-icone" id="logoRetirer" title="Retirer" style="vertical-align:middle">✕</button>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="grille-champs" style="margin-top:16px">' +
+        '<div class="champ"><label>Hauteur (px)</label><input type="number" id="logoHauteur" min="16" max="120" step="1" value="' + lp.hauteur + '"></div>' +
+        '<div class="champ"><label>Largeur maximale (px, facultatif)</label><input type="number" id="logoLargeur" min="16" max="400" step="1" value="' + lp.largeur + '"></div>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px"><label>Animation à l\'apparition</label>' +
+        '<select id="logoAnimation">' +
+          '<option value="aucune"' + (lp.animation === 'aucune' ? ' selected' : '') + '>Aucune</option>' +
+          '<option value="fondu"' + (lp.animation === 'fondu' ? ' selected' : '') + '>Fondu</option>' +
+          '<option value="glisse"' + (lp.animation === 'glisse' ? ' selected' : '') + '>Glissade depuis la gauche</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-logo_perso"></div><button class="btn-enregistrer" id="logoEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  var urlActuelle = lp.url;
+  function draft(){ return { url: urlActuelle, hauteur: parseInt($('logoHauteur').value, 10) || 42, largeur: parseInt($('logoLargeur').value, 10) || undefined, animation: $('logoAnimation').value }; }
+  function previsualiser(){ envoyerApercu('logo_perso', draft()); }
+
+  $('logoHauteur').oninput = previsualiser;
+  $('logoLargeur').oninput = previsualiser;
+  $('logoAnimation').onchange = previsualiser;
+  var retirer = $('logoRetirer');
+  if (retirer) retirer.onclick = function(){ urlActuelle = ''; rendreSectionLogo(); };
+
+  $('logoFichier').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    if (f.size > 4 * 1024 * 1024) { toast('Image trop lourde (4 Mo max).', true); return; }
+    var ext = (f.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g,'') || 'png';
+    var chemin = 'logo-perso-' + Date.now() + '.' + ext;
+    toast('Envoi du logo…');
+    televerserFichier(f, chemin).then(function(res){
+      if (!res.ok || !res.d.url) { toast(res.d && res.d.erreur ? res.d.erreur : 'Envoi impossible.', true); return; }
+      urlActuelle = res.d.url;
+      previsualiser();
+      rendreSectionLogo();
+    }).catch(function(){ toast('Envoi impossible (réseau).', true); });
+  });
+
+  $('logoEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('logo_perso', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('logo_perso', 'histo-logo_perso', rendreSectionLogo); });
+  };
+  chargerHistorique('logo_perso', 'histo-logo_perso', rendreSectionLogo);
 }
 
 function rendreSectionOrdre(){
