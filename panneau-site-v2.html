@@ -362,6 +362,7 @@ var GROUPES = [
     { id:'hero_baseline', label:'Baseline' },
     { id:'sections_accueil', label:'Textes des sections', reel:true },
     { id:'sections_ordre', label:'Visibilité & ordre', reel:true },
+    { id:'styles_sections', label:'Style par section', reel:true },
     { id:'disposition', label:'Disposition du bouton CTA', reel:true }
   ]},
   { nom:'Boutons', items:[
@@ -410,6 +411,7 @@ function afficherSection(id){
   if (id === 'boutons') { rendreSectionBoutons(); return; }
   if (id === 'menu_liens') { rendreSectionMenu(); return; }
   if (id === 'sections_ordre') { rendreSectionOrdre(); return; }
+  if (id === 'styles_sections') { rendreSectionStyles(); return; }
   if (id === 'reseaux_liste') { rendreSectionReseaux(); return; }
   if (id === 'palette') { rendreSectionPalette(); return; }
   if (id === 'polices') { rendreSectionPolices(); return; }
@@ -1135,6 +1137,73 @@ function rendreSectionSectionsGuides(){
     enregistrer('sections_guides', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('sections_guides', 'histo-sections_guides', rendreSectionSectionsGuides); });
   };
   chargerHistorique('sections_guides', 'histo-sections_guides', rendreSectionSectionsGuides);
+}
+
+function rendreSectionStyles(){
+  var tousStyles = reglages.styles_sections || {};
+  var sectionActuelle = SECTIONS_ACCUEIL[0][0];
+
+  function dessiner(){
+    var titres = {}; SECTIONS_ACCUEIL.forEach(function(d){ titres[d[0]] = d[1]; });
+    var s = tousStyles[sectionActuelle] || {};
+    var perso = !!(s.police || s.taille || s.couleur || s.fond);
+
+    $('editeur').innerHTML =
+      '<p class="fil">Page d\'accueil <span style="opacity:.5">/</span> <b>Style par section</b></p>' +
+      '<h1 class="titre-section">Style par section</h1>' +
+      '<p class="aide-section">Donne à UNE section sa propre police, taille de texte, couleur et fond — indépendamment de la palette du site. Laissée désactivée, la section garde le style général.</p>' +
+      '<div class="carte">' +
+        '<div class="champ" style="max-width:340px"><label>Section</label><select id="stSection">' +
+          SECTIONS_ACCUEIL.map(function(d){ return '<option value="' + d[0] + '"' + (d[0] === sectionActuelle ? ' selected' : '') + '>' + d[1] + (tousStyles[d[0]] ? ' (personnalisée)' : '') + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="toggle-ligne" style="margin-top:10px"><div class="toggle-txt"><b>Style personnalisé pour cette section</b></div><button class="interrupteur' + (perso ? ' on' : '') + '" id="stPerso"><i></i></button></div>' +
+        '<div id="stChamps" style="' + (perso ? '' : 'display:none') + '">' +
+          '<div class="grille-champs" style="margin-top:14px">' +
+            '<div class="champ"><label>Police</label><select id="stPolice">' + ['(garder la police du thème)'].concat(POLICES_DISPONIBLES).map(function(f){ var v = f.indexOf('(') === 0 ? '' : f; return '<option value="' + v + '"' + (v === (s.police||'') ? ' selected' : '') + '>' + f + '</option>'; }).join('') + '</select></div>' +
+            '<div class="champ"><label>Taille du texte (px)</label><input type="number" id="stTaille" min="10" max="40" value="' + (s.taille || '') + '" placeholder="16"></div>' +
+          '</div>' +
+          '<div class="grille-champs" style="margin-top:14px">' +
+            '<div class="champ"><label>Couleur du texte</label><div class="rang-couleur"><input type="color" id="stCouleur" value="' + (s.couleur || '#2b353e') + '"><code id="stCouleurHex">' + (s.couleur || '(thème)') + '</code></div></div>' +
+            '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="stFond" value="' + (s.fond || '#ffffff') + '"><code id="stFondHex">' + (s.fond || '(thème)') + '</code></div></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="pied-carte"><div class="historique" id="histo-styles_sections"></div><button class="btn-enregistrer" id="stEnregistrer">Enregistrer</button></div>' +
+      '</div>';
+
+    function draftSection(){
+      if (!$('stPerso').classList.contains('on')) return null;
+      var out = {};
+      if ($('stPolice').value) out.police = $('stPolice').value;
+      if ($('stTaille').value) out.taille = parseInt($('stTaille').value, 10);
+      if ($('stCouleur').dataset.touche === '1') out.couleur = $('stCouleur').value;
+      if ($('stFond').dataset.touche === '1') out.fond = $('stFond').value;
+      else if (s.fond) out.fond = s.fond;
+      if (s.couleur && !out.couleur) out.couleur = s.couleur;
+      return Object.keys(out).length ? out : null;
+    }
+    function draftComplet(){
+      var out = Object.assign({}, tousStyles);
+      var d = draftSection();
+      if (d) out[sectionActuelle] = d; else delete out[sectionActuelle];
+      return out;
+    }
+    function previsualiser(){ envoyerApercu('styles_sections', draftComplet()); }
+
+    $('stSection').onchange = function(){ tousStyles = draftComplet(); sectionActuelle = this.value; dessiner(); };
+    $('stPerso').onclick = function(){ this.classList.toggle('on'); $('stChamps').style.display = this.classList.contains('on') ? '' : 'none'; previsualiser(); };
+    $('stPolice').onchange = previsualiser;
+    $('stTaille').oninput = previsualiser;
+    $('stCouleur').oninput = function(){ this.dataset.touche = '1'; $('stCouleurHex').textContent = this.value; previsualiser(); };
+    $('stFond').oninput = function(){ this.dataset.touche = '1'; $('stFondHex').textContent = this.value; previsualiser(); };
+    $('stEnregistrer').onclick = function(){
+      var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+      tousStyles = draftComplet();
+      enregistrer('styles_sections', tousStyles).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('styles_sections', 'histo-styles_sections', rendreSectionStyles); });
+    };
+    chargerHistorique('styles_sections', 'histo-styles_sections', rendreSectionStyles);
+  }
+
+  dessiner();
 }
 
 function rendreSectionOrdre(){

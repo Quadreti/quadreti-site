@@ -114,28 +114,47 @@
     injecterStyle('qz-reglages-disposition', css);
   }
 
+  /* Charge une police Google Fonts si besoin (pas déjà présente, pas une des deux
+     polices d'origine déjà chargées dans le <head> de chaque page). Partagé entre
+     appliquerPolices (site entier) et appliquerStylesSections (une section). */
+  function chargerPoliceGoogle(famille) {
+    if (!famille || famille === 'Quicksand' || famille === 'Karla') return;
+    var href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(famille) + ':wght@400;500;600;700&display=swap';
+    if (!document.querySelector('link[href="' + href + '"]')) {
+      var l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = href;
+      document.head.appendChild(l);
+    }
+  }
+
   function appliquerPolices(p) {
     if (!p) return;
     var titres = p.titres || DEFAUTS.polices.titres;
     var texte = p.texte || DEFAUTS.polices.texte;
     if (titres === DEFAUTS.polices.titres && texte === DEFAUTS.polices.texte) return;
-    var familles = [];
-    [titres, texte].forEach(function (f) {
-      if (f !== 'Quicksand' && f !== 'Karla' && familles.indexOf(f) < 0) familles.push(f);
-    });
-    if (familles.length) {
-      var href = 'https://fonts.googleapis.com/css2?' + familles.map(function (f) {
-        return 'family=' + encodeURIComponent(f) + ':wght@400;500;600;700';
-      }).join('&') + '&display=swap';
-      if (!document.querySelector('link[href="' + href + '"]')) {
-        var l = document.createElement('link');
-        l.rel = 'stylesheet'; l.href = href;
-        document.head.appendChild(l);
-      }
-    }
+    chargerPoliceGoogle(titres); chargerPoliceGoogle(texte);
     injecterStyle('qz-reglages-polices',
       'body,p,li,a,input,button,textarea{font-family:\'' + texte + '\',sans-serif}' +
       'h1,h2,h3,h4,.qz-wordmark,.qz-cat,.cta,.qz-cta{font-family:\'' + titres + '\',sans-serif}');
+  }
+
+  /* Style dédié à UNE section de l'accueil (police/taille/couleur/fond) : CSS ciblé
+     sur son identifiant, qui l'emporte naturellement sur les règles générales du site
+     (spécificité #id > body/h2 génériques) — pas de bidouille de priorité nécessaire.
+     Absent/vide = la section garde le style du thème global. */
+  function appliquerStylesSections(styles) {
+    if (!styles) return;
+    var css = '';
+    Object.keys(styles).forEach(function (id) {
+      var s = styles[id];
+      if (!s || SECTIONS_ACCUEIL_IDS.indexOf(id) === -1) return;
+      var sel = '#' + id;
+      if (s.fond) css += sel + '{background:' + s.fond + '!important}\n';
+      if (s.couleur) css += sel + ' h2,' + sel + ' h3,' + sel + ' p,' + sel + ' li,' + sel + ' b{color:' + s.couleur + '!important}\n';
+      if (s.police) { chargerPoliceGoogle(s.police); css += sel + '{font-family:\'' + s.police + '\',sans-serif}\n'; }
+      if (s.taille) css += sel + ' p{font-size:' + s.taille + 'px}\n';
+    });
+    if (css) injecterStyle('qz-styles-sections', css);
   }
 
   function texte(sel, val) {
@@ -712,6 +731,7 @@
     appliquerSections(g.sections_guides);
     appliquerOrdreSections(g.sections_ordre);
     appliquerVisibiliteSections(g.sections_visibilite);
+    appliquerStylesSections(g.styles_sections);
     appliquerPageContact(g.page_contact);
     appliquerPageColoriages(g.page_coloriages);
     appliquerBandeauVideo(g.bandeau_video);
