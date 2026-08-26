@@ -385,6 +385,7 @@ var GROUPES = [
     { id:'taquin_app', label:'Taquin (jeu)', reel:true },
     { id:'mosaique_revelee_app', label:'Mosaïque Révélée (jeu)', reel:true },
     { id:'mandala_app', label:'Mandala (jeu)', reel:true },
+    { id:'memo_app', label:'Mémo (jeu)', reel:true },
     { id:'sections_guides', label:'Textes des guides', reel:true }
   ]},
   { nom:'Footer & légal', items:[
@@ -439,6 +440,7 @@ function afficherSection(id){
   if (id === 'taquin_app') { rendreSectionTaquinApp(); return; }
   if (id === 'mosaique_revelee_app') { rendreSectionMosaiqueRevelee(); return; }
   if (id === 'mandala_app') { rendreSectionMandala(); return; }
+  if (id === 'memo_app') { rendreSectionMemo(); return; }
   if (id === 'sections_guides') { rendreSectionSectionsGuides(); return; }
   if (id === 'hero_baseline') { rendreSectionZone('hero_baseline', 'hb', 'Baseline', 'Page d\'accueil', 'Le texte en haut de la photo/vidéo d\'accueil, 1 à 3 lignes.', { min:16, max:60, defaut:20 }, { min:0, max:300, defaut:0 }, 'haut-centre'); return; }
   if (id === 'hero_changez') { rendreSectionZone('hero_changez', 'hc', 'Ligne « Changez à volonté »', 'Page d\'accueil', 'Le texte en bas de la photo/vidéo d\'accueil, au-dessus du bouton « Composer mon mur ».', { min:16, max:70, defaut:20 }, { min:0, max:300, defaut:100 }, 'bas-centre'); return; }
@@ -1361,6 +1363,43 @@ function rendreSectionMandala(){
   chargerHistorique('mandala_app', 'histo-mandala_app', rendreSectionMandala);
 }
 
+function rendreSectionMemo(){
+  var mm = Object.assign({ actif:true, titre:'', accroche:'', pont_titre:'', pont_texte:'', pont_lien:'' }, reglages.memo_app || {});
+
+  $('editeur').innerHTML =
+    '<p class="fil">Contenu des pages <span style="opacity:.5">/</span> <b>Mémo</b></p>' +
+    '<h1 class="titre-section">Mémo (jeu)</h1>' +
+    '<p class="aide-section">Le jeu de paires (motifs ou photos, mode libre ou chrono). Pas d\'aperçu en direct — c\'est une page séparée, ouvrez-la dans un nouvel onglet pour vérifier après enregistrement.</p>' +
+
+    '<div class="carte">' +
+      '<div class="toggle-ligne"><div class="toggle-txt"><b>Outil publié</b><span>Visible sur le site</span></div><button class="interrupteur' + (mm.actif ? ' on' : '') + '" id="mmActif"><i></i></button></div>' +
+      '<div class="champ" style="margin-top:12px"><label>Titre</label><input type="text" id="mmTitre" value="' + escHtml(mm.titre) + '" placeholder="Un mémo, aux couleurs Quadreti."></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Accroche</label><textarea id="mmAccroche" placeholder="Retrouvez les paires — motifs de la bibliothèque, ou vos propres photos.">' + escHtml(mm.accroche) + '</textarea></div>' +
+    '</div>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Pont vers la mosaïque</h2></div>' +
+      '<p class="aide-section" style="margin-bottom:12px">Affiché sous le jeu.</p>' +
+      '<div class="champ"><label>Titre</label><input type="text" id="mmPontTitre" value="' + escHtml(mm.pont_titre) + '" placeholder="Envie de les revoir sur un vrai mur ?"></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Texte</label><textarea id="mmPontTexte" placeholder="Composez une mosaïque Quadreti à partir de vos propres photos.">' + escHtml(mm.pont_texte) + '</textarea></div>' +
+      '<div class="champ" style="margin-top:10px"><label>Lien</label><input type="text" id="mmPontLien" value="' + escHtml(mm.pont_lien) + '" placeholder="https://designer.quadreti.fr (par défaut)"></div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-memo_app"></div><button class="btn-enregistrer" id="mmEnregistrer">Enregistrer</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      actif: $('mmActif').classList.contains('on'), titre: $('mmTitre').value.trim(), accroche: $('mmAccroche').value.trim(),
+      pont_titre: $('mmPontTitre').value.trim(), pont_texte: $('mmPontTexte').value.trim(), pont_lien: $('mmPontLien').value.trim()
+    };
+  }
+  $('mmActif').onclick = function(){ this.classList.toggle('on'); };
+  $('mmEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('memo_app', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('memo_app', 'histo-memo_app', rendreSectionMemo); });
+  };
+  chargerHistorique('memo_app', 'histo-memo_app', rendreSectionMemo);
+}
+
 var SECTIONS_GUIDES = [
   ['guideInteractifHero', 'Guide de l\'app — titre d\'accueil'],
   ['guideCodifHero', 'Guide de montage — titre d\'accueil'],
@@ -1780,6 +1819,7 @@ var MENU_PAR_DEFAUT = [
   { texte:'Taquin', lien:'/taquin/' },
   { texte:'Mosaïque Révélée', lien:'/mosaique-revelee/' },
   { texte:'Mandala', lien:'/mandala/' },
+  { texte:'Mémo', lien:'/memo/' },
   { texte:'Livraison & paiement', lien:'/index.html#livraison' },
   { texte:'FAQ', lien:'/index.html#faq' },
   { texte:'Contact', lien:'/contact.html' }

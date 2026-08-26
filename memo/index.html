@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mandala Quadreti — À colorier en ligne ou à imprimer | Quadreti</title>
-<meta name="description" content="Un mandala à colorier, à l'écran ou sur papier. Palette de couleurs, mémoire, code hex, pipette. Gratuit, par Quadreti.">
+<title>Mémo Quadreti — Jeu de paires gratuit | Quadreti</title>
+<meta name="description" content="Un mémo aux couleurs Quadreti : retrouvez les paires parmi les motifs de la bibliothèque, ou avec vos propres photos. Mode libre ou chrono, gratuit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
@@ -63,7 +63,7 @@
   .qz-burger.active span:nth-child(2){ opacity:0; }
   .qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
   .qz-navpanel{ width:100%; background:var(--qz-charbon); max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
-  .qz-navpanel.open{ max-height:640px; }
+  .qz-navpanel.open{ max-height:680px; }
   .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
   .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
   .qz-navpanel a{ font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
@@ -168,57 +168,66 @@
   .onglet-mode{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:9px 20px; cursor:pointer; }
   .onglet-mode.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
 
-  .cadre{ max-width:960px; margin:20px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 270px; gap:28px; align-items:start; justify-content:center; }
+  .cadre{ max-width:960px; margin:20px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 260px; gap:28px; align-items:start; justify-content:center; }
   @media (max-width:800px){ .cadre{ grid-template-columns:1fr; justify-items:center; } }
 
-  .toile-carte{ background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:18px; box-shadow:0 20px 50px -30px #2b353e55; }
-  .toile{ width:min(420px,80vw); height:min(420px,80vw); display:block; }
-  .region{ stroke:var(--charbon); stroke-width:1; cursor:pointer; transition:filter .1s ease; }
-  .region:hover{ filter:brightness(0.94); }
+  .plateau-carte{ background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:18px; box-shadow:0 20px 50px -30px #2b353e55; }
+  .grille-memo{ display:grid; gap:8px; width:min(420px,80vw); }
+  .carte-memo{ aspect-ratio:3/4; perspective:700px; cursor:pointer; }
+  .carte-memo .interieur{ position:relative; width:100%; height:100%; transition:transform .4s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+  .carte-memo.retournee .interieur{ transform:rotateY(180deg); }
+  .face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:9px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .face-dos{ background:var(--charbon); }
+  .face-dos .qlogo{ display:grid; grid-template-columns:repeat(4,5px); grid-template-rows:repeat(4,5px); gap:1.2px; opacity:.5; }
+  .face-dos .qlogo i{ border-radius:1.2px; background:transparent; }
+  .face-dos .qlogo i.t{ background:var(--creme); }
+  .face-dos .qlogo i.a{ background:var(--terracotta); }
+  .face-image{ background:var(--papier); border:1.5px solid var(--bord); transform:rotateY(180deg); }
+  .face-image svg{ width:55%; height:55%; }
+  .face-image img{ width:100%; height:100%; object-fit:cover; }
+  .carte-memo.trouvee .interieur{ opacity:.55; }
+  .carte-memo.secouee .interieur{ animation:secousse .22s ease; }
+  @keyframes secousse{ 0%,100%{ transform:rotateY(0deg) translateX(0); } 25%{ transform:rotateY(0deg) translateX(-4px); } 75%{ transform:rotateY(0deg) translateX(4px); } }
+  @media (prefers-reduced-motion: reduce){ .carte-memo .interieur{ transition:none; } .carte-memo.secouee .interieur{ animation:none; } }
 
   .panneau{ display:flex; flex-direction:column; gap:14px; }
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
   .carte .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
-
-  .rang-actif{ display:flex; align-items:center; gap:10px; }
-  .pastille-active{ width:36px; height:36px; border-radius:50%; border:2px solid var(--surface); box-shadow:0 0 0 1.5px var(--bord); flex-shrink:0; }
-  .rang-actif .hex-actuel{ font-family:ui-monospace,monospace; font-size:13px; color:var(--doux); }
-
-  .grille-palette{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
-  .swatch{ aspect-ratio:1; border-radius:8px; border:2px solid transparent; cursor:pointer; padding:0; }
-  .swatch.actif{ border-color:var(--charbon); }
-
-  .rang-memoire{ display:flex; gap:6px; flex-wrap:wrap; min-height:26px; }
-  .rang-memoire .swatch{ width:26px; height:26px; flex:0 0 auto; }
-  .memoire-vide{ font-size:11px; color:var(--doux); font-style:italic; }
-
-  .rang-hex{ display:flex; gap:6px; }
-  .rang-hex input{ flex:1; min-width:0; font:inherit; font-family:ui-monospace,monospace; font-size:13px; padding:8px 10px; border:1.5px solid var(--bord); border-radius:8px; background:var(--papier); color:var(--texte); }
-  .rang-hex input:invalid{ border-color:#b04a36; }
-
-  .btn-pipette{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; padding:10px; border-radius:10px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte); cursor:pointer; }
-  .btn-pipette:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .btn-pipette:disabled{ opacity:.4; cursor:default; }
-  .btn-pipette svg{ width:16px; height:16px; }
+  .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
+  .carte-stat .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
+  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:20px; }
 
   .rang-scrollable{ display:flex; align-items:center; gap:6px; }
   .fleche-scroll{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; padding:0; }
   .fleche-scroll:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .choix-motif{ display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
-  .choix-motif::-webkit-scrollbar{ display:none; }
-  .btn-motif{ scroll-snap-align:start; flex:0 0 auto; min-width:84px; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11.5px; padding:8px 4px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
-  .btn-motif.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .choix-taille{ display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
+  .choix-taille::-webkit-scrollbar{ display:none; }
+  .btn-taille{ scroll-snap-align:start; flex:0 0 auto; min-width:88px; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; padding:8px 4px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-taille.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
   .points-scroll{ display:flex; justify-content:center; gap:6px; margin-top:8px; }
   .points-scroll span{ width:6px; height:6px; border-radius:50%; background:var(--bord); display:block; }
   .points-scroll span.actif{ background:var(--terracotta); width:16px; border-radius:99px; transition:width .15s ease; }
 
   .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; border:none; border-radius:99px; padding:12px 20px; cursor:pointer; text-align:center; width:100%; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
-  .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
   .btn.principal:hover{ background:#1c232a; }
 
   .rang-fichier{ display:flex; flex-direction:column; gap:8px; }
   .rang-fichier input[type=file]{ font-family:'Karla',sans-serif; font-size:11.5px; color:var(--doux); }
+  .note-fichier{ font-size:10.5px; color:var(--doux); margin:0; }
+
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .victoire.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
+  .defaite{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--papier); border:1px dashed var(--doux); color:var(--doux); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .defaite.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
+  @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .victoire.actif, .defaite.actif{ animation:none; } }
+
+  .etat-apercu{ text-align:center; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); margin:0 0 10px; }
+
+  .choix-jeu{ display:flex; gap:6px; }
+  .btn-jeu{ flex:1; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; padding:8px 4px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-jeu.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
 
   .note{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
 
@@ -227,28 +236,6 @@
   .carte-pont h3{ font-size:18px; margin:0 0 6px; color:var(--creme); }
   .carte-pont p{ font-size:13px; color:#d9d4c4; margin:0; max-width:48ch; }
   .carte-pont .btn.principal{ background:var(--terracotta); color:#fff; flex-shrink:0; width:auto; }
-
-  #zoneImpression{ display:none; }
-  @media print{
-    body > *:not(#zoneImpression){ display:none !important; }
-    #zoneImpression{ display:block !important; }
-    .page-imp{ width:100%; box-sizing:border-box; }
-    .imp-entete{ display:flex; align-items:center; gap:9px; border-bottom:2px solid #1A1611; padding-bottom:10px; margin-bottom:14px; }
-    .imp-logo{ display:grid; grid-template-columns:repeat(4,3.2px); grid-template-rows:repeat(4,3.2px); gap:0.9px; flex-shrink:0; }
-    .imp-logo i{ border-radius:0.8px; background:transparent; }
-    .imp-logo i.t{ background:#1A1611; }
-    .imp-logo i.a{ background:#E2725B; }
-    .imp-marque{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:#1A1611; }
-    .imp-baseline{ font-size:9.5px; color:#6b6355; flex:1; text-align:right; }
-    .imp-titre{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; margin:0 0 14px; color:#1A1611; text-align:center; }
-    .imp-svg-cadre{ display:flex; justify-content:center; }
-    .imp-svg-cadre svg{ width:160mm; height:160mm; }
-    .imp-svg-cadre svg .region{ stroke:#1A1611; }
-    .imp-pied{ display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid #1A161122; padding-top:9px; margin-top:16px; }
-    .imp-url{ font-family:ui-monospace,monospace; font-size:9.5px; color:#6b6355; }
-    .imp-qr{ width:20mm; height:20mm; border:1.3px dashed #6b6355; border-radius:2mm; display:flex; align-items:center; justify-content:center; font-size:7px; color:#6b6355; text-align:center; }
-    @page{ margin:14mm; }
-  }
 </style>
 </head>
 <body id="qz-top">
@@ -284,8 +271,8 @@
     <li><a href="../coloriages/">Coloriages (bibliothèque)</a></li>
     <li><a href="../taquin/">Taquin</a></li>
     <li><a href="../mosaique-revelee/">Mosaïque Révélée</a></li>
-    <li><a href="index.html">Mandala</a></li>
-    <li><a href="../memo/">Mémo</a></li>
+    <li><a href="../mandala/">Mandala</a></li>
+    <li><a href="index.html">Mémo</a></li>
     <li><a href="../index.html#livraison">Livraison &amp; paiement</a></li>
     <li><a href="../index.html#faq">FAQ</a></li>
     <li><a href="../contact.html">Contact</a></li>
@@ -296,81 +283,68 @@
 
 <section class="hero">
   <p class="eyebrow">Gratuit · Quadreti</p>
-  <h1 class="titre" id="heroTitre">Un mandala à colorier, à l'écran ou sur papier.</h1>
-  <p class="accroche" id="heroAccroche">Choisissez un motif, une couleur — clic, hex, ou pipette — et coloriez région par région. Ou imprimez-le vierge pour le crayon.</p>
+  <h1 class="titre" id="heroTitre">Un mémo, aux couleurs Quadreti.</h1>
+  <p class="accroche" id="heroAccroche">Retrouvez les paires — motifs de la bibliothèque, ou vos propres photos.</p>
 </section>
 
 <div class="onglets-mode">
   <button class="onglet-mode actif" data-mode="bibliotheque">Bibliothèque</button>
-  <button class="onglet-mode" data-mode="motif">Votre motif</button>
+  <button class="onglet-mode" data-mode="photo">Vos photos</button>
 </div>
 
 <div class="cadre">
-  <div class="toile-carte">
-    <svg class="toile" id="toileSvg" viewBox="0 0 440 440"></svg>
+  <div class="plateau-carte">
+    <p class="etat-apercu" id="etatApercu" style="display:none">Mémorisez le plateau…</p>
+    <div class="grille-memo" id="grilleMemo"></div>
   </div>
   <div class="panneau">
-    <div class="carte" id="carteMotif">
-      <div class="label">Motif</div>
-      <div class="rang-scrollable">
-        <button class="fleche-scroll" type="button" id="flecheMotifGauche" aria-label="Précédent">‹</button>
-        <div class="choix-motif" id="rangMotif">
-          <button class="btn-motif actif" data-motif="classique">Classique</button>
-          <button class="btn-motif" data-motif="fleur">Fleur</button>
-          <button class="btn-motif" data-motif="etoile">Étoile</button>
-        </div>
-        <button class="fleche-scroll" type="button" id="flecheMotifDroite" aria-label="Suivant">›</button>
-      </div>
-      <div class="points-scroll" id="pointsMotif"></div>
-    </div>
-    <div class="carte" id="carteImport" style="display:none">
-      <div class="label">Votre motif</div>
+    <div class="carte" id="cartePhoto" style="display:none">
+      <div class="label">Vos photos</div>
       <div class="rang-fichier">
-        <p class="note" style="margin:0 0 6px">Bientôt : import d'un motif personnalisé. En attendant, la bibliothèque reste disponible.</p>
+        <input type="file" id="champPhotos" accept="image/*" multiple>
+        <p class="note-fichier">Une photo par paire. S'il en manque, les motifs de la bibliothèque complètent.</p>
+        <p class="note-fichier" id="retourPhotos"></p>
       </div>
     </div>
     <div class="carte">
-      <div class="label">Couleur active</div>
-      <div class="rang-actif">
-        <div class="pastille-active" id="pastilleActive" style="background:#E63946"></div>
-        <span class="hex-actuel" id="hexActuel">#E63946</span>
+      <div class="label">Mode de jeu</div>
+      <div class="choix-jeu">
+        <button class="btn-jeu actif" type="button" data-jeu="libre">Libre</button>
+        <button class="btn-jeu" type="button" data-jeu="chrono">Chrono</button>
       </div>
     </div>
     <div class="carte">
-      <div class="label">Palette</div>
-      <div class="grille-palette" id="grillePalette"></div>
-    </div>
-    <div class="carte">
-      <div class="label">Mémoire des couleurs</div>
-      <div class="rang-memoire" id="rangMemoire"><span class="memoire-vide">Les couleurs utilisées apparaîtront ici</span></div>
-    </div>
-    <div class="carte">
-      <div class="label">Code hex</div>
-      <div class="rang-hex">
-        <input type="text" id="champHex" placeholder="#E2725B" maxlength="7">
+      <div class="label">Nombre de paires</div>
+      <div class="rang-scrollable">
+        <button class="fleche-scroll" type="button" id="flecheTailleGauche" aria-label="Précédent">‹</button>
+        <div class="choix-taille" id="rangTaille">
+          <button class="btn-taille" data-paires="6">6 paires</button>
+          <button class="btn-taille actif" data-paires="8">8 paires</button>
+          <button class="btn-taille" data-paires="12">12 paires</button>
+        </div>
+        <button class="fleche-scroll" type="button" id="flecheTailleDroite" aria-label="Suivant">›</button>
       </div>
+      <div class="points-scroll" id="pointsTaille"></div>
     </div>
-    <button class="btn-pipette" id="btnPipette">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
-      <span id="texteFleche">Pipette</span>
-    </button>
-    <button class="btn secondaire" id="btnEffacer">Tout effacer</button>
-    <button class="btn principal" id="btnImprimer">Imprimer ce motif</button>
-    <p class="note">Cliquez une région pour la colorier avec la couleur active.</p>
+    <div class="carte-stat"><div class="label">Paires trouvées</div><div class="valeur" id="statPaires">0 / 8</div></div>
+    <div class="carte-stat"><div class="label">Coups</div><div class="valeur" id="statCoups">0</div></div>
+    <div class="carte-stat"><div class="label">Temps</div><div class="valeur" id="statTemps">00:00</div></div>
+    <button class="btn principal" id="btnNouvelle">Nouvelle partie</button>
+    <div class="victoire" id="victoire">Complet ! Toutes les paires trouvées.</div>
+    <div class="defaite" id="defaite">Temps écoulé !</div>
+    <p class="note">Retournez deux cartes — si elles correspondent, elles restent visibles.</p>
   </div>
 </div>
 
 <section class="pont">
   <div class="carte-pont">
     <div>
-      <h3 id="pontTitre">Envie de le porter sur un vrai mur ?</h3>
-      <p id="pontTexte">Composez une mosaïque Quadreti à partir de vos propres photos, avec la même logique de couleurs et de régions.</p>
+      <h3 id="pontTitre">Envie de les revoir sur un vrai mur ?</h3>
+      <p id="pontTexte">Composez une mosaïque Quadreti à partir de vos propres photos.</p>
     </div>
     <a class="btn principal" id="pontLien" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer ma mosaïque</a>
   </div>
 </section>
-
-<div id="zoneImpression"></div>
 
 <footer class="qz-footer">
   <div class="qz-basdepage">
@@ -464,103 +438,194 @@
 (function(){
   'use strict';
   var $ = function(id){ return document.getElementById(id); };
-  var NS = 'http://www.w3.org/2000/svg';
   var SB_URL = 'https://dxpwkdzofwcxzolwdggp.supabase.co';
   var SB_KEY = 'sb_publishable_EKu_a0eDzPrlkf5W6CuBzg_cxZtSlab';
 
-  var couleurActive = '#E63946';
-  var memoire = [];
-  var MEMOIRE_MAX = 10;
+  var modeActuel = 'bibliotheque';
+  var modeJeu = 'libre';
+  var nbPaires = 8;
+  var photosChargees = [];
+  var cartes = [];
+  var retournees = [];
+  var verrou = false;
+  var paires = 0, coups = 0, secondes = 0, chrono = null;
+  var TEMPS_APERCU_MS = 2500;
+  var TEMPS_PAR_PAIRE_S = 8;
 
-  /* Palette couleur primaire : vif et reconnaissable (comme une vraie boite de
-     crayons), plutot que la palette de marque Quadreti -- le hex et la pipette
-     restent la pour aller plus loin que ces 18 teintes de depart. */
-  var PALETTE = [
-    '#E63946','#F77F00','#FFD60A','#2DC653','#2A9DF4','#6A4C93',
-    '#FF6B9D','#06AED5','#8B5A2B','#000000','#7A7A7A','#FFFFFF',
-    '#FFADAD','#FFD6A5','#FDFFB6','#CAFFBF','#A0C4FF','#BDB2FF'
+  /* --- Bibliotheque : 12 icones dessinees en SVG, palette variee (pas juste
+     la palette de marque -- il faut des couleurs bien distinctes deux a deux
+     pour que le jeu de memoire reste lisible). --- */
+  var ICONES = [
+    { nom:'cercle', couleur:'#E2725B', dessiner:function(s){ s+='<circle cx="50" cy="50" r="34"/>'; return s; } },
+    { nom:'carre', couleur:'#2B353E', dessiner:function(s){ s+='<rect x="18" y="18" width="64" height="64" rx="8"/>'; return s; } },
+    { nom:'triangle', couleur:'#CBBD93', dessiner:function(s){ s+='<path d="M50 14 L86 82 L14 82 Z"/>'; return s; } },
+    { nom:'etoile', couleur:'#2A9DF4', dessiner:function(s){
+        var pts=[]; for(var i=0;i<10;i++){ var r=i%2===0?36:15; var a=(Math.PI/5)*i-Math.PI/2; pts.push((50+r*Math.cos(a))+','+(50+r*Math.sin(a))); }
+        s+='<polygon points="'+pts.join(' ')+'"/>'; return s; } },
+    { nom:'coeur', couleur:'#FF6B9D', dessiner:function(s){ s+='<path d="M50 84 C10 58 14 28 34 22 C44 19 50 28 50 28 C50 28 56 19 66 22 C86 28 90 58 50 84 Z"/>'; return s; } },
+    { nom:'hexagone', couleur:'#2DC653', dessiner:function(s){
+        var pts=[]; for(var i=0;i<6;i++){ var a=(Math.PI/3)*i-Math.PI/2; pts.push((50+34*Math.cos(a))+','+(50+34*Math.sin(a))); }
+        s+='<polygon points="'+pts.join(' ')+'"/>'; return s; } },
+    { nom:'croix', couleur:'#6A4C93', dessiner:function(s){ s+='<path d="M40 14h20v26h26v20H60v26H40V60H14V40h26Z"/>'; return s; } },
+    { nom:'losange', couleur:'#F77F00', dessiner:function(s){ s+='<polygon points="50,14 86,50 50,86 14,50"/>'; return s; } },
+    { nom:'plus', couleur:'#FFD60A', dessiner:function(s){ s+='<path d="M44 18h12v26h26v12H56v26H44V56H18V44h26Z"/>'; return s; } },
+    { nom:'vague', couleur:'#06AED5', dessiner:function(s){ s+='<path d="M12 50 Q26 30 40 50 T68 50 T96 50" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>'; return s; } },
+    { nom:'anneau', couleur:'#8B5A2B', dessiner:function(s){ s+='<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="11"/>'; return s; } },
+    { nom:'feuille', couleur:'#7A8B4E', dessiner:function(s){ s+='<path d="M20 80 C20 40 50 16 84 16 C84 54 56 80 20 80 Z"/><path d="M22 78 L70 30" fill="none" stroke="var(--papier)" stroke-width="4"/>'; return s; } }
   ];
 
-  function pointPolaire(cx, cy, r, angleDeg){
-    var a = (angleDeg - 90) * Math.PI / 180;
-    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
-  }
-  function cheminSecteur(cx, cy, rInner, rOuter, aDebut, aFin){
-    var p1 = pointPolaire(cx, cy, rOuter, aDebut);
-    var p2 = pointPolaire(cx, cy, rOuter, aFin);
-    var p3 = pointPolaire(cx, cy, rInner, aFin);
-    var p4 = pointPolaire(cx, cy, rInner, aDebut);
-    var grandArc = (aFin - aDebut) > 180 ? 1 : 0;
-    return 'M ' + p1[0] + ' ' + p1[1] +
-      ' A ' + rOuter + ' ' + rOuter + ' 0 ' + grandArc + ' 1 ' + p2[0] + ' ' + p2[1] +
-      ' L ' + p3[0] + ' ' + p3[1] +
-      ' A ' + rInner + ' ' + rInner + ' 0 ' + grandArc + ' 0 ' + p4[0] + ' ' + p4[1] + ' Z';
+  function svgIcone(icone){
+    var couleur = icone.couleur;
+    var contenu = icone.dessiner('').replace(/fill="none"/g, '__NONE__').replace(/<(circle|rect|path|polygon)(?![^>]*__NONE__)/g, '<$1 fill="' + couleur + '"').replace(/__NONE__/g, 'fill="none"');
+    return '<svg viewBox="0 0 100 100" style="color:' + couleur + '">' + contenu + '</svg>';
   }
 
-  /* --- 3 motifs, meme generateur (anneaux de secteurs), configs differentes.
-     Anneau exterieur en dents (rayon alterne) pour un bord festonne façon
-     petale, sans avoir a calculer de vraies courbes de Bezier. --- */
-  var MOTIFS = {
-    classique: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:36, segments:1 },
-      { rInner:40, rOuter:95, segments:8 },
-      { rInner:100, rOuter:160, segments:16 },
-      { rInner:165, rOuter:205, segments:8 }
-    ]},
-    fleur: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:30, segments:1 },
-      { rInner:34, rOuter:120, segments:6, feston:18 },
-      { rInner:126, rOuter:170, segments:12 },
-      { rInner:175, rOuter:210, segments:6, feston:14 }
-    ]},
-    etoile: { cx:220, cy:220, anneaux:[
-      { rInner:0, rOuter:24, segments:1 },
-      { rInner:28, rOuter:80, segments:10 },
-      { rInner:84, rOuter:130, segments:20 },
-      { rInner:134, rOuter:170, segments:10 },
-      { rInner:174, rOuter:208, segments:20 }
-    ]}
-  };
+  function melangerTableau(t){
+    for (var i = t.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = t[i]; t[i] = t[j]; t[j] = tmp;
+    }
+    return t;
+  }
 
-  function genererMotif(cle){
-    var svg = $('toileSvg');
-    svg.innerHTML = '';
-    var config = MOTIFS[cle];
-    var cx = config.cx, cy = config.cy;
-    config.anneaux.forEach(function(anneau, ai){
-      var n = anneau.segments;
-      var pas = 360 / n;
-      for (var i = 0; i < n; i++){
-        var aDebut = i * pas, aFin = (i + 1) * pas;
-        var rOuter = anneau.rOuter;
-        if (anneau.feston && i % 2 === 0) rOuter -= anneau.feston;
-        var d;
-        if (anneau.rInner === 0){
-          var p1 = pointPolaire(cx, cy, rOuter, aDebut);
-          var p2 = pointPolaire(cx, cy, rOuter, aFin);
-          var grandArc = (aFin - aDebut) > 180 ? 1 : 0;
-          d = 'M ' + cx + ' ' + cy + ' L ' + p1[0] + ' ' + p1[1] + ' A ' + rOuter + ' ' + rOuter + ' 0 ' + grandArc + ' 1 ' + p2[0] + ' ' + p2[1] + ' Z';
-        } else {
-          d = cheminSecteur(cx, cy, anneau.rInner, rOuter, aDebut, aFin);
+  function majAffichageTemps(){
+    var m = String(Math.floor(secondes / 60)).padStart(2, '0'), s = String(secondes % 60).padStart(2, '0');
+    $('statTemps').textContent = m + ':' + s;
+  }
+
+  function demarrerChrono(){
+    if (chrono) clearInterval(chrono);
+    chrono = setInterval(function(){
+      if (modeJeu === 'chrono'){
+        secondes--;
+        majAffichageTemps();
+        if (secondes <= 0){
+          clearInterval(chrono); chrono = null;
+          verrou = true;
+          $('defaite').classList.add('actif');
         }
-        var path = document.createElementNS(NS, 'path');
-        path.setAttribute('d', d);
-        path.setAttribute('class', 'region');
-        path.setAttribute('fill', '#FFFFFF');
-        path.dataset.anneau = ai;
-        path.addEventListener('click', function(){
-          this.setAttribute('fill', couleurActive);
-          ajouterMemoire(couleurActive);
-        });
-        svg.appendChild(path);
+      } else {
+        secondes++;
+        majAffichageTemps();
       }
-    });
+    }, 1000);
   }
 
-  /* Meme aide que Mosaïque Révélée : points de position calcules depuis le
+  function majRetourPhotos(){
+    var conteneur = $('retourPhotos');
+    if (!photosChargees.length){ conteneur.textContent = ''; return; }
+    var utilisees = Math.min(photosChargees.length, nbPaires);
+    if (photosChargees.length > nbPaires){
+      conteneur.textContent = photosChargees.length + ' photos chargées, seulement ' + utilisees + ' utilisées pour cette taille.';
+    } else {
+      conteneur.textContent = photosChargees.length + ' photo' + (photosChargees.length > 1 ? 's' : '') + ' chargée' + (photosChargees.length > 1 ? 's' : '') + '.';
+    }
+  }
+
+  function construireJeu(){
+    if (chrono) clearInterval(chrono);
+    var grille = $('grilleMemo');
+    grille.innerHTML = '';
+    retournees = []; verrou = true;
+    paires = 0; coups = 0;
+    secondes = modeJeu === 'chrono' ? nbPaires * TEMPS_PAR_PAIRE_S : 0;
+    $('statPaires').textContent = '0 / ' + nbPaires;
+    $('statCoups').textContent = '0';
+    majAffichageTemps();
+    $('victoire').classList.remove('actif');
+    $('defaite').classList.remove('actif');
+    $('etatApercu').style.display = 'block';
+    majRetourPhotos();
+
+    var contenus = [];
+    if (modeActuel === 'photo' && photosChargees.length){
+      for (var i = 0; i < nbPaires; i++){
+        if (i < photosChargees.length) contenus.push({ type:'photo', src:photosChargees[i] });
+        else contenus.push({ type:'icone', icone:ICONES[i % ICONES.length] });
+      }
+    } else {
+      var melange = melangerTableau(ICONES.slice());
+      for (var j = 0; j < nbPaires; j++) contenus.push({ type:'icone', icone:melange[j % melange.length] });
+    }
+
+    var paquet = [];
+    contenus.forEach(function(c, idx){ paquet.push({ id:idx, contenu:c }); paquet.push({ id:idx, contenu:c }); });
+    melangerTableau(paquet);
+
+    var cols = nbPaires <= 6 ? 3 : nbPaires <= 8 ? 4 : 4;
+    grille.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+
+    cartes = paquet.map(function(item, pos){
+      var carte = document.createElement('div');
+      carte.className = 'carte-memo';
+      carte.dataset.id = item.id;
+      carte.dataset.pos = pos;
+      var faceImage;
+      if (item.contenu.type === 'photo'){
+        faceImage = '<img src="' + item.contenu.src + '" alt="">';
+      } else {
+        faceImage = svgIcone(item.contenu.icone);
+      }
+      carte.innerHTML =
+        '<div class="interieur">' +
+          '<div class="face face-dos"><div class="qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div></div>' +
+          '<div class="face face-image">' + faceImage + '</div>' +
+        '</div>';
+      carte.addEventListener('click', function(){ retournerCarte(carte); });
+      carte.classList.add('retournee');
+      grille.appendChild(carte);
+      return carte;
+    });
+
+    /* Apercu de demarrage : toutes les cartes se montrent quelques secondes
+       avant de se cacher -- convention classique du jeu de memo. Le chrono
+       (libre ou a rebours) ne demarre qu'une fois l'apercu termine, pour ne
+       pas grignoter le temps de jeu reel. */
+    setTimeout(function(){
+      cartes.forEach(function(c){ c.classList.remove('retournee'); });
+      verrou = false;
+      $('etatApercu').style.display = 'none';
+      demarrerChrono();
+    }, TEMPS_APERCU_MS);
+  }
+
+  function retournerCarte(carte){
+    if (verrou) return;
+    if (carte.classList.contains('retournee') || carte.classList.contains('trouvee')) return;
+    carte.classList.add('retournee');
+    retournees.push(carte);
+    if (retournees.length === 2){
+      verrou = true;
+      coups++;
+      $('statCoups').textContent = coups;
+      var a = retournees[0], b = retournees[1];
+      if (a.dataset.id === b.dataset.id){
+        setTimeout(function(){
+          a.classList.add('trouvee'); b.classList.add('trouvee');
+          retournees = []; verrou = false;
+          paires++;
+          $('statPaires').textContent = paires + ' / ' + nbPaires;
+          if (paires === nbPaires){
+            if (chrono) clearInterval(chrono);
+            $('victoire').classList.add('actif');
+          }
+        }, 450);
+      } else {
+        setTimeout(function(){
+          a.classList.add('secouee'); b.classList.add('secouee');
+          setTimeout(function(){
+            a.classList.remove('retournee', 'secouee');
+            b.classList.remove('retournee', 'secouee');
+            retournees = []; verrou = false;
+          }, 550);
+        }, 550);
+      }
+    }
+  }
+
+  /* Meme aide que les autres jeux : points de position calcules depuis le
      defilement (getBoundingClientRect, pas offsetLeft) + fleches utiles au
-     clavier/souris/trackpad (PC, tablette), qui n'ont pas de geste swipe
-     naturel comme le doigt. */
+     clavier/souris/trackpad. */
   function initialiserRangDefilante(rang, conteneurPoints, flecheGauche, flecheDroite){
     var boutons = [].slice.call(rang.children);
     var points = boutons.map(function(){
@@ -587,129 +652,61 @@
     if (flecheDroite) flecheDroite.addEventListener('click', function(){ rang.scrollBy({ left: pasDefilement(), behavior: 'smooth' }); });
   }
 
-  function majActive(hex){
-    couleurActive = hex;
-    $('pastilleActive').style.background = hex;
-    $('hexActuel').textContent = hex.toUpperCase();
-    $('champHex').value = hex.toUpperCase();
-    document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('actif', s.dataset.hex === hex.toUpperCase()); });
-  }
-
-  function ajouterMemoire(hex){
-    hex = hex.toUpperCase();
-    memoire = memoire.filter(function(c){ return c !== hex; });
-    memoire.unshift(hex);
-    if (memoire.length > MEMOIRE_MAX) memoire = memoire.slice(0, MEMOIRE_MAX);
-    dessinerMemoire();
-  }
-  function dessinerMemoire(){
-    var conteneur = $('rangMemoire');
-    if (!memoire.length){ conteneur.innerHTML = '<span class="memoire-vide">Les couleurs utilisées apparaîtront ici</span>'; return; }
-    conteneur.innerHTML = '';
-    memoire.forEach(function(hex){
-      var b = document.createElement('button');
-      b.className = 'swatch'; b.style.background = hex; b.dataset.hex = hex;
-      b.title = hex;
-      b.addEventListener('click', function(){ majActive(hex); });
-      conteneur.appendChild(b);
-    });
-  }
-
-  function construirePalette(){
-    var grille = $('grillePalette');
-    grille.innerHTML = '';
-    PALETTE.forEach(function(hex){
-      var b = document.createElement('button');
-      b.className = 'swatch'; b.style.background = hex; b.dataset.hex = hex;
-      b.title = hex;
-      if (hex === couleurActive.toUpperCase()) b.classList.add('actif');
-      b.addEventListener('click', function(){ majActive(hex); });
-      grille.appendChild(b);
-    });
-  }
-
-  $('champHex').addEventListener('input', function(){
-    var v = this.value.trim();
-    if (!v.startsWith('#')) v = '#' + v;
-    if (/^#[0-9A-Fa-f]{6}$/.test(v)){
-      this.setCustomValidity('');
-      majActive(v);
-    } else {
-      this.setCustomValidity('invalide');
-    }
-  });
-
-  $('btnPipette').addEventListener('click', function(){
-    if (!window.EyeDropper){ return; }
-    var dropper = new EyeDropper();
-    dropper.open().then(function(resultat){
-      majActive(resultat.sRGBHex);
-      ajouterMemoire(resultat.sRGBHex);
-    }).catch(function(){});
-  });
-  if (!window.EyeDropper){
-    $('btnPipette').disabled = true;
-    $('texteFleche').textContent = 'Pipette (non supportée ici)';
-  }
-
-  $('btnEffacer').addEventListener('click', function(){
-    document.querySelectorAll('.region').forEach(function(r){ r.setAttribute('fill', '#FFFFFF'); });
-  });
-
-  $('btnImprimer').addEventListener('click', function(){
-    var clone = $('toileSvg').cloneNode(true);
-    clone.querySelectorAll('.region').forEach(function(r){ r.setAttribute('fill', '#FFFFFF'); });
-    clone.removeAttribute('class');
-    var baseline = window.__baselineImpression || 'Composez. Imprimez. Clipsez. Changez quand vous voulez.';
-    var urlAffichee = window.__urlImpression || 'quadreti.fr/mandala';
-    var html = '<div class="page-imp">' +
-      '<div class="imp-entete">' +
-        '<div class="imp-logo"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>' +
-        '<span class="imp-marque">Quadretı</span>' +
-        '<span class="imp-baseline">' + baseline + '</span>' +
-      '</div>' +
-      '<h1 class="imp-titre">Mandala Quadreti — à colorier</h1>' +
-      '<div class="imp-svg-cadre">' + clone.outerHTML + '</div>' +
-      '<div class="imp-pied"><span class="imp-url">' + urlAffichee + '</span><div class="imp-qr">QR<br>code</div></div>' +
-    '</div>';
-    $('zoneImpression').innerHTML = html;
-    window.print();
-  });
-
-  document.querySelectorAll('.btn-motif').forEach(function(b){
+  document.querySelectorAll('.btn-taille').forEach(function(b){
     b.addEventListener('click', function(){
-      document.querySelectorAll('.btn-motif').forEach(function(x){ x.classList.remove('actif'); });
+      document.querySelectorAll('.btn-taille').forEach(function(x){ x.classList.remove('actif'); });
       b.classList.add('actif');
-      genererMotif(b.dataset.motif);
+      nbPaires = parseInt(b.dataset.paires, 10);
+      construireJeu();
     });
   });
   document.querySelectorAll('.onglet-mode').forEach(function(b){
     b.addEventListener('click', function(){
       document.querySelectorAll('.onglet-mode').forEach(function(x){ x.classList.remove('actif'); });
       b.classList.add('actif');
-      var enBibliotheque = b.dataset.mode === 'bibliotheque';
-      $('carteMotif').style.display = enBibliotheque ? '' : 'none';
-      $('carteImport').style.display = enBibliotheque ? 'none' : '';
+      modeActuel = b.dataset.mode;
+      $('cartePhoto').style.display = modeActuel === 'photo' ? '' : 'none';
+      construireJeu();
     });
   });
+  document.querySelectorAll('.btn-jeu').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.btn-jeu').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      modeJeu = b.dataset.jeu;
+      construireJeu();
+    });
+  });
+  $('champPhotos').addEventListener('change', function(e){
+    var fichiers = [].slice.call(e.target.files).slice(0, 30);
+    photosChargees = [];
+    var restants = fichiers.length;
+    if (!restants) return;
+    fichiers.forEach(function(f){
+      var lecteur = new FileReader();
+      lecteur.onload = function(ev){
+        photosChargees.push(ev.target.result);
+        restants--;
+        if (restants === 0) construireJeu();
+      };
+      lecteur.readAsDataURL(f);
+    });
+  });
+  $('btnNouvelle').addEventListener('click', construireJeu);
 
-  construirePalette();
-  genererMotif('classique');
-  majActive(couleurActive);
-  initialiserRangDefilante($('rangMotif'), $('pointsMotif'), $('flecheMotifGauche'), $('flecheMotifDroite'));
+  initialiserRangDefilante($('rangTaille'), $('pointsTaille'), $('flecheTailleGauche'), $('flecheTailleDroite'));
+  construireJeu();
 
-  /* Reglages depuis le panneau (hero, pont, baseline d'impression). */
-  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=in.(mandala_app,baselines)', {
+  /* Reglages depuis le panneau (hero, pont). */
+  fetch(SB_URL + '/rest/v1/reglages_site?select=cle,valeur&cle=eq.memo_app', {
     headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
   }).then(function(r){ return r.ok ? r.json() : []; }).then(function(lignes){
-    var g = {}; (lignes || []).forEach(function(l){ g[l.cle] = l.valeur; });
-    var reglages = g.mandala_app || {};
-    window.__baselineImpression = (g.baselines || {}).produit || 'Composez. Imprimez. Clipsez. Changez quand vous voulez.';
-    if (reglages.titre) $('heroTitre').textContent = reglages.titre;
-    if (reglages.accroche) $('heroAccroche').textContent = reglages.accroche;
-    if (reglages.pont_titre) $('pontTitre').textContent = reglages.pont_titre;
-    if (reglages.pont_texte) $('pontTexte').textContent = reglages.pont_texte;
-    if (reglages.pont_lien) $('pontLien').href = reglages.pont_lien;
+    var g = (lignes && lignes[0] && lignes[0].valeur) || {};
+    if (g.titre) $('heroTitre').textContent = g.titre;
+    if (g.accroche) $('heroAccroche').textContent = g.accroche;
+    if (g.pont_titre) $('pontTitre').textContent = g.pont_titre;
+    if (g.pont_texte) $('pontTexte').textContent = g.pont_texte;
+    if (g.pont_lien) $('pontLien').href = g.pont_lien;
   }).catch(function(){});
 })();
 </script>
