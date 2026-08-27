@@ -2,6 +2,37 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mosaïque Révélée — Révélez l'image cachée | Quadreti</title>
 <meta name="description" content="Loin, une image. Près, des tesselles. Révélez une mosaïque cachée à votre rythme — tesselles, pixelisé, flouté, zoom arrière ou contours. Gratuit, par Quadreti.">

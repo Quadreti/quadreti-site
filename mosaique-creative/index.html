@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosaïque Créative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --charbon:#2B353E; --terracotta:#E2725B; --bleu:#2A9DF4; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --doux:#5c646c; }
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; margin:0; }
+  body{ display:flex; flex-direction:column; background:var(--papier); color:var(--charbon); font-family:'Karla',sans-serif; }
+
+  header{ text-align:center; padding:18px 20px 12px; flex-shrink:0; }
+  h1{ font-family:'Quicksand',sans-serif; font-size:clamp(19px,3.4vw,25px); margin:0 0 4px; }
+  header p{ font-size:12.5px; color:var(--doux); margin:0; }
+
+  /* Bascule de mode -- deux fichiers deja construits/verifies independamment
+     (mode decoupe = Canvas, bibliotheque de scenes = Canvas depuis ce soir),
+     charges chacun dans son propre cadre isole plutot que fusionnes dans un
+     seul DOM. Choix delibere : les deux outils partagent des identifiants
+     (menuContextuel, btnEnregistrer...) et une fusion reelle exposerait a des
+     collisions -- l'iframe isole chaque page dans son propre document, sans
+     rien retoucher a ce qui est deja verifie. Limite assumee : changer de
+     mode recharge le cadre, la composition en cours dans l'autre mode n'est
+     pas conservee -- pas de partage d'etat entre les deux pour l'instant. */
+  .bascule{ display:flex; justify-content:center; gap:6px; padding:0 20px 16px; flex-shrink:0; }
+  .bascule button{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer;
+    border:1.5px solid var(--bord); background:var(--surface); color:var(--doux);
+    border-radius:99px; padding:9px 20px; transition:border-color .15s, color .15s, background .15s;
+  }
+  .bascule button:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .bascule button.actif{ background:var(--charbon); border-color:var(--charbon); color:#fff; }
+
+  .zone-cadre{ flex:1; min-height:0; padding:0 16px; }
+  iframe{ width:100%; height:100%; border:1px solid var(--bord); border-radius:16px; background:var(--surface); display:block; }
+
+  /* Socle minimum (CLAUDE.md) : FAQ + bouton de direction + contact. Integre
+     au depot du site le 27/08 (dossier mosaique-creative/) -- les liens
+     direction/contact pointent donc en relatif vers les pages du site
+     (../index.html, ../contact.html), meme logique qu'Editeur Creatif. Pas
+     encore ajoute au MENU de navigation du site (28 pages) -- decision
+     d'emplacement/categorisation qui reste a coordonner avec Site & Boutique,
+     pas tranchee unilateralement ce soir. La FAQ reste auto-portee ici
+     (propre a cet outil, pas de section FAQ Mosaique Creative sur le site
+     pour l'instant). */
+  footer.pied{ flex-shrink:0; padding:14px 20px 20px; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; }
+  footer.pied a, footer.pied button{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--doux);
+    text-decoration:none; background:none; border:none; cursor:pointer; padding:0;
+  }
+  footer.pied a:hover, footer.pied button:hover{ color:var(--terracotta); }
+
+  .faq-couverture{
+    position:fixed; inset:0; z-index:100; background:rgba(43,53,62,.45);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .faq-couverture.ouverte{ display:flex; }
+  .faq-panneau{
+    background:var(--surface); border-radius:16px; max-width:560px; width:100%; max-height:80vh; overflow:auto;
+    padding:22px 24px; box-shadow:0 20px 60px rgba(43,53,62,.3);
+  }
+  .faq-panneau h2{ font-family:'Quicksand',sans-serif; font-size:19px; margin:0 0 14px; }
+  .faq-item{ border-top:1px solid var(--bord); padding:12px 0; }
+  .faq-item:first-of-type{ border-top:none; }
+  .faq-question{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer;
+    display:flex; justify-content:space-between; align-items:center; gap:10px; user-select:none;
+  }
+  .faq-question .chevron{ transition:transform .15s; color:var(--doux); flex-shrink:0; }
+  .faq-item.ouvert .faq-question .chevron{ transform:rotate(180deg); }
+  .faq-reponse{ max-height:0; overflow:hidden; transition:max-height .2s ease; }
+  .faq-item.ouvert .faq-reponse{ max-height:200px; }
+  .faq-reponse p{ font-size:13px; color:var(--doux); line-height:1.55; margin:10px 0 0; }
+  .faq-fermer{
+    display:block; margin:16px auto 0; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px;
+    padding:9px 20px; border-radius:99px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer;
+  }
+  .faq-fermer:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mosaïque Créative</h1>
+  <p>Deux façons de composer : des pièces qui se découpent entre elles, ou une scène déjà prête à colorier.</p>
+</header>
+
+<div class="bascule" role="tablist" aria-label="Choisir le mode">
+  <button class="actif" id="btnModeDecoupe" role="tab" aria-selected="true">Mode découpe</button>
+  <button id="btnModeScenes" role="tab" aria-selected="false">Bibliothèque de scènes</button>
+  <button id="btnModeGuide" role="tab" aria-selected="false">Guide interactif</button>
+</div>
+
+<div class="zone-cadre">
+  <iframe id="cadre" title="Mosaïque Créative"></iframe>
+</div>
+
+<footer class="pied">
+  <button id="btnOuvrirFaq">Questions fréquentes</button>
+  <a href="../index.html">Découvrir les autres outils QuadretI</a>
+  <a href="../contact.html">Contact</a>
+</footer>
+
+<div class="faq-couverture" id="faqCouverture">
+  <div class="faq-panneau">
+    <h2>Questions fréquentes</h2>
+    <div id="faqListe"></div>
+    <button class="faq-fermer" id="btnFermerFaq">Fermer</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var cadre = document.getElementById('cadre');
+  var boutons = {
+    decoupe: document.getElementById('btnModeDecoupe'),
+    scenes: document.getElementById('btnModeScenes'),
+    guide: document.getElementById('btnModeGuide')
+  };
+  var FICHIERS = {
+    decoupe: 'decoupe.html',
+    scenes: 'scenes.html',
+    guide: 'guide-interactif.html'
+  };
+
+  // L'iframe ne commence a charger qu'une fois CETTE page deverrouillee --
+  // sinon elle demarre son propre chargement en parallele du garde-acces de
+  // la page hote, et affiche sa PROPRE invite de mot de passe avant meme que
+  // celle de la page hote soit validee (double invite au tout premier passage,
+  // repere en testant). Poll leger plutot qu'un evenement : le script du
+  // garde-acces est generique/partage par toutes les pages du site, pas de
+  // hook expose a accrocher depuis ici.
+  (function demarrerCadreQuandDeverrouille(){
+    if (localStorage.getItem('quadretiAccesPreview') === '1') cadre.src = FICHIERS.decoupe;
+    else setTimeout(demarrerCadreQuandDeverrouille, 150);
+  })();
+
+  function basculer(mode){
+    Object.keys(boutons).forEach(function(k){
+      boutons[k].classList.toggle('actif', k === mode);
+      boutons[k].setAttribute('aria-selected', k === mode);
+    });
+    cadre.src = FICHIERS[mode];
+  }
+
+  boutons.decoupe.addEventListener('click', function(){ basculer('decoupe'); });
+  boutons.scenes.addEventListener('click', function(){ basculer('scenes'); });
+  boutons.guide.addEventListener('click', function(){ basculer('guide'); });
+
+  /* ================= FAQ (socle minimum CLAUDE.md) ================= */
+  var FAQ = [
+    { q:"Quelle est la différence entre les deux modes ?", r:"Le mode découpe : vous posez des pièces (carré, rond, triangle...) qui se redécoupent entre elles au fil de la composition, comme un vrai mosaïste. La bibliothèque de scènes : vous partez d'un motif déjà découpé en tesselles (chevrons, nid d'abeille, une photo importée...) et vous coloriez chaque pièce." },
+    { q:"Le fichier téléchargé est-il prêt à imprimer ?", r:"Oui — le téléchargement est calculé à la vraie résolution d'impression (300 DPI) du format physique choisi, jamais juste la résolution de l'écran." },
+    { q:"Puis-je reprendre ma composition plus tard ?", r:"Oui, avec le bouton Enregistrer de chaque mode — la composition reste sur cet appareil (navigateur), à recharger avec Charger." },
+    { q:"À quoi sert le mode miroir ?", r:"Il reproduit automatiquement de l'autre côté du canevas tout ce que vous posez, déplacez ou coloriez — beaucoup de vraies mosaïques sont symétriques, plus besoin de tout refaire deux fois." },
+    { q:"Puis-je transformer une de mes photos en mosaïque ?", r:"Oui, dans la bibliothèque de scènes : « Générer depuis une photo » convertit automatiquement une image importée en tesselles colorées d'après ses vraies couleurs, à ajuster ensuite comme n'importe quelle scène." }
+  ];
+  var faqCouverture = document.getElementById('faqCouverture');
+  var faqListe = document.getElementById('faqListe');
+  FAQ.forEach(function(item){
+    var div = document.createElement('div');
+    div.className = 'faq-item';
+    div.innerHTML = '<div class="faq-question"><span>' + item.q + '</span><span class="chevron">▾</span></div>' +
+      '<div class="faq-reponse"><p>' + item.r + '</p></div>';
+    div.querySelector('.faq-question').addEventListener('click', function(){ div.classList.toggle('ouvert'); });
+    faqListe.appendChild(div);
+  });
+  document.getElementById('btnOuvrirFaq').addEventListener('click', function(){ faqCouverture.classList.add('ouverte'); });
+  document.getElementById('btnFermerFaq').addEventListener('click', function(){ faqCouverture.classList.remove('ouverte'); });
+  faqCouverture.addEventListener('click', function(e){ if (e.target === faqCouverture) faqCouverture.classList.remove('ouverte'); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') faqCouverture.classList.remove('ouverte'); });
+
+  /* Expose pour verification/tests. */
+  window.__shell = { basculer: basculer, get modeActuel(){ return cadre.src; }, FAQ: FAQ };
+})();
+</script>
+
+</body>
+</html>

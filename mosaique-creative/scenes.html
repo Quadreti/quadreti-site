@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<title>Mosaïque Créative — Bibliothèque de scènes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
+  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+
+  .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }
+  .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 10px; font-weight:600; }
+  h1.titre{ font-size:clamp(22px,4vw,30px); line-height:1.15; margin:0 0 8px; }
+  p.accroche{ font-size:13.5px; color:var(--doux); max-width:60ch; margin:0 auto; line-height:1.55; }
+
+  .atelier{ max-width:1180px; margin:20px auto 60px; padding:0 20px; display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:start; }
+  @media (max-width:800px){ .atelier{ grid-template-columns:1fr; } }
+
+  .colonne{ display:flex; flex-direction:column; gap:10px; }
+  .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
+  .carte .label{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:8px; }
+
+  /* --- Galerie de la bibliotheque : scenes completes pretes a colorier --- */
+  .grille-galerie{ display:flex; flex-direction:column; gap:10px; }
+  .carte-scene{
+    border:1.5px solid var(--bord); border-radius:12px; overflow:hidden; cursor:pointer; background:var(--papier);
+    transition:border-color .15s;
+  }
+  .carte-scene:hover, .carte-scene.actif{ border-color:var(--terracotta); }
+  .carte-scene canvas{ width:100%; height:90px; display:block; }
+  .carte-scene .nom-scene{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:11.5px; padding:6px 8px; color:var(--charbon); }
+
+  .zone-travail{ display:flex; justify-content:center; }
+  .canevas-cadre{ background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:16px; box-shadow:0 20px 50px -30px #2b353e55; width:100%; max-width:720px; }
+  .canevas{ width:100%; aspect-ratio:4/3; border:1px solid var(--bord); border-radius:10px; overflow:hidden; background:#eae5d8; }
+  .canevas canvas{ width:100%; height:100%; display:block; cursor:pointer; }
+
+  .note-bas{ font-size:11px; color:var(--doux); text-align:center; margin-top:10px; line-height:1.5; }
+  .champ-case{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--doux); cursor:pointer; }
+  .champ-case input{ accent-color:var(--terracotta); width:15px; height:15px; cursor:pointer; }
+  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
+  .btn:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-format{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+
+  /* ===== Menu clic droit : palette en tiroir ===== */
+  .menu-contextuel{
+    position:fixed; z-index:200; background:var(--surface); border:1px solid var(--bord); border-radius:12px;
+    box-shadow:0 14px 40px rgba(43,53,62,.25); padding:8px; display:none; width:250px;
+    font-family:'Quicksand',sans-serif;
+  }
+  .menu-contextuel.ouvert{ display:block; }
+  .mc-section{ padding:6px 6px 8px; border-bottom:1px solid var(--bord); }
+  .mc-section:last-child{ border-bottom:none; }
+  .mc-titre{
+    display:flex; align-items:center; justify-content:space-between; font-size:11.5px; font-weight:700;
+    color:var(--charbon); margin-bottom:7px; cursor:pointer; user-select:none;
+  }
+  .mc-titre .pastille-actuelle{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--bord); flex-shrink:0; }
+  .mc-titre .rang-titre{ display:flex; align-items:center; gap:7px; }
+  .mc-titre .chevron{ font-size:10px; color:var(--doux); transition:transform .15s; }
+  .mc-titre.ouvert .chevron{ transform:rotate(180deg); }
+
+  .grille-swatches-mc{ display:grid; grid-template-columns:repeat(8,1fr); gap:5px; margin-bottom:6px; }
+  .swatch-mc{ aspect-ratio:1; border-radius:6px; border:1.5px solid transparent; cursor:pointer; padding:0; }
+  .swatch-mc.actif{ border-color:var(--charbon); }
+
+  /* Le tiroir : cache par defaut (max-height:0), se deplie au clic sur le titre --
+     compact tant qu'on ne demande pas plus, sans jamais alourdir le menu par defaut. */
+  .tiroir-mc{ max-height:0; overflow:hidden; transition:max-height .2s ease; }
+  .tiroir-mc.ouvert{ max-height:160px; }
+  .tiroir-contenu{ padding-top:8px; }
+  .rang-hex-mc{ display:flex; align-items:center; gap:6px; margin-bottom:7px; }
+  .champ-hex-mc{ flex:1; font-family:ui-monospace,monospace; font-size:11.5px; font-weight:600; padding:6px 7px; border-radius:7px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte); min-width:0; }
+  .btn-pipette-mc{ width:28px; height:28px; border-radius:7px; border:1.5px solid var(--bord); background:var(--papier); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--doux); }
+  .btn-pipette-mc:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-pipette-mc svg{ width:13px; height:13px; }
+  .btn-pipette-mc:disabled{ opacity:.35; cursor:not-allowed; }
+  .palette-perso-mc{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+  .palette-perso-mc .swatch-mc{ width:20px; height:20px; flex:0 0 auto; }
+  .ajouter-perso-mc{
+    width:20px; height:20px; border-radius:6px; border:1.5px dashed var(--bord); background:var(--papier);
+    color:var(--doux); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .ajouter-perso-mc:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+
+  .lien-palette{
+    display:block; background:none; border:none; padding:0; margin:2px 0 8px; cursor:pointer;
+    font-family:'Karla',sans-serif; font-size:10.5px; color:var(--doux); text-decoration:underline;
+  }
+  .lien-palette:hover{ color:var(--terracotta); }
+  .mc-sep{ height:1px; background:var(--bord); margin:4px 0; }
+  .mc-vide{ padding:16px; text-align:center; font-size:12px; color:var(--doux); }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <h1 class="titre">Mosaïque Créative — choisissez une scène, colorez vos tesselles</h1>
+  <p class="accroche">Une bibliothèque de scènes en mosaïque déjà composées — choisissez-en une, puis colorez chaque tesselle : remplissage et joint, au clic droit.</p>
+</section>
+
+<div class="atelier">
+  <div class="colonne">
+    <div class="carte">
+      <div class="label">Format (cm)</div>
+      <div class="grille-galerie" id="grilleFormats" style="display:grid; grid-template-columns:1fr 1fr; gap:6px;"></div>
+    </div>
+    <div class="carte">
+      <div class="label">Bibliothèque de scènes</div>
+      <div class="grille-galerie" id="grilleGalerie"></div>
+    </div>
+    <div class="carte">
+      <div class="label">Photo → Mosaïque</div>
+      <input type="file" id="inputPhoto" accept="image/*" style="display:none;">
+      <button class="btn" id="btnInsererPhoto">Générer depuis une photo</button>
+    </div>
+    <div class="carte">
+      <div class="label">Coloriage</div>
+      <label class="champ-case" style="margin-bottom:8px;">
+        <input type="checkbox" id="checkColoriageGroupe"> Coloriage par groupe
+      </label>
+      <label class="champ-case">
+        <input type="checkbox" id="checkMiroirScene"> Mode miroir (axe vertical)
+      </label>
+    </div>
+    <div class="carte">
+      <div class="label">Composition</div>
+      <div class="grille-galerie" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+        <button class="btn" id="btnEnregistrer">Enregistrer</button>
+        <button class="btn" id="btnCharger">Charger</button>
+      </div>
+      <button class="btn" id="btnTelecharger">Télécharger PNG</button>
+    </div>
+  </div>
+
+  <div class="zone-travail">
+    <div class="canevas-cadre">
+      <div class="canevas" id="canevas"><canvas id="canevasScene" width="400" height="300"></canvas></div>
+      <p class="note-bas">Clic gauche : sélectionner. Clic droit : remplissage &amp; joint.</p>
+    </div>
+  </div>
+</div>
+
+<div class="menu-contextuel" id="menuContextuel">
+  <div class="mc-section">
+    <div class="mc-titre" id="mcTitreRemplissage">
+      <span class="rang-titre"><span class="pastille-actuelle" id="mcPastilleRemplissage"></span>Remplissage</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="grille-swatches-mc" id="mcSwatchesRemplissage"></div>
+    <button class="lien-palette" id="mcLienPaletteRemplissage" style="display:none;"></button>
+    <div class="tiroir-mc" id="mcTiroirRemplissage">
+      <div class="tiroir-contenu">
+        <div class="rang-hex-mc">
+          <input type="text" class="champ-hex-mc" id="mcHexRemplissage" maxlength="7">
+          <button class="btn-pipette-mc" id="mcPipetteRemplissage" title="Pipette">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
+          </button>
+        </div>
+        <div class="palette-perso-mc" id="mcPersoRemplissage"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mc-section">
+    <div class="mc-titre" id="mcTitreJoint">
+      <span class="rang-titre"><span class="pastille-actuelle" id="mcPastilleJoint"></span>Joint</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="grille-swatches-mc" id="mcSwatchesJoint"></div>
+    <button class="lien-palette" id="mcLienPaletteJoint" style="display:none;"></button>
+    <div class="tiroir-mc" id="mcTiroirJoint">
+      <div class="tiroir-contenu">
+        <div class="rang-hex-mc">
+          <input type="text" class="champ-hex-mc" id="mcHexJoint" maxlength="7">
+          <button class="btn-pipette-mc" id="mcPipetteJoint" title="Pipette">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
+          </button>
+        </div>
+        <div class="palette-perso-mc" id="mcPersoJoint"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ================= Generation procedurale d'une scene en tesselles =================
+     Une scene = une grille legerement "gigotee" (jitter) de quadrilateres irreguliers
+     (l'aspect tesselle de mosaique), chacun colore par defaut selon la zone de l'image
+     ou tombe son centre (ciel, soleil, montagne, sol/mer). Permet d'enrichir la
+     bibliotheque avec de nouvelles scenes juste en changeant la fonction de zones --
+     jamais besoin de dessiner chaque tesselle a la main. */
+  var LARGEUR = 400, HAUTEUR = 300;
+
+  function alea(min, max){ return min + Math.random() * (max - min); }
+
+  /* Retrecit un polygone vers son centre d'une distance FIXE en pixels (pas un
+     pourcentage) -- chaque point recule de la meme distance absolue vers le
+     centre, quelle que soit sa position d'origine. Un retrecissement en %
+     s'est revele insuffisant : le bruit aleatoire du gigotage (jitter) peut
+     depasser un retrait proportionnel et faire quand meme se toucher deux
+     tesselles voisines (verifie en mesurant les bounding boxes reelles de deux
+     tesselles cote a cote -- ecart negatif = elles se chevauchaient encore).
+     Une distance fixe, calibree au-dessus de l'amplitude du jitter, garantit
+     un vide reel dans (quasi) tous les cas. */
+  function retrecirPolygone(pts, distancePx){
+    var cx = 0, cy = 0;
+    pts.forEach(function(p){ cx += p[0]; cy += p[1]; });
+    cx /= pts.length; cy /= pts.length;
+    return pts.map(function(p){
+      var dx = p[0] - cx, dy = p[1] - cy;
+      var longueur = Math.hypot(dx, dy) || 1;
+      var f = Math.max(0, 1 - distancePx / longueur);
+      return [cx + dx * f, cy + dy * f];
+    });
+  }
+
+  var RETRAIT_JOINT_PX = 7; /* superieur a l'amplitude max du jitter des scenes en grille, pour garantir un vrai vide */
+
+  function chemin(pts){
+    return 'M ' + pts.map(function(p){ return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L ') + ' Z';
+  }
+
+  /* Chaque generateur (grille, flux...) produit directement dJoint/dFill --
+     dessinerTesselles() n'a ensuite plus besoin de savoir COMMENT la tesselle
+     a ete construite, juste a dessiner les deux chemins deja prets (chaine de
+     chemin SVG standard, transformee en Path2D par la couche de rendu). */
+  function genererGrille(pas, jitter, fonctionCouleur){
+    var tesselles = [];
+    for (var y = 0; y < HAUTEUR; y += pas){
+      for (var x = 0; x < LARGEUR; x += pas){
+        var pts = [
+          [x + alea(-jitter, jitter), y + alea(-jitter, jitter)],
+          [x + pas + alea(-jitter, jitter), y + alea(-jitter, jitter)],
+          [x + pas + alea(-jitter, jitter), y + pas + alea(-jitter, jitter)],
+          [x + alea(-jitter, jitter), y + pas + alea(-jitter, jitter)]
+        ];
+        var cx = x + pas / 2, cy = y + pas / 2;
+        tesselles.push({
+          dJoint: chemin(pts),
+          dFill: chemin(retrecirPolygone(pts, RETRAIT_JOINT_PX)),
+          remplissage: fonctionCouleur(cx, cy),
+          joint: '#2B353E',
+          cx: cx, cy: cy
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  /* ================= Generateur "a flux" : tesselles etirees et courbees le
+     long d'une ligne de conduite (andamento), pas posees dans une grille rigide.
+     Utilise ici pour des anneaux concentriques (chaque tesselle = un segment
+     d'anneau, les deux bords radiaux sont de vraies courbes -- via une courbe
+     de Bezier quadratique dont le point de controle est pris exactement sur le
+     cercle -- pas des lignes droites). Le meme principe (ligne guide + tesselles
+     etirees perpendiculairement) s'appliquera plus tard a un contour de
+     silhouette (ex. le poisson) en remplacant le cercle par n'importe quelle
+     courbe parametrique. ================= */
+  function polaire(cx, cy, r, angle){ return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)]; }
+
+  function cheminAnneau(cx, cy, r0, r1, a0, a1){
+    var am = (a0 + a1) / 2;
+    var pA = polaire(cx, cy, r0, a0), pB = polaire(cx, cy, r0, a1), ctrlInt = polaire(cx, cy, r0, am);
+    var pC = polaire(cx, cy, r1, a1), pD = polaire(cx, cy, r1, a0), ctrlExt = polaire(cx, cy, r1, am);
+    var f = function(p){ return p[0].toFixed(1) + ',' + p[1].toFixed(1); };
+    return 'M ' + f(pA) + ' Q ' + f(ctrlInt) + ' ' + f(pB) + ' L ' + f(pC) + ' Q ' + f(ctrlExt) + ' ' + f(pD) + ' Z';
+  }
+
+  function genererFluxAnneaux(cx, cy, rayons, margeJointPx, fonctionCouleurAnneau){
+    var tesselles = [];
+    for (var anneau = 0; anneau < rayons.length - 1; anneau++){
+      var r0 = rayons[anneau], r1 = rayons[anneau + 1];
+      var rMoyen = (r0 + r1) / 2;
+      var circonference = 2 * Math.PI * rMoyen;
+      var tailleCible = 22;
+      var nbSegments = Math.max(10, Math.round(circonference / tailleCible));
+      var pasAngle = (Math.PI * 2) / nbSegments;
+      /* Le rayon interieur est le plus petit -> le plus "genereux" en angle pour
+         une meme marge en pixels ; sur un tout petit anneau ca peut quand meme
+         manger presque tout le segment, donc on plafonne a 30% de la largeur
+         angulaire de cote (verifie : sans ce plafond, l'anneau le plus interne
+         se retrouvait avec des tesselles quasi invisibles). */
+      var margeAngle = Math.min(margeJointPx / r0, pasAngle * 0.3);
+      for (var s = 0; s < nbSegments; s++){
+        var a0 = s * pasAngle, a1 = a0 + pasAngle;
+        var am2 = (a0 + a1) / 2;
+        tesselles.push({
+          dJoint: cheminAnneau(cx, cy, r0, r1, a0, a1),
+          dFill: cheminAnneau(cx, cy, r0 + margeJointPx, r1 - margeJointPx, a0 + margeAngle, a1 - margeAngle),
+          remplissage: fonctionCouleurAnneau(anneau, s, nbSegments),
+          joint: '#2B353E',
+          cx: cx + rMoyen * Math.cos(am2), cy: cy + rMoyen * Math.sin(am2)
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  function couleurAnneau(anneau){
+    var palette = ['#F2EEDF', '#C9502F', '#2B2320', '#F2EEDF', '#C9502F', '#8a7a5c'];
+    return teinte(palette[anneau % palette.length], 10);
+  }
+
+  function teinte(hex, variation){
+    var v = parseInt(hex.slice(1), 16);
+    var r = (v >> 16) & 255, g = (v >> 8) & 255, b = v & 255;
+    var d = alea(-variation, variation);
+    var brider = function(n){ return Math.max(0, Math.min(255, Math.round(n + d))); };
+    return '#' + [brider(r), brider(g), brider(b)].map(function(n){ return n.toString(16).padStart(2, '0'); }).join('');
+  }
+
+  /* ================= Motifs geometriques repetitifs (27/08, backlog) =================
+     Contrairement au paysage/anneaux (une scene FIGURATIVE unique), ces motifs
+     sont de vraies dispositions de mosaique reelle -- chevrons, vannerie, nid
+     d'abeille, meandre grec, pois -- inspirees d'une photo de panneaux de sol
+     fournie par le fondateur. Chaque tesselle generee porte en plus une
+     etiquette `groupe` (le "role" qu'elle joue dans le motif, ex. les 2 teintes
+     d'un chevron) -- c'est ce qui permet le coloriage par groupe plus bas :
+     colorier UNE tesselle applique la meme couleur a toutes celles du meme role. */
+
+  function rectangleOriente(cx, cy, longueur, largeur, angleRad){
+    var dl = longueur / 2, dw = largeur / 2;
+    var coinsLocaux = [[-dl, -dw], [dl, -dw], [dl, dw], [-dl, dw]];
+    var cosA = Math.cos(angleRad), sinA = Math.sin(angleRad);
+    return coinsLocaux.map(function(p){
+      return [cx + p[0] * cosA - p[1] * sinA, cy + p[0] * sinA + p[1] * cosA];
+    });
+  }
+
+  function sommetsHexagone(cx, cy, r){
+    var pts = [];
+    for (var i = 0; i < 6; i++){
+      var a = -Math.PI / 2 + i * (Math.PI / 3);
+      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+    }
+    return pts;
+  }
+
+  function sommetsCercle(cx, cy, r, n){
+    var pts = [];
+    for (var i = 0; i < n; i++){
+      var a = (i / n) * Math.PI * 2;
+      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+    }
+    return pts;
+  }
+
+  /* Recentre une rangee de positions X sur l'axe vertical du canevas (garde
+     l'espacement RELATIF entre colonnes, translate juste tout le bloc) --
+     garantit que la colonne k et la colonne (N-1-k) sont exactement
+     symetriques par rapport a LARGEUR/2, quel que soit le nombre de colonnes
+     ou le decalage d'origine (utile pour les rangees paires/impaires
+     decalees du nid d'abeille). Necessaire pour le mode miroir : sans ca,
+     une largeur de case qui ne divise pas LARGEUR exactement (ex. 30px sur
+     un canevas de 400px) laisse la grille legerement decentree, et aucune
+     tesselle ne tombe exactement en face de son reflet attendu. */
+  function centrerRangee(positionsX){
+    if (!positionsX.length) return positionsX;
+    var min = Math.min.apply(null, positionsX), max = Math.max.apply(null, positionsX);
+    var decalage = LARGEUR / 2 - (min + max) / 2;
+    return positionsX.map(function(x){ return x + decalage; });
+  }
+
+  /* --- Chevrons : planches rectangulaires a 45deg/-45deg en diagonales
+     alternees. Approximation geometrique -- premiere passe a affiner selon le
+     retour visuel du fondateur, contrairement a vannerie/nid d'abeille/pois
+     dont le pavage est exact analytiquement. */
+  function genererChevrons(){
+    var tesselles = [];
+    var longueur = 54, largeur = 26;
+    var pas = largeur * Math.SQRT2;
+    var nbCols = Math.ceil(LARGEUR / pas) + 6; // marge de chaque cote pour deborder proprement
+    for (var row = -3; row * (pas / 2) < HAUTEUR + longueur; row++){
+      var decalageRangee = (Math.abs(row % 2) === 1) ? pas / 2 : 0;
+      var positionsX = [];
+      for (var col = 0; col < nbCols; col++) positionsX.push(col * pas + decalageRangee);
+      positionsX = centrerRangee(positionsX);
+      var cy = row * (pas / 2);
+      for (var k = 0; k < positionsX.length; k++){
+        var cx = positionsX[k];
+        // La parite qui pilote l'alternance A/B suit l'INDICE k (stable apres
+        // centrage), pas la position en pixels -- sinon l'alternance se
+        // desalignerait du decalage introduit par centrerRangee().
+        var pairIndex = row + k;
+        var angle = (pairIndex % 2 === 0) ? Math.PI / 4 : -Math.PI / 4;
+        var pts = rectangleOriente(cx, cy, longueur, largeur, angle);
+        tesselles.push({
+          dJoint: chemin(pts),
+          dFill: chemin(retrecirPolygone(pts, RETRAIT_JOINT_PX)),
+          remplissage: teinte(pairIndex % 2 === 0 ? '#CBBD93' : '#8a7a5c', 8),
+          joint: '#2B353E',
+          groupe: pairIndex % 2 === 0 ? 'A' : 'B',
+          cx: cx, cy: cy
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  /* --- Vannerie/tressage : blocs 2x2 de planches, alternant horizontal/
+     vertical en damier -- pavage exact (rectangles alignes sur les axes,
+     aucune rotation), les 2 orientations = les 2 groupes coloriables. */
+  function genererVannerie(){
+    var tesselles = [];
+    var bloc = 44, demiBloc = bloc / 2;
+    var nbBlocsX = Math.ceil(LARGEUR / bloc) + 2;
+    for (var by = -1; by * bloc < HAUTEUR + bloc; by++){
+      var positionsX = [];
+      for (var bx = 0; bx < nbBlocsX; bx++) positionsX.push(bx * bloc);
+      positionsX = centrerRangee(positionsX);
+      var y0 = by * bloc;
+      for (var k = 0; k < positionsX.length; k++){
+        var x0 = positionsX[k];
+        var horizontal = (k + by) % 2 === 0;
+        for (var j = 0; j < 2; j++){
+          var pts = horizontal
+            ? [[x0, y0 + j * demiBloc], [x0 + bloc, y0 + j * demiBloc], [x0 + bloc, y0 + (j + 1) * demiBloc], [x0, y0 + (j + 1) * demiBloc]]
+            : [[x0 + j * demiBloc, y0], [x0 + (j + 1) * demiBloc, y0], [x0 + (j + 1) * demiBloc, y0 + bloc], [x0 + j * demiBloc, y0 + bloc]];
+          var cxPlanche = horizontal ? x0 + bloc / 2 : x0 + j * demiBloc + demiBloc / 2;
+          var cyPlanche = horizontal ? y0 + j * demiBloc + demiBloc / 2 : y0 + bloc / 2;
+          tesselles.push({
+            dJoint: chemin(pts),
+            dFill: chemin(retrecirPolygone(pts, RETRAIT_JOINT_PX)),
+            remplissage: teinte(horizontal ? '#CBBD93' : '#a8946a', 8),
+            joint: '#2B353E',
+            groupe: horizontal ? 'A' : 'B',
+            cx: cxPlanche, cy: cyPlanche
+          });
+        }
+      }
+    }
+    return tesselles;
+  }
+
+  /* --- Nid d'abeille : pavage hexagonal exact (formule standard, sommet en
+     haut) -- un seul role, toutes les alveoles se valent dans un vrai nid
+     d'abeille (le coloriage par groupe recolore donc tout le motif d'un
+     coup, ce qui reste utile). */
+  function genererNidAbeille(){
+    var tesselles = [];
+    var R = 22;
+    var dx = Math.sqrt(3) * R, dy = 1.5 * R;
+    var nbCols = Math.ceil(LARGEUR / dx) + 3;
+    for (var row = -1; row * dy < HAUTEUR + R; row++){
+      var decalageRangee = (Math.abs(row % 2) === 1) ? dx / 2 : 0;
+      var positionsX = [];
+      for (var col = 0; col < nbCols; col++) positionsX.push(col * dx + decalageRangee);
+      positionsX = centrerRangee(positionsX);
+      var cyHex = row * dy;
+      for (var k = 0; k < positionsX.length; k++){
+        var cxHex = positionsX[k];
+        var pts = sommetsHexagone(cxHex, cyHex, R);
+        tesselles.push({
+          dJoint: chemin(pts),
+          dFill: chemin(retrecirPolygone(pts, RETRAIT_JOINT_PX)),
+          remplissage: teinte('#CBBD93', 10),
+          joint: '#2B353E',
+          groupe: 'A',
+          cx: cxHex, cy: cyHex
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  /* --- Meandre grec : ruban en escalier a angle droit (jamais de diagonale,
+     contrairement aux chevrons -- c'est ce qui le rend reconnaissable comme
+     "grec") sur un fond de cases pleines. Motif le plus approximatif des 5 --
+     un vrai meandre grec est plus intricat qu'un simple escalier periodique,
+     a affiner en priorite selon le retour visuel du fondateur. */
+  function genererMeandre(){
+    var tesselles = [];
+    var s = 22;
+    var nbCols = Math.ceil(LARGEUR / s) + 4, rows = Math.ceil(HAUTEUR / s);
+    var positionsX = [];
+    for (var col = 0; col < nbCols; col++) positionsX.push(col * s);
+    positionsX = centrerRangee(positionsX);
+    var periode = 8, largeurCle = 3;
+    function surLeChemin(row, col){
+      var phase = ((row % periode) + periode) % periode;
+      var centre = phase < periode / 2 ? phase : periode - phase;
+      var colDansPeriode = ((col % periode) + periode) % periode;
+      return Math.abs(colDansPeriode - centre) < largeurCle / 2;
+    }
+    for (var row = 0; row < rows; row++){
+      for (var k = 0; k < positionsX.length; k++){
+        var x0 = positionsX[k], y0 = row * s;
+        var pts = [[x0, y0], [x0 + s, y0], [x0 + s, y0 + s], [x0, y0 + s]];
+        var surChemin = surLeChemin(row, k);
+        tesselles.push({
+          dJoint: chemin(pts),
+          dFill: chemin(retrecirPolygone(pts, RETRAIT_JOINT_PX)),
+          remplissage: teinte(surChemin ? '#2B353E' : '#eae0c8', 6),
+          joint: '#2B353E',
+          groupe: surChemin ? 'A' : 'B',
+          cx: x0 + s / 2, cy: y0 + s / 2
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  /* --- Pois : fond en cases pleines (groupe B) + un pois (cercle approxime
+     en polygone 28 cotes, groupe A) pose PAR-DESSUS chaque case -- pas besoin
+     de calculer la forme "case moins trou rond", le pois recouvre juste sa
+     portion du fond, comme un vrai carreau a pois. */
+  function genererPois(){
+    var tesselles = [];
+    var s = 30, rayonPois = s * 0.32;
+    var nbCols = Math.ceil(LARGEUR / s) + 4, rows = Math.ceil(HAUTEUR / s);
+    var positionsX = [];
+    for (var col = 0; col < nbCols; col++) positionsX.push(col * s);
+    positionsX = centrerRangee(positionsX);
+    for (var row = 0; row < rows; row++){
+      for (var k = 0; k < positionsX.length; k++){
+        var x0 = positionsX[k], y0 = row * s;
+        var ptsFond = [[x0, y0], [x0 + s, y0], [x0 + s, y0 + s], [x0, y0 + s]];
+        var cxCase = x0 + s / 2, cyCase = y0 + s / 2;
+        tesselles.push({
+          dJoint: chemin(ptsFond),
+          dFill: chemin(retrecirPolygone(ptsFond, RETRAIT_JOINT_PX)),
+          remplissage: teinte('#eae0c8', 6),
+          joint: '#2B353E',
+          groupe: 'B',
+          cx: cxCase, cy: cyCase
+        });
+        var ptsPois = sommetsCercle(cxCase, cyCase, rayonPois, 28);
+        tesselles.push({
+          dJoint: chemin(ptsPois),
+          dFill: chemin(retrecirPolygone(ptsPois, RETRAIT_JOINT_PX * 0.6)),
+          remplissage: teinte('#C9502F', 8),
+          joint: '#2B353E',
+          groupe: 'A',
+          cx: cxCase, cy: cyCase
+        });
+      }
+    }
+    return tesselles;
+  }
+
+  var SCENES = [
+    { id:'anneaux', nom:'Cercles concentriques', paletteSuggeree:['#F2EEDF','#C9502F','#2B2320','#8a7a5c'], construire: function(){
+      return genererFluxAnneaux(LARGEUR / 2, HAUTEUR / 2, [16, 42, 68, 94, 120, 140], 5, couleurAnneau);
+    } },
+    { id:'chevrons', nom:'Chevrons', paletteSuggeree:['#CBBD93','#8a7a5c','#2B353E','#FBF8F1'], construire: genererChevrons },
+    { id:'vannerie', nom:'Vannerie', paletteSuggeree:['#CBBD93','#a8946a','#2B353E','#FBF8F1'], construire: genererVannerie },
+    { id:'nid-abeille', nom:"Nid d'abeille", paletteSuggeree:['#CBBD93','#E2725B','#2B353E','#FBF8F1'], construire: genererNidAbeille },
+    { id:'meandre', nom:'Méandre grec', paletteSuggeree:['#2B353E','#eae0c8','#C9502F','#8a7a5c'], construire: genererMeandre },
+    { id:'pois', nom:'Pois', paletteSuggeree:['#eae0c8','#C9502F','#2B353E','#F2EEDF'], construire: genererPois }
+  ];
+
+  /* ================= Mode miroir (27/08, backlog) =================
+     Generique, PAS specifique a un motif : chaque generateur attache deja
+     cx/cy (le centre reel de sa tesselle) -- il suffit de chercher, pour
+     chaque tesselle, celle dont le centre est le plus proche du point
+     miroir horizontal (LARGEUR - cx, cy). Recherche restreinte au meme
+     `groupe` quand il existe (evite qu'un fond de "pois" se fasse apparier
+     au pois lui-meme, qui partage exactement le meme centre que son propre
+     fond -- seul le role identique doit matcher). Les scenes sans etiquette
+     groupe (paysage/anneaux) n'ont simplement pas de restriction. */
+  function calculerMiroirs(tesselles){
+    var SEUIL = 6;
+    tesselles.forEach(function(t, i){
+      if (t.cx == null){ t.miroir = null; return; }
+      var xCible = LARGEUR - t.cx, yCible = t.cy;
+      var meilleurIdx = -1, meilleureDist = Infinity;
+      tesselles.forEach(function(u, j){
+        if (j === i || u.cx == null) return;
+        if (t.groupe != null && u.groupe !== t.groupe) return;
+        var d = Math.hypot(u.cx - xCible, u.cy - yCible);
+        if (d < meilleureDist){ meilleureDist = d; meilleurIdx = j; }
+      });
+      t.miroir = (meilleurIdx !== -1 && meilleureDist <= SEUIL) ? meilleurIdx : null;
+    });
+  }
+
+  var scenesGenerees = {};
+  function obtenirTesselles(scene){
+    if (!scenesGenerees[scene.id]){
+      var t = scene.construire();
+      calculerMiroirs(t);
+      scenesGenerees[scene.id] = t;
+    }
+    return scenesGenerees[scene.id];
+  }
+
+  /* ================= Rendu du canevas -- CANVAS (27/08, converti depuis SVG) =================
+     `new Path2D(d)` accepte directement une chaine de chemin SVG standard --
+     TOUS les generateurs plus haut continuent de produire du texte "M x,y L
+     ... Z" sans le moindre changement, seule cette couche de rendu change de
+     technologie. Chaque tesselle se dessine en 2 passes (comme en SVG) : le
+     chemin dJoint (silhouette pleine, couleur du joint) PUIS le chemin dFill
+     (silhouette retrecie, couleur du remplissage) par-dessus -- le vide entre
+     les deux reste visible comme un vrai joint. */
+  var canevas = $('canevas');
+  var canevasScene = $('canevasScene');
+  var ctxScene = canevasScene.getContext('2d');
+  var sceneActive = null;
+  var idSelectionne = null;
+  var idSurvol = null;
+
+  function dessinerTesselles(ctxCible, tesselles, idxSel, idxSurvolCourant){
+    tesselles.forEach(function(t){
+      ctxCible.fillStyle = t.joint;
+      ctxCible.fill(new Path2D(t.dJoint));
+      ctxCible.fillStyle = t.remplissage;
+      ctxCible.fill(new Path2D(t.dFill));
+    });
+    // Survol et selection : un voile blanc translucide sur la silhouette
+    // PLEINE (dJoint, pas juste dFill) -- reproduit l'effet filter:brightness()
+    // de l'ancienne version SVG sans dependre des filtres Canvas (peu
+    // fiables/lourds entre navigateurs pour un rendu repete a chaque frame).
+    if (idxSurvolCourant != null && tesselles[idxSurvolCourant] && idxSurvolCourant !== idxSel){
+      ctxCible.fillStyle = 'rgba(255,255,255,0.22)';
+      ctxCible.fill(new Path2D(tesselles[idxSurvolCourant].dJoint));
+    }
+    if (idxSel != null && tesselles[idxSel]){
+      ctxCible.fillStyle = 'rgba(255,255,255,0.32)';
+      ctxCible.fill(new Path2D(tesselles[idxSel].dJoint));
+    }
+  }
+
+  function rendreCanevas(){
+    ctxScene.clearRect(0, 0, LARGEUR, HAUTEUR);
+    if (!sceneActive) return;
+    dessinerTesselles(ctxScene, obtenirTesselles(sceneActive), idSelectionne, idSurvol);
+  }
+
+  /* Coordonnees ecran -> coordonnees SCENE (LARGEUR x HAUTEUR) : le canevas
+     est affiche etire en CSS (width:100%), sa taille reelle affichee n'est
+     pas forcement 400x300 physiques. */
+  function positionScene(e){
+    var rect = canevasScene.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left) * (LARGEUR / rect.width),
+      y: (e.clientY - rect.top) * (HAUTEUR / rect.height)
+    };
+  }
+
+  /* Cherche la tesselle sous (x,y) en partant du DERNIER indice (dessine en
+     dernier = visuellement au-dessus) -- necessaire pour les Pois, ou le pois
+     (pousse apres son fond) doit gagner sur son propre fond quand les deux se
+     chevauchent au meme endroit. Teste dJoint (silhouette PLEINE, joint
+     compris) -- meme zone que celle cliquable sur le <g> SVG d'origine. */
+  function trouverTesselleSous(tesselles, x, y){
+    for (var i = tesselles.length - 1; i >= 0; i--){
+      if (ctxScene.isPointInPath(new Path2D(tesselles[i].dJoint), x, y)) return i;
+    }
+    return -1;
+  }
+
+  canevasScene.addEventListener('click', function(e){
+    if (!sceneActive) return;
+    var pos = positionScene(e);
+    var idx = trouverTesselleSous(obtenirTesselles(sceneActive), pos.x, pos.y);
+    if (idx !== -1){ idSelectionne = idx; rendreCanevas(); }
+  });
+  canevasScene.addEventListener('contextmenu', function(e){
+    if (!sceneActive) return;
+    e.preventDefault();
+    var pos = positionScene(e);
+    var idx = trouverTesselleSous(obtenirTesselles(sceneActive), pos.x, pos.y);
+    if (idx === -1) return;
+    idSelectionne = idx;
+    rendreCanevas();
+    ouvrirMenuContextuel(e.clientX, e.clientY, obtenirTesselles(sceneActive)[idx]);
+  });
+  canevasScene.addEventListener('mousemove', function(e){
+    if (!sceneActive) return;
+    var pos = positionScene(e);
+    var idx = trouverTesselleSous(obtenirTesselles(sceneActive), pos.x, pos.y);
+    var nouveauSurvol = idx === -1 ? null : idx;
+    if (nouveauSurvol !== idSurvol){ idSurvol = nouveauSurvol; rendreCanevas(); }
+  });
+  canevasScene.addEventListener('mouseleave', function(){
+    if (idSurvol != null){ idSurvol = null; rendreCanevas(); }
+  });
+
+  /* ================= Format physique (cm) -> resolution d'export reelle =================
+     Regle transversale posee ce soir (CLAUDE.md, "Qualite d'impression des
+     visuels -- obligatoire") : QuadretI est un produit physique, tout export
+     imprimable doit etre calcule a une resolution derivee du format REEL, pas
+     de la taille d'affichage/edition. Rendu ici en SVG (vectoriel) -- aucune
+     perte a rasteriser a la resolution cible, contrairement a un rendu Canvas
+     ou les pixels de travail sont deja figes a une resolution modeste. */
+  var DPI_CIBLE = 300;
+  var formatActuelCm = 20;
+  var FORMATS_CM = [20, 40, 60, 80, 100];
+  var grilleFormats = $('grilleFormats');
+  FORMATS_CM.forEach(function(taille, i){
+    var b = document.createElement('button');
+    b.className = 'btn-format' + (i === 0 ? ' actif' : '');
+    b.textContent = taille + '×' + taille;
+    b.dataset.taille = taille;
+    b.addEventListener('click', function(){
+      grilleFormats.querySelectorAll('.btn-format').forEach(function(x){ x.classList.remove('actif'); });
+      b.classList.add('actif');
+      formatActuelCm = taille;
+    });
+    grilleFormats.appendChild(b);
+  });
+
+  /* ================= Galerie =================
+     `creerCarteScene` est factorisee pour etre reutilisable par la
+     conversion photo->mosaique plus bas (une nouvelle carte doit pouvoir
+     s'ajouter dynamiquement APRES le chargement initial, pas juste une fois
+     au demarrage). */
+  var grilleGalerie = $('grilleGalerie');
+
+  function selectionnerScene(scene, carte){
+    document.querySelectorAll('.carte-scene').forEach(function(c){ c.classList.remove('actif'); });
+    carte.classList.add('actif');
+    sceneActive = scene;
+    idSelectionne = null;
+    rendreCanevas();
+  }
+
+  function creerCarteScene(scene){
+    var carte = document.createElement('div');
+    carte.className = 'carte-scene';
+    var miniCanvas = document.createElement('canvas');
+    miniCanvas.width = LARGEUR; miniCanvas.height = HAUTEUR;
+    dessinerTesselles(miniCanvas.getContext('2d'), obtenirTesselles(scene), null, null);
+    var nomDiv = document.createElement('div');
+    nomDiv.className = 'nom-scene';
+    nomDiv.textContent = scene.nom;
+    carte.appendChild(miniCanvas);
+    carte.appendChild(nomDiv);
+    carte.addEventListener('click', function(){ selectionnerScene(scene, carte); });
+    return carte;
+  }
+
+  SCENES.forEach(function(scene){ grilleGalerie.appendChild(creerCarteScene(scene)); });
+  // Scene par defaut chargee au demarrage (jamais de canevas vide au premier abord).
+  grilleGalerie.firstChild.click();
+
+  /* ================= Conversion automatique photo -> mosaique (27/08, backlog) =================
+     Phase 1 (la seule construite ce soir, conforme a l'evaluation de
+     faisabilite deja actee) : reutilise TEL QUEL le generateur "grille" deja
+     construit pour Paysage/les motifs -- meme grille de tesselles gigotees,
+     sauf que la fonction de couleur echantillonne la VRAIE couleur de la
+     photo a chaque position au lieu d'une fonction de zone codee a la main.
+     Aucun nouveau generateur, juste une nouvelle fonction de couleur. La
+     phase 2 (suivi de contours pour orienter les tesselles) reste a faire
+     plus tard si cette premiere passe plait. */
+  var carteScenePhoto = null; // reference vers la carte deja creee, pour la reutiliser/rafraichir plutot qu'en dupliquer une nouvelle a chaque photo
+
+  function genererDepuisPhoto(canevasPhoto){
+    var pctx = canevasPhoto.getContext('2d');
+    function couleurPhoto(cx, cy){
+      var x = Math.max(0, Math.min(LARGEUR - 1, Math.round(cx)));
+      var y = Math.max(0, Math.min(HAUTEUR - 1, Math.round(cy)));
+      var d = pctx.getImageData(x, y, 1, 1).data;
+      return '#' + [d[0], d[1], d[2]].map(function(n){ return n.toString(16).padStart(2, '0'); }).join('');
+    }
+    // Pas plus fin (18 au lieu de 26) que les autres scenes en grille -- une
+    // photo a besoin de plus de tesselles pour rester reconnaissable qu'un
+    // paysage aux zones larges et simples.
+    return genererGrille(18, 2, couleurPhoto);
+  }
+
+  $('btnInsererPhoto').addEventListener('click', function(){ $('inputPhoto').click(); });
+  $('inputPhoto').addEventListener('change', function(e){
+    var fichier = e.target.files[0];
+    if (!fichier) return;
+    var lecteur = new FileReader();
+    lecteur.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        // Etire la photo au format de travail LARGEUR x HAUTEUR (meme
+        // simplification que le calque de reference du mode decoupe) --
+        // pour echantillonner directement aux memes coordonnees que les
+        // tesselles generees, sans conversion supplementaire.
+        var canevasPhoto = document.createElement('canvas');
+        canevasPhoto.width = LARGEUR; canevasPhoto.height = HAUTEUR;
+        canevasPhoto.getContext('2d').drawImage(img, 0, 0, LARGEUR, HAUTEUR);
+
+        var scene = { id:'photo', nom:'Ma photo', construire: function(){ return genererDepuisPhoto(canevasPhoto); } };
+        scenesGenerees['photo'] = null; // force une regeneration (nouvelle photo = nouvelles tesselles)
+        delete scenesGenerees['photo'];
+
+        var idx = SCENES.findIndex(function(s){ return s.id === 'photo'; });
+        if (idx === -1){ SCENES.push(scene); } else { SCENES[idx] = scene; }
+
+        if (carteScenePhoto){ carteScenePhoto.remove(); }
+        carteScenePhoto = creerCarteScene(scene);
+        grilleGalerie.appendChild(carteScenePhoto);
+        carteScenePhoto.click(); // selectionne directement la scene fraichement generee
+      };
+      img.src = ev.target.result;
+    };
+    lecteur.readAsDataURL(fichier);
+  });
+
+  /* ================= Palette avancee reutilisable (identique a Editeur Creatif) ================= */
+  var PALETTE_AVANCEE = ['#2B353E','#E2725B','#CBBD93','#E63946','#F77F00','#FFD60A','#2DC653','#2A9DF4','#6A4C93','#FF6B9D','#000000','#FFFFFF'];
+  var CLE_PALETTE_PERSO = 'mosaiqueCreativePalettePerso';
+  function chargerPalettePerso(){ try { return JSON.parse(localStorage.getItem(CLE_PALETTE_PERSO)) || []; } catch(e){ return []; } }
+  function sauverPalettePerso(p){ try { localStorage.setItem(CLE_PALETTE_PERSO, JSON.stringify(p)); } catch(e){} }
+
+  /* ================= Menu contextuel : deux sections (Remplissage / Joint), chacune
+     avec une grille de pastilles toujours visible + un tiroir (hex/pipette/perso). ================= */
+  var menuContextuel = $('menuContextuel');
+  var tesselleCible = null;
+
+  // Coloriage par groupe (27/08, backlog) : desactive par defaut ("activable,
+  // pas force" -- le fondateur peut vouloir varier chaque tesselle
+  // individuellement meme sur un motif repetitif). Quand actif, changer une
+  // couleur (remplissage OU joint) se propage a toutes les tesselles qui
+  // partagent la meme etiquette `groupe` -- ex. les 2 teintes d'un chevron en
+  // 2 clics au lieu d'une par une. Les scenes figuratives (paysage/anneaux)
+  // n'ont pas d'etiquette groupe : la propagation ne fait alors rien de plus
+  // que colorier la seule tesselle cliquee, sans casse.
+  var coloriageParGroupeActif = false;
+  $('checkColoriageGroupe').addEventListener('change', function(){ coloriageParGroupeActif = this.checked; });
+
+  // Mode miroir : desactive par defaut, comme le coloriage par groupe --
+  // "activable, pas force". Se combine avec le coloriage par groupe : si les
+  // deux sont actifs, colorier une tesselle propage a son GROUPE, ET le
+  // jumeau miroir de CHAQUE tesselle du groupe est aussi recolorie -- sinon
+  // le miroir ne colorerait qu'une seule tesselle en face d'un groupe entier.
+  var miroirSceneActif = false;
+  $('checkMiroirScene').addEventListener('change', function(){ miroirSceneActif = this.checked; });
+
+  function appliquerCouleur(tesselle, champ, valeur){
+    var t = obtenirTesselles(sceneActive);
+    var cibles = [tesselle];
+    if (coloriageParGroupeActif && tesselle.groupe != null){
+      t.forEach(function(x){ if (x !== tesselle && x.groupe === tesselle.groupe) cibles.push(x); });
+    }
+    cibles.forEach(function(c){
+      c[champ] = valeur;
+      if (miroirSceneActif && c.miroir != null && t[c.miroir]) t[c.miroir][champ] = valeur;
+    });
+    rendreCanevas();
+  }
+
+  /* ================= Enregistrer / Charger (local) + Telecharger PNG (27/08) =================
+     La geometrie d'une scene (dJoint/dFill) est deterministe (meme ordre de
+     boucle a chaque construire()) -- seules les COULEURS (remplissage/joint,
+     indexees par position dans le tableau) ont besoin d'etre sauvegardees,
+     pas question de re-serialiser toute la geometrie. Sauvegarde separee par
+     scene (une cle localStorage par id de scene), explicite (jamais de
+     chargement automatique a la selection -- l'utilisateur garde la main sur
+     quand ecraser son brouillon courant). */
+  function cleSauvegardeScene(scene){ return 'mosaiqueCreativeScene_' + scene.id; }
+
+  $('btnEnregistrer').addEventListener('click', function(){
+    if (!sceneActive) return;
+    var t = obtenirTesselles(sceneActive);
+    var couleurs = t.map(function(x){ return { remplissage:x.remplissage, joint:x.joint }; });
+    try {
+      localStorage.setItem(cleSauvegardeScene(sceneActive), JSON.stringify(couleurs));
+      var btn = $('btnEnregistrer'); var texteOrigine = btn.textContent;
+      btn.textContent = 'Enregistré ✓';
+      setTimeout(function(){ btn.textContent = texteOrigine; }, 1200);
+    } catch (e){ /* quota depasse ou navigation privee -- ne bloque jamais le reste de l'outil */ }
+  });
+
+  $('btnCharger').addEventListener('click', function(){
+    if (!sceneActive) return;
+    var brut = localStorage.getItem(cleSauvegardeScene(sceneActive));
+    if (!brut) return;
+    var couleurs = JSON.parse(brut);
+    var t = obtenirTesselles(sceneActive);
+    couleurs.forEach(function(c, i){ if (t[i]){ t[i].remplissage = c.remplissage; t[i].joint = c.joint; } });
+    rendreCanevas();
+  });
+
+  /* Export en vraie resolution d'impression -- meme principe que le mode
+     decoupe : `dessinerTesselles` est la MEME fonction que celle utilisee pour
+     le canevas d'edition, appelee ici sur un contexte mis a l'echelle du
+     format physique choisi. Chaque Path2D est retrace net a la resolution
+     cible, jamais une image existante etiree. Corrige au passage une
+     deformation heritee de la version SVG : la scene travaille en 4:3
+     (400x300), mais l'export forcait un canevas CARRE (formatCm x formatCm),
+     ecrasant l'image -- desormais l'export garde le vrai ratio 4:3, formatCm
+     pilote la hauteur physique. */
+  $('btnTelecharger').addEventListener('click', function(){
+    if (!sceneActive) return;
+    var hauteurPx = Math.round(formatActuelCm / 2.54 * DPI_CIBLE);
+    var largeurPx = Math.round(hauteurPx * LARGEUR / HAUTEUR);
+    var c = document.createElement('canvas');
+    c.width = largeurPx; c.height = hauteurPx;
+    var ctx2 = c.getContext('2d');
+    ctx2.scale(hauteurPx / HAUTEUR, hauteurPx / HAUTEUR);
+    dessinerTesselles(ctx2, obtenirTesselles(sceneActive), null, null); // jamais le voile de selection/survol dans l'export
+    c.toBlob(function(blob){
+      var urlPng = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = urlPng; a.download = 'mosaique-creative-' + sceneActive.id + '-' + formatActuelCm + 'cm-300dpi.png';
+      a.click();
+      URL.revokeObjectURL(urlPng);
+    });
+  });
+
+  // Palette resserree par scene (27/08, backlog) : "une selection de 4-5
+  // couleurs coherentes suggerees selon la scene choisie, plutot que la
+  // palette complete a chaque fois" -- observation du fondateur sur une
+  // vraie mosaique de metro, jamais plus de 4-5 teintes en vrai. Etat de
+  // visibilite garde PAR SECTION (Remplissage/Joint peuvent etre dans des
+  // etats differents), reinitialise a "resserree" a chaque ouverture du menu
+  // (voir ouvrirMenuContextuel) pour ne jamais rester bloque sur "tout" par accident.
+  var voirToutesLesCouleurs = { Remplissage:false, Joint:false };
+
+  function peuplerSection(prefixe, valeurActuelle, onChange){
+    var grilleEl = $('mcSwatches' + prefixe);
+    var hexEl = $('mcHex' + prefixe);
+    var pipetteEl = $('mcPipette' + prefixe);
+    var persoEl = $('mcPerso' + prefixe);
+    var pastilleEl = $('mcPastille' + prefixe);
+    var lienEl = $('mcLienPalette' + prefixe);
+
+    pastilleEl.style.background = valeurActuelle;
+    hexEl.value = valeurActuelle;
+
+    var aUnePaletteResserree = sceneActive && sceneActive.paletteSuggeree;
+    var paletteAffichee = (aUnePaletteResserree && !voirToutesLesCouleurs[prefixe]) ? sceneActive.paletteSuggeree : PALETTE_AVANCEE;
+
+    var perso = chargerPalettePerso();
+    grilleEl.innerHTML = paletteAffichee.map(function(c){
+      return '<button class="swatch-mc' + (c.toUpperCase() === valeurActuelle.toUpperCase() ? ' actif' : '') + '" style="background:' + c + '" data-c="' + c + '"></button>';
+    }).join('');
+    grilleEl.querySelectorAll('.swatch-mc').forEach(function(b){
+      b.addEventListener('click', function(){ onChange(b.dataset.c); peuplerSection(prefixe, b.dataset.c, onChange); });
+    });
+
+    if (aUnePaletteResserree){
+      lienEl.style.display = 'block';
+      lienEl.textContent = voirToutesLesCouleurs[prefixe] ? 'Revenir à la palette suggérée' : 'Toutes les couleurs';
+      lienEl.onclick = function(){
+        voirToutesLesCouleurs[prefixe] = !voirToutesLesCouleurs[prefixe];
+        peuplerSection(prefixe, valeurActuelle, onChange);
+      };
+    } else {
+      lienEl.style.display = 'none';
+    }
+
+    hexEl.oninput = function(){
+      var v = hexEl.value;
+      if (/^#[0-9a-fA-F]{6}$/.test(v)) onChange(v);
+    };
+
+    if (window.EyeDropper){
+      pipetteEl.disabled = false;
+      pipetteEl.onclick = function(){
+        new window.EyeDropper().open().then(function(r){ onChange(r.sRGBHex); peuplerSection(prefixe, r.sRGBHex, onChange); }).catch(function(){});
+      };
+    } else {
+      pipetteEl.disabled = true;
+      pipetteEl.title = 'Pipette non supportée par ce navigateur';
+    }
+
+    persoEl.innerHTML = perso.map(function(c){
+      return '<button class="swatch-mc" style="background:' + c + '" data-c="' + c + '"></button>';
+    }).join('') + '<button class="ajouter-perso-mc" title="Ajouter la couleur actuelle">+</button>';
+    persoEl.querySelectorAll('.swatch-mc').forEach(function(b){
+      b.addEventListener('click', function(){ onChange(b.dataset.c); peuplerSection(prefixe, b.dataset.c, onChange); });
+    });
+    persoEl.querySelector('.ajouter-perso-mc').addEventListener('click', function(){
+      var p = chargerPalettePerso();
+      if (p.indexOf(hexEl.value) === -1){ p.push(hexEl.value); sauverPalettePerso(p); }
+      peuplerSection(prefixe, hexEl.value, onChange);
+    });
+  }
+
+  function lierTiroir(prefixe){
+    var titre = $('mcTitre' + prefixe);
+    var tiroir = $('mcTiroir' + prefixe);
+    titre.onclick = function(){
+      var ouvert = tiroir.classList.toggle('ouvert');
+      titre.classList.toggle('ouvert', ouvert);
+    };
+  }
+  lierTiroir('Remplissage');
+  lierTiroir('Joint');
+
+  function ouvrirMenuContextuel(x, y, tesselle){
+    tesselleCible = tesselle;
+    // Un tiroir reste ferme d'un menu a l'autre par defaut -- compact avant tout.
+    $('mcTiroirRemplissage').classList.remove('ouvert');
+    $('mcTitreRemplissage').classList.remove('ouvert');
+    $('mcTiroirJoint').classList.remove('ouvert');
+    $('mcTitreJoint').classList.remove('ouvert');
+    // Repart toujours de la palette resserree a l'ouverture d'un menu --
+    // jamais bloque sur "toutes les couleurs" d'une ouverture precedente.
+    voirToutesLesCouleurs.Remplissage = false;
+    voirToutesLesCouleurs.Joint = false;
+
+    peuplerSection('Remplissage', tesselle.remplissage, function(c){ appliquerCouleur(tesselle, 'remplissage', c); });
+    peuplerSection('Joint', tesselle.joint, function(c){ appliquerCouleur(tesselle, 'joint', c); });
+
+    menuContextuel.classList.add('ouvert');
+    var rect;
+    menuContextuel.style.left = '0px'; menuContextuel.style.top = '0px';
+    rect = menuContextuel.getBoundingClientRect();
+    var vx = Math.min(x, window.innerWidth - rect.width - 10);
+    var vy = Math.min(y, window.innerHeight - rect.height - 10);
+    menuContextuel.style.left = Math.max(4, vx) + 'px';
+    menuContextuel.style.top = Math.max(4, vy) + 'px';
+  }
+
+  function fermerMenuContextuel(){ menuContextuel.classList.remove('ouvert'); }
+
+  document.addEventListener('click', function(e){
+    /* composedPath, pas e.target : cliquer une pastille reconstruit la grille de
+       pastilles (pour mettre a jour laquelle est "active") PENDANT le clic -- e.target
+       se retrouve detache du document au moment ou cet ecouteur s'execute, et
+       menuContextuel.contains(e.target) renvoie alors faux a tort, fermant le menu
+       au moment meme ou on choisit une couleur. composedPath() est fige au moment
+       du clic, avant toute reconstruction du DOM. */
+    if (e.composedPath().indexOf(menuContextuel) === -1) fermerMenuContextuel();
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') fermerMenuContextuel(); });
+
+  /* Expose pour verification/tests. */
+  window.__mosaiqueCreative = {
+    SCENES: SCENES, obtenirTesselles: obtenirTesselles,
+    get sceneActive(){ return sceneActive; }, get coloriageParGroupeActif(){ return coloriageParGroupeActif; },
+    get miroirSceneActif(){ return miroirSceneActif; }, get idSelectionne(){ return idSelectionne; }, get idSurvol(){ return idSurvol; },
+    appliquerCouleur: appliquerCouleur, canevasScene: canevasScene, dessinerTesselles: dessinerTesselles
+  };
+})();
+</script>
+</body>
+</html>

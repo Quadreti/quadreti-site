@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosaïque Créative — Découvrez l'outil en le survolant</title>
+<meta name="description" content="Le guide interactif de Mosaïque Créative : survolez chaque zone pour comprendre, puis suivez la visite guidée.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Meme mecanique et meme famille de palette que SITE\APPLICATION\quadreti-guide-interactif.html
+     (demande explicite du fondateur, CLAUDE.md "socle minimum") -- ici les
+     deux teintes de pastille distinguent les deux MODES de l'outil plutot
+     que "app/maison" : terracotta = mode decoupe, bleu = bibliotheque de
+     scenes (le bleu est deja la couleur d'identite de la selection dans les
+     deux mockups reels, adapte ici comme teinte d'onglet). */
+  :root{
+    --terracotta:#E2725B;
+    --terracotta-soft:#F6DED8;
+    --bleu:#2A9DF4;
+    --bleu-soft:#DCEEFC;
+    --kraft:#CBBD93;
+    --kraft-soft:#F1ECDD;
+    --charbon:#2b353e;
+    --fond:#F5F5F5;
+    --blanc:#FFFFFF;
+    --border:#E3E0DA;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Quicksand', sans-serif;
+    background:var(--fond); color:var(--charbon);
+    font-size:15px; line-height:1.55;
+  }
+  button{ font-family:inherit; cursor:pointer; }
+
+  header{ text-align:center; padding:30px 16px 18px; }
+  .brand-logo{
+    position:relative; margin:0 auto 14px; width:44px; height:58px;
+    display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(4,1fr); gap:6%;
+  }
+  .brand-logo i{ border-radius:22%; background:var(--charbon); opacity:0; transform:scale(.3); animation:brandTileIn .5s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .brand-logo i.empty{ background:transparent; animation:none; }
+  .brand-logo .tail{
+    position:absolute; bottom:0; right:calc(-1 * ((100% - 12%) / 3) - 6%);
+    width:calc((100% - 12%) / 3); height:calc((100% - 18%) / 4);
+    border-radius:22%; background:var(--terracotta);
+    opacity:0; transform:scale(.3); animation:brandTileIn .5s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:.34s;
+  }
+  @keyframes brandTileIn{ 0%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.18); } 100%{ opacity:1; transform:scale(1); } }
+  header h1{ font-size:clamp(21px,4.5vw,30px); font-weight:700; margin:8px 0 6px; }
+  header p{ color:#5a636b; max-width:560px; margin:0 auto; font-size:15px; }
+  header p b{ color:var(--charbon); }
+  @media (prefers-reduced-motion: reduce){ .brand-logo i{ animation:none !important; opacity:1 !important; transform:none !important; } }
+
+  footer.guide-foot{ text-align:center; padding:34px 16px 40px; }
+  footer.guide-foot .sig{ font-weight:700; font-size:15px; color:var(--charbon); margin:0; }
+  footer.guide-foot .sig span{ color:var(--terracotta); }
+
+  .ctrl{
+    display:flex; gap:10px; justify-content:center; align-items:center;
+    flex-wrap:wrap; padding:14px 16px 8px;
+  }
+  .tour-btn{
+    background:var(--terracotta); color:#fff; border:none;
+    font-weight:700; font-size:15px; border-radius:99px;
+    padding:10px 22px;
+    box-shadow:0 4px 14px rgba(226,114,91,.35);
+    transition:transform .15s;
+  }
+  .tour-btn:hover{ transform:translateY(-2px); }
+  .scene-tabs{ display:flex; gap:6px; background:var(--blanc); border:1px solid var(--border); border-radius:99px; padding:4px; }
+  .scene-tabs button{
+    border:none; background:transparent; font-weight:700; font-size:13.5px;
+    color:#6a727b; border-radius:99px; padding:7px 16px;
+  }
+  .scene-tabs button.on{ background:var(--charbon); color:#fff; }
+
+  .stage{ max-width:980px; margin:10px auto 0; padding:0 14px 130px; position:relative; }
+  .scene{ display:none; position:relative; }
+  .scene.on{ display:block; }
+
+  .mock{
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:16px; padding:14px;
+    display:grid; gap:12px;
+    grid-template-columns:190px 1fr;
+    grid-template-areas:"outils atelier";
+  }
+  @media (max-width:700px){
+    .mock{ grid-template-columns:1fr; grid-template-areas:"outils" "atelier"; }
+  }
+  .panel{
+    background:var(--fond); border:1px solid var(--border);
+    border-radius:12px; padding:11px; position:relative;
+  }
+  .panel h2{
+    font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.1em; color:#8a9099; margin-bottom:8px;
+  }
+  .p-outils{ grid-area:outils; display:flex; flex-direction:column; gap:10px; }
+  .p-atelier{ grid-area:atelier; display:flex; flex-direction:column; gap:10px; }
+
+  .mockbtn{
+    display:block; width:100%;
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:8px; font-weight:600; font-size:11.5px;
+    color:var(--charbon); padding:6px 8px; margin:3px 0;
+    text-align:center; pointer-events:none;
+  }
+  .mockbtn.primary{ background:var(--terracotta); color:#fff; border-color:var(--terracotta); }
+  .mockbtn.actif{ background:var(--bleu); color:#fff; border-color:var(--bleu); }
+
+  .grille-formes-mock{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+  .grille-formes-mock i{ display:block; aspect-ratio:1; border-radius:6px; background:var(--blanc); border:1.5px solid var(--border); }
+
+  .swatches-mock{ display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
+  .swatches-mock i{ display:block; aspect-ratio:1; border-radius:5px; border:1px solid rgba(0,0,0,.08); }
+
+  /* Canevas mock : quelques tesselles qui se chevauchent, evoque la decoupe --
+     purement decoratif, positions figees en pourcentage. */
+  .canevas-mock{
+    background:#EAE0C8; border-radius:12px; position:relative; aspect-ratio:1/1;
+    overflow:hidden;
+  }
+  .canevas-mock .piece{ position:absolute; border-radius:8px; box-shadow:0 0 0 5px #EAE0C8; }
+  .canevas-mock .p1{ width:42%; height:42%; left:14%; top:16%; background:var(--terracotta); }
+  .canevas-mock .p2{ width:38%; height:38%; left:38%; top:34%; background:var(--charbon); border-radius:50%; }
+  .canevas-mock .p3{ width:30%; height:30%; left:56%; top:12%; background:var(--kraft); transform:rotate(45deg); }
+  .canevas-mock .zoom-mock{
+    position:absolute; right:8%; bottom:8%; background:var(--blanc); border:1px solid var(--border);
+    border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; color:var(--doux, #5c646c);
+  }
+
+  /* Canevas mock scenes : petite grille de tesselles coloree, evoque une scene a colorier. */
+  .canevas-mock-scenes{
+    background:#eae5d8; border-radius:12px; padding:8px;
+    display:grid; grid-template-columns:repeat(6,1fr); gap:4px; aspect-ratio:4/3;
+  }
+  .canevas-mock-scenes i{ display:block; border-radius:3px; }
+
+  .galerie-mock{ display:flex; flex-direction:column; gap:6px; }
+  .galerie-mock .carte-mock{
+    background:var(--blanc); border:1.5px solid var(--border); border-radius:8px; padding:6px 8px;
+    font-size:11px; font-weight:700; color:var(--charbon); display:flex; align-items:center; gap:6px;
+  }
+  .galerie-mock .carte-mock.actif{ border-color:var(--bleu); color:var(--bleu); }
+  .galerie-mock .carte-mock i{ width:16px; height:16px; border-radius:4px; flex-shrink:0; }
+
+  .menu-mock{
+    position:absolute; z-index:6; background:var(--blanc); border:1px solid var(--border); border-radius:10px;
+    box-shadow:0 10px 26px rgba(43,53,62,.18); padding:8px; width:150px;
+  }
+  .menu-mock .titre-mock{ font-size:10px; font-weight:700; color:var(--charbon); margin-bottom:6px; }
+  .menu-mock .swatches-mock{ margin-bottom:0; }
+
+  .hot{
+    position:absolute; z-index:5;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--terracotta); color:#fff;
+    border:2.5px solid #fff;
+    font-weight:700; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(226,114,91,.45);
+  }
+  .hot::before{
+    content:""; position:absolute; inset:-7px; border-radius:50%;
+    border:2px solid var(--terracotta); opacity:.55;
+    animation:pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{ transform:scale(.7); opacity:.7; }
+    100%{ transform:scale(1.25); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){ .hot::before{ animation:none; } }
+  .hot.bleu{ background:var(--bleu); box-shadow:0 3px 10px rgba(42,157,244,.45); }
+  .hot.bleu::before{ border-color:var(--bleu); }
+  .hot.seen{ background:#aab2ab; box-shadow:none; }
+  .hot.seen::before{ display:none; }
+  .hot.active{ transform:scale(1.18); }
+  .hot:focus-visible{ outline:3px solid var(--charbon); outline-offset:2px; }
+
+  .lit{ box-shadow:0 0 0 3px var(--terracotta), 0 0 0 8px rgba(226,114,91,.18) !important; border-radius:12px; }
+
+  .pop{
+    position:fixed; z-index:60;
+    left:50%; bottom:14px; transform:translateX(-50%);
+    width:min(480px, calc(100vw - 24px));
+    background:var(--blanc); border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 14px 40px rgba(43,53,62,.22);
+    padding:18px 20px 14px;
+    display:none;
+  }
+  .pop.on{ display:block; animation:rise .22s ease; }
+  @keyframes rise{ from{ transform:translate(-50%, 14px); opacity:0; } to{ transform:translate(-50%,0); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .pop.on{ animation:none; } }
+  .pop .pop-step{
+    font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--terracotta); margin-bottom:4px;
+  }
+  .pop h3{ font-size:17.5px; font-weight:700; margin-bottom:6px; }
+  .pop p{ font-size:14px; color:#3d4650; }
+  .pop p + p{ margin-top:6px; }
+  .pop .ui{
+    display:inline-block; font-weight:600; font-size:.92em;
+    background:var(--bleu-soft); color:#1c6ea8;
+    border:1px solid #b9dcf4; border-radius:5px; padding:0 7px 1px; white-space:nowrap;
+  }
+  .pop-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:14px; gap:10px;
+  }
+  .pop-nav .dots{ font-size:12.5px; font-weight:700; color:#8a9099; }
+  .pop-nav button{
+    border:1px solid var(--border); background:var(--blanc);
+    font-weight:700; font-size:13.5px; border-radius:99px; padding:7px 16px;
+    color:var(--charbon);
+  }
+  .pop-nav button.next{ background:var(--charbon); color:#fff; border-color:var(--charbon); }
+  .pop-close{
+    position:absolute; top:10px; right:12px;
+    border:none; background:transparent; font-size:17px; color:#8a9099;
+    padding:4px;
+  }
+
+  .finale{
+    position:fixed; inset:0; z-index:80;
+    background:rgba(245,245,245,.96);
+    display:none; align-items:center; justify-content:center; text-align:center; padding:20px;
+  }
+  .finale.on{ display:flex; }
+  .finale .clic{ font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:#8a9099; margin-bottom:12px; }
+  .finale p.phrase{ font-size:clamp(22px,5vw,34px); font-weight:700; }
+  .finale p.phrase span{ color:var(--terracotta); }
+  .finale button{
+    margin-top:26px; background:var(--terracotta); color:#fff; border:none;
+    font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-logo" aria-hidden="true">
+    <i style="animation-delay:.10s"></i><i style="animation-delay:.16s"></i><i style="animation-delay:.22s"></i>
+    <i style="animation-delay:.08s"></i><i class="empty"></i><i style="animation-delay:.26s"></i>
+    <i style="animation-delay:.06s"></i><i class="empty"></i><i style="animation-delay:.30s"></i>
+    <i style="animation-delay:.04s"></i><i style="animation-delay:.02s"></i><i style="animation-delay:0s"></i>
+    <i class="tail"></i>
+  </div>
+  <h1>Mosaïque Créative, en la touchant</h1>
+  <p>Deux façons de composer une mosaïque : <b>poser des pièces qui se découpent entre elles</b>, ou <b>colorier une scène déjà prête</b>. Touchez les pastilles librement, ou lancez la visite guidée.</p>
+</header>
+
+<div class="ctrl">
+  <button class="tour-btn" id="tourBtn">▶ Lancer la visite guidée</button>
+  <div class="scene-tabs" role="tablist" aria-label="Choisir le mode">
+    <button class="on" id="tabDecoupe" role="tab" aria-selected="true">Mode découpe</button>
+    <button id="tabScenes" role="tab" aria-selected="false">Bibliothèque de scènes</button>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- ================= SCÈNE 1 : MODE DÉCOUPE ================= -->
+  <div class="scene on" id="sceneDecoupe">
+    <div class="mock">
+
+      <div class="panel p-outils" id="z-formes">
+        <h2>Insérer</h2>
+        <div class="grille-formes-mock" aria-hidden="true">
+          <i></i><i style="border-radius:50%;"></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div id="z-mordre" style="margin-top:10px;">
+          <h2>Découpe</h2>
+          <span class="mockbtn actif">Les pièces se découpent</span>
+        </div>
+        <div id="z-symetrie" style="margin-top:10px;">
+          <h2>Symétrie</h2>
+          <span class="mockbtn">Mode miroir</span>
+        </div>
+        <div id="z-calque" style="margin-top:10px;">
+          <h2>Calque de référence</h2>
+          <span class="mockbtn">Insérer</span>
+        </div>
+      </div>
+
+      <div class="panel p-atelier" id="z-canevas">
+        <h2>Votre composition</h2>
+        <div class="canevas-mock" aria-hidden="true">
+          <div class="piece p1"></div>
+          <div class="piece p2"></div>
+          <div class="piece p3"></div>
+          <div class="zoom-mock">100%</div>
+        </div>
+        <div class="atelier-tools" id="z-poignees" style="display:flex; gap:6px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">Redimensionner</span>
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">Courber un bord</span>
+        </div>
+        <div id="z-historique" style="display:flex; gap:6px; justify-content:center; margin-top:8px;">
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">↺ Annuler</span>
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">↻ Rétablir</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SCÈNE 2 : BIBLIOTHÈQUE DE SCÈNES ================= -->
+  <div class="scene" id="sceneScenes">
+    <div class="mock">
+
+      <div class="panel p-outils" id="z-galerie">
+        <h2>Bibliothèque de scènes</h2>
+        <div class="galerie-mock" aria-hidden="true">
+          <div class="carte-mock actif"><i style="background:var(--bleu);"></i>Cercles concentriques</div>
+          <div class="carte-mock"><i style="background:var(--kraft);"></i>Chevrons</div>
+          <div class="carte-mock"><i style="background:#a8946a;"></i>Vannerie</div>
+        </div>
+        <div id="z-photo" style="margin-top:10px;">
+          <h2>Photo → Mosaïque</h2>
+          <span class="mockbtn">Générer depuis une photo</span>
+        </div>
+      </div>
+
+      <div class="panel p-atelier" id="z-canevas-scenes" style="position:relative;">
+        <h2>Colorez chaque tesselle</h2>
+        <div class="canevas-mock-scenes" aria-hidden="true">
+          <i style="background:#F2EEDF"></i><i style="background:#C9502F"></i><i style="background:#2B2320"></i><i style="background:#F2EEDF"></i><i style="background:#C9502F"></i><i style="background:#8a7a5c"></i>
+          <i style="background:#C9502F"></i><i style="background:#2B2320"></i><i style="background:#F2EEDF"></i><i style="background:#C9502F"></i><i style="background:#8a7a5c"></i><i style="background:#F2EEDF"></i>
+          <i style="background:#2B2320"></i><i style="background:#F2EEDF"></i><i style="background:#C9502F"></i><i style="background:#8a7a5c"></i><i style="background:#F2EEDF"></i><i style="background:#C9502F"></i>
+        </div>
+        <div class="menu-mock" id="z-menu-couleur" style="top:52%; left:30%;">
+          <div class="titre-mock">Remplissage</div>
+          <div class="swatches-mock">
+            <i style="background:#C9502F"></i><i style="background:#2B2320"></i><i style="background:#F2EEDF"></i><i style="background:#8a7a5c"></i>
+          </div>
+        </div>
+        <div id="z-groupe" style="display:flex; gap:6px; justify-content:center; margin-top:60px; flex-wrap:wrap;">
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">Coloriage par groupe</span>
+          <span class="mockbtn" style="width:auto; padding:5px 10px; margin:0;">Mode miroir</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= POPUP ================= -->
+<div class="pop" id="pop" role="dialog" aria-modal="false" aria-labelledby="popTitle">
+  <button class="pop-close" id="popClose" aria-label="Fermer">✕</button>
+  <div class="pop-step" id="popStep"></div>
+  <h3 id="popTitle"></h3>
+  <div id="popBody"></div>
+  <div class="pop-nav">
+    <button id="popPrev">‹ Précédent</button>
+    <span class="dots" id="popDots"></span>
+    <button class="next" id="popNext">Suivant ›</button>
+  </div>
+</div>
+
+<!-- ================= FINALE ================= -->
+<div class="finale" id="finale">
+  <div>
+    <div class="clic">· clic ·</div>
+    <p class="phrase">Posez, découpez, coloriez,<br><span>imprimez à la bonne résolution.</span></p>
+    <button id="finaleClose">Rejouer la visite</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // scene: 'decoupe' | 'scenes' — anchor: id de l'element a annoter
+  const STEPS = [
+    { scene:'decoupe', anchor:'z-formes', num:1, title:'Six formes à poser',
+      html:"<p>Carré, rond, triangle, losange, ovale, hexagone — glissez-en une depuis la bibliothèque jusqu'au canevas, comme si vous alliez la chercher plutôt que de la faire apparaître d'office.</p>" },
+    { scene:'decoupe', anchor:'z-mordre', num:2, title:'La découpe entre pièces',
+      html:"<p>Activez <span class='ui'>Les pièces se découpent</span> : chaque pièce posée par-dessus une autre la redécoupe pour respecter un joint constant — exactement le geste d'un mosaïste qui ajuste une tesselle à sa voisine.</p><p>Désactivé par défaut : vous pouvez composer librement avant de figer les découpes.</p>" },
+    { scene:'decoupe', anchor:'z-poignees', num:3, title:'Ajuster une pièce',
+      html:"<p>Sélectionnez une pièce : une poignée de coin la <b>redimensionne</b>, une poignée au milieu d'un bord le <b>courbe</b> (concave ou bombé). Une loupe apparaît pendant l'ajustement pour viser au pixel près.</p>" },
+    { scene:'decoupe', anchor:'z-symetrie', num:4, title:'Composer en miroir',
+      html:"<p>Le <span class='ui'>Mode miroir</span> reproduit automatiquement de l'autre côté du canevas tout ce que vous posez, déplacez ou coloriez — beaucoup de vraies mosaïques sont symétriques, plus besoin de tout refaire deux fois.</p>" },
+    { scene:'decoupe', anchor:'z-calque', num:5, title:'Décalquer une photo',
+      html:"<p>Importez une image : elle reste visible en transparence pendant que vous composez, pour vous en inspirer ou la reproduire pièce par pièce — mais elle n'apparaît jamais dans le fichier final téléchargé.</p>" },
+    { scene:'decoupe', anchor:'z-historique', num:6, title:'Le droit à l’erreur',
+      html:"<p><span class='ui'>↺ Annuler</span> / <span class='ui'>↻ Rétablir</span> reviennent sur n'importe quelle action, découpe comprise — la découpe est permanente une fois posée, mais jamais irréversible.</p>" },
+    { scene:'decoupe', anchor:'z-canevas', num:7, title:'Zoom et repères',
+      html:"<p>Le contrôle en bas à droite du canevas zoome sous le curseur (<b>Ctrl + molette</b>) et s'ajuste à l'écran d'un clic. Une sous-grille en centimètres réels aide à juger les proportions du format physique choisi.</p>" },
+    { scene:'scenes', anchor:'z-galerie', num:8, title:'Une bibliothèque de scènes prêtes',
+      html:"<p>Chaque vignette est une scène déjà découpée en tesselles — un paysage, des cercles concentriques, ou de vrais motifs de mosaïque (chevrons, vannerie, nid d'abeille, méandre grec, pois). Cliquez pour la charger.</p>" },
+    { scene:'scenes', anchor:'z-menu-couleur', num:9, title:'Colorier chaque tesselle',
+      html:"<p>Clic droit sur une tesselle : remplissage et joint se colorient indépendamment. La palette proposée est <b>resserrée</b> à 4-5 teintes cohérentes avec la scène — comme une vraie mosaïque, qui n'utilise presque jamais plus de couleurs que ça.</p>" },
+    { scene:'scenes', anchor:'z-groupe', num:10, title:'Aller plus vite',
+      html:"<p><span class='ui'>Coloriage par groupe</span> : sur un motif répétitif, colorier une tesselle recolore d'un coup toutes celles qui jouent le même rôle (les 2 teintes d'un chevron en 2 clics). Le <span class='ui'>Mode miroir</span> fonctionne aussi ici, sur la couleur.</p>" },
+    { scene:'scenes', anchor:'z-photo', num:11, title:'Une photo, en mosaïque',
+      html:"<p><span class='ui'>Générer depuis une photo</span> convertit automatiquement une image importée en tesselles colorées d'après ses vraies couleurs — un point de départ à ajuster ensuite comme n'importe quelle scène.</p>" },
+    { scene:'scenes', anchor:'z-canevas-scenes', num:12, title:'Enregistrer, télécharger, imprimer',
+      html:"<p>Enregistrez votre progression localement pour la reprendre plus tard, ou téléchargez directement en image — calculée à la vraie résolution d'impression du format choisi, jamais juste celle de l'écran.</p>" },
+  ];
+
+  const pop = document.getElementById('pop');
+  const popStep = document.getElementById('popStep');
+  const popTitle = document.getElementById('popTitle');
+  const popBody = document.getElementById('popBody');
+  const popDots = document.getElementById('popDots');
+  const popPrev = document.getElementById('popPrev');
+  const popNext = document.getElementById('popNext');
+  const finale = document.getElementById('finale');
+  const sceneDecoupe = document.getElementById('sceneDecoupe');
+  const sceneScenes = document.getElementById('sceneScenes');
+  const tabDecoupe = document.getElementById('tabDecoupe');
+  const tabScenes = document.getElementById('tabScenes');
+
+  let current = -1;
+  let tourMode = false;
+
+  function showScene(name){
+    const isDecoupe = name === 'decoupe';
+    sceneDecoupe.classList.toggle('on', isDecoupe);
+    sceneScenes.classList.toggle('on', !isDecoupe);
+    tabDecoupe.classList.toggle('on', isDecoupe);
+    tabScenes.classList.toggle('on', !isDecoupe);
+    tabDecoupe.setAttribute('aria-selected', isDecoupe);
+    tabScenes.setAttribute('aria-selected', !isDecoupe);
+  }
+  tabDecoupe.addEventListener('click', () => { closePop(); showScene('decoupe'); });
+  tabScenes.addEventListener('click', () => { closePop(); showScene('scenes'); });
+
+  const hots = [];
+  STEPS.forEach((s, i) => {
+    const anchor = document.getElementById(s.anchor);
+    const b = document.createElement('button');
+    b.className = 'hot' + (s.scene === 'scenes' ? ' bleu' : '');
+    b.textContent = s.num;
+    b.setAttribute('aria-label', 'Étape ' + s.num + ' : ' + s.title.replace(/&amp;/g,'&'));
+    b.addEventListener('click', (e) => { e.stopPropagation(); openStep(i, false); });
+    anchor.style.position = anchor.style.position || 'relative';
+    b.style.top = '-10px'; b.style.right = '-8px';
+    anchor.appendChild(b);
+    hots.push(b);
+  });
+
+  function openStep(i, fromTour){
+    const s = STEPS[i];
+    showScene(s.scene);
+    document.querySelectorAll('.lit').forEach(el => el.classList.remove('lit'));
+    hots.forEach(h => h.classList.remove('active'));
+    document.getElementById(s.anchor).classList.add('lit');
+    hots[i].classList.add('active');
+    hots[i].classList.add('seen');
+    current = i;
+    if (fromTour !== undefined) tourMode = fromTour || tourMode;
+
+    popStep.textContent = 'Étape ' + s.num + ' / ' + STEPS.length;
+    popTitle.innerHTML = s.title;
+    popBody.innerHTML = s.html;
+    popDots.textContent = s.num + ' / ' + STEPS.length;
+    popPrev.style.visibility = i === 0 ? 'hidden' : 'visible';
+    popNext.textContent = i === STEPS.length - 1 ? 'Terminer ✓' : 'Suivant ›';
+    pop.classList.add('on');
+    hots[i].scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+
+  function closePop(){
+    pop.classList.remove('on');
+    document.querySelectorAll('.lit').forEach(el => el.classList.remove('lit'));
+    hots.forEach(h => h.classList.remove('active'));
+    current = -1;
+  }
+
+  popPrev.addEventListener('click', () => { if (current > 0) openStep(current - 1); });
+  popNext.addEventListener('click', () => {
+    if (current < STEPS.length - 1) openStep(current + 1);
+    else { closePop(); finale.classList.add('on'); tourMode = false; }
+  });
+  document.getElementById('popClose').addEventListener('click', closePop);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ closePop(); finale.classList.remove('on'); }
+    if (!pop.classList.contains('on')) return;
+    if (e.key === 'ArrowRight') popNext.click();
+    if (e.key === 'ArrowLeft') popPrev.click();
+  });
+
+  document.getElementById('tourBtn').addEventListener('click', () => {
+    hots.forEach(h => h.classList.remove('seen'));
+    openStep(0, true);
+  });
+
+  document.getElementById('finaleClose').addEventListener('click', () => {
+    finale.classList.remove('on');
+    hots.forEach(h => h.classList.remove('seen'));
+    showScene('decoupe');
+    openStep(0, true);
+  });
+
+  /* Expose pour verification/tests. */
+  window.__guide = { STEPS: STEPS, openStep: openStep, get current(){ return current; } };
+})();
+</script>
+
+<footer class="guide-foot">
+  <p class="sig">Posez, découpez, coloriez,<span> imprimez à la bonne résolution.</span></p>
+</footer>
+
+</body>
+</html>
