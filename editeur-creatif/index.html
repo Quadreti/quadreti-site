@@ -303,6 +303,69 @@
   .menu-contextuel button:hover{ background:var(--teinte-actif); color:var(--terracotta); }
   .menu-contextuel button:disabled{ opacity:.4; cursor:default; background:none; color:var(--texte); }
   .menu-contextuel hr{ border:none; border-top:1px solid var(--bord); margin:4px 2px; }
+  .mc-groupe-titre{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin:6px 10px 3px; }
+  .mc-groupe-titre:first-child{ margin-top:2px; }
+
+  /* ================= Personnaliser le clic droit (28/08) =================
+     Meme mecanique que Mosaique Creative (mode decoupe) : fenetre pop-up
+     (couverture+panneau) pour choisir quelles actions du clic droit
+     apparaissent et dans quel ordre. Toutes les actions listees ici
+     existaient deja (dupliquer/copier/coller/ordre d'empilement/retourner/
+     supprimer dans le menu, verrouiller/annuler/retablir ailleurs dans l'app)
+     -- rien de nouveau construit cote logique, seul le fait qu'elles soient
+     personnalisables est nouveau. */
+  .mcd-couverture{
+    position:fixed; inset:0; z-index:300; background:rgba(43,53,62,.45);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .mcd-couverture.ouverte{ display:flex; }
+  .mcd-popup{
+    background:var(--surface); border-radius:16px; max-width:420px; width:100%; max-height:82vh; overflow:auto;
+    padding:18px 20px 22px; box-shadow:0 24px 60px -12px #2b353e55;
+  }
+  .mcd-entete{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    position:sticky; top:-18px; background:var(--surface); padding:18px 0 10px; margin:-18px 0 4px;
+  }
+  .mcd-entete h3{ font-family:'Quicksand',sans-serif; font-size:15px; margin:0; }
+  .mcd-fermer{
+    width:28px; height:28px; border-radius:50%; border:none; background:var(--papier); color:var(--doux);
+    cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .mcd-fermer:hover{ background:#b04a36; color:#fff; }
+  .mcd-fermer svg{ width:14px; height:14px; }
+  .mcd-note{ font-size:11.5px; color:var(--doux); margin:0 0 14px; line-height:1.5; }
+
+  .mcd-groupe{ margin-bottom:14px; }
+  .mcd-groupe:last-child{ margin-bottom:0; }
+  .mcd-groupe-label{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--doux); margin:0 0 6px 2px; }
+  .mcd-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+
+  .mcd-ligne{ display:flex; align-items:center; gap:8px; padding:6px 6px; border-radius:8px; background:var(--surface); user-select:none; }
+  .mcd-ligne.mcd-fantome{ opacity:.35; }
+  .mcd-ligne.mcd-verrouille{ background:var(--teinte-actif); }
+
+  .mcd-poignee{ width:16px; height:16px; flex-shrink:0; color:var(--bord); cursor:grab; touch-action:none; }
+  .mcd-poignee svg{ width:100%; height:100%; }
+  .mcd-ligne.mcd-verrouille .mcd-poignee{ visibility:hidden; }
+  .mcd-poignee:active{ cursor:grabbing; }
+
+  .mcd-case{ width:18px; height:18px; flex-shrink:0; border-radius:5px; border:1.5px solid var(--bord); background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .mcd-case.mcd-coche{ background:var(--charbon); border-color:var(--charbon); }
+  .mcd-case svg{ width:11px; height:11px; color:var(--creme); opacity:0; }
+  .mcd-case.mcd-coche svg{ opacity:1; }
+
+  .mcd-libelle{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
+  .mcd-ligne.mcd-desactivee .mcd-libelle{ color:var(--doux); }
+
+  .mcd-cadenas{ width:14px; height:14px; color:#b04a36; flex-shrink:0; }
+  .mcd-cadenas svg{ width:100%; height:100%; }
+
+  .mcd-reinit{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
+    background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
+  }
+  .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 
   .grille-effets{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
   .btn-effet{ font:inherit; font-family:'Karla',sans-serif; font-weight:700; font-size:9.5px; padding:6px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; text-align:center; }
@@ -429,6 +492,10 @@
       </div>
       <p class="note" id="etatSauvegarde" style="margin-top:8px"></p>
     </div>
+    <div class="carte">
+      <div class="label">Clic droit</div>
+      <button class="btn secondaire" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
+    </div>
   </div>
 
   <div class="zone-travail">
@@ -449,18 +516,21 @@
 </div>
 
 <div class="menu-contextuel" id="menuContextuel">
-  <button data-action="dupliquer">Dupliquer</button>
-  <button data-action="copier">Copier</button>
-  <button data-action="coller" id="mcColler">Coller</button>
-  <hr>
-  <button data-action="avancer">Avancer</button>
-  <button data-action="reculer">Reculer</button>
-  <button data-action="premierPlan">Premier plan</button>
-  <button data-action="arrierePlan">Arrière-plan</button>
-  <hr>
-  <button data-action="retourner">Retourner</button>
-  <hr>
-  <button data-action="supprimer" style="color:#b04a36">Supprimer</button>
+  <div id="mcGroupesDynamiques"></div>
+</div>
+
+<div class="mcd-couverture" id="mcdCouverture">
+  <div class="mcd-popup">
+    <div class="mcd-entete">
+      <h3>Personnaliser le clic droit</h3>
+      <button class="mcd-fermer" id="mcdFermer" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+    <p class="mcd-note">Coche/décoche une action, glisse une poignée pour la réordonner dans son groupe. Supprimer reste toujours actif.</p>
+    <div id="mcdListeGroupes"></div>
+    <button class="mcd-reinit" id="mcdReinit">Réinitialiser</button>
+  </div>
 </div>
 
 <input type="file" id="fichierFormePhotoCanevas" accept="image/*" style="display:none">
@@ -1480,8 +1550,11 @@
      accessibles sans quitter des yeux le canevas -- convention deja connue
      de Canva/PowerPoint. --- */
   var menuContextuel = $('menuContextuel');
+  var calqueMenu = null; // calque sur lequel le clic droit a ete ouvert (remplace l'ancien dataset.calqueId)
+
   function ouvrirMenuContextuel(x, y, c){
-    $('mcColler').disabled = !pressePapier;
+    calqueMenu = c;
+    construireGroupesMenuContextuel(c);
     menuContextuel.classList.add('ouvert');
     // Positionne d'abord hors ecran a gauche/haut pour mesurer sa taille reelle,
     // puis replie dans la fenetre si besoin (evite qu'il deborde a droite/en bas).
@@ -1491,30 +1564,262 @@
     var py = Math.min(y, window.innerHeight - hauteur - 8);
     menuContextuel.style.left = px + 'px';
     menuContextuel.style.top = py + 'px';
-    menuContextuel.dataset.calqueId = c.id;
   }
   function fermerMenuContextuel(){ menuContextuel.classList.remove('ouvert'); }
-  menuContextuel.querySelectorAll('button[data-action]').forEach(function(b){
-    b.addEventListener('click', function(){
-      var c = calques.find(function(x){ return x.id === menuContextuel.dataset.calqueId; });
-      var action = b.dataset.action;
-      fermerMenuContextuel();
-      if (action === 'coller'){ actionColler(); return; }
-      if (!c) return;
-      if (action === 'dupliquer') actionDupliquer(c);
-      else if (action === 'copier') actionCopier(c);
-      else if (action === 'avancer') actionAvancer(c);
-      else if (action === 'reculer') actionReculer(c);
-      else if (action === 'premierPlan') actionPremierPlan(c);
-      else if (action === 'arrierePlan') actionArrierePlan(c);
-      else if (action === 'retourner') actionRetourner(c);
-      else if (action === 'supprimer') actionSupprimer(c);
+
+  /* Registre des actions personnalisables (28/08) -- toutes deja existantes
+     (actionDupliquer, actionVerrou... deja utilisees par le panneau de droite
+     et/ou l'ancien menu fixe), seule la personnalisation est nouvelle.
+     "desactive" grise l'action sans la retirer (ex. Coller sans presse-papier),
+     "libelleDyn" remplace le libelle statique quand il depend de l'etat du calque. */
+  var ACTIONS = {
+    'retourner': { label:'Retourner', run:function(c){ actionRetourner(c); } },
+    'avancer': { label:'Avancer', run:function(c){ actionAvancer(c); } },
+    'reculer': { label:'Reculer', run:function(c){ actionReculer(c); } },
+    'premierPlan': { label:'Premier plan', run:function(c){ actionPremierPlan(c); } },
+    'arrierePlan': { label:'Arrière-plan', run:function(c){ actionArrierePlan(c); } },
+    'dupliquer': { label:'Dupliquer', run:function(c){ actionDupliquer(c); } },
+    'copier': { label:'Copier', run:function(c){ actionCopier(c); } },
+    'coller': { label:'Coller', run:function(){ actionColler(); }, desactive:function(){ return !pressePapier; } },
+    'supprimer': { label:'Supprimer', run:function(c){ actionSupprimer(c); }, danger:true },
+    'verrou': { label:'Verrouiller', run:function(c){ actionVerrou(c); },
+      libelleDyn:function(c){ return c.verrouille ? 'Déverrouiller' : 'Verrouiller'; } },
+    'annuler': { label:'Annuler', run:function(){ annuler(); }, desactive:function(){ return historiqueIndex <= 0; } },
+    'retablir': { label:'Rétablir', run:function(){ retablir(); }, desactive:function(){ return historiqueIndex >= historique.length - 1; } }
+  };
+
+  /* Config par defaut : 5 groupes -- Transformation, Ordre d'empilement,
+     Edition, Protection, Historique. Meme decoupage fonctionnel que Mosaique
+     Creative, sans Apparence/Selection (pas d'equivalent ici : la couleur se
+     regle par type de calque dans le panneau, pas un bouton de menu unique ;
+     pas de selection multiple dans cet outil). */
+  var MCD_DEFAUT = [
+    { id:'transformation', label:'Transformation', items:[
+      { id:'retourner', actif:true }
+    ]},
+    { id:'ordre', label:"Ordre d'empilement", items:[
+      { id:'avancer', actif:true },
+      { id:'reculer', actif:true },
+      { id:'premierPlan', actif:true },
+      { id:'arrierePlan', actif:true }
+    ]},
+    { id:'edition', label:'Édition', items:[
+      { id:'dupliquer', actif:true },
+      { id:'copier', actif:true },
+      { id:'coller', actif:true },
+      { id:'supprimer', actif:true, verrouille:true }
+    ]},
+    { id:'protection', label:'Protection', items:[
+      { id:'verrou', actif:false }
+    ]},
+    { id:'historique', label:'Historique', items:[
+      { id:'annuler', actif:false },
+      { id:'retablir', actif:false }
+    ]}
+  ];
+
+  var CLE_MENU_CLIC_DROIT = 'editeurCreatifMenuClicDroit';
+  function clonerDefautMenu(){ return JSON.parse(JSON.stringify(MCD_DEFAUT)); }
+
+  function fusionnerConfigMenu(sauvegarde){
+    var base = clonerDefautMenu();
+    if (!sauvegarde || !Array.isArray(sauvegarde)) return base;
+    return base.map(function(groupeDefaut){
+      var groupeSauvegarde = sauvegarde.find(function(g){ return g && g.id === groupeDefaut.id; });
+      if (!groupeSauvegarde || !Array.isArray(groupeSauvegarde.items)) return groupeDefaut;
+      var items = groupeSauvegarde.items.filter(function(it){
+        return it && groupeDefaut.items.some(function(d){ return d.id === it.id; });
+      }).map(function(it){ return { id: it.id, actif: !!it.actif }; });
+      var idsConnus = items.map(function(it){ return it.id; });
+      groupeDefaut.items.forEach(function(d){
+        if (idsConnus.indexOf(d.id) === -1) items.push({ id: d.id, actif: d.actif });
+      });
+      items.forEach(function(it){
+        var d = groupeDefaut.items.find(function(dd){ return dd.id === it.id; });
+        if (d && d.verrouille){ it.verrouille = true; it.actif = true; }
+      });
+      return { id: groupeDefaut.id, label: groupeDefaut.label, items: items };
     });
+  }
+
+  function chargerConfigMenu(){
+    try {
+      var brut = localStorage.getItem(CLE_MENU_CLIC_DROIT);
+      return fusionnerConfigMenu(brut ? JSON.parse(brut) : null);
+    } catch(e){ return clonerDefautMenu(); }
+  }
+  function sauverConfigMenu(){
+    try { localStorage.setItem(CLE_MENU_CLIC_DROIT, JSON.stringify(configMenu)); } catch(e){}
+  }
+
+  var configMenu = chargerConfigMenu();
+
+  /* ================= Construction du VRAI menu contextuel ================= */
+  var mcGroupesDynamiques = $('mcGroupesDynamiques');
+
+  function construireGroupesMenuContextuel(c){
+    mcGroupesDynamiques.innerHTML = '';
+    configMenu.forEach(function(groupe){
+      var actifs = groupe.items.filter(function(item){
+        var def = ACTIONS[item.id];
+        return def && item.actif;
+      });
+      if (!actifs.length) return;
+      var titreGroupe = document.createElement('div');
+      titreGroupe.className = 'mc-groupe-titre';
+      titreGroupe.textContent = groupe.label;
+      mcGroupesDynamiques.appendChild(titreGroupe);
+      actifs.forEach(function(item){
+        var def = ACTIONS[item.id];
+        var bouton = document.createElement('button');
+        bouton.dataset.action = item.id;
+        if (def.danger) bouton.style.color = '#b04a36';
+        bouton.textContent = def.libelleDyn ? def.libelleDyn(c) : def.label;
+        bouton.disabled = !!(def.desactive && def.desactive(c));
+        mcGroupesDynamiques.appendChild(bouton);
+      });
+    });
+  }
+
+  // Delegation sur le conteneur (au lieu d'un listener par bouton) : le menu
+  // etant reconstruit a chaque ouverture, un listener attache une seule fois
+  // au chargement de la page ne verrait plus les boutons recrees ensuite.
+  menuContextuel.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-action]');
+    if (!b || b.disabled) return;
+    var action = b.dataset.action;
+    var def = ACTIONS[action];
+    fermerMenuContextuel();
+    if (!def) return;
+    if (action === 'coller'){ def.run(); return; }
+    if (!calqueMenu) return;
+    def.run(calqueMenu);
   });
+
+  /* ================= Fenetre pop-up "Personnaliser le clic droit" ================= */
+  var SVG_GRIP_MCD = '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
+  var SVG_CHECK_MCD = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.5"/></svg>';
+  var SVG_LOCK_MCD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var mcdListeGroupes = $('mcdListeGroupes');
+
+  function rendrePanneauMcd(){
+    mcdListeGroupes.innerHTML = '';
+    configMenu.forEach(function(groupe){
+      var divGroupe = document.createElement('div');
+      divGroupe.className = 'mcd-groupe';
+      var titre = document.createElement('div');
+      titre.className = 'mcd-groupe-label';
+      titre.textContent = groupe.label;
+      divGroupe.appendChild(titre);
+      var ul = document.createElement('ul');
+      ul.className = 'mcd-liste';
+      ul.dataset.groupe = groupe.id;
+      groupe.items.forEach(function(item){ ul.appendChild(construireLigneMcd(groupe, item)); });
+      divGroupe.appendChild(ul);
+      mcdListeGroupes.appendChild(divGroupe);
+    });
+  }
+
+  function construireLigneMcd(groupe, item){
+    var def = ACTIONS[item.id];
+    var li = document.createElement('li');
+    li.className = 'mcd-ligne' + (item.actif ? '' : ' mcd-desactivee') + (item.verrouille ? ' mcd-verrouille' : '');
+    li.dataset.itemId = item.id;
+
+    var poignee = document.createElement('span');
+    poignee.className = 'mcd-poignee';
+    poignee.innerHTML = SVG_GRIP_MCD;
+    li.appendChild(poignee);
+
+    if (item.verrouille){
+      var cadenas = document.createElement('span');
+      cadenas.className = 'mcd-cadenas';
+      cadenas.title = 'Toujours actif';
+      cadenas.innerHTML = SVG_LOCK_MCD;
+      li.appendChild(cadenas);
+    } else {
+      var caseACocher = document.createElement('span');
+      caseACocher.className = 'mcd-case' + (item.actif ? ' mcd-coche' : '');
+      caseACocher.innerHTML = SVG_CHECK_MCD;
+      caseACocher.addEventListener('click', function(){
+        item.actif = !item.actif;
+        sauverConfigMenu();
+        rendrePanneauMcd();
+      });
+      li.appendChild(caseACocher);
+    }
+
+    var libelle = document.createElement('span');
+    libelle.className = 'mcd-libelle';
+    libelle.textContent = def ? def.label : item.id;
+    li.appendChild(libelle);
+
+    if (!item.verrouille){
+      poignee.addEventListener('pointerdown', function(e){ demarrerGlisserMcd(e, groupe, li); });
+    }
+    return li;
+  }
+
+  function demarrerGlisserMcd(e, groupe, ligneDepart){
+    e.preventDefault();
+    var ul = ligneDepart.parentElement;
+    var idDepart = ligneDepart.dataset.itemId;
+    try { ligneDepart.setPointerCapture && ligneDepart.setPointerCapture(e.pointerId); } catch(err) {}
+    ligneDepart.classList.add('mcd-fantome');
+
+    function surDeplacement(ev){
+      var lignes = Array.prototype.slice.call(ul.querySelectorAll('.mcd-ligne'));
+      var y = ev.clientY;
+      var cible = null;
+      for (var i = 0; i < lignes.length; i++){
+        var r = lignes[i].getBoundingClientRect();
+        if (y < r.top + r.height / 2){ cible = lignes[i]; break; }
+      }
+      var items = groupe.items;
+      var depuis = items.findIndex(function(it){ return it.id === idDepart; });
+      var versId = cible ? cible.dataset.itemId : null;
+      var vers = versId ? items.findIndex(function(it){ return it.id === versId; }) : items.length;
+      if (vers > depuis) vers -= 1;
+      if (depuis === -1 || vers === depuis) return;
+      var pris = items.splice(depuis, 1)[0];
+      items.splice(vers, 0, pris);
+      rendrePanneauMcd();
+      var nouvelleLigne = ul.querySelector('[data-item-id="' + idDepart + '"]');
+      if (nouvelleLigne) nouvelleLigne.classList.add('mcd-fantome');
+    }
+    function surRelachement(){
+      document.removeEventListener('pointermove', surDeplacement);
+      document.removeEventListener('pointerup', surRelachement);
+      sauverConfigMenu();
+      rendrePanneauMcd();
+    }
+    document.addEventListener('pointermove', surDeplacement);
+    document.addEventListener('pointerup', surRelachement);
+  }
+
+  $('mcdReinit').addEventListener('click', function(){
+    configMenu = clonerDefautMenu();
+    sauverConfigMenu();
+    rendrePanneauMcd();
+  });
+
+  var mcdCouverture = $('mcdCouverture');
+  function ouvrirPopupMcd(){ mcdCouverture.classList.add('ouverte'); }
+  function fermerPopupMcd(){ mcdCouverture.classList.remove('ouverte'); }
+  $('btnOuvrirReglagesMenu').addEventListener('click', ouvrirPopupMcd);
+  $('mcdFermer').addEventListener('click', fermerPopupMcd);
+  mcdCouverture.addEventListener('click', function(e){ if (e.target === mcdCouverture) fermerPopupMcd(); });
+
+  rendrePanneauMcd();
+
   document.addEventListener('pointerdown', function(e){
     if (menuContextuel.classList.contains('ouvert') && !menuContextuel.contains(e.target)) fermerMenuContextuel();
   });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') fermerMenuContextuel(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if (menuContextuel.classList.contains('ouvert')) fermerMenuContextuel();
+    else fermerPopupMcd();
+  });
   canevas.addEventListener('contextmenu', function(e){ if (e.target === canevas) e.preventDefault(); });
 
   window.__calques = function(){ return calques; };
@@ -1526,6 +1831,11 @@
   window.__retablir = retablir;
   window.__historiqueIndex = function(){ return historiqueIndex; };
   window.__historiqueLongueur = function(){ return historique.length; };
+  window.__configMenu = function(){ return configMenu; };
+  window.__pressePapier = function(){ return pressePapier; };
+  window.__ouvrirPopupMcd = ouvrirPopupMcd;
+  window.__fermerPopupMcd = fermerPopupMcd;
+  window.__fermerMenuContextuel = fermerMenuContextuel;
 
   rendreCanevas();
   rendrePanneau();
