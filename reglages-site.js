@@ -17,43 +17,48 @@
      référence pour la visibilité et le réordonnancement (panneau V2). */
   var SECTIONS_ACCUEIL_IDS = ['histoire', 'comment', 'app', 'styles', 'grandir', 'changer', 'gamme', 'cadeau', 'faq', 'livraison'];
 
-  /* Préréglage « Magazine Déco » : mêmes valeurs que le test validé visuellement,
-     y compris le footer clair assorti au bandeau (demande fondateur). */
-  var MAGAZINE = { fond: '#EFE8D8', texte: '#33302a', accent: '#c95a44', survol: '#b04a36' };
-  var MAGAZINE_EXTRAS = [
-    '.cta{background:var(--terracotta,#c95a44)!important;color:#F8F4E9!important}',
-    '.cta:hover{background:#b04a36!important}',
-    '.qz-burger{background:#33302a}.qz-burger:hover{background:#141210}',
-    '.qz-basdepage,.qz-reseaux,.qz-legal{background:#EFE8D8}',
-    '.qz-basdepage{border-top:1px solid #33302a33}',
-    '.qz-basdepage .qz-qlogo i.t{background:#33302a}',
-    '.qz-basdepage .qz-wordmark{color:#33302a}',
-    '.qz-baseline,.qz-reseaux .qz-sub,.qz-copy{color:#6b654f}',
-    '.qz-reseaux .qz-accroche{color:#33302a}',
-    '.qz-reseaux .qz-grid a{background:#c95a44;color:#F8F4E9}',
-    '.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:#b04a36;color:#F8F4E9}',
-    '.qz-legal a.qz-leg{background:#F0EADA;border:1px solid #33302a33}',
-    '.qz-legal a.qz-leg span{color:#33302a}',
-    '.qz-legal .qz-picto{color:#6b654f}',
-    '.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:#b04a36;border-color:#b04a36}',
-    '.qz-legal a.qz-leg:hover span,.qz-legal a.qz-leg:hover .qz-picto{color:#F8F4E9}',
-    '.qz-fab{background:#33302a;border-color:#33302a40}.qz-fab svg{stroke:#EFE8D8}',
-    '.qz-fab:hover,.qz-fab:focus-visible{background:#b04a36;border-color:#b04a36}'
-  ].join('\n');
-
   function injecterStyle(id, css) {
     var el = document.getElementById(id);
     if (!el) { el = document.createElement('style'); el.id = id; document.head.appendChild(el); }
     el.textContent = css;
   }
 
+  /* Luminance approximative (0-255) — deja utilisee plus bas par les fonctions
+     de menu, remontee ici pour servir aussi au calcul de contraste des
+     couleurs generales. Declaration de fonction => hissee, l'ordre dans le
+     fichier n'a pas d'importance. */
+  function luminance(hex) {
+    var h = hex.replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return 0.2126 * (n >> 16 & 255) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255);
+  }
+
+  /* Palette maitresse (28/08) — remplace les ~15 couleurs eparpillees de
+     l'ancienne section Identite par 6 roles clairs (+Accent/Survol inchanges,
+     +fond du menu de navigation qui reste volontairement a part, voir
+     appliquerMenuNav) :
+       Titre (h2/h3), Sous-titre (eyebrow), Texte (corps de texte)
+       General (fond de page), Bouton (.cta), Arriere-plan texte (cartes/encarts)
+     "Texte" ne se contente plus d'etre pose tel quel partout (c'est ce qui
+     rendait du texte blanc invisible sur des cartes restees blanches, ex.
+     .gift/.premium/.trust-card qui n'avaient meme pas de champ de fond dedie
+     avant ce remaniement) : sur les zones d'arriere-plan-texte, la couleur
+     reellement appliquee est verifiee par contraste contre CE fond precis,
+     jamais supposee lisible juste parce qu'elle l'est ailleurs.
+     L'ancien prereglage "Magazine" (bloc de couleurs crème fige, reinjecte a
+     chaque chargement independamment du reste) est retire : Général doit
+     vraiment tout gouverner, plus de valeurs figees qui ignorent le reste de
+     la palette choisie. */
+  function couleurLisibleSur(fondHex, texteSouhaite) {
+    if (Math.abs(luminance(fondHex) - luminance(texteSouhaite)) > 80) return texteSouhaite;
+    return luminance(fondHex) > 128 ? '#2b353e' : '#ffffff';
+  }
+
   function appliquerCouleurs(c) {
     if (!c) return DEFAUTS.couleurs;
     var v = {};
-    if (c.theme === 'magazine') {
-      v = { fond: MAGAZINE.fond, texte: MAGAZINE.texte, accent: MAGAZINE.accent, survol: MAGAZINE.survol };
-    }
-    /* les couleurs individuelles priment sur le préréglage */
+    /* les couleurs individuelles priment toujours */
     ['fond', 'texte', 'accent', 'survol'].forEach(function (k) {
       if (c[k] && c[k] !== DEFAUTS.couleurs[k]) v[k] = c[k];
     });
@@ -62,29 +67,89 @@
     var accent = v.accent || DEFAUTS.couleurs.accent;
     var survol = v.survol || DEFAUTS.couleurs.survol;
     var palette = { fond: fond, texte: texte, accent: accent, survol: survol };
-    if (!Object.keys(v).length && c.theme !== 'magazine' && !c.titres && !c.texteDoux) return palette;
+    var titre = c.titres || c.titre; /* "titres" = nom historique du champ, meme role */
+    var sousTitre = c.sousTitre;
+    var arrierePlanTexte = c.arrierePlanTexte || c.carte || c.encartFond; /* migration douce depuis les anciens champs */
+    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte) return palette;
     var css = ':root{' +
       '--fond:' + fond + ';--charbon:' + texte + ';--terracotta:' + accent + ';' +
       '--qz-clair:' + fond + ';--qz-charbon:' + texte + ';--qz-terracotta:' + accent + ';' +
       '}\nbody{background:' + fond + ';color:' + texte + '}' +
-      '\na:hover .qz-picto{color:inherit}';
-    if (c.theme === 'magazine') css += '\n' + MAGAZINE_EXTRAS;
-    else css += '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
+      '\na:hover .qz-picto{color:inherit}' +
+      '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
 
-    /* Zones fines (facultatives) : absentes = suivent le thème global.
-       Ajoutées EN DERNIER pour primer sur le préréglage Magazine. */
-    if (c.cartouches) css += '\n.qz-legal a.qz-leg{background:' + c.cartouches + '}';
-    if (c.bouton) css += '\n.cta{background:' + c.bouton + '!important}';
-    if (c.menu) css += '\n.qz-header{background:' + c.menu + '}';
-    if (c.logo) css += '\n.qz-header .qz-qlogo i.t{background:' + c.logo + '}\n.qz-header .qz-wordmark{color:' + c.logo + '}';
-    if (c.boutiqueFond && /\/boutique\//.test(location.pathname)) css += '\nbody{background:' + c.boutiqueFond + '}';
-    if (c.carte) css += '\n.step,.reason,.c-form-compact{background:' + c.carte + '!important}';
-    if (c.encartFond) css += '\n:root{--olive-soft:' + c.encartFond + '}';
-    if (c.encartTexte) css += '\n:root{--olive:' + c.encartTexte + '}';
-    if (c.enumeration) css += '\n.step .num,.reason .ic{background:' + c.enumeration + '}';
-    if (c.titres) css += '\nh2,h3{color:' + c.titres + '}';
-    if (c.texteDoux) css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
-      '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + c.texteDoux + '}';
+    /* Pied de page (28/08) : contrairement au bandeau du haut (deja bien
+       gere par appliquerMenuNav, qui pose ses propres couleurs calculees
+       PAR-DESSUS la variable --qz-charbon), le pied de page (.qz-basdepage/
+       .qz-reseaux/.qz-legal) n'a jamais eu de calque equivalent -- il
+       affichait donc directement var(--qz-charbon), qui vaut ici la couleur
+       de TEXTE (pensee a l'origine pour un theme clair ou --charbon et le
+       texte fonce coincident, jamais mis a jour pour un theme sombre custom).
+       Corrige en lui donnant enfin son propre calque, aligne sur la vraie
+       palette plutot que sur une variable partagee mal reliee -- c'est ce
+       qui restait fige en creme via l'ancien theme "Magazine", retire. */
+    var texteSurFooter = couleurLisibleSur(fond, texte);
+    css += '\n.qz-basdepage,.qz-reseaux,.qz-legal{background:' + fond + '}' +
+      '\n.qz-basdepage .qz-wordmark,.qz-baseline,.qz-reseaux .qz-accroche,.qz-legal a.qz-leg span{color:' + texteSurFooter + '}' +
+      '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
+      '\n.qz-reseaux .qz-sub,.qz-copy,.qz-legal .qz-picto{color:' + couleurLisibleSur(fond, '#9aa2a9') + '}' +
+      '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
+      '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
+      '\n.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:' + accent + ';border-color:' + accent + '}' +
+      '\n.qz-legal a.qz-leg:hover span,.qz-legal a.qz-leg:hover .qz-picto{color:' + couleurLisibleSur(accent, texte) + '}';
+
+    /* Bouton (28/08, correctif majeur) : la base CSS du site pose le fond
+       de PLUSIEURS elements (bouton principal .cta, pastilles numerotees
+       .step .num, badge "Le plus choisi" .offer .flag, puces .chip) sur
+       var(--charbon) -- une variable qui, dans ce fichier, tient la couleur
+       de TEXTE choisie (--charbon:texte, ligne plus haut), jamais mise a jour
+       pour un theme sombre custom. Resultat concret trouve en testant : sur
+       le theme marine/blanc actuel, le bouton "Composer mon mur", les
+       pastilles 1/2/3 et le badge "Le plus choisi" deviennent blanc sur
+       blanc, invisibles. Avant, cette regle etait CONDITIONNELLE (seulement
+       si c.bouton etait rempli a la main) -- desormais TOUJOURS appliquee
+       (avec un repli sur Accent si rien n'est personnalise), pour que ces
+       elements ne dependent plus jamais de --charbon. */
+    var bouton = c.bouton || accent;
+    css += '\n.cta,.step .num,.offer .flag,.chip{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+    if (titre) css += '\nh2,h3{color:' + titre + '}';
+    if (sousTitre) css += '\n.eyebrow{color:' + sousTitre + '}';
+
+    /* Meme famille de bug, deux autres cas trouves en testant (28/08) :
+       - .finale (bandeau de cloture, juste avant le pied de page) pose
+         aussi son fond sur var(--charbon) -- suit General desormais.
+       - .color-note (encart "Palette infinie") a un fond FIXE (kraft clair,
+         jamais pilote par la palette) mais un texte qui suivait quand meme
+         --charbon -- corrige avec une couleur calculee contre CE fond fixe
+         precis, jamais suppose lisible juste parce qu'il l'est ailleurs. */
+    css += '\n.finale{background:' + fond + '!important}';
+    var couleurNote = couleurLisibleSur('#E9EDDD', texte);
+    css += '\n.color-note b{color:' + couleurNote + '!important}';
+
+    /* .offer (cartes de tarifs) : meme oubli que .gift/.premium/.trust-card
+       avant ce remaniement -- fond blanc code en dur, aucun champ dedie. */
+    if (arrierePlanTexte) {
+      css += '\n.offer{background:' + arrierePlanTexte + '!important}';
+      css += '\n.offer .fmt,.offer .prix{color:' + couleurLisibleSur(arrierePlanTexte, texte) + '}';
+    }
+
+    /* Arriere-plan texte : couvre maintenant TOUTES les cartes contenant du
+       texte, y compris .gift/.premium/.trust-card qui n'avaient avant aucun
+       champ de fond dedie (elles gardaient le blanc code en dur du site,
+       incompatible avec un texte qui se voulait blanc ailleurs). Le texte
+       pose dessus passe systematiquement par couleurLisibleSur -- jamais
+       colle tel quel. NE TOUCHE PLUS --olive/--olive-soft (erreur corrigee) :
+       ce sont les couleurs d'un systeme de badges/encarts distinct
+       (.badge, .step .hint, .premium .ic...), pas un alias du texte/fond
+       des cartes -- les detourner cassait a son tour .premium .ic (icone
+       blanche sur fond blanc, meme famille de bug). */
+    if (arrierePlanTexte) {
+      css += '\n.step,.reason,.c-form-compact,.gift,.premium,.trust-card,.qz-legal a.qz-leg{background:' + arrierePlanTexte + '!important}';
+      var texteSurCarte = couleurLisibleSur(arrierePlanTexte, texte);
+      css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
+        '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p' +
+        '{color:' + texteSurCarte + '}';
+    }
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
   }
@@ -475,15 +540,10 @@
     return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + alpha + ')';
   }
 
-  /* Luminance approximative — sert a choisir automatiquement, dans la palette,
-     laquelle de fond/texte joue le role « clair » et laquelle joue le role
-     « fonce », quel que soit le sens du theme (classique ou invers en clair-sur-fonce). */
-  function luminance(hex) {
-    var h = hex.replace('#', '');
-    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-    var n = parseInt(h, 16);
-    return 0.2126 * (n >> 16 & 255) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255);
-  }
+  /* luminance() deja definie plus haut (utilisee par appliquerCouleurs) --
+     sert ici a choisir automatiquement, dans la palette, laquelle de
+     fond/texte joue le role « clair » et laquelle joue le role « fonce »,
+     quel que soit le sens du theme (classique ou inverse clair-sur-fonce). */
   function plusClair(p) { return luminance(p.fond) >= luminance(p.texte) ? p.fond : p.texte; }
   function plusFonce(p) { return luminance(p.fond) < luminance(p.texte) ? p.fond : p.texte; }
 

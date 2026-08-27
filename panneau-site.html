@@ -634,19 +634,28 @@ function rendreSectionReseaux(){
    reglages.couleurs existant et on ne modifie QUE les champs édités ici, pour ne
    jamais effacer un réglage qu'on n'a pas touché (l'enregistrement remplace l'objet
    entier côté base, pas une fusion). */
+/* Remaniement du 28/08 : les anciens champs 'cartouches', 'carte', 'encartFond',
+   'encartTexte', 'enumeration' et 'texteDoux' sont retires -- ils faisaient
+   doublon ou, pire, couvraient des zones DIFFERENTES avec la MEME couleur
+   (texteDoux appliquait un seul blanc a la fois a des cartes sombres et a
+   des cartes blanches jamais reglees ailleurs -- .gift/.premium/.trust-card
+   n'avaient meme pas de champ de fond avant ce remaniement, d'ou le texte
+   invisible constate). Tout ca fusionne dans le nouveau champ unique
+   'arrierePlanTexte' (couvre desormais TOUTES les cartes contenant du texte)
+   -- le texte pose dessus est calcule automatiquement pour rester lisible
+   (voir couleurLisibleSur dans reglages-site.js), plus besoin d'un champ de
+   texte separe pour ca. 'sousTitre' est nouveau (le 3e niveau demande par le
+   fondateur : Titre > Sous-titre > Texte). */
 var ZONES_FINES = [
-  ['cartouches', 'Cartouches légales', 'Bas de page', 'accent'],
-  ['bouton', 'Boutons', 'Composer mon mur, Essayer l\'app...', 'accent'],
   ['menu', 'Bandeau de navigation', 'Haut de page', 'fond'],
   ['boutiqueFond', 'Arrière-plan boutique', 'Page Boutique uniquement', 'fond'],
-  ['logo', 'Logo', 'Tesselles + nom, bandeau du haut', 'texte'],
-  ['carte', 'Fond des encarts blancs', 'Ex. « Comment ça marche »', '#ffffff'],
-  ['encartFond', 'Fond des encarts pastel', 'Partout sur le site', '#E9EDDD'],
-  ['encartTexte', 'Texte des encarts pastel', 'Partout sur le site', '#556B2F'],
-  ['enumeration', 'Pastilles numérotées', '1, 2, 3...', 'texte'],
-  ['titres', 'Titres', 'Partout sur le site', 'texte'],
-  ['texteDoux', 'Texte courant', 'Paragraphes, partout', '#4a5158']
+  ['logo', 'Logo', 'Tesselles + nom, bandeau du haut', 'texte']
 ];
+/* Titre/Sous-titre/Bouton/Arriere-plan-texte sont remontes DANS la carte
+   "Palette maitresse" elle-meme (28/08, demande fondateur) -- ce ne sont
+   plus des reglages fins avec interrupteur suivre/personnaliser, mais des
+   champs a part entiere a cote de Fond/Texte/Accent/Survol, toujours
+   visibles et explicites. Voir CHAMPS_MAITRES plus bas. */
 
 function rendreSectionPalette(){
   var c = Object.assign({ theme:'actuel', fond:'#F5F5F5', texte:'#2b353e', accent:'#e2725b', survol:'#cf6450' }, reglages.couleurs || {});
@@ -659,6 +668,18 @@ function rendreSectionPalette(){
     if (repli === 'texte') return c.texte;
     return repli;
   }
+
+  /* Valeurs affichees pour les 4 champs remontes dans la palette maitresse
+     (28/08) -- si jamais personnalises, un repli sensible (identique a celui
+     deja utilise cote reglages-site.js) plutot qu'un champ vide/noir par
+     defaut. Des l'enregistrement, la valeur devient explicite comme les
+     autres champs maitres (plus de notion de "suivre" pour ceux-la). */
+  var CHAMPS_MAITRES = {
+    titre: c.titres || c.titre || c.accent,
+    sousTitre: c.sousTitre || c.accent,
+    bouton: c.bouton || c.accent,
+    arrierePlanTexte: c.arrierePlanTexte || c.carte || c.encartFond || '#ffffff'
+  };
 
   var chipsHtml = [1,2,3,4,5].map(function(n){
     var p = palettesMemorisees[n];
@@ -710,9 +731,14 @@ function rendreSectionPalette(){
 
     '<div class="carte">' +
       '<div class="carte-entete"><h2>Couleurs</h2></div>' +
+      '<p class="aide-section" style="margin:-4px 0 12px">3 niveaux de texte, 3 niveaux d\'arrière-plan, plus Accent/Survol — tout le reste du site en découle.</p>' +
       '<div class="grille-champs">' +
-        '<div class="champ"><label>Fond</label><div class="rang-couleur"><input type="color" id="cFond" value="' + c.fond + '"><code id="cFondHex">' + c.fond + '</code></div></div>' +
+        '<div class="champ"><label>Titre</label><div class="rang-couleur"><input type="color" id="cTitre" value="' + CHAMPS_MAITRES.titre + '"><code id="cTitreHex">' + CHAMPS_MAITRES.titre + '</code></div></div>' +
+        '<div class="champ"><label>Sous-titre</label><div class="rang-couleur"><input type="color" id="cSousTitre" value="' + CHAMPS_MAITRES.sousTitre + '"><code id="cSousTitreHex">' + CHAMPS_MAITRES.sousTitre + '</code></div></div>' +
         '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="cTexte" value="' + c.texte + '"><code id="cTexteHex">' + c.texte + '</code></div></div>' +
+        '<div class="champ"><label>Général</label><div class="rang-couleur"><input type="color" id="cFond" value="' + c.fond + '"><code id="cFondHex">' + c.fond + '</code></div></div>' +
+        '<div class="champ"><label>Bouton</label><div class="rang-couleur"><input type="color" id="cBouton" value="' + CHAMPS_MAITRES.bouton + '"><code id="cBoutonHex">' + CHAMPS_MAITRES.bouton + '</code></div></div>' +
+        '<div class="champ"><label>Arrière-plan texte</label><div class="rang-couleur"><input type="color" id="cArrierePlanTexte" value="' + CHAMPS_MAITRES.arrierePlanTexte + '"><code id="cArrierePlanTexteHex">' + CHAMPS_MAITRES.arrierePlanTexte + '</code></div></div>' +
         '<div class="champ"><label>Accent</label><div class="rang-couleur"><input type="color" id="cAccent" value="' + c.accent + '"><code id="cAccentHex">' + c.accent + '</code></div></div>' +
         '<div class="champ"><label>Survol</label><div class="rang-couleur"><input type="color" id="cSurvol" value="' + c.survol + '"><code id="cSurvolHex">' + c.survol + '</code></div></div>' +
       '</div>' +
@@ -737,6 +763,13 @@ function rendreSectionPalette(){
     var out = Object.assign({}, reglages.couleurs || {});
     out.theme = document.querySelector('input[name=cTheme]:checked').value;
     out.fond = $('cFond').value; out.texte = $('cTexte').value; out.accent = $('cAccent').value; out.survol = $('cSurvol').value;
+    out.titres = $('cTitre').value; out.sousTitre = $('cSousTitre').value;
+    out.bouton = $('cBouton').value; out.arrierePlanTexte = $('cArrierePlanTexte').value;
+    /* Ces 4 champs vivent desormais dans la palette maitresse elle-meme --
+       les anciens noms de champs "fins" retires (carte/encartFond/titre au
+       singulier) ne doivent plus trainer dans les donnees enregistrees. */
+    delete out.carte; delete out.encartFond; delete out.encartTexte; delete out.enumeration;
+    delete out.cartouches; delete out.texteDoux; delete out.titre;
     out.sections = { bandeau: $('secBandeau').classList.contains('on'), accueil: $('secAccueil').classList.contains('on'), widgets: $('secWidgets').classList.contains('on') };
     ZONES_FINES.forEach(function(z){
       var cle = z[0];
@@ -749,7 +782,7 @@ function rendreSectionPalette(){
   function previsualiser(){ envoyerApercu('couleurs', draft()); }
 
   document.querySelectorAll('input[name=cTheme]').forEach(function(r){ r.onchange = previsualiser; });
-  ['cFond','cTexte','cAccent','cSurvol'].forEach(function(id){
+  ['cFond','cTexte','cAccent','cSurvol','cTitre','cSousTitre','cBouton','cArrierePlanTexte'].forEach(function(id){
     $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
   });
   ['secBandeau','secAccueil','secWidgets'].forEach(function(id){
