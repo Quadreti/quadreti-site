@@ -527,10 +527,10 @@
 
   /* ===== Palette infinie (arrière-plan de l'encart couleur, pleine largeur du site) ===== */
   .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:38px; width:100%; }
-  .palette-band{
-    position:absolute; inset:0; z-index:0; border-radius:inherit;
-    display:flex; align-items:center; overflow:hidden;
-  }
+  /* Retire (28/08, demande fondateur) : le defilement fatiguait les yeux a
+     la longue. display:none plutot que suppression du HTML/JS qui le
+     peuple -- garde la possibilite de le rallumer facilement plus tard. */
+  .palette-band{ display:none; }
   .palette-track{
     display:flex; gap:12px; width:max-content;
     animation:paletteScroll 30s linear infinite;
