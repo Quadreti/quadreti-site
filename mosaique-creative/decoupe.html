@@ -12,7 +12,7 @@
   document.addEventListener('DOMContentLoaded', function(){
     var voile = document.createElement('div');
     voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
-    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+    voile.innerHTML = '<div style="font-size:15px;">Site en préparation — accès réservé</div>' +
       '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
       '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
     document.body.appendChild(voile);
@@ -179,6 +179,66 @@
   .mc-action{ display:block; width:100%; text-align:left; background:none; border:none; padding:7px 4px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); cursor:pointer; border-radius:6px; }
   .mc-action:hover{ background:var(--papier); }
   .mc-action.danger{ color:#b04a36; }
+  .mc-action:disabled{ opacity:.4; cursor:not-allowed; }
+  .mc-groupe-titre{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin:2px 4px 4px; }
+
+  /* ================= Personnaliser le clic droit (28/08) =================
+     Fenetre pop-up (meme mecanique couverture+panneau que la FAQ de
+     mosaique-creative/index.html) qui laisse chacun choisir quelles actions
+     apparaissent dans le clic droit, et dans quel ordre -- "clic droit
+     magique > UX construit sa boite a outils", litteralement cette fois. */
+  .mcd-couverture{
+    position:fixed; inset:0; z-index:300; background:rgba(43,53,62,.45);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .mcd-couverture.ouverte{ display:flex; }
+  .mcd-popup{
+    background:var(--surface); border-radius:16px; max-width:420px; width:100%; max-height:82vh; overflow:auto;
+    padding:18px 20px 22px; box-shadow:0 24px 60px -12px #2b353e55;
+  }
+  .mcd-entete{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    position:sticky; top:-18px; background:var(--surface); padding:18px 0 10px; margin:-18px 0 4px;
+  }
+  .mcd-entete h3{ font-family:'Quicksand',sans-serif; font-size:15px; margin:0; }
+  .mcd-fermer{
+    width:28px; height:28px; border-radius:50%; border:none; background:var(--papier); color:var(--doux);
+    cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .mcd-fermer:hover{ background:#b04a36; color:#fff; }
+  .mcd-fermer svg{ width:14px; height:14px; }
+  .mcd-note{ font-size:11.5px; color:var(--doux); margin:0 0 14px; line-height:1.5; }
+
+  .mcd-groupe{ margin-bottom:14px; }
+  .mcd-groupe:last-child{ margin-bottom:0; }
+  .mcd-groupe-label{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--doux); margin:0 0 6px 2px; }
+  .mcd-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+
+  .mcd-ligne{ display:flex; align-items:center; gap:8px; padding:6px 6px; border-radius:8px; background:var(--surface); user-select:none; }
+  .mcd-ligne.mcd-fantome{ opacity:.35; }
+  .mcd-ligne.mcd-verrouille{ background:#e2725b12; }
+
+  .mcd-poignee{ width:16px; height:16px; flex-shrink:0; color:var(--bord); cursor:grab; touch-action:none; }
+  .mcd-poignee svg{ width:100%; height:100%; }
+  .mcd-ligne.mcd-verrouille .mcd-poignee{ visibility:hidden; }
+  .mcd-poignee:active{ cursor:grabbing; }
+
+  .mcd-case{ width:18px; height:18px; flex-shrink:0; border-radius:5px; border:1.5px solid var(--bord); background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .mcd-case.mcd-coche{ background:var(--charbon); border-color:var(--charbon); }
+  .mcd-case svg{ width:11px; height:11px; color:var(--creme); opacity:0; }
+  .mcd-case.mcd-coche svg{ opacity:1; }
+
+  .mcd-libelle{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
+  .mcd-ligne.mcd-desactivee .mcd-libelle{ color:var(--doux); }
+
+  .mcd-cadenas{ width:14px; height:14px; color:#b04a36; flex-shrink:0; }
+  .mcd-cadenas svg{ width:100%; height:100%; }
+
+  .mcd-reinit{
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
+    background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
+  }
+  .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 </style>
 </head>
 <body>
@@ -223,6 +283,10 @@
         <button class="btn" id="btnAnnuler" disabled>↺ Annuler</button>
         <button class="btn" id="btnRetablir" disabled>↻ Rétablir</button>
       </div>
+    </div>
+    <div class="carte">
+      <div class="label">Clic droit</div>
+      <button class="btn" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
     </div>
     <div class="carte">
       <div class="label">Verrouillage</div>
@@ -298,11 +362,20 @@
       </div>
     </div>
   </div>
-  <div class="mc-section">
-    <button class="mc-action" id="mcVerrouiller">Verrouiller</button>
-    <button class="mc-action" id="mcReinitForme">Réinitialiser la forme</button>
-    <button class="mc-action" id="mcDupliquer">Dupliquer</button>
-    <button class="mc-action danger" id="mcSupprimer">Supprimer</button>
+  <div id="mcGroupesDynamiques"></div>
+</div>
+
+<div class="mcd-couverture" id="mcdCouverture">
+  <div class="mcd-popup">
+    <div class="mcd-entete">
+      <h3>Personnaliser le clic droit</h3>
+      <button class="mcd-fermer" id="mcdFermer" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+    <p class="mcd-note">Coche/décoche une action, glisse une poignée pour la réordonner dans son groupe. Couleur et Supprimer restent toujours actifs.</p>
+    <div id="mcdListeGroupes"></div>
+    <button class="mcd-reinit" id="mcdReinit">Réinitialiser</button>
   </div>
 </div>
 
@@ -396,7 +469,12 @@
     // moment de la morsure (sa propre forme/taille/poignees a cet instant,
     // deplacer la mordante plus tard ne change plus rien -- c'est deja
     // le comportement voulu de la decoupe permanente, juste stocke autrement).
-    return { id: ++compteurId, forme: forme, x: x, y: y, taille: 100, couleur: '#E2725B', verrouille: false, poignees: poignees, morsures: [] };
+    // neMordPas (28/08) : exception PAR PIECE a l'interrupteur global "les
+    // pieces se decoupent entre elles" -- cette piece precise ne mord jamais,
+    // meme si le reglage global est actif. Absent des anciennes sauvegardes
+    // (Charger) => undefined => falsy => mord normalement, aucune migration
+    // necessaire.
+    return { id: ++compteurId, forme: forme, x: x, y: y, taille: 100, couleur: '#E2725B', verrouille: false, poignees: poignees, morsures: [], neMordPas: false };
   }
 
   function trouverJumeau(id){
@@ -463,6 +541,7 @@
   }
 
   function mordreLesAutres(pieceMordante){
+    if (pieceMordante.neMordPas) return; // exception par piece (28/08), voir creerPiece
     PIECES.forEach(function(victime){
       if (victime === pieceMordante) return;
       if (!pourraitChevaucher(pieceMordante, victime)) return;
@@ -1123,6 +1202,8 @@
   /* ================= Menu contextuel ================= */
   var menuContextuel = $('menuContextuel');
   var pieceMenu = null;
+  var pieceCopiee = null; // presse-papier "Copier/Coller" (piece entiere)
+  var styleCopie = null; // presse-papier "Copier le style" (couleur+forme)
 
   canvas.addEventListener('contextmenu', function(e){
     e.preventDefault();
@@ -1142,9 +1223,9 @@
     $('mcTiroirRemplissage').classList.remove('ouvert');
     $('mcTitreRemplissage').classList.remove('ouvert');
     peuplerRemplissage(pieceMenu);
-    $('mcVerrouiller').textContent = pieceMenu.verrouille ? 'Déverrouiller' : 'Verrouiller';
-    // Rond/ovale n'ont pas de bords a deformer -- rien a reinitialiser.
-    $('mcReinitForme').style.display = pieceMenu.poignees ? 'block' : 'none';
+    // Portion personnalisable du menu (28/08) -- tout ce qui n'est pas la
+    // section Couleur ci-dessus, voir construireGroupesMenuContextuel plus bas.
+    construireGroupesMenuContextuel(pieceMenu);
 
     menuContextuel.classList.add('ouvert');
     menuContextuel.style.left = '0px'; menuContextuel.style.top = '0px';
@@ -1166,7 +1247,12 @@
   }
 
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') fermerMenuContextuel();
+    // Echap ferme d'abord le menu contextuel s'il est ouvert (le plus recent
+    // des deux), sinon la fenetre de reglages du clic droit.
+    if (e.key === 'Escape'){
+      if (menuContextuel.classList.contains('ouvert')) fermerMenuContextuel();
+      else fermerPopupMcd();
+    }
     // Ctrl/Cmd+Z = annuler, Ctrl/Cmd+Maj+Z (ou Ctrl+Y) = retablir -- meme
     // convention que la quasi-totalite des logiciels de creation.
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !dansUnChamp(e)){
@@ -1217,14 +1303,21 @@
   $('btnAnnuler').addEventListener('click', annuler);
   $('btnRetablir').addEventListener('click', retablir);
 
-  $('mcVerrouiller').addEventListener('click', function(){
+  /* ================= Actions du clic droit (28/08) =================
+     Chaque action est une fonction nommee independante (au lieu d'un
+     listener anonyme attache a un bouton fixe), pour pouvoir etre pilotee
+     par le registre ACTIONS ci-dessous -- necessaire des que l'ordre et la
+     visibilite des actions deviennent personnalisables (menu construit a la
+     volee, plus de DOM fixe). Comportement des 4 actions deja existantes
+     (verrouiller/reinit-forme/dupliquer/supprimer) inchange, juste renomme. */
+  function actionVerrouiller(){
     pieceMenu.verrouille = !pieceMenu.verrouille;
     if (miroirActif) synchroniserMiroir(pieceMenu);
     fermerMenuContextuel();
     rendre();
     enregistrerHistorique();
-  });
-  $('mcReinitForme').addEventListener('click', function(){
+  }
+  function actionReinitForme(){
     // Ne remet a plat QUE les bords propres de la piece -- ses morsures
     // recues restent intactes (refonte vectorielle : plus couplees au meme
     // bitmap que la forme propre, contrairement a l'ancienne version).
@@ -1233,8 +1326,8 @@
     fermerMenuContextuel();
     rendre();
     enregistrerHistorique();
-  });
-  $('mcDupliquer').addEventListener('click', function(){
+  }
+  function actionDupliquer(){
     // Copie fraiche : reprend la forme/couleur actuelles, mais PAS les
     // morsures deja recues -- meme comportement "nouvelle piece" que l'ancienne
     // version (une copie n'est pas censee arriver deja mordue).
@@ -1242,6 +1335,7 @@
     copie.id = ++compteurId;
     copie.x += 24; copie.y += 24;
     copie.morsures = [];
+    copie.neMordPas = false;
     PIECES.push(copie);
     if (mordreActif) mordreLesAutres(copie); // la copie vient d'etre "posee" a son tour
     if (miroirActif) synchroniserMiroir(copie); // la copie merite son propre reflet, independant de celui de l'original
@@ -1249,8 +1343,8 @@
     fermerMenuContextuel();
     rendre();
     enregistrerHistorique();
-  });
-  $('mcSupprimer').addEventListener('click', function(){
+  }
+  function actionSupprimer(){
     // Si le miroir est actif ET que la piece a un reflet, les deux partent
     // ensemble -- sinon on laisserait une moitie de symetrie orpheline.
     var idsASupprimer = [pieceMenu.id];
@@ -1261,7 +1355,405 @@
     fermerMenuContextuel();
     rendre();
     enregistrerHistorique();
+  }
+
+  // Retourner (horizontal) : reutilise EXACTEMENT la meme table de
+  // remappage/transformee que le mode miroir (MIROIR_INDICES, deja verifiee
+  // bord par bord pour chaque forme), appliquee a la piece ELLE-MEME plutot
+  // qu'a un jumeau. Volontairement PAS de variante verticale : les corners de
+  // coinsForme() sont generes fixes ("pointe en haut" pour le triangle), un
+  // simple remappage de poignees ne produit pas un vrai retournement vertical
+  // pour une forme asymetrique haut/bas comme le triangle -- pas construit
+  // plutot que construit a moitie faux.
+  function actionRetourner(){
+    if (pieceMenu.poignees && MIROIR_INDICES[pieceMenu.forme]){
+      var ordre = MIROIR_INDICES[pieceMenu.forme];
+      pieceMenu.poignees = ordre.map(function(idxSource){
+        var src = pieceMenu.poignees[idxSource];
+        return { dx: -src.dx, dy: src.dy };
+      });
+    }
+    if (miroirActif) synchroniserMiroir(pieceMenu);
+    fermerMenuContextuel();
+    rendre();
+    enregistrerHistorique();
+  }
+
+  // Ordre d'empilement : PIECES est deja l'ordre de rendu reel (rendre()
+  // dessine dans l'ordre du tableau, dernier = dessus) -- reordonner le
+  // tableau suffit, aucune donnee de "z-index" separee a maintenir. A noter :
+  // glisser ensuite une piece NON verrouillee la ramene automatiquement au
+  // premier plan (comportement deja existant, ligne du pointerdown) -- ces
+  // 4 actions sont donc surtout utiles combinees a Verrouiller.
+  function indexPieceMenu(){ return PIECES.indexOf(pieceMenu); }
+  function actionAvancerPlan(){
+    var i = indexPieceMenu();
+    if (i === -1 || i >= PIECES.length - 1) return;
+    PIECES.splice(i, 1); PIECES.splice(i + 1, 0, pieceMenu);
+    fermerMenuContextuel(); rendre(); enregistrerHistorique();
+  }
+  function actionReculerPlan(){
+    var i = indexPieceMenu();
+    if (i <= 0) return;
+    PIECES.splice(i, 1); PIECES.splice(i - 1, 0, pieceMenu);
+    fermerMenuContextuel(); rendre(); enregistrerHistorique();
+  }
+  function actionPremierPlan(){
+    var i = indexPieceMenu();
+    if (i === -1 || i === PIECES.length - 1) return;
+    PIECES.splice(i, 1); PIECES.push(pieceMenu);
+    fermerMenuContextuel(); rendre(); enregistrerHistorique();
+  }
+  function actionArrierePlan(){
+    var i = indexPieceMenu();
+    if (i <= 0) return;
+    PIECES.splice(i, 1); PIECES.unshift(pieceMenu);
+    fermerMenuContextuel(); rendre(); enregistrerHistorique();
+  }
+
+  // Copier le style / Coller le style : "Coller" refuse si la forme differe
+  // (le nombre de poignees depend de la forme -- coller les poignees d'un
+  // triangle sur un carre desalignerait tout, jamais tente).
+  function actionCopierStyle(){
+    styleCopie = {
+      forme: pieceMenu.forme, couleur: pieceMenu.couleur,
+      poignees: pieceMenu.poignees ? JSON.parse(JSON.stringify(pieceMenu.poignees)) : null
+    };
+    fermerMenuContextuel();
+  }
+  function actionCollerStyle(){
+    if (!styleCopie || styleCopie.forme !== pieceMenu.forme) return;
+    pieceMenu.couleur = styleCopie.couleur;
+    if (styleCopie.poignees && pieceMenu.poignees) pieceMenu.poignees = JSON.parse(JSON.stringify(styleCopie.poignees));
+    if (miroirActif) synchroniserMiroir(pieceMenu);
+    fermerMenuContextuel();
+    rendre();
+    enregistrerHistorique();
+  }
+
+  // Copier / Coller (piece entiere) : meme principe que Dupliquer (copie
+  // fraiche, jamais mordue), mais en 2 temps via un presse-papier -- la copie
+  // "source" avance de 24px a chaque collage pour que des collages successifs
+  // ne s'empilent pas exactement au meme endroit (meme decalage que Dupliquer).
+  function actionCopier(){
+    pieceCopiee = {
+      forme: pieceMenu.forme, x: pieceMenu.x, y: pieceMenu.y, taille: pieceMenu.taille, couleur: pieceMenu.couleur,
+      poignees: pieceMenu.poignees ? JSON.parse(JSON.stringify(pieceMenu.poignees)) : null
+    };
+    fermerMenuContextuel();
+  }
+  function actionColler(){
+    if (!pieceCopiee) return;
+    // Decale AVANT de creer la copie (pas apres) : le tout premier collage
+    // doit deja etre visible a cote de la source, meme logique que Dupliquer
+    // (jamais une copie posee exactement sur l'originale, invisible/confuse).
+    pieceCopiee.x += 24; pieceCopiee.y += 24;
+    var copie = JSON.parse(JSON.stringify(pieceCopiee));
+    copie.id = ++compteurId;
+    copie.verrouille = false;
+    copie.morsures = [];
+    copie.neMordPas = false;
+    PIECES.push(copie);
+    if (mordreActif) mordreLesAutres(copie);
+    if (miroirActif) synchroniserMiroir(copie);
+    selectionId = copie.id;
+    fermerMenuContextuel();
+    rendre();
+    enregistrerHistorique();
+  }
+
+  // Selectionner tout : exclut les pieces verrouillees, meme regle que le
+  // Maj+clic sur une piece seule et que le rectangle de selection (marquee).
+  // Pas d'enregistrerHistorique() : la selection de groupe n'a jamais fait
+  // partie de l'historique (voir Maj+clic plus haut), comportement inchange.
+  function actionSelectionnerTout(){
+    selectionGroupe = PIECES.filter(function(p){ return !p.verrouille; }).map(function(p){ return p.id; });
+    selectionId = null;
+    fermerMenuContextuel();
+    rendre();
+  }
+
+  // Mordre / Demordre PAR PIECE (28/08) : exception a l'interrupteur global
+  // "les pieces se decoupent entre elles" -- voir neMordPas dans creerPiece()
+  // et le garde-fou ajoute dans mordreLesAutres().
+  function actionMordre(){
+    pieceMenu.neMordPas = !pieceMenu.neMordPas;
+    fermerMenuContextuel();
+    rendre();
+    enregistrerHistorique();
+  }
+
+  function actionAnnuler(){ annuler(); fermerMenuContextuel(); }
+  function actionRetablir(){ retablir(); fermerMenuContextuel(); }
+
+  /* Registre des actions personnalisables -- id (utilise dans MCD_DEFAUT et
+     la sauvegarde localStorage) -> libelle + fonction. "cache" retire
+     l'action du menu pour cette piece precise (ex. pas de poignees a
+     reinitialiser sur un rond) ; "desactive" la garde visible mais grisee
+     (ex. Coller sans rien dans le presse-papier) ; "libelleDyn" remplace le
+     libelle statique quand il depend de l'etat de la piece. */
+  var ACTIONS = {
+    'copier-style': { label:'Copier le style', run:actionCopierStyle },
+    'coller-style': { label:'Coller le style', run:actionCollerStyle,
+      desactive:function(p){ return !styleCopie || styleCopie.forme !== p.forme; } },
+    'reinit-forme': { label:'Réinitialiser la forme', run:actionReinitForme,
+      cache:function(p){ return !p.poignees; } },
+    'retourner': { label:'Retourner (horizontal)', run:actionRetourner,
+      cache:function(p){ return !p.poignees; } },
+    'avancer': { label:"Avancer d'un plan", run:actionAvancerPlan },
+    'reculer': { label:"Reculer d'un plan", run:actionReculerPlan },
+    'premier-plan': { label:'Premier plan', run:actionPremierPlan },
+    'arriere-plan': { label:'Arrière-plan', run:actionArrierePlan },
+    'dupliquer': { label:'Dupliquer', run:actionDupliquer },
+    'copier': { label:'Copier', run:actionCopier },
+    'coller': { label:'Coller', run:actionColler, desactive:function(){ return !pieceCopiee; } },
+    'supprimer': { label:'Supprimer', run:actionSupprimer, danger:true },
+    'selectionner-tout': { label:'Sélectionner tout', run:actionSelectionnerTout },
+    'verrouiller': { label:'Verrouiller', run:actionVerrouiller,
+      libelleDyn:function(p){ return p.verrouille ? 'Déverrouiller' : 'Verrouiller'; } },
+    'mordre': { label:'Ne plus mordre', run:actionMordre,
+      libelleDyn:function(p){ return p.neMordPas ? 'Mordre à nouveau' : 'Ne plus mordre'; } },
+    'annuler': { label:'Annuler', run:actionAnnuler, desactive:function(){ return INDEX_HISTORIQUE <= 0; } },
+    'retablir': { label:'Rétablir', run:actionRetablir, desactive:function(){ return INDEX_HISTORIQUE >= HISTORIQUE.length - 1; } }
+  };
+
+  /* Config par defaut du menu personnalisable : 7 groupes, meme decoupage
+     valide avec le fondateur sur la maquette. "Couleur (remplissage)" n'est
+     pas dans cette liste -- elle reste la section fixe existante au-dessus
+     (tiroir hex/pipette/palette perso, pas un simple bouton), toujours
+     affichee en premier. Grouper/Degrouper : PAS construit cette passe --
+     demanderait de faire persister une notion de groupe au-dela de la
+     selection ephemere actuelle (selectionGroupe), qui toucherait la logique
+     de clic/selection deja verifiee -- laisse de cote plutot que construit
+     a moitie. */
+  var MCD_DEFAUT = [
+    { id:'apparence', label:'Apparence', items:[
+      { id:'copier-style', actif:true },
+      { id:'coller-style', actif:true }
+    ]},
+    { id:'transformation', label:'Transformation', items:[
+      { id:'reinit-forme', actif:true },
+      { id:'retourner', actif:true }
+    ]},
+    { id:'ordre', label:"Ordre d'empilement", items:[
+      { id:'avancer', actif:false },
+      { id:'reculer', actif:false },
+      { id:'premier-plan', actif:false },
+      { id:'arriere-plan', actif:false }
+    ]},
+    { id:'edition', label:'Édition', items:[
+      { id:'dupliquer', actif:true },
+      { id:'copier', actif:false },
+      { id:'coller', actif:false },
+      { id:'supprimer', actif:true, verrouille:true }
+    ]},
+    { id:'selection', label:'Sélection', items:[
+      { id:'selectionner-tout', actif:false }
+    ]},
+    { id:'protection', label:'Protection', items:[
+      { id:'verrouiller', actif:true },
+      { id:'mordre', actif:false }
+    ]},
+    { id:'historique', label:'Historique', items:[
+      { id:'annuler', actif:false },
+      { id:'retablir', actif:false }
+    ]}
+  ];
+
+  var CLE_MENU_CLIC_DROIT = 'mosaiqueCreativeDecoupeMenuClicDroit';
+  function clonerDefautMenu(){ return JSON.parse(JSON.stringify(MCD_DEFAUT)); }
+
+  /* Fusionne une config sauvegardee avec les groupes/items par defaut --
+     jamais l'inverse (la sauvegarde ne remplace pas tout) : un item retire
+     depuis (sauvegarde perimee) est ignore, un item AJOUTE depuis (nouvelle
+     version de l'outil) apparait a la fin de son groupe avec son etat par
+     defaut. Un item "verrouille" reste verrouille et actif meme si une
+     ancienne sauvegarde le disait autrement -- le plancher (Couleur/Supprimer)
+     n'est jamais contournable via un vieux localStorage. */
+  function fusionnerConfigMenu(sauvegarde){
+    var base = clonerDefautMenu();
+    if (!sauvegarde || !Array.isArray(sauvegarde)) return base;
+    return base.map(function(groupeDefaut){
+      var groupeSauvegarde = sauvegarde.find(function(g){ return g && g.id === groupeDefaut.id; });
+      if (!groupeSauvegarde || !Array.isArray(groupeSauvegarde.items)) return groupeDefaut;
+      var items = groupeSauvegarde.items.filter(function(it){
+        return it && groupeDefaut.items.some(function(d){ return d.id === it.id; });
+      }).map(function(it){ return { id: it.id, actif: !!it.actif }; });
+      var idsConnus = items.map(function(it){ return it.id; });
+      groupeDefaut.items.forEach(function(d){
+        if (idsConnus.indexOf(d.id) === -1) items.push({ id: d.id, actif: d.actif });
+      });
+      items.forEach(function(it){
+        var d = groupeDefaut.items.find(function(dd){ return dd.id === it.id; });
+        if (d && d.verrouille){ it.verrouille = true; it.actif = true; }
+      });
+      return { id: groupeDefaut.id, label: groupeDefaut.label, items: items };
+    });
+  }
+
+  function chargerConfigMenu(){
+    try {
+      var brut = localStorage.getItem(CLE_MENU_CLIC_DROIT);
+      return fusionnerConfigMenu(brut ? JSON.parse(brut) : null);
+    } catch(e){ return clonerDefautMenu(); }
+  }
+  function sauverConfigMenu(){
+    try { localStorage.setItem(CLE_MENU_CLIC_DROIT, JSON.stringify(configMenu)); } catch(e){}
+  }
+
+  var configMenu = chargerConfigMenu();
+
+  /* ================= Construction du VRAI menu contextuel ================= */
+  var mcGroupesDynamiques = $('mcGroupesDynamiques');
+
+  function construireGroupesMenuContextuel(piece){
+    mcGroupesDynamiques.innerHTML = '';
+    configMenu.forEach(function(groupe){
+      var actifs = groupe.items.filter(function(item){
+        var def = ACTIONS[item.id];
+        if (!def || !item.actif) return false;
+        if (def.cache && def.cache(piece)) return false;
+        return true;
+      });
+      if (!actifs.length) return;
+      var section = document.createElement('div');
+      section.className = 'mc-section';
+      var titreGroupe = document.createElement('div');
+      titreGroupe.className = 'mc-groupe-titre';
+      titreGroupe.textContent = groupe.label;
+      section.appendChild(titreGroupe);
+      actifs.forEach(function(item){
+        var def = ACTIONS[item.id];
+        var bouton = document.createElement('button');
+        bouton.className = 'mc-action' + (def.danger ? ' danger' : '');
+        bouton.textContent = def.libelleDyn ? def.libelleDyn(piece) : def.label;
+        if (def.desactive && def.desactive(piece)) bouton.disabled = true;
+        else bouton.addEventListener('click', def.run);
+        section.appendChild(bouton);
+      });
+      mcGroupesDynamiques.appendChild(section);
+    });
+  }
+
+  /* ================= Fenetre pop-up "Personnaliser le clic droit" ================= */
+  var SVG_GRIP_MCD = '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
+  var SVG_CHECK_MCD = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.5"/></svg>';
+  var SVG_LOCK_MCD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var mcdListeGroupes = $('mcdListeGroupes');
+
+  function rendrePanneauMcd(){
+    mcdListeGroupes.innerHTML = '';
+    configMenu.forEach(function(groupe){
+      var divGroupe = document.createElement('div');
+      divGroupe.className = 'mcd-groupe';
+      var titre = document.createElement('div');
+      titre.className = 'mcd-groupe-label';
+      titre.textContent = groupe.label;
+      divGroupe.appendChild(titre);
+      var ul = document.createElement('ul');
+      ul.className = 'mcd-liste';
+      ul.dataset.groupe = groupe.id;
+      groupe.items.forEach(function(item){ ul.appendChild(construireLigneMcd(groupe, item)); });
+      divGroupe.appendChild(ul);
+      mcdListeGroupes.appendChild(divGroupe);
+    });
+  }
+
+  function construireLigneMcd(groupe, item){
+    var def = ACTIONS[item.id];
+    var li = document.createElement('li');
+    li.className = 'mcd-ligne' + (item.actif ? '' : ' mcd-desactivee') + (item.verrouille ? ' mcd-verrouille' : '');
+    li.dataset.itemId = item.id;
+
+    var poignee = document.createElement('span');
+    poignee.className = 'mcd-poignee';
+    poignee.innerHTML = SVG_GRIP_MCD;
+    li.appendChild(poignee);
+
+    if (item.verrouille){
+      var cadenas = document.createElement('span');
+      cadenas.className = 'mcd-cadenas';
+      cadenas.title = 'Toujours actif';
+      cadenas.innerHTML = SVG_LOCK_MCD;
+      li.appendChild(cadenas);
+    } else {
+      var caseACocher = document.createElement('span');
+      caseACocher.className = 'mcd-case' + (item.actif ? ' mcd-coche' : '');
+      caseACocher.innerHTML = SVG_CHECK_MCD;
+      caseACocher.addEventListener('click', function(){
+        item.actif = !item.actif;
+        sauverConfigMenu();
+        rendrePanneauMcd();
+      });
+      li.appendChild(caseACocher);
+    }
+
+    var libelle = document.createElement('span');
+    libelle.className = 'mcd-libelle';
+    libelle.textContent = def ? def.label : item.id;
+    li.appendChild(libelle);
+
+    if (!item.verrouille){
+      poignee.addEventListener('pointerdown', function(e){ demarrerGlisserMcd(e, groupe, li); });
+    }
+    return li;
+  }
+
+  // Reordonnancement par glisser (PointerEvent reel), a l'interieur d'un
+  // meme groupe uniquement -- meme technique verifiee que la maquette
+  // (setPointerCapture protege par try/catch : peut echouer sans casser le
+  // glisser si le pointeur n'est pas reconnu "actif" par le navigateur).
+  function demarrerGlisserMcd(e, groupe, ligneDepart){
+    e.preventDefault();
+    var ul = ligneDepart.parentElement;
+    var idDepart = ligneDepart.dataset.itemId;
+    try { ligneDepart.setPointerCapture && ligneDepart.setPointerCapture(e.pointerId); } catch(err) {}
+    ligneDepart.classList.add('mcd-fantome');
+
+    function surDeplacement(ev){
+      var lignes = Array.prototype.slice.call(ul.querySelectorAll('.mcd-ligne'));
+      var y = ev.clientY;
+      var cible = null;
+      for (var i = 0; i < lignes.length; i++){
+        var r = lignes[i].getBoundingClientRect();
+        if (y < r.top + r.height / 2){ cible = lignes[i]; break; }
+      }
+      var items = groupe.items;
+      var depuis = items.findIndex(function(it){ return it.id === idDepart; });
+      var versId = cible ? cible.dataset.itemId : null;
+      var vers = versId ? items.findIndex(function(it){ return it.id === versId; }) : items.length;
+      if (vers > depuis) vers -= 1;
+      if (depuis === -1 || vers === depuis) return;
+      var pris = items.splice(depuis, 1)[0];
+      items.splice(vers, 0, pris);
+      rendrePanneauMcd();
+      var nouvelleLigne = ul.querySelector('[data-item-id="' + idDepart + '"]');
+      if (nouvelleLigne) nouvelleLigne.classList.add('mcd-fantome');
+    }
+    function surRelachement(){
+      document.removeEventListener('pointermove', surDeplacement);
+      document.removeEventListener('pointerup', surRelachement);
+      sauverConfigMenu();
+      rendrePanneauMcd();
+    }
+    document.addEventListener('pointermove', surDeplacement);
+    document.addEventListener('pointerup', surRelachement);
+  }
+
+  $('mcdReinit').addEventListener('click', function(){
+    configMenu = clonerDefautMenu();
+    sauverConfigMenu();
+    rendrePanneauMcd();
   });
+
+  var mcdCouverture = $('mcdCouverture');
+  function ouvrirPopupMcd(){ mcdCouverture.classList.add('ouverte'); }
+  function fermerPopupMcd(){ mcdCouverture.classList.remove('ouverte'); }
+  $('btnOuvrirReglagesMenu').addEventListener('click', ouvrirPopupMcd);
+  $('mcdFermer').addEventListener('click', fermerPopupMcd);
+  mcdCouverture.addEventListener('click', function(e){ if (e.target === mcdCouverture) fermerPopupMcd(); });
+
+  rendrePanneauMcd();
 
   /* ================= Reglages generaux ================= */
   var curseurJoint = $('curseurJoint');
@@ -1478,7 +1970,10 @@
     get PIECES(){ return PIECES; }, get selectionId(){ return selectionId; }, get selectionGroupe(){ return selectionGroupe; },
     get niveauZoom(){ return niveauZoom; }, get indexHistorique(){ return INDEX_HISTORIQUE; }, get tailleHistorique(){ return HISTORIQUE.length; },
     creerPiece: creerPiece, rendre: rendre, cheminPiece: cheminPiece, annuler: annuler, retablir: retablir,
-    estVisible: estVisible, dessinerPiece: dessinerPiece
+    estVisible: estVisible, dessinerPiece: dessinerPiece,
+    get configMenu(){ return configMenu; }, get pieceMenu(){ return pieceMenu; }, get pieceCopiee(){ return pieceCopiee; },
+    get styleCopie(){ return styleCopie; }, ouvrirMenuContextuel: ouvrirMenuContextuel, ouvrirPopupMcd: ouvrirPopupMcd,
+    fermerPopupMcd: fermerPopupMcd
   };
 
   rendre();
