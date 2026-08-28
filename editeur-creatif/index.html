@@ -197,10 +197,6 @@
   body{ margin:0; background:var(--charbon); color:var(--creme); font-family:'Karla',sans-serif; }
   h1,h2,h3{ font-family:'Quicksand',sans-serif; }
 
-  .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }
-  .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 10px; font-weight:600; }
-  h1.titre{ font-size:clamp(22px,4vw,30px); line-height:1.15; margin:0 0 8px; }
-  p.accroche{ font-size:13.5px; color:var(--doux-sombre); max-width:60ch; margin:0 auto; line-height:1.55; }
 
   /* ================= Rails d'icones (28/08, meme base que Mosaique) =================
      Les 4 cartes empilees (Format/Inserer/Composition/Clic droit) + le panneau
@@ -209,10 +205,14 @@
      le canevas (jamais de tiroir qui pousse le contenu). Tout le contenu des
      popovers est repris tel quel (memes id, meme JS) -- seul le conteneur
      visuel change. */
-  .atelier{ max-width:1180px; margin:20px auto 60px; padding:0 20px; }
+  /* Pleine largeur (28/08, meme esprit que Mosaique) : plus de max-width qui
+     centrait l'atelier avec des marges mortes de chaque cote -- les rails
+     touchent maintenant les bords de l'ecran, le canevas recupere tout
+     l'espace libere. */
+  .atelier{ margin:0; padding:0; }
   .rangee-atelier{
-    display:grid; grid-template-columns:56px 1fr 56px; align-items:stretch;
-    border:1px solid #ffffff1c; background:var(--charbon); box-shadow:0 20px 50px -30px #00000088;
+    display:grid; grid-template-columns:56px 1fr 56px; align-items:stretch; min-height:calc(100vh - 90px);
+    background:var(--charbon);
   }
   @media (max-width:760px){ .rangee-atelier{ grid-template-columns:48px 1fr 48px; } }
 
@@ -270,8 +270,12 @@
   .btn-sticker{ aspect-ratio:1; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; }
   .btn-sticker:hover{ border-color:var(--terracotta); }
 
-  .canevas-cadre{ background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:16px; box-shadow:0 20px 50px -30px #2b353e55; }
-  .canevas{ position:relative; width:min(560px,80vw); aspect-ratio:1/1; background:repeating-conic-gradient(#0000 0 25%, #2b353e08 0 50%) 0 0/20px 20px; border:1px solid var(--bord); border-radius:8px; overflow:hidden; touch-action:none; }
+  /* Angles droits + liseré blanc réduit à son maximum (28/08, même esprit que
+     Mosaïque) : le cadre ne sert plus que de trait de contour fin, plus de
+     padding/arrondi qui ressortait comme une bordure blanche épaisse sur le
+     nouveau fond charbon de la page. */
+  .canevas-cadre{ position:relative; background:var(--surface); border:1px solid var(--bord); }
+  .canevas{ position:relative; width:min(760px, calc(100vw - 170px), calc(100vh - 200px)); aspect-ratio:1/1; background:repeating-conic-gradient(#0000 0 25%, #2b353e08 0 50%) 0 0/20px 20px; overflow:hidden; touch-action:none; }
 
   /* Repere tuiles : la mosaique est faite de tuiles physiques carrees de 20cm --
      ce trait fin montre au client, pendant la composition, comment son visuel
@@ -279,7 +283,7 @@
      visuel, jamais un obstacle au clic (meme piege que le repere photo forme). */
   .repere-tuiles{
     position:absolute; inset:0; z-index:9000; pointer-events:none;
-    border:1.5px solid #2b353ed9; border-radius:7px;
+    border:1.5px solid #2b353ed9;
     background-image:
       linear-gradient(to right, #2b353e66 0, #2b353e66 1px, transparent 1px),
       linear-gradient(to bottom, #2b353e66 0, #2b353e66 1px, transparent 1px);
@@ -496,12 +500,10 @@
 <div class="qz-nav-voile" id="qzNavVoile"></div>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<section class="hero">
-  <p class="eyebrow">Gratuit · Quadreti</p>
-  <h1 class="titre">Éditeur Créatif — composez votre visuel</h1>
-  <p class="accroche">Format, photo, texte, stickers, formes, détourage — composez librement, la composition reste enregistrée sur cette page.</p>
-  <p style="margin-top:10px"><a href="guide-interactif.html" style="font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:var(--terracotta); text-decoration:none;">Comment ça marche ? Voir le guide interactif →</a></p>
-</section>
+<!-- Bandeau titre/accroche retire (28/08, gain de place -- meme esprit que Mosaique
+     Creative) : redondant avec le bandeau du site au-dessus, et l'acces au guide
+     reviendra via l'icone Aide (coin du canevas), a construire dans la prochaine
+     passe (Zoom/Rotation/Symetrie/Couleur/Aide-Boutique/Tout selectionner). -->
 
 <div class="atelier">
   <div class="rangee-atelier">
