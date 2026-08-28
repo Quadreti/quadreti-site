@@ -334,7 +334,12 @@
   .interrupteur-mini.on{ background:var(--terracotta); }
   .interrupteur-mini.on i{ transform:translateX(15px); }
 
-  .zone-detourage{ position:fixed; inset:0; background:#0000009a; z-index:50; display:none; align-items:center; justify-content:center; }
+  /* z-index releve (28/08) : le detourage s'ouvre depuis un bouton DANS le
+     popover Propriétés (z-index 210, nouveau avec les rails) -- avec l'ancien
+     z-index:50, la modale de detourage passait DERRIERE ce popover encore
+     ouvert, rendant ses controles inatteignables au clic. Doit rester au-dessus
+     de tout ce qui peut etre ouvert en meme temps (popovers, menu contextuel). */
+  .zone-detourage{ position:fixed; inset:0; background:#0000009a; z-index:400; display:none; align-items:center; justify-content:center; }
   .zone-detourage.ouvert{ display:flex; }
   .carte-detourage{ background:var(--surface); border-radius:16px; padding:18px; width:min(560px,92vw); }
   .carte-detourage canvas{ width:100%; touch-action:none; border-radius:10px; background:repeating-conic-gradient(#0000 0 25%, #2b353e08 0 50%) 0 0/20px 20px; cursor:crosshair; }
@@ -347,7 +352,7 @@
   .repere-alignement.vertical{ width:1px; top:0; bottom:0; }
   .repere-alignement.horizontal{ height:1px; left:0; right:0; }
 
-  .menu-contextuel{ position:fixed; z-index:200; background:var(--surface); border:1px solid var(--bord); border-radius:10px; box-shadow:0 14px 34px -12px #2b353e66; padding:5px; display:none; min-width:170px; }
+  .menu-contextuel{ position:fixed; z-index:220; background:var(--surface); border:1px solid var(--bord); border-radius:10px; box-shadow:0 14px 34px -12px #2b353e66; padding:5px; display:none; min-width:170px; }
   .menu-contextuel.ouvert{ display:block; }
   .menu-contextuel button{ display:flex; align-items:center; gap:8px; width:100%; text-align:left; font:inherit; font-family:'Karla',sans-serif; font-size:12.5px; font-weight:600; color:var(--texte); background:none; border:none; border-radius:7px; padding:8px 10px; cursor:pointer; }
   .menu-contextuel button:hover{ background:var(--teinte-actif); color:var(--terracotta); }
