@@ -244,7 +244,40 @@
   .popover-outil.ouvert{ display:block; }
   .popover-outil h3{ font-family:'Quicksand',sans-serif; font-size:12px; font-weight:700; margin:0 0 10px; text-transform:uppercase; letter-spacing:.03em; color:var(--doux); }
 
-  .zone-travail{ display:flex; justify-content:center; align-items:center; padding:22px; }
+  /* Zoom (28/08, transpose de Mosaique) : bloc compact en bas du rail droit,
+     pas un popover -- juste 3 icones + une valeur, pas besoin d'ouvrir/fermer
+     quoi que ce soit pour zoomer. */
+  .bloc-zoom{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .icone-mini{
+    width:30px; height:30px; border-radius:8px; border:none; background:#ffffff1c; color:var(--creme);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .icone-mini:hover{ background:#ffffff30; }
+  .icone-mini svg{ width:15px; height:15px; }
+  .valeur-zoom{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; color:var(--doux-sombre); }
+
+  /* Coins Aide / Boutique (28/08, transpose de Mosaique) : deux fonctions
+     posees directement sur le canevas plutot que dans un rail -- l'aide et la
+     direction vers les autres outils n'ont pas besoin de la meme place qu'un
+     vrai outil de composition. */
+  .coin-fonction{
+    position:absolute; width:30px; height:30px; border-radius:9px; text-decoration:none; z-index:20;
+    display:flex; align-items:center; justify-content:center; background:var(--kraft); color:var(--charbon);
+    box-shadow:0 6px 16px -6px #00000066;
+  }
+  .coin-fonction svg{ width:15px; height:15px; }
+  .coin-aide{ left:10px; bottom:10px; }
+  .coin-boutique{ right:10px; bottom:10px; background:var(--terracotta); color:#fff; }
+  .bulle-coin{
+    position:absolute; bottom:40px; width:190px; background:var(--surface); color:var(--texte);
+    border-radius:10px; padding:10px 12px; font-size:11.5px; line-height:1.5; box-shadow:0 14px 30px -10px #00000066;
+    opacity:0; pointer-events:none; transition:opacity .15s ease; z-index:30;
+  }
+  .coin-aide .bulle-coin{ left:0; }
+  .coin-boutique .bulle-coin{ right:0; }
+  .coin-fonction:hover .bulle-coin, .coin-fonction:focus-visible .bulle-coin{ opacity:1; }
+
+  .zone-travail{ position:relative; display:flex; justify-content:center; align-items:center; padding:22px; }
 
   .colonne{ display:flex; flex-direction:column; gap:10px; }
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
@@ -559,6 +592,16 @@
       </div>
       <div class="groupe-bas">
         <div class="icone-outil-conteneur">
+          <button class="icone-outil kraft" title="Couleur" data-cible="popCouleur">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="8.2" r="1.6" fill="currentColor" stroke="none"/><circle cx="15.8" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="15.8" r="1.6" fill="currentColor" stroke="none"/><circle cx="8.2" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <div class="popover-outil popover-bas" id="popCouleur">
+            <h3>Couleur actuelle</h3>
+            <p class="note" style="margin:-4px 0 8px;text-align:left">S'applique aux prochains texte/forme insérés.</p>
+            <div id="popCouleurContenu"></div>
+          </div>
+        </div>
+        <div class="icone-outil-conteneur">
           <button class="icone-outil kraft" title="Format" data-cible="popFormat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/></svg>
           </button>
@@ -584,18 +627,40 @@
           <div class="repere-tuiles" id="repereTuiles"></div>
         </div>
       </div>
+      <a class="coin-fonction coin-aide" href="guide-interactif.html" title="Aide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1.5 1-1.5 2.2"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
+        <span class="bulle-coin">Guide interactif et FAQ de l'Éditeur Créatif →</span>
+      </a>
+      <a class="coin-fonction coin-boutique" href="../index.html" title="Autres outils QuadretI">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l1.5-4h13L20 8M4 8h16M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M9 12a3 3 0 0 0 6 0"/></svg>
+        <span class="bulle-coin">Découvrir les autres outils QuadretI →</span>
+      </a>
     </div>
 
     <div class="rail rail-droite">
-      <div class="icone-outil-conteneur">
-        <button class="icone-outil" id="btnPropsIcone" title="Propriétés" data-cible="popProps" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        </button>
-        <div class="popover-outil" id="popProps">
-          <div class="carte panneau-props" id="panneauProps" style="border:none;padding:0">
-            <div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>
+      <div class="groupe-haut">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="btnPropsIcone" title="Propriétés" data-cible="popProps" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </button>
+          <div class="popover-outil" id="popProps">
+            <div class="carte panneau-props" id="panneauProps" style="border:none;padding:0">
+              <div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>
+            </div>
           </div>
         </div>
+      </div>
+      <div class="groupe-bas bloc-zoom">
+        <button class="icone-mini" id="btnZoomPlus" title="Zoom avant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+        </button>
+        <span class="valeur-zoom" id="valeurZoom">100%</span>
+        <button class="icone-mini" id="btnZoomMoins" title="Zoom arrière">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg>
+        </button>
+        <button class="icone-mini" id="btnZoomAjuster" title="Réinitialiser le zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1032,6 +1097,17 @@
   var cibleFormePhotoCanevas = null;
   var historique = [];
   var historiqueIndex = -1;
+  /* Couleur actuelle (28/08, transpose de Mosaique Creative) : pre-remplit la
+     couleur des nouveaux texte/forme au moment de l'insertion -- ne touche
+     jamais un calque deja pose (ca reste le role du selecteur de couleur dans
+     Proprietés). */
+  var couleurActuelle = '#E2725B';
+  /* Zoom (28/08, transpose de Mosaique) : purement visuel (transform:scale sur
+     .canevas), la position/taille des calques (c.x/c.y/c.w/c.h) restent en
+     pixels LOGIQUES non zoomes -- demarrerDeplacement/demarrerRedim divisent
+     par niveauZoom pour convertir le mouvement souris (en pixels ecran, deja
+     zoomes par le transform) vers ces coordonnees logiques. */
+  var niveauZoom = 1;
 
   function creerId(){ return 'c' + (++compteurId); }
 
@@ -1046,7 +1122,13 @@
       el.style.left = c.x + 'px'; el.style.top = c.y + 'px';
       el.style.width = c.w + 'px'; el.style.height = c.h + 'px';
       el.style.zIndex = c.z;
-      if (c.retourne) el.style.transform = 'scaleX(-1)';
+      /* Rotation par palier de 90 (28/08, transpose de Mosaique) : combine avec
+         le retournement existant en une seule chaine transform -- les deux
+         peuvent etre actifs en meme temps. */
+      var transforms = [];
+      if (c.retourne) transforms.push('scaleX(-1)');
+      if (c.rotation) transforms.push('rotate(' + c.rotation + 'deg)');
+      if (transforms.length) el.style.transform = transforms.join(' ');
       el.dataset.id = c.id;
 
       if (c.type === 'photo'){
@@ -1203,10 +1285,10 @@
   function demarrerDeplacement(e, c){
     e.stopPropagation();
     var rect = canevas.getBoundingClientRect();
-    var depX = e.clientX - rect.left - c.x, depY = e.clientY - rect.top - c.y;
+    var depX = (e.clientX - rect.left) / niveauZoom - c.x, depY = (e.clientY - rect.top) / niveauZoom - c.y;
     function surDeplacement(ev){
-      c.x = ev.clientX - rect.left - depX;
-      c.y = ev.clientY - rect.top - depY;
+      c.x = (ev.clientX - rect.left) / niveauZoom - depX;
+      c.y = (ev.clientY - rect.top) / niveauZoom - depY;
       accrocher(c);
       rendreCanevas();
     }
@@ -1223,8 +1305,8 @@
     e.stopPropagation();
     var rect = canevas.getBoundingClientRect();
     function surDeplacement(ev){
-      c.w = Math.max(24, ev.clientX - rect.left - c.x);
-      c.h = Math.max(24, ev.clientY - rect.top - c.y);
+      c.w = Math.max(24, (ev.clientX - rect.left) / niveauZoom - c.x);
+      c.h = Math.max(24, (ev.clientY - rect.top) / niveauZoom - c.y);
       rendreCanevas();
     }
     function surRelachement(){
@@ -1248,6 +1330,12 @@
     if (btnPropsIcone) btnPropsIcone.disabled = false;
 
     var html = '';
+    /* Rotation par palier de 90 (28/08) : commune a tous les types de calque,
+       affichee en tete du panneau, avant les champs specifiques au type. */
+    html += '<div class="champ-mini"><label>Rotation</label><div class="rang-btn2">' +
+      '<button type="button" class="btn secondaire" id="propTournerMoins90" title="-90°">↺ -90°</button>' +
+      '<button type="button" class="btn secondaire" id="propTourner90" title="+90°">↻ +90°</button>' +
+    '</div></div>';
     if (c.type === 'texte'){
       html += '<div class="champ-mini"><label>Contenu</label><input type="text" id="propTexteContenu" value="' + escHtml(c.contenu) + '"></div>';
       html += htmlSelecteurCouleur('propTexteCouleur', c.couleur, 'Couleur');
@@ -1343,6 +1431,7 @@
     pousserHistorique();
   }
   function actionRetourner(c){ c.retourne = !c.retourne; rendreCanevas(); pousserHistorique(); }
+  function actionTourner(c, delta){ c.rotation = ((c.rotation || 0) + delta + 360) % 360; rendreCanevas(); rendrePanneau(); pousserHistorique(); }
   function actionAvancer(c){ c.z += 1.5; rendreCanevas(); pousserHistorique(); }
   function actionReculer(c){ c.z -= 1.5; rendreCanevas(); pousserHistorique(); }
   function actionPremierPlan(c){ c.z = ++compteurZ; rendreCanevas(); pousserHistorique(); }
@@ -1357,6 +1446,8 @@
 
   function lierPanneau(c){
     var t = function(id){ return $(id); };
+    if (t('propTournerMoins90')) t('propTournerMoins90').onclick = function(){ actionTourner(c, -90); };
+    if (t('propTourner90')) t('propTourner90').onclick = function(){ actionTourner(c, 90); };
     if (t('propTexteContenu')){
       t('propTexteContenu').oninput = function(){ c.contenu = this.value; rendreCanevas(); };
       t('propTexteContenu').onblur = pousserHistorique;
@@ -1410,7 +1501,7 @@
 
   /* --- Ajout d'elements --- */
   function ajouterCalque(base){
-    var c = Object.assign({ id:creerId(), z:++compteurZ, verrouille:false, retourne:false }, base);
+    var c = Object.assign({ id:creerId(), z:++compteurZ, verrouille:false, retourne:false, rotation:0 }, base);
     calques.push(c);
     selectionner(c.id);
     pousserHistorique();
@@ -1447,7 +1538,7 @@
   });
 
   $('btnAjouterTexte').addEventListener('click', function(){
-    ajouterCalque({ type:'texte', contenu:'Votre texte', x:80, y:80, w:180, h:60, couleur:'#2B353E', taille:22, police:'Quicksand', effet:'aucun', courbure:0 });
+    ajouterCalque({ type:'texte', contenu:'Votre texte', x:80, y:80, w:180, h:60, couleur:couleurActuelle, taille:22, police:'Quicksand', effet:'aucun', courbure:0 });
   });
 
   $('btnBascculerStickers').addEventListener('click', function(){
@@ -1502,7 +1593,7 @@
       var estLigne = FORMES_LIGNE.indexOf(f.id) !== -1;
       ajouterCalque({
         type:'forme', forme:f.id, x:100, y:100, w:estLigne ? 130 : 100, h:estLigne ? 50 : 100,
-        rempli:!estLigne, couleur:'#E2725B', epaisseur:6,
+        rempli:!estLigne, couleur:couleurActuelle, epaisseur:6,
         cadreActif:false, cadreCouleur:'#2B353E', cadreEpaisseur:4, photoSrc:null
       });
     });
@@ -1666,6 +1757,8 @@
      "libelleDyn" remplace le libelle statique quand il depend de l'etat du calque. */
   var ACTIONS = {
     'retourner': { label:'Retourner', run:function(c){ actionRetourner(c); } },
+    'tournerMoins90': { label:'Tourner -90°', run:function(c){ actionTourner(c, -90); } },
+    'tourner90': { label:'Tourner +90°', run:function(c){ actionTourner(c, 90); } },
     'avancer': { label:'Avancer', run:function(c){ actionAvancer(c); } },
     'reculer': { label:'Reculer', run:function(c){ actionReculer(c); } },
     'premierPlan': { label:'Premier plan', run:function(c){ actionPremierPlan(c); } },
@@ -1687,7 +1780,9 @@
      pas de selection multiple dans cet outil). */
   var MCD_DEFAUT = [
     { id:'transformation', label:'Transformation', items:[
-      { id:'retourner', actif:true }
+      { id:'retourner', actif:true },
+      { id:'tournerMoins90', actif:true },
+      { id:'tourner90', actif:true }
     ]},
     { id:'ordre', label:"Ordre d'empilement", items:[
       { id:'avancer', actif:true },
@@ -1928,6 +2023,28 @@
   window.__ouvrirPopupMcd = ouvrirPopupMcd;
   window.__fermerPopupMcd = fermerPopupMcd;
   window.__fermerMenuContextuel = fermerMenuContextuel;
+
+  /* Popover Couleur (28/08) : reutilise le meme composant que les selecteurs
+     de couleur du panneau Proprietés (htmlSelecteurCouleur/lierSelecteurCouleur),
+     un seul endroit qui definit ce composant, jamais duplique. */
+  $('popCouleurContenu').innerHTML = htmlSelecteurCouleur('couleurActuelle', couleurActuelle, 'Couleur');
+  lierSelecteurCouleur('couleurActuelle', couleurActuelle, function(h){ couleurActuelle = h; });
+
+  /* Zoom (28/08) : transform:scale sur .canevas-cadre (le cadre ET le canevas
+     grandissent ensemble, sinon le trait de contour fixe se decolle du contenu
+     zoome) -- position/taille des calques restent en pixels logiques,
+     demarrerDeplacement/demarrerRedim divisent deja par niveauZoom (voir plus
+     haut, getBoundingClientRect() de .canevas reflete deja la transformation
+     posee sur son parent). */
+  var canevasCadre = document.querySelector('.canevas-cadre');
+  canevasCadre.style.transformOrigin = 'center';
+  function appliquerZoom(){
+    canevasCadre.style.transform = 'scale(' + niveauZoom + ')';
+    $('valeurZoom').textContent = Math.round(niveauZoom * 100) + '%';
+  }
+  $('btnZoomPlus').addEventListener('click', function(){ niveauZoom = Math.min(2.5, +(niveauZoom + 0.1).toFixed(2)); appliquerZoom(); });
+  $('btnZoomMoins').addEventListener('click', function(){ niveauZoom = Math.max(0.3, +(niveauZoom - 0.1).toFixed(2)); appliquerZoom(); });
+  $('btnZoomAjuster').addEventListener('click', function(){ niveauZoom = 1; appliquerZoom(); });
 
   rendreCanevas();
   rendrePanneau();
