@@ -117,14 +117,18 @@
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
 
-    /* Mentions legales (icones des liens "Mentions legales/CGV/CGU & RGPD/
-       Livraison & paiement/Contact", bas de page) : couleur fixe var(--qz-
-       kraft) dans commun.css, jamais reliee au panneau -- demande fondateur
-       (28/08) de pouvoir la regler. Nouveau reglage fin dans le panneau
-       (ZONES_FINES, cle "mentionsKraft", repli sur le kraft actuel -- zero
-       changement visuel tant que personne n'y touche). */
+    /* Mentions legales (cartouches "Mentions legales/CGV/CGU & RGPD/
+       Livraison & paiement/Contact", bas de page) : fond fixe dans
+       commun.css, jamais relie au panneau -- demande fondateur (28/08) de
+       pouvoir le regler. Nouveau reglage fin dans le panneau (ZONES_FINES,
+       cle "mentionsKraft", repli sur le kraft actuel -- zero changement
+       visuel tant que personne n'y touche).
+       28/08 (suite) : precise par le fondateur -- c'est bien le FOND du
+       cartouche qui doit rester kraft (pas l'icone comme suppose au premier
+       jet), texte et icone repasses en noir/charbon fixe (pas un reglage,
+       choix de design assume) directement dans commun.css. */
     var couleurMentions = c.mentionsKraft || '#CBBD93';
-    css += '\n.qz-legal .qz-picto{color:' + couleurMentions + '!important}';
+    css += '\n.qz-legal a.qz-leg{background:' + couleurMentions + '!important}';
 
     /* Arriere-plan boutique (28/08) : meme bug que Logo ci-dessus, trouve en
        corrigeant celui-ci -- 3e reglage fin du panneau (ZONES_FINES,
@@ -150,9 +154,15 @@
        qui restait fige en creme via l'ancien theme "Magazine", retire. */
     var texteSurFooter = couleurLisibleSur(fond, texte);
     css += '\n.qz-basdepage,.qz-reseaux,.qz-legal{background:' + fond + '}' +
-      '\n.qz-basdepage .qz-wordmark,.qz-baseline,.qz-reseaux .qz-accroche,.qz-legal a.qz-leg span{color:' + texteSurFooter + '}' +
+      '\n.qz-basdepage .qz-wordmark,.qz-baseline,.qz-reseaux .qz-accroche{color:' + texteSurFooter + '}' +
       '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
-      '\n.qz-reseaux .qz-sub,.qz-copy,.qz-legal .qz-picto{color:' + couleurLisibleSur(fond, '#9aa2a9') + '}' +
+      /* .qz-legal a.qz-leg span et .qz-legal .qz-picto retires de ces deux
+         listes (28/08, suite) : ils suivaient a tort la meme logique de
+         contraste que le reste du pied de page (texte clair sur fond
+         SOMBRE), alors que leur cartouche a desormais son PROPRE fond kraft
+         clair (voir plus haut, .qz-legal a.qz-leg) -- texte/icone noir fixe
+         geres dans commun.css, plus rien a calculer ici pour ces deux-la. */
+      '\n.qz-reseaux .qz-sub,.qz-copy{color:' + couleurLisibleSur(fond, '#9aa2a9') + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
       '\n.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:' + accent + ';border-color:' + accent + '}' +
