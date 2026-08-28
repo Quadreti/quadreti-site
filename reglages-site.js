@@ -165,7 +165,27 @@
       css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
         '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p' +
         '{color:' + texteSurCarte + '}';
+
+      /* Meme famille de bug encore (28/08) : ces elements sont des ENFANTS
+         PLUS PRECIS des selecteurs juste au-dessus (<b>/<a> a l'interieur
+         d'un texte deja couvert) -- leur regle de base, plus specifique
+         (.trust-card li b, .how-foot a...), gagne sur le color: pose sur le
+         parent et reste figee sur var(--charbon) (texte en gras/lien pense
+         a l'origine pour un fond blanc). Sur la palette Quadreti, ces cartes
+         sont maintenant charbon elles-memes -- texte charbon sur fond
+         charbon, invisible. Meme correctif que le parent : couleur calculee
+         par contraste, jamais collee telle quelle, avec !important pour
+         battre la specificite de la regle de base. */
+      css += '\n.story .txt p b,.story .txt .reinvente,.app-reassure b,.scal-foot b,' +
+        '.change li b,.gamme-notes b,.trust-card li b,.how-foot a' +
+        '{color:' + texteSurCarte + '!important}';
     }
+
+    /* Questions du FAQ (28/08) : posees sur le fond general de la page (pas
+       une carte a arriere-plan-texte), jamais couvertes -- restaient sur
+       var(--charbon) fige, invisibles des que "Texte" devient clair. */
+    css += '\n.qa button.q{color:' + couleurLisibleSur(fond, texte) + '!important}';
+
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
   }
@@ -248,18 +268,26 @@
      (spécificité #id > body/h2 génériques) — pas de bidouille de priorité nécessaire.
      Absent/vide = la section garde le style du thème global. */
   function appliquerStylesSections(styles) {
-    if (!styles) return;
     var css = '';
-    Object.keys(styles).forEach(function (id) {
-      var s = styles[id];
-      if (!s || SECTIONS_ACCUEIL_IDS.indexOf(id) === -1) return;
-      var sel = '#' + id;
-      if (s.fond) css += sel + '{background:' + s.fond + '!important}\n';
-      if (s.couleur) css += sel + ' h2,' + sel + ' h3,' + sel + ' p,' + sel + ' li,' + sel + ' b{color:' + s.couleur + '!important}\n';
-      if (s.police) { chargerPoliceGoogle(s.police); css += sel + '{font-family:\'' + s.police + '\',sans-serif}\n'; }
-      if (s.taille) css += sel + ' p{font-size:' + s.taille + 'px}\n';
-    });
-    if (css) injecterStyle('qz-styles-sections', css);
+    if (styles) {
+      Object.keys(styles).forEach(function (id) {
+        var s = styles[id];
+        if (!s || SECTIONS_ACCUEIL_IDS.indexOf(id) === -1) return;
+        var sel = '#' + id;
+        if (s.fond) css += sel + '{background:' + s.fond + '!important}\n';
+        if (s.couleur) css += sel + ' h2,' + sel + ' h3,' + sel + ' p,' + sel + ' li,' + sel + ' b{color:' + s.couleur + '!important}\n';
+        if (s.police) { chargerPoliceGoogle(s.police); css += sel + '{font-family:\'' + s.police + '\',sans-serif}\n'; }
+        if (s.taille) css += sel + ' p{font-size:' + s.taille + 'px}\n';
+      });
+    }
+    /* Toujours appele, meme avec css vide (28/08, vrai bug trouve en testant) :
+       avant, injecterStyle n'etait appele QUE si css avait du contenu -- une
+       fois qu'un reglage etait supprime cote panneau/base, l'ancien style
+       injecte restait fige pour toujours (rien ne venait jamais le vider),
+       y compris apres un rechargement complet une fois le cache anti-flash
+       repopule avec l'ancienne valeur. injecterStyle avec une chaine vide
+       vide correctement le <style> existant. */
+    injecterStyle('qz-styles-sections', css);
   }
 
   function texte(sel, val) {
