@@ -71,7 +71,12 @@
     var titre = c.titres || c.titre; /* "titres" = nom historique du champ, meme role */
     var sousTitre = c.sousTitre;
     var arrierePlanTexte = c.arrierePlanTexte || c.carte || c.encartFond; /* migration douce depuis les anciens champs */
-    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte) return palette;
+    /* c.logo/c.mentionsKraft ajoutes a cette garde (28/08) : sans ca, un
+       reglage fin personnalise seul (aucun autre champ de la palette
+       maitresse touche) faisait sortir la fonction avant meme d'atteindre
+       le CSS qui les applique plus bas -- exactement le genre de silence
+       qui a fait perdre le reglage "Logo" avant ce correctif. */
+    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft) return palette;
     /* --charbon / --qz-charbon (28/08, correctif racine) : ces deux variables
        ETAIENT reinjectees ici avec la valeur de "Texte" -- pratique tant que
        Texte restait sombre (les deux se confondaient), mais des qu'un theme
@@ -98,13 +103,28 @@
        appliquerMenuNav (qui ne pose que le burger/le panneau) -- restait
        fige sur var(--qz-charbon), pense a l'origine pour un bandeau clair.
        Des que General (fond du bandeau, --qz-clair juste au-dessus) devient
-       sombre, logo fonce sur fond fonce = invisible, aucun reglage du
-       panneau ne pouvait le corriger (rien ne le pilotait). Calcule contre
-       le VRAI fond du bandeau, comme le reste ce soir -- blanc si le fond
-       est sombre, retombe sur charbon si le fond redevient clair un jour. */
-    var couleurLogo = couleurLisibleSur(fond, '#ffffff');
+       sombre, logo fonce sur fond fonce = invisible.
+       28/08 (suite) : un reglage "fin" existait DEJA dans le panneau pour
+       ceci (carte Palette maitresse > Reglages fins > "Logo", repli sur
+       Texte) -- le fondateur l'avait meme deja bascule et enregistre en
+       blanc (#ffffff, verifie en base) mais RIEN ne le lisait jamais ici,
+       d'ou le "j'ai beau essayer, je n'y arrive pas". Corrige : c.logo est
+       maintenant lu s'il est personnalise (interrupteur "fin" desactive),
+       sinon repli sur Texte (comme declare dans ZONES_FINES du panneau) --
+       Texte est deja pense pour rester lisible sur General, pas une
+       coincidence a esperer comme les bugs precedents. */
+    var couleurLogo = c.logo || texte;
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
+
+    /* Mentions legales (icones des liens "Mentions legales/CGV/CGU & RGPD/
+       Livraison & paiement/Contact", bas de page) : couleur fixe var(--qz-
+       kraft) dans commun.css, jamais reliee au panneau -- demande fondateur
+       (28/08) de pouvoir la regler. Nouveau reglage fin dans le panneau
+       (ZONES_FINES, cle "mentionsKraft", repli sur le kraft actuel -- zero
+       changement visuel tant que personne n'y touche). */
+    var couleurMentions = c.mentionsKraft || '#CBBD93';
+    css += '\n.qz-legal .qz-picto{color:' + couleurMentions + '!important}';
 
     /* Pied de page (28/08) : contrairement au bandeau du haut (deja bien
        gere par appliquerMenuNav, qui pose ses propres couleurs calculees
