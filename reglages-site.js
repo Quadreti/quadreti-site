@@ -159,32 +159,48 @@
        (.badge, .step .hint, .premium .ic...), pas un alias du texte/fond
        des cartes -- les detourner cassait a son tour .premium .ic (icone
        blanche sur fond blanc, meme famille de bug). */
+    /* 28/08 (correctif de fond, suite aux captures du fondateur) : cette
+       liste melangeait a tort deux fonds DIFFERENTS sous une seule couleur
+       calculee (texteSurCarte, contre arrierePlanTexte) :
+       - les vraies cartes arriere-plan-texte (.step,.premium,.gift,
+         .trust-card...), qui RECOIVENT ce fond juste au-dessus -- correct.
+       - du texte pose directement sur le fond GENERAL de la page
+         (.story .txt, .how-foot, .app-reassure, .scal-foot, .change li,
+         .gamme-notes, .blk p.lead) -- ca "marchait" uniquement parce que
+         arrierePlanTexte == General dans la palette Quadreti actuelle,
+         coincidence qui casse des que les deux different.
+       - .mode p, sur un fond BLANC FIXE (#fff, jamais pilote par la
+         palette) -- ici la coincidence ne tenait plus du tout : texte
+         calcule pour un fond charbon, colle sur une carte restee blanche,
+         invisible (capture d'ecran du fondateur, "Mode Couleur" etc).
+       Separe en 3 groupes, chacun calcule contre son VRAI fond -- plus
+       aucune coincidence a esperer, correct meme si les couleurs divergent
+       un jour. */
     if (arrierePlanTexte) {
       css += '\n.step,.reason,.c-form-compact,.gift,.premium,.trust-card,.qz-legal a.qz-leg{background:' + arrierePlanTexte + '!important}';
       var texteSurCarte = couleurLisibleSur(arrierePlanTexte, texte);
-      css += '\n.blk p.lead,.story .txt p,.step p,.how-foot,.mode p,.app-reassure,' +
-        '.scal-foot,.change li,.gamme-notes,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p' +
-        '{color:' + texteSurCarte + '}';
-
-      /* Meme famille de bug encore (28/08) : ces elements sont des ENFANTS
-         PLUS PRECIS des selecteurs juste au-dessus (<b>/<a> a l'interieur
-         d'un texte deja couvert) -- leur regle de base, plus specifique
-         (.trust-card li b, .how-foot a...), gagne sur le color: pose sur le
-         parent et reste figee sur var(--charbon) (texte en gras/lien pense
-         a l'origine pour un fond blanc). Sur la palette Quadreti, ces cartes
-         sont maintenant charbon elles-memes -- texte charbon sur fond
-         charbon, invisible. Meme correctif que le parent : couleur calculee
-         par contraste, jamais collee telle quelle, avec !important pour
-         battre la specificite de la regle de base. */
-      css += '\n.story .txt p b,.story .txt .reinvente,.app-reassure b,.scal-foot b,' +
-        '.change li b,.gamme-notes b,.trust-card li b,.how-foot a' +
-        '{color:' + texteSurCarte + '!important}';
+      css += '\n.step p,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + texteSurCarte + '}';
+      css += '\n.trust-card li b{color:' + texteSurCarte + '!important}';
     }
 
-    /* Questions du FAQ (28/08) : posees sur le fond general de la page (pas
-       une carte a arriere-plan-texte), jamais couvertes -- restaient sur
-       var(--charbon) fige, invisibles des que "Texte" devient clair. */
-    css += '\n.qa button.q{color:' + couleurLisibleSur(fond, texte) + '!important}';
+    /* Texte pose directement sur le fond general de la page (pas une carte
+       a part) : calcule contre "fond", jamais contre arrierePlanTexte. */
+    var texteSurFond = couleurLisibleSur(fond, texte);
+    css += '\n.blk p.lead,.story .txt p,.how-foot,.app-reassure,' +
+      '.scal-foot,.change li,.gamme-notes{color:' + texteSurFond + '}';
+    css += '\n.story .txt p b,.story .txt .reinvente,.app-reassure b,.scal-foot b,' +
+      '.change li b,.gamme-notes b,.how-foot a' +
+      '{color:' + texteSurFond + '!important}';
+
+    /* Questions du FAQ : meme fond general, jamais couvertes avant -- restaient
+       sur var(--charbon) fige, invisibles des que "Texte" devient clair. */
+    css += '\n.qa button.q{color:' + texteSurFond + '!important}';
+
+    /* .mode (cartes "Mode Couleur"/"Mode Photo"...) : fond BLANC FIXE, jamais
+       pilote par la palette -- calcule contre blanc, jamais contre fond ni
+       arrierePlanTexte (c'est exactement le melange qui rendait ce texte
+       invisible). */
+    css += '\n.mode p{color:' + couleurLisibleSur('#ffffff', texte) + '!important}';
 
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
