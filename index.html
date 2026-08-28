@@ -805,11 +805,20 @@
        ne s'adapte pas au mobile, meme limite que BandeauEye en son temps) -- deux sources
        de nouveau, comme BandeauEye2x2/BandeauEye. Remplace temporairement le diaporama
        photo pour jugement en situation ; l'ancien diaporama (8 photos) reste dans
-       l'historique git si on revient en arriere. -->
+       l'historique git si on revient en arriere.
+       28/08/2026 : fond de l'animation passe en transparent (nouvelle regle par defaut du
+       fil Video/Animation) -- le charbon plein qu'on voyait avant venait de la video elle
+       meme, maintenant c'est le fond reel de la page (pilote par la palette maitresse) qui
+       se voit derriere, jamais fige. WebM+alpha en premiere source (seul format qui rend la
+       transparence), repli MP4 opaque juste apres pour Safari qui ne lit pas le WebM du
+       tout (avec ou sans alpha) -- sans transparence dans ce cas precis, comportement
+       attendu et documente par le fil Video/Animation. -->
   <div class="bg-slides" aria-hidden="true">
     <div class="slide on">
       <video class="shot" autoplay muted playsinline>
+        <source media="(max-width:759px)" src="video/quadreti-bandeau-changez-carre-transparent.webm" type="video/webm">
         <source media="(max-width:759px)" src="video/quadreti-bandeau-changez-carre.mp4" type="video/mp4">
+        <source src="video/quadreti-bandeau-changez-transparent.webm" type="video/webm">
         <source src="video/quadreti-bandeau-changez.mp4" type="video/mp4">
       </video>
       <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="" data-image-zone="bandeau">
