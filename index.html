@@ -962,50 +962,6 @@
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <script src="/commun-pied.js"></script>
 
-<script>
-/* Bloc commun — seul JS embarqué : ouverture/fermeture du volet menu
-   (aucune animation en JS, conformément à la consigne CSS pur). */
-(function(){
-  var btn = document.getElementById('qzMenuBtn');
-  var panel = document.getElementById('qzNavPanel');
-  var voile = document.getElementById('qzNavVoile');
-  if(btn && panel){
-    btn.addEventListener('click', function(){
-      var willOpen = !panel.classList.contains('open');
-      if(willOpen && getComputedStyle(panel).position === 'fixed'){
-        var hdr = document.querySelector('.qz-header');
-        if(hdr) panel.style.top = hdr.getBoundingClientRect().bottom + 'px';
-      }
-      panel.classList.toggle('open', willOpen);
-      btn.classList.toggle('active', willOpen);
-      btn.setAttribute('aria-expanded', String(willOpen));
-      btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
-      if(voile) voile.classList.toggle('open', willOpen);
-      if(!willOpen){
-        document.querySelectorAll('.qz-hassub.open').forEach(function(it){
-          it.classList.remove('open');
-          var tog = it.querySelector('.qz-subtoggle');
-          if(tog) tog.setAttribute('aria-expanded','false');
-        });
-      }
-    });
-  }
-  if(voile){
-    voile.addEventListener('click', function(){
-      if(btn) btn.click();
-    });
-  }
-  document.querySelectorAll('.qz-hassub').forEach(function(item){
-    var toggle = item.querySelector('.qz-subtoggle');
-    if(!toggle) return;
-    toggle.addEventListener('click', function(){
-      var open = !item.classList.contains('open');
-      item.classList.toggle('open', open);
-      toggle.setAttribute('aria-expanded', String(open));
-    });
-  });
-})();
-</script>
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
 <script>

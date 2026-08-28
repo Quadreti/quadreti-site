@@ -62,38 +62,56 @@ document.write(
 );
 
 (function(){
-  var btn = document.getElementById('qzMenuBtn');
-  var panel = document.getElementById('qzNavPanel');
-  var voile = document.getElementById('qzNavVoile');
-  if (btn && panel){
-    btn.addEventListener('click', function(){
-      var willOpen = !panel.classList.contains('open');
-      if (willOpen && getComputedStyle(panel).position === 'fixed'){
-        var hdr = document.querySelector('.qz-header');
-        if (hdr) panel.style.top = hdr.getBoundingClientRect().bottom + 'px';
-      }
-      panel.classList.toggle('open', willOpen);
-      btn.classList.toggle('active', willOpen);
-      btn.setAttribute('aria-expanded', String(willOpen));
-      btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
-      if (voile) voile.classList.toggle('open', willOpen);
-      if (!willOpen){
-        document.querySelectorAll('.qz-hassub.open').forEach(function(it){
-          it.classList.remove('open');
-          var tog = it.querySelector('.qz-subtoggle');
-          if (tog) tog.setAttribute('aria-expanded', 'false');
-        });
-      }
-    });
+  /* Delegation sur document pour le burger ET le sous-menu (28/08), meme
+     principe que appliquerMenuLiens dans reglages-site.js.
+     Vrai bug trouve en prod ce jour-la, cause reelle identifiee : 22 pages
+     (index.html, coloriages/*, boutique, blog, 404, guides...) gardaient un
+     VIEUX script "FOOTER COMMUN" (source quadreti-bloc-commun_1.html)
+     attachant DEJA un addEventListener direct sur #qzMenuBtn -- jamais
+     retire quand ce fichier a ete introduit. Sur ces pages, DEUX listeners
+     repondaient au meme clic : l'ancien (direct, target phase) ouvrait le
+     panneau, puis celui-ci (delegue sur document, bubble phase) le revoyait
+     deja ouvert et le refermait aussitot dans le meme clic -- net visible :
+     rien ne semblait se passer. Le vieux script a ete supprime de ces 22
+     pages ; la delegation ici est conservee car saine et deja alignee sur
+     le sous-menu. */
+  function basculerMenu(willOpen){
+    var btn = document.getElementById('qzMenuBtn');
+    var panel = document.getElementById('qzNavPanel');
+    var voile = document.getElementById('qzNavVoile');
+    if (!btn || !panel) return;
+    if (willOpen && getComputedStyle(panel).position === 'fixed'){
+      var hdr = document.querySelector('.qz-header');
+      if (hdr) panel.style.top = hdr.getBoundingClientRect().bottom + 'px';
+    }
+    panel.classList.toggle('open', willOpen);
+    btn.classList.toggle('active', willOpen);
+    btn.setAttribute('aria-expanded', String(willOpen));
+    btn.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+    if (voile) voile.classList.toggle('open', willOpen);
+    if (!willOpen){
+      document.querySelectorAll('.qz-hassub.open').forEach(function(it){
+        it.classList.remove('open');
+        var tog = it.querySelector('.qz-subtoggle');
+        if (tog) tog.setAttribute('aria-expanded', 'false');
+      });
+    }
   }
-  if (voile){ voile.addEventListener('click', function(){ if (btn) btn.click(); }); }
-  document.querySelectorAll('.qz-hassub').forEach(function(item){
-    var toggle = item.querySelector('.qz-subtoggle');
-    if (!toggle) return;
-    toggle.addEventListener('click', function(){
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    if (e.target.closest('#qzMenuBtn')){
+      var panel = document.getElementById('qzNavPanel');
+      basculerMenu(!(panel && panel.classList.contains('open')));
+      return;
+    }
+    if (e.target.closest('#qzNavVoile')){ basculerMenu(false); return; }
+    var toggle = e.target.closest('.qz-subtoggle');
+    if (toggle){
+      var item = toggle.closest('.qz-hassub');
+      if (!item) return;
       var open = !item.classList.contains('open');
       item.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', String(open));
-    });
+    }
   });
 })();

@@ -342,17 +342,12 @@
       }
       return '<li><a href="' + echapper(item.lien) + '">' + echapper(item.texte) + '</a></li>';
     }).join('');
-    if (!panel.dataset.qzMenuDelegue) {
-      panel.dataset.qzMenuDelegue = '1';
-      panel.addEventListener('click', function (e) {
-        var tog = e.target.closest && e.target.closest('.qz-subtoggle');
-        if (!tog) return;
-        var item = tog.closest('.qz-hassub');
-        var open = !item.classList.contains('open');
-        item.classList.toggle('open', open);
-        tog.setAttribute('aria-expanded', String(open));
-      });
-    }
+    /* Delegation du sous-menu retiree d'ici (28/08) : commun-bandeau.js gere
+       desormais TOUS les clics .qz-subtoggle via une delegation sur document
+       (voir son commentaire -- corrige un vrai bug du bouton burger en
+       production). Garder les deux aurait double-bascule le sous-menu
+       (ouvre puis referme aussitot, les deux delegations reagissant au
+       meme clic qui remonte jusqu'a document). */
   }
 
   function appliquerReseaux(r) {
