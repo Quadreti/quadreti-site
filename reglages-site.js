@@ -71,12 +71,12 @@
     var titre = c.titres || c.titre; /* "titres" = nom historique du champ, meme role */
     var sousTitre = c.sousTitre;
     var arrierePlanTexte = c.arrierePlanTexte || c.carte || c.encartFond; /* migration douce depuis les anciens champs */
-    /* c.logo/c.mentionsKraft ajoutes a cette garde (28/08) : sans ca, un
-       reglage fin personnalise seul (aucun autre champ de la palette
-       maitresse touche) faisait sortir la fonction avant meme d'atteindre
-       le CSS qui les applique plus bas -- exactement le genre de silence
-       qui a fait perdre le reglage "Logo" avant ce correctif. */
-    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft) return palette;
+    /* c.logo/c.mentionsKraft/c.boutiqueFond ajoutes a cette garde (28/08) :
+       sans ca, un reglage fin personnalise seul (aucun autre champ de la
+       palette maitresse touche) faisait sortir la fonction avant meme
+       d'atteindre le CSS qui les applique plus bas -- exactement le genre
+       de silence qui a fait perdre le reglage "Logo" avant ce correctif. */
+    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft && !c.boutiqueFond) return palette;
     /* --charbon / --qz-charbon (28/08, correctif racine) : ces deux variables
        ETAIENT reinjectees ici avec la valeur de "Texte" -- pratique tant que
        Texte restait sombre (les deux se confondaient), mais des qu'un theme
@@ -125,6 +125,18 @@
        changement visuel tant que personne n'y touche). */
     var couleurMentions = c.mentionsKraft || '#CBBD93';
     css += '\n.qz-legal .qz-picto{color:' + couleurMentions + '!important}';
+
+    /* Arriere-plan boutique (28/08) : meme bug que Logo ci-dessus, trouve en
+       corrigeant celui-ci -- 3e reglage fin du panneau (ZONES_FINES,
+       "boutiqueFond", repli "fond") jamais applique nulle part. Repli =
+       "fond" = suivre General comme aujourd'hui (deja le cas via le body{
+       background:fond} generique juste au-dessus) : rien a injecter tant
+       que non personnalise. Seul un choix personnalise a besoin d'une regle
+       a part, et seulement sur la page Boutique elle-meme -- jamais sur le
+       reste du site, comme le nom du reglage le precise dans le panneau. */
+    if (c.boutiqueFond && /\/boutique\/(index\.html)?$/.test(location.pathname)) {
+      css += '\nbody{background:' + c.boutiqueFond + '!important}';
+    }
 
     /* Pied de page (28/08) : contrairement au bandeau du haut (deja bien
        gere par appliquerMenuNav, qui pose ses propres couleurs calculees
