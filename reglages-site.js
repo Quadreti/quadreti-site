@@ -71,9 +71,24 @@
     var sousTitre = c.sousTitre;
     var arrierePlanTexte = c.arrierePlanTexte || c.carte || c.encartFond; /* migration douce depuis les anciens champs */
     if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte) return palette;
+    /* --charbon / --qz-charbon (28/08, correctif racine) : ces deux variables
+       ETAIENT reinjectees ici avec la valeur de "Texte" -- pratique tant que
+       Texte restait sombre (les deux se confondaient), mais des qu'un theme
+       choisit un Texte clair (ex. palette "Quadreti", Texte=blanc), ca
+       detourne TOUTE la variable partout sur le site : les ~90 endroits qui
+       posent color:var(--charbon) pour du texte en gras dans des encarts
+       (.how-foot a, .app-reassure b, .trust-card li b, .gamme-notes b...) --
+       et qui attendaient un charbon fixe, pas la couleur de Texte choisie --
+       deviennent blancs sur blanc, invisibles. Meme chose pour les fonds
+       (.carte-pont, .onglet-mode.actif, .face-dos des jeux) qui viraient
+       blancs eux aussi. Retire : --charbon/--qz-charbon redeviennent ce
+       qu'ils ont toujours ete pour le reste du site, une couleur charbon FIXE
+       -- jamais pilotee par Texte. Les endroits qui avaient deja besoin de
+       suivre Texte dynamiquement (bouton, .cta, footer, h2/h3...) le font
+       deja via leurs propres regles plus bas, independantes de --charbon. */
     var css = ':root{' +
-      '--fond:' + fond + ';--charbon:' + texte + ';--terracotta:' + accent + ';' +
-      '--qz-clair:' + fond + ';--qz-charbon:' + texte + ';--qz-terracotta:' + accent + ';' +
+      '--fond:' + fond + ';--terracotta:' + accent + ';' +
+      '--qz-clair:' + fond + ';--qz-terracotta:' + accent + ';' +
       '}\nbody{background:' + fond + ';color:' + texte + '}' +
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
