@@ -27,6 +27,17 @@
 .qz-qlogo i.t{ background:var(--qz-charbon); }
 .qz-qlogo i.a{ background:var(--qz-terracotta); }
 .qz-wordmark{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:16px; color:var(--qz-charbon); white-space:nowrap; }
+/* Logo du bandeau du HAUT +20% (28/08, demande fondateur) : chaque mesure
+   augmentee de 20%, pas un transform:scale -- garde la taille reelle en
+   layout (evite tout chevauchement avec le bouton burger si le bandeau est
+   etroit). Scope a .qz-header uniquement : le pied de page a sa PROPRE
+   taille de logo (8px, plus bas dans ce fichier), pas concerne par cette
+   demande, ne doit pas grossir avec. .qz-dot/.qz-doti utilisent des unites
+   em relatives a la police du mot-symbole : suivent automatiquement. */
+.qz-header .qz-logorow{ gap:9.6px; }
+.qz-header .qz-qlogo{ grid-template-columns:repeat(4,8.4px); grid-template-rows:repeat(4,8.4px); gap:1.68px; }
+.qz-header .qz-qlogo i{ border-radius:1.68px; }
+.qz-header .qz-wordmark{ font-size:19.2px; }
 .qz-doti{ position:relative; display:inline-block; }
 .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
 .qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }

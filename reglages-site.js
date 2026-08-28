@@ -94,6 +94,18 @@
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
 
+    /* Logo du bandeau du haut (tesselles + "Quadretı") : jamais couvert par
+       appliquerMenuNav (qui ne pose que le burger/le panneau) -- restait
+       fige sur var(--qz-charbon), pense a l'origine pour un bandeau clair.
+       Des que General (fond du bandeau, --qz-clair juste au-dessus) devient
+       sombre, logo fonce sur fond fonce = invisible, aucun reglage du
+       panneau ne pouvait le corriger (rien ne le pilotait). Calcule contre
+       le VRAI fond du bandeau, comme le reste ce soir -- blanc si le fond
+       est sombre, retombe sur charbon si le fond redevient clair un jour. */
+    var couleurLogo = couleurLisibleSur(fond, '#ffffff');
+    css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
+      '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
+
     /* Pied de page (28/08) : contrairement au bandeau du haut (deja bien
        gere par appliquerMenuNav, qui pose ses propres couleurs calculees
        PAR-DESSUS la variable --qz-charbon), le pied de page (.qz-basdepage/
