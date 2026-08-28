@@ -212,8 +212,13 @@
   .bascule button:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .bascule button.actif{ background:var(--charbon); border-color:var(--charbon); color:#fff; }
 
-  .zone-cadre{ height:75vh; min-height:460px; padding:0 16px; }
-  iframe{ width:100%; height:100%; border:1px solid var(--bord); border-radius:16px; background:var(--surface); display:block; }
+  /* Iframe pleine largeur, sans liseré (28/08) : le mode decoupe a bascule
+     sur un fond charbon plein ecran -- l'ancien encadrement de l'iframe
+     (padding lateral + coins arrondis + fond blanc) laissait un liseré
+     blanc visible tout autour, incoherent avec ce nouveau fond sombre.
+     Retire, l'iframe colle desormais pleine largeur/hauteur. */
+  .zone-cadre{ height:75vh; min-height:460px; }
+  iframe{ width:100%; height:100%; border:none; background:var(--charbon); display:block; }
 
   /* Socle minimum (CLAUDE.md) : FAQ + bouton de direction + contact. Integre
      au depot du site le 27/08 (dossier mosaique-creative/) -- les liens
