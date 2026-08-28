@@ -1093,6 +1093,14 @@
   var compteurId = 0;
   var compteurZ = 1;
   var selectionId = null;
+  /* Selection multiple (28/08, "Tout selectionner") : liste d'id, vide en usage
+     normal -- l'outil garde son modele de selection simple (selectionId) comme
+     source de verite le reste du temps, cette liste s'active seulement le temps
+     d'une action groupee (Tout selectionner -> deplacer/dupliquer/verrouiller/
+     supprimer ensemble), jamais un vrai systeme de multi-selection au clic
+     (shift-clic, rectangle...) -- hors scope, demanderait de retoucher tout le
+     modele de selection existant pour un besoin plus large que celui exprime. */
+  var selectionMultiple = [];
   var pressePapier = null;
   var cibleFormePhotoCanevas = null;
   var historique = [];
@@ -1118,7 +1126,8 @@
     [].slice.call(canevas.querySelectorAll('.calque')).forEach(function(el){ el.remove(); });
     calques.slice().sort(function(a,b){ return a.z - b.z; }).forEach(function(c){
       var el = document.createElement('div');
-      el.className = 'calque calque-' + c.type + (c.id === selectionId ? ' selectionne' : '') + (c.verrouille ? ' verrouille' : '');
+      var estSelectionne = c.id === selectionId || selectionMultiple.indexOf(c.id) !== -1;
+      el.className = 'calque calque-' + c.type + (estSelectionne ? ' selectionne' : '') + (c.verrouille ? ' verrouille' : '');
       el.style.left = c.x + 'px'; el.style.top = c.y + 'px';
       el.style.width = c.w + 'px'; el.style.height = c.h + 'px';
       el.style.zIndex = c.z;
@@ -1236,6 +1245,14 @@
 
       el.addEventListener('pointerdown', function(e){
         if (e.target.classList.contains('poignee-redim')) return;
+        /* Deplacement groupe (28/08, "Tout selectionner") : si ce calque fait
+           partie de la selection multiple en cours, on deplace TOUS les calques
+           selectionnes ensemble plutot que de revenir a une selection simple. */
+        if (selectionMultiple.length && selectionMultiple.indexOf(c.id) !== -1){
+          if (!c.verrouille) demarrerDeplacementGroupe(e, selectionMultiple.map(function(id){ return calques.find(function(x){ return x.id === id; }); }).filter(Boolean));
+          return;
+        }
+        selectionMultiple = [];
         selectionner(c.id);
         if (!c.verrouille) demarrerDeplacement(e, c);
       });
@@ -1251,11 +1268,12 @@
 
   function selectionner(id){
     selectionId = id;
+    selectionMultiple = [];
     rendreCanevas();
     rendrePanneau();
   }
   canevas.addEventListener('pointerdown', function(e){
-    if (e.target === canevas){ selectionId = null; rendreCanevas(); rendrePanneau(); }
+    if (e.target === canevas){ selectionId = null; selectionMultiple = []; rendreCanevas(); rendrePanneau(); }
   });
 
   /* --- Alignement magnetique : accroche au centre du canevas et au centre
@@ -1301,6 +1319,30 @@
     window.addEventListener('pointermove', surDeplacement);
     window.addEventListener('pointerup', surRelachement);
   }
+  /* Deplacement groupe (28/08, "Tout selectionner" niveau 2) : meme principe que
+     demarrerDeplacement, mais applique le MEME delta a tous les calques du
+     groupe -- pas d'accrochage magnetique ici (concu pour un seul calque a la
+     fois, accrocherait chaque element independamment de facon confuse en
+     groupe). */
+  function demarrerDeplacementGroupe(e, liste){
+    e.stopPropagation();
+    var rect = canevas.getBoundingClientRect();
+    var departX = (e.clientX - rect.left) / niveauZoom, departY = (e.clientY - rect.top) / niveauZoom;
+    var origines = liste.map(function(c){ return { c:c, x:c.x, y:c.y }; });
+    function surDeplacement(ev){
+      var dx = (ev.clientX - rect.left) / niveauZoom - departX;
+      var dy = (ev.clientY - rect.top) / niveauZoom - departY;
+      origines.forEach(function(o){ o.c.x = o.x + dx; o.c.y = o.y + dy; });
+      rendreCanevas();
+    }
+    function surRelachement(){
+      window.removeEventListener('pointermove', surDeplacement);
+      window.removeEventListener('pointerup', surRelachement);
+      pousserHistorique();
+    }
+    window.addEventListener('pointermove', surDeplacement);
+    window.addEventListener('pointerup', surRelachement);
+  }
   function demarrerRedim(e, c){
     e.stopPropagation();
     var rect = canevas.getBoundingClientRect();
@@ -1320,8 +1362,26 @@
 
   /* --- Panneau de proprietes contextuel --- */
   function rendrePanneau(){
-    var c = calqueSelectionne();
     var btnPropsIcone = $('btnPropsIcone');
+    /* Selection multiple (28/08, "Tout selectionner") : panneau simplifie,
+       seulement des actions groupees -- pas l'edition riche par type (couleur,
+       police...) qui n'a de sens que pour un calque precis. */
+    if (selectionMultiple.length){
+      if (btnPropsIcone) btnPropsIcone.disabled = false;
+      panneauProps.innerHTML =
+        '<div class="champ-mini"><label>' + selectionMultiple.length + ' éléments sélectionnés</label></div>' +
+        '<p class="note" style="margin:0 0 10px">Glissez l\'un des éléments sélectionnés pour les déplacer ensemble.</p>' +
+        '<div class="colonne">' +
+          '<button class="btn secondaire" id="propGroupeDupliquer">Dupliquer tout</button>' +
+          '<button class="btn secondaire" id="propGroupeVerrou">Verrouiller / déverrouiller tout</button>' +
+          '<button class="btn danger" id="propGroupeSupprimer">Supprimer tout</button>' +
+        '</div>';
+      $('propGroupeDupliquer').onclick = actionGroupeDupliquer;
+      $('propGroupeVerrou').onclick = actionGroupeVerrou;
+      $('propGroupeSupprimer').onclick = actionGroupeSupprimer;
+      return;
+    }
+    var c = calqueSelectionne();
     if (!c){
       panneauProps.innerHTML = '<div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>';
       if (btnPropsIcone){ btnPropsIcone.disabled = true; btnPropsIcone.classList.remove('actif'); var pp = $('popProps'); if (pp) pp.classList.remove('ouvert'); }
@@ -1432,6 +1492,40 @@
   }
   function actionRetourner(c){ c.retourne = !c.retourne; rendreCanevas(); pousserHistorique(); }
   function actionTourner(c, delta){ c.rotation = ((c.rotation || 0) + delta + 360) % 360; rendreCanevas(); rendrePanneau(); pousserHistorique(); }
+  /* Tout selectionner (28/08) : ignore quel calque a ete clique pour ouvrir le
+     menu contextuel (le run() des actions du registre recoit toujours un
+     calque cible, ici simplement pas utilise) -- selectionne tous les calques
+     a la fois pour une action groupee (deplacer/dupliquer/verrouiller/
+     supprimer ensemble), pas une vraie multi-selection au clic. */
+  function actionToutSelectionner(){
+    if (!calques.length) return;
+    selectionMultiple = calques.map(function(c){ return c.id; });
+    selectionId = null;
+    rendreCanevas();
+    rendrePanneau();
+  }
+  function actionGroupeDupliquer(){
+    var copies = selectionMultiple.map(function(id){ return calques.find(function(c){ return c.id === id; }); }).filter(Boolean).map(function(c){
+      return Object.assign({}, c, { id:creerId(), x:c.x + 16, y:c.y + 16, z:++compteurZ, verrouille:false });
+    });
+    calques = calques.concat(copies);
+    selectionMultiple = copies.map(function(c){ return c.id; });
+    rendreCanevas(); rendrePanneau();
+    pousserHistorique();
+  }
+  function actionGroupeVerrou(){
+    var cibles = selectionMultiple.map(function(id){ return calques.find(function(c){ return c.id === id; }); }).filter(Boolean);
+    var toutVerrouille = cibles.every(function(c){ return c.verrouille; });
+    cibles.forEach(function(c){ c.verrouille = !toutVerrouille; });
+    rendreCanevas(); rendrePanneau();
+    pousserHistorique();
+  }
+  function actionGroupeSupprimer(){
+    calques = calques.filter(function(c){ return selectionMultiple.indexOf(c.id) === -1; });
+    selectionMultiple = [];
+    rendreCanevas(); rendrePanneau();
+    pousserHistorique();
+  }
   function actionAvancer(c){ c.z += 1.5; rendreCanevas(); pousserHistorique(); }
   function actionReculer(c){ c.z -= 1.5; rendreCanevas(); pousserHistorique(); }
   function actionPremierPlan(c){ c.z = ++compteurZ; rendreCanevas(); pousserHistorique(); }
@@ -1688,6 +1782,7 @@
     historiqueIndex--;
     calques = JSON.parse(JSON.stringify(historique[historiqueIndex]));
     selectionId = null;
+    selectionMultiple = [];
     rendreCanevas(); rendrePanneau(); majBoutonsHistorique();
   }
   function retablir(){
@@ -1695,6 +1790,7 @@
     historiqueIndex++;
     calques = JSON.parse(JSON.stringify(historique[historiqueIndex]));
     selectionId = null;
+    selectionMultiple = [];
     rendreCanevas(); rendrePanneau(); majBoutonsHistorique();
   }
   function majBoutonsHistorique(){
@@ -1766,6 +1862,7 @@
     'dupliquer': { label:'Dupliquer', run:function(c){ actionDupliquer(c); } },
     'copier': { label:'Copier', run:function(c){ actionCopier(c); } },
     'coller': { label:'Coller', run:function(){ actionColler(); }, desactive:function(){ return !pressePapier; } },
+    'toutSelectionner': { label:'Tout sélectionner', run:function(){ actionToutSelectionner(); }, desactive:function(){ return !calques.length; } },
     'supprimer': { label:'Supprimer', run:function(c){ actionSupprimer(c); }, danger:true },
     'verrou': { label:'Verrouiller', run:function(c){ actionVerrou(c); },
       libelleDyn:function(c){ return c.verrouille ? 'Déverrouiller' : 'Verrouiller'; } },
@@ -1794,6 +1891,7 @@
       { id:'dupliquer', actif:true },
       { id:'copier', actif:true },
       { id:'coller', actif:true },
+      { id:'toutSelectionner', actif:true },
       { id:'supprimer', actif:true, verrouille:true }
     ]},
     { id:'protection', label:'Protection', items:[
