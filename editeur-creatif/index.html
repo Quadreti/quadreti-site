@@ -186,18 +186,65 @@
   .qz-fab:hover svg{ stroke:var(--qz-creme); }
 </style>
 <style>
-  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
+  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --doux-sombre:#b9c0c7; --teinte-actif:#e2725b12; }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
+  /* 28/08 : theme sombre harmonise avec Mosaique Creative (meme refonte) --
+     seul le fond de PAGE (body) et le texte courant passent en charbon/creme.
+     Les cartes/popovers/menu contextuel restent sur --surface (blanc), comme
+     sur Mosaique -- ce sont des elements poses PAR-DESSUS le fond sombre,
+     jamais eux-memes sombres (deja le cas avant ce correctif, aucun changement
+     necessaire sur --surface/--papier). */
+  body{ margin:0; background:var(--charbon); color:var(--creme); font-family:'Karla',sans-serif; }
   h1,h2,h3{ font-family:'Quicksand',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 10px; font-weight:600; }
   h1.titre{ font-size:clamp(22px,4vw,30px); line-height:1.15; margin:0 0 8px; }
-  p.accroche{ font-size:13.5px; color:var(--doux); max-width:60ch; margin:0 auto; line-height:1.55; }
+  p.accroche{ font-size:13.5px; color:var(--doux-sombre); max-width:60ch; margin:0 auto; line-height:1.55; }
 
-  .atelier{ max-width:1180px; margin:20px auto 60px; padding:0 20px; display:grid; grid-template-columns:180px 1fr 250px; gap:16px; align-items:start; }
-  @media (max-width:1000px){ .atelier{ grid-template-columns:1fr; } }
+  /* ================= Rails d'icones (28/08, meme base que Mosaique) =================
+     Les 4 cartes empilees (Format/Inserer/Composition/Clic droit) + le panneau
+     Propriétés deviennent des icones individuelles sur deux rails verticaux de
+     part et d'autre du canevas, chacune ouvrant son propre popover par-dessus
+     le canevas (jamais de tiroir qui pousse le contenu). Tout le contenu des
+     popovers est repris tel quel (memes id, meme JS) -- seul le conteneur
+     visuel change. */
+  .atelier{ max-width:1180px; margin:20px auto 60px; padding:0 20px; }
+  .rangee-atelier{
+    display:grid; grid-template-columns:56px 1fr 56px; align-items:stretch;
+    border:1px solid #ffffff1c; background:var(--charbon); box-shadow:0 20px 50px -30px #00000088;
+  }
+  @media (max-width:760px){ .rangee-atelier{ grid-template-columns:48px 1fr 48px; } }
+
+  .rail{ display:flex; flex-direction:column; align-items:center; padding:14px 0; gap:10px; }
+  .rail-gauche, .rail-droite{ justify-content:space-between; }
+  .rail .groupe-haut{ display:flex; flex-direction:column; gap:10px; }
+  .rail .groupe-bas{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+
+  .icone-outil-conteneur{ position:relative; }
+  .icone-outil{
+    width:34px; height:34px; border-radius:9px; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:transform .12s ease, opacity .12s ease;
+    background:var(--terracotta); color:#fff;
+  }
+  .icone-outil:hover{ opacity:.9; }
+  .icone-outil:active{ transform:scale(.94); }
+  .icone-outil.kraft{ background:var(--kraft); color:var(--charbon); }
+  .icone-outil svg{ width:17px; height:17px; }
+  .icone-outil.actif{ outline:2px solid var(--creme); outline-offset:2px; }
+  .icone-outil:disabled{ opacity:.35; cursor:not-allowed; }
+
+  .popover-outil{
+    position:absolute; top:0; width:220px; background:var(--surface); color:var(--texte);
+    border-radius:12px; box-shadow:0 18px 44px -14px #00000066; padding:14px; display:none; z-index:210;
+  }
+  .rail-gauche .popover-outil{ left:44px; }
+  .rail-droite .popover-outil{ right:44px; }
+  .popover-outil.popover-bas{ top:auto; bottom:0; }
+  .popover-outil.ouvert{ display:block; }
+  .popover-outil h3{ font-family:'Quicksand',sans-serif; font-size:12px; font-weight:700; margin:0 0 10px; text-transform:uppercase; letter-spacing:.03em; color:var(--doux); }
+
+  .zone-travail{ display:flex; justify-content:center; align-items:center; padding:22px; }
 
   .colonne{ display:flex; flex-direction:column; gap:10px; }
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
@@ -223,7 +270,6 @@
   .btn-sticker{ aspect-ratio:1; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; }
   .btn-sticker:hover{ border-color:var(--terracotta); }
 
-  .zone-travail{ display:flex; justify-content:center; }
   .canevas-cadre{ background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:16px; box-shadow:0 20px 50px -30px #2b353e55; }
   .canevas{ position:relative; width:min(560px,80vw); aspect-ratio:1/1; background:repeating-conic-gradient(#0000 0 25%, #2b353e08 0 50%) 0 0/20px 20px; border:1px solid var(--bord); border-radius:8px; overflow:hidden; touch-action:none; }
 
@@ -458,59 +504,92 @@
 </section>
 
 <div class="atelier">
-  <div class="colonne">
-    <div class="carte">
-      <div class="label">Format (cm)</div>
-      <div class="grille-formats" id="grilleFormats">
-        <button class="btn-format actif" data-taille="20">20×20</button>
-        <button class="btn-format" data-taille="40">40×40</button>
-        <button class="btn-format" data-taille="60">60×60</button>
-        <button class="btn-format" data-taille="80">80×80</button>
-        <button class="btn-format" data-taille="100">100×100</button>
+  <div class="rangee-atelier">
+    <div class="rail rail-gauche">
+      <div class="groupe-haut">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil kraft" title="Insérer" data-cible="popInserer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="popover-outil" id="popInserer">
+            <h3>Insérer</h3>
+            <div class="colonne">
+              <label class="btn secondaire">Photo<input type="file" id="fichierPhoto" accept="image/*"></label>
+              <button class="btn secondaire" id="btnAjouterTexte">Texte</button>
+              <button class="btn secondaire" id="btnBascculerStickers">Sticker</button>
+              <button class="btn secondaire" id="btnBasculerFormes">Forme</button>
+            </div>
+            <div class="grille-stickers" id="grilleStickers"></div>
+            <div class="grille-formes" id="grilleFormes"></div>
+          </div>
+        </div>
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" title="Historique &amp; composition" data-cible="popHistorique">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
+          </button>
+          <div class="popover-outil" id="popHistorique">
+            <h3>Historique</h3>
+            <div class="rang-btn2" style="margin-bottom:8px">
+              <button class="btn secondaire" id="btnAnnuler" title="Ctrl+Z" disabled>↺ Annuler</button>
+              <button class="btn secondaire" id="btnRetablir" title="Ctrl+Maj+Z" disabled>↻ Rétablir</button>
+            </div>
+            <div class="colonne">
+              <button class="btn secondaire" id="btnEnregistrer">Enregistrer</button>
+              <button class="btn danger" id="btnEffacer">Tout effacer</button>
+            </div>
+            <p class="note" id="etatSauvegarde" style="margin-top:8px"></p>
+          </div>
+        </div>
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil kraft" title="Personnaliser le clic droit" data-cible="popClicDroit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6l9 3-4 2-2 4-3-9z"/></svg>
+          </button>
+          <div class="popover-outil" id="popClicDroit">
+            <h3>Clic droit</h3>
+            <button class="btn secondaire" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
+          </div>
+        </div>
+      </div>
+      <div class="groupe-bas">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil kraft" title="Format" data-cible="popFormat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/></svg>
+          </button>
+          <div class="popover-outil popover-bas" id="popFormat">
+            <h3>Format (cm)</h3>
+            <div class="grille-formats" id="grilleFormats">
+              <button class="btn-format actif" data-taille="20">20×20</button>
+              <button class="btn-format" data-taille="40">40×40</button>
+              <button class="btn-format" data-taille="60">60×60</button>
+              <button class="btn-format" data-taille="80">80×80</button>
+              <button class="btn-format" data-taille="100">100×100</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="carte">
-      <div class="label">Insérer</div>
-      <div class="colonne">
-        <label class="btn secondaire">Photo<input type="file" id="fichierPhoto" accept="image/*"></label>
-        <button class="btn secondaire" id="btnAjouterTexte">Texte</button>
-        <button class="btn secondaire" id="btnBascculerStickers">Sticker</button>
-        <button class="btn secondaire" id="btnBasculerFormes">Forme</button>
-      </div>
-      <div class="grille-stickers" id="grilleStickers"></div>
-      <div class="grille-formes" id="grilleFormes"></div>
-    </div>
-    <div class="carte">
-      <div class="label">Composition</div>
-      <div class="rang-btn2" style="margin-bottom:8px">
-        <button class="btn secondaire" id="btnAnnuler" title="Ctrl+Z" disabled>↺ Annuler</button>
-        <button class="btn secondaire" id="btnRetablir" title="Ctrl+Maj+Z" disabled>↻ Rétablir</button>
-      </div>
-      <div class="colonne">
-        <button class="btn secondaire" id="btnEnregistrer">Enregistrer</button>
-        <button class="btn danger" id="btnEffacer">Tout effacer</button>
-      </div>
-      <p class="note" id="etatSauvegarde" style="margin-top:8px"></p>
-    </div>
-    <div class="carte">
-      <div class="label">Clic droit</div>
-      <button class="btn secondaire" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
-    </div>
-  </div>
 
-  <div class="zone-travail">
-    <div class="canevas-cadre">
-      <div class="canevas" id="canevas">
-        <div class="repere-alignement vertical" id="repereV"></div>
-        <div class="repere-alignement horizontal" id="repereH"></div>
-        <div class="repere-tuiles" id="repereTuiles"></div>
+    <div class="zone-travail">
+      <div class="canevas-cadre">
+        <div class="canevas" id="canevas">
+          <div class="repere-alignement vertical" id="repereV"></div>
+          <div class="repere-alignement horizontal" id="repereH"></div>
+          <div class="repere-tuiles" id="repereTuiles"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="colonne">
-    <div class="carte panneau-props" id="panneauProps">
-      <div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>
+    <div class="rail rail-droite">
+      <div class="icone-outil-conteneur">
+        <button class="icone-outil" id="btnPropsIcone" title="Propriétés" data-cible="popProps" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+        <div class="popover-outil" id="popProps">
+          <div class="carte panneau-props" id="panneauProps" style="border:none;padding:0">
+            <div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1153,7 +1232,13 @@
   /* --- Panneau de proprietes contextuel --- */
   function rendrePanneau(){
     var c = calqueSelectionne();
-    if (!c){ panneauProps.innerHTML = '<div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>'; return; }
+    var btnPropsIcone = $('btnPropsIcone');
+    if (!c){
+      panneauProps.innerHTML = '<div class="vide">Sélectionnez un élément sur le canevas pour le modifier.</div>';
+      if (btnPropsIcone){ btnPropsIcone.disabled = true; btnPropsIcone.classList.remove('actif'); var pp = $('popProps'); if (pp) pp.classList.remove('ouvert'); }
+      return;
+    }
+    if (btnPropsIcone) btnPropsIcone.disabled = false;
 
     var html = '';
     if (c.type === 'texte'){
@@ -1840,6 +1925,43 @@
   rendreCanevas();
   rendrePanneau();
   pousserHistorique();
+})();
+</script>
+
+<!-- ================= Rails d'icones : ouverture/fermeture des popovers =================
+     Meme mecanique generique que Mosaique Creative (mode decoupe) : un seul
+     script pour toutes les icones du rail, chacune identifiee par data-cible.
+     Volontairement dans un bloc de script separe, independant du gros bloc
+     au-dessus (aucune collision de nom, aucune dependance a son ordre d'execution). -->
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){ return document.getElementById(id); };
+  var OUTILS = Array.prototype.slice.call(document.querySelectorAll('.icone-outil[data-cible]')).map(function(bouton){
+    return { bouton: bouton, popover: $(bouton.dataset.cible) };
+  });
+
+  function fermerTousLesOutils(){
+    OUTILS.forEach(function(o){ o.bouton.classList.remove('actif'); if (o.popover) o.popover.classList.remove('ouvert'); });
+  }
+  function ouvrirOutil(o){
+    fermerTousLesOutils();
+    o.bouton.classList.add('actif');
+    if (o.popover) o.popover.classList.add('ouvert');
+  }
+  OUTILS.forEach(function(o){
+    o.bouton.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (o.bouton.disabled) return;
+      var etaitOuvert = o.popover && o.popover.classList.contains('ouvert');
+      if (etaitOuvert) fermerTousLesOutils(); else ouvrirOutil(o);
+    });
+  });
+  document.addEventListener('pointerdown', function(e){
+    var dansUnPopover = e.target.closest('.popover-outil, .icone-outil');
+    if (!dansUnPopover) fermerTousLesOutils();
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') fermerTousLesOutils(); });
 })();
 </script>
 </body>
