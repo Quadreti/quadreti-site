@@ -125,7 +125,11 @@
   li.qz-hassub.open .qz-subtoggle .qz-chev{ transform:rotate(180deg); }
   li.qz-hassub.open .qz-subtoggle{ color:var(--qz-creme); }
   .qz-sublist{ list-style:none; margin:0; padding:0; max-height:0; overflow:hidden; transition:max-height .25s ease; background:#37434e; border-radius:10px; display:flex; flex-direction:column; justify-content:center; }
-  li.qz-hassub.open .qz-sublist{ max-height:120px; margin-bottom:4px; }
+  /* max-height augmentee (28/08) : figee a 120px, ne suffisait plus pour le
+     sous-menu "Jeux & Creativite" (6 liens, ~216px reels) -- les derniers
+     etaient coupes par l'overflow:hidden. Relevee avec de la marge pour
+     l'ajout futur d'un lien sans re-tronquer. */
+  li.qz-hassub.open .qz-sublist{ max-height:400px; margin-bottom:4px; }
   .qz-sublist li{ max-width:none !important; }
   .qz-sublist a{ font-size:12.5px; font-weight:600; color:#9aa2a9; padding:8px 0; }
   .qz-sublist a:hover{ color:var(--qz-terracotta); }
