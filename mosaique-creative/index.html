@@ -48,10 +48,25 @@
     --qz-clair:#F5F5F5;
     --qz-sombre:#1f272e;
   }
+  /* Bascule de mode integree au bandeau (28/08, demande explicite) : au
+     centre entre logo et burger -- grille passee a 3 colonnes/zones nommees
+     (etait 1fr auto, le logo prenait toute la place restante). Titre+texte
+     de presentation retires (redondants avec la bascule elle-meme). Zones
+     nommees plutot que simple ordre de colonnes : permet de repasser sur 2
+     lignes en dessous de 640px (logo+burger en haut, bascule en dessous)
+     sans quoi logo+3 boutons+burger ne tiennent pas sur un ecran de
+     telephone (verifie : ~590px necessaires au minimum). */
   .qz-header{
     width:100%; background:var(--qz-clair); border-bottom:1px solid #2b353e14;
-    padding:14px 32px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px;
+    padding:14px 32px; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px;
+    grid-template-areas:"logo bascule burger";
     position:relative; z-index:60; box-sizing:border-box;
+  }
+  .qz-logorow{ grid-area:logo; }
+  .qz-burger{ grid-area:burger; }
+  @media (max-width:640px){
+    .qz-header{ grid-template-columns:1fr auto; grid-template-areas:"logo burger" "bascule bascule"; row-gap:12px; }
+    .bascule{ flex-wrap:wrap; }
   }
   .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
   .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
@@ -190,9 +205,6 @@
   *{ box-sizing:border-box; }
   body{ margin:0; background:var(--papier); color:var(--charbon); font-family:'Karla',sans-serif; }
 
-  .entete-outil{ text-align:center; padding:18px 20px 12px; flex-shrink:0; }
-  h1{ font-family:'Quicksand',sans-serif; font-size:clamp(19px,3.4vw,25px); margin:0 0 4px; }
-  .entete-outil p{ font-size:12.5px; color:var(--doux); margin:0; }
 
   /* Bascule de mode -- deux fichiers deja construits/verifies independamment
      (mode decoupe = Canvas, bibliotheque de scenes = Canvas depuis ce soir),
@@ -203,14 +215,14 @@
      rien retoucher a ce qui est deja verifie. Limite assumee : changer de
      mode recharge le cadre, la composition en cours dans l'autre mode n'est
      pas conservee -- pas de partage d'etat entre les deux pour l'instant. */
-  .bascule{ display:flex; justify-content:center; gap:6px; padding:0 20px 16px; flex-shrink:0; }
+  .bascule{ display:flex; justify-content:center; gap:6px; justify-self:center; grid-area:bascule; }
   .bascule button{
-    font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer;
-    border:1.5px solid var(--bord); background:var(--surface); color:var(--doux);
-    border-radius:99px; padding:9px 20px; transition:border-color .15s, color .15s, background .15s;
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer;
+    border:none; background:var(--terracotta); color:#fff;
+    border-radius:99px; padding:7px 16px; transition:background .15s, opacity .15s;
   }
-  .bascule button:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .bascule button.actif{ background:var(--charbon); border-color:var(--charbon); color:#fff; }
+  .bascule button:hover{ background:#c85f49; }
+  .bascule button.actif{ background:var(--charbon); color:#fff; }
 
   /* Iframe pleine largeur, sans liseré (28/08) : le mode decoupe a bascule
      sur un fond charbon plein ecran -- l'ancien encadrement de l'iframe
@@ -275,6 +287,13 @@
     </span>
     <img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">
   </a>
+
+  <div class="bascule" role="tablist" aria-label="Choisir le mode">
+    <button class="actif" id="btnModeDecoupe" role="tab" aria-selected="true">Mode découpe</button>
+    <button id="btnModeScenes" role="tab" aria-selected="false">Bibliothèque de scènes</button>
+    <button id="btnModeGuide" role="tab" aria-selected="false">Guide interactif</button>
+  </div>
+
   <button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">
     <span></span><span></span><span></span>
   </button>
@@ -315,17 +334,6 @@
   </ul>
 </nav>
 <div class="qz-nav-voile" id="qzNavVoile"></div>
-
-<header class="entete-outil">
-  <h1>Mosaïque Créative</h1>
-  <p>Deux façons de composer : des pièces qui se découpent entre elles, ou une scène déjà prête à colorier.</p>
-</header>
-
-<div class="bascule" role="tablist" aria-label="Choisir le mode">
-  <button class="actif" id="btnModeDecoupe" role="tab" aria-selected="true">Mode découpe</button>
-  <button id="btnModeScenes" role="tab" aria-selected="false">Bibliothèque de scènes</button>
-  <button id="btnModeGuide" role="tab" aria-selected="false">Guide interactif</button>
-</div>
 
 <div class="zone-cadre">
   <iframe id="cadre" title="Mosaïque Créative"></iframe>
