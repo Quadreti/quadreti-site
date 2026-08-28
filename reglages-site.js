@@ -10,6 +10,7 @@
 
   var DEFAUTS = {
     couleurs: { theme: 'actuel', fond: '#F5F5F5', texte: '#2b353e', accent: '#e2725b', survol: '#cf6450' },
+    couleursJeux: { fondJeu: '#2B353E', carteJeu: '#FFFFFF', accentJeu: '#E2725B', texteJeu: '#F2EEDF' },
     polices: { titres: 'Quicksand', texte: 'Karla' }
   };
 
@@ -167,6 +168,30 @@
     }
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
+  }
+
+  /* Palette Jeux (28/08) : les mini-jeux (Memo, Taquin, Mandala, Pixel Number,
+     Set, Mosaique Revelee) ont deliberement leurs propres couleurs, distinctes
+     de l'identite du site (memoire projet-quadreti-... "couleurs vives pour le
+     gameplay, pas la palette de marque"). Avant ce correctif, ces couleurs
+     etaient codees en dur, identiques mot pour mot, dans les 6 pages -- toute
+     retouche demandait de modifier 6 fichiers a la main. Meme mecanique que
+     appliquerCouleurs, mais sur les variables partagees par ces 6 pages
+     (--charbon/--surface/--terracotta/--creme) et seulement sur ces pages :
+     jamais applique ailleurs, pour ne pas recreer la confusion du matin. */
+  var PAGES_JEUX = ['/memo/', '/taquin/', '/mandala/', '/pixel-number/', '/set/', '/mosaique-revelee/'];
+  function estPageJeu() {
+    return PAGES_JEUX.some(function (p) { return location.pathname.indexOf(p) !== -1; });
+  }
+  function appliquerCouleursJeux(cj) {
+    if (!estPageJeu()) return;
+    var d = DEFAUTS.couleursJeux;
+    var fondJeu = (cj && cj.fondJeu) || d.fondJeu;
+    var carteJeu = (cj && cj.carteJeu) || d.carteJeu;
+    var accentJeu = (cj && cj.accentJeu) || d.accentJeu;
+    var texteJeu = (cj && cj.texteJeu) || d.texteJeu;
+    var css = ':root{--charbon:' + fondJeu + ';--surface:' + carteJeu + ';--terracotta:' + accentJeu + ';--creme:' + texteJeu + ';}';
+    injecterStyle('qz-reglages-couleurs-jeux', css);
   }
 
   function appliquerSeo(s) {
@@ -832,6 +857,7 @@
     var c = g.couleurs || {};
     var sec = c.sections || {};
     var palette = appliquerCouleurs(c);
+    appliquerCouleursJeux(g.couleurs_jeux);
     appliquerMenuNav(g.menu_nav, palette, sec.bandeau !== false);
     appliquerMenuLiens(g.menu_liens);
     appliquerHeroBaseline(g.hero_baseline, palette, sec.accueil !== false);

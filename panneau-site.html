@@ -383,6 +383,7 @@ dimensionnerIframe();
 var GROUPES = [
   { nom:'Identité visuelle', items:[
     { id:'palette', label:'Palette maîtresse', reel:true },
+    { id:'palette_jeux', label:'Palette Jeux', reel:true },
     { id:'polices', label:'Polices', reel:true },
     { id:'logo', label:'Logo', reel:true },
     { id:'baselines', label:'Baselines', reel:true },
@@ -460,6 +461,7 @@ function afficherSection(id){
   if (id === 'styles_sections') { rendreSectionStyles(); return; }
   if (id === 'reseaux_liste') { rendreSectionReseaux(); return; }
   if (id === 'palette') { rendreSectionPalette(); return; }
+  if (id === 'palette_jeux') { rendreSectionPaletteJeux(); return; }
   if (id === 'polices') { rendreSectionPolices(); return; }
   if (id === 'logo') { rendreSectionLogo(); return; }
   if (id === 'baselines') { rendreSectionBaselines(); return; }
@@ -838,6 +840,52 @@ function rendreSectionPalette(){
     enregistrer('couleurs', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les couleurs'; chargerHistorique('couleurs', 'histo-couleurs', rendreSectionPalette); });
   };
   chargerHistorique('couleurs', 'histo-couleurs', rendreSectionPalette);
+}
+
+/* Palette Jeux (28/08) : Mémo, Taquin, Mandala, Pixel Number, Set, Mosaïque
+   Révélée ont volontairement des couleurs à part de l'identité du site
+   (gameplay vif, pas la marque) -- mais avant ce correctif, ces couleurs
+   étaient codées en dur, à l'identique, dans les 6 fichiers : aucun réglage
+   possible sans modifier chaque page à la main. Même mécanique que la palette
+   maîtresse (clé dédiée `couleurs_jeux`, appliquée par reglages-site.js
+   uniquement sur ces 6 pages), volontairement réduite à 4 champs -- pas de
+   thème, pas de zones fines, pas de palettes mémorisées : ce sont des
+   couleurs de gameplay, pas une identité à décliner. */
+function rendreSectionPaletteJeux(){
+  var cj = Object.assign({ fondJeu:'#2B353E', carteJeu:'#FFFFFF', accentJeu:'#E2725B', texteJeu:'#F2EEDF' }, reglages.couleurs_jeux || {});
+
+  $('editeur').innerHTML =
+    '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Palette Jeux</b></p>' +
+    '<h1 class="titre-section">Palette Jeux</h1>' +
+    '<p class="aide-section">S\'applique à Mémo, Taquin, Mandala, Pixel Number, Set et Mosaïque Révélée — volontairement à part de la Palette maîtresse du site.</p>' +
+
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Couleurs</h2></div>' +
+      '<div class="grille-champs">' +
+        '<div class="champ"><label>Fond de jeu</label><div class="rang-couleur"><input type="color" id="cjFondJeu" value="' + cj.fondJeu + '"><code id="cjFondJeuHex">' + cj.fondJeu + '</code></div></div>' +
+        '<div class="champ"><label>Carte</label><div class="rang-couleur"><input type="color" id="cjCarteJeu" value="' + cj.carteJeu + '"><code id="cjCarteJeuHex">' + cj.carteJeu + '</code></div></div>' +
+        '<div class="champ"><label>Accent de jeu</label><div class="rang-couleur"><input type="color" id="cjAccentJeu" value="' + cj.accentJeu + '"><code id="cjAccentJeuHex">' + cj.accentJeu + '</code></div></div>' +
+        '<div class="champ"><label>Texte de jeu</label><div class="rang-couleur"><input type="color" id="cjTexteJeu" value="' + cj.texteJeu + '"><code id="cjTexteJeuHex">' + cj.texteJeu + '</code></div></div>' +
+      '</div>' +
+      '<div class="pied-carte"><div class="historique" id="histo-couleurs-jeux"></div><button class="btn-enregistrer" id="cjEnregistrer">Enregistrer les couleurs</button></div>' +
+    '</div>';
+
+  function draft(){
+    return {
+      fondJeu: $('cjFondJeu').value, carteJeu: $('cjCarteJeu').value,
+      accentJeu: $('cjAccentJeu').value, texteJeu: $('cjTexteJeu').value
+    };
+  }
+  function previsualiser(){ envoyerApercu('couleurs_jeux', draft()); }
+
+  ['cjFondJeu','cjCarteJeu','cjAccentJeu','cjTexteJeu'].forEach(function(id){
+    $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
+  });
+  $('cjEnregistrer').onclick = function(){
+    var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
+    enregistrer('couleurs_jeux', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer les couleurs'; chargerHistorique('couleurs_jeux', 'histo-couleurs-jeux', rendreSectionPaletteJeux); });
+  };
+  chargerHistorique('couleurs_jeux', 'histo-couleurs-jeux', rendreSectionPaletteJeux);
 }
 
 var POLICES_DISPONIBLES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
