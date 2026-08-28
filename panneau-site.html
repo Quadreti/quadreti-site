@@ -807,6 +807,13 @@ function rendreSectionPalette(){
       if (pc.texte) { $('cTexte').value = pc.texte; $('cTexteHex').textContent = pc.texte; }
       if (pc.accent) { $('cAccent').value = pc.accent; $('cAccentHex').textContent = pc.accent; }
       if (pc.survol) { $('cSurvol').value = pc.survol; $('cSurvolHex').textContent = pc.survol; }
+      // 4 champs maitres plus recents (28/08) -- absents des palettes memorisees
+      // avant ce correctif, chargees seulement si presentes pour ne rien ecraser
+      // par du vide sur une ancienne palette qui ne les avait pas encore.
+      if (pc.titres) { $('cTitre').value = pc.titres; $('cTitreHex').textContent = pc.titres; }
+      if (pc.sousTitre) { $('cSousTitre').value = pc.sousTitre; $('cSousTitreHex').textContent = pc.sousTitre; }
+      if (pc.bouton) { $('cBouton').value = pc.bouton; $('cBoutonHex').textContent = pc.bouton; }
+      if (pc.arrierePlanTexte) { $('cArrierePlanTexte').value = pc.arrierePlanTexte; $('cArrierePlanTexteHex').textContent = pc.arrierePlanTexte; }
       toast('Palette « ' + (p.nom || '') + ' » chargée dans le formulaire — Enregistrer pour l\'appliquer.');
       previsualiser();
     };
@@ -816,7 +823,14 @@ function rendreSectionPalette(){
     if (!nom) { toast('Donnez un nom à cette composition.', true); return; }
     var slot = $('memSlot').value;
     var nouvelles = Object.assign({}, palettesMemorisees);
-    nouvelles[slot] = { nom: nom, couleurs: { theme: document.querySelector('input[name=cTheme]:checked').value, fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value } };
+    // 4 champs maitres inclus (28/08) -- une palette memorisee omettait
+    // jusque-la Titre/Sous-titre/Bouton/Arriere-plan texte, silencieusement
+    // perdus au chargement d'une composition sauvegardee.
+    nouvelles[slot] = { nom: nom, couleurs: {
+      theme: document.querySelector('input[name=cTheme]:checked').value,
+      fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value,
+      titres: $('cTitre').value, sousTitre: $('cSousTitre').value, bouton: $('cBouton').value, arrierePlanTexte: $('cArrierePlanTexte').value
+    } };
     enregistrer('palettes', nouvelles).then(function(){ $('memNom').value = ''; rendreSectionPalette(); });
   };
   $('cEnregistrer').onclick = function(){
