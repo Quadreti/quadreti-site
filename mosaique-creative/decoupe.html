@@ -40,20 +40,24 @@
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
+  body{ margin:0; background:var(--charbon); color:var(--creme); font-family:'Karla',sans-serif; }
   h1,h2,h3{ font-family:'Quicksand',sans-serif; }
 
-  .hero{ max-width:1000px; margin:0 auto; padding:24px 24px 4px; text-align:center; }
-  .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 8px; font-weight:600; }
-  h1.titre{ font-size:clamp(20px,4vw,27px); line-height:1.15; margin:0 0 6px; }
-  p.accroche{ font-size:13px; color:var(--doux); max-width:64ch; margin:0 auto; line-height:1.5; }
+  /* Titre retire de la page (28/08, demande du fondateur) : sera porte par
+     le bandeau superieur du site lors de l'integration, pas duplique ici --
+     gagne aussi la hauteur qu'occupait le hero. */
+  .aide-intro{ font-size:12.5px; color:var(--doux); line-height:1.5; margin:0 0 14px; padding-bottom:12px; border-bottom:1px solid var(--bord); }
 
-  .atelier{ max-width:1180px; margin:18px auto 60px; padding:0 20px; display:grid; grid-template-columns:190px 1fr; gap:16px; align-items:start; }
-  @media (max-width:800px){ .atelier{ grid-template-columns:1fr; } }
-
-  .colonne{ display:flex; flex-direction:column; gap:10px; }
-  .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
-  .carte .label{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:8px; }
+  /* Marges/paddings resserres (28/08) : dernier contributeur au defilement
+     de PAGE restant (colonne de gauche mesuree plus haute que la fenetre --
+     le canevas lui, deja plafonne a 70vh via .zone-zoom, ne debordait plus).
+     Aucun changement fonctionnel, juste moins d'espace mort autour des
+     cartes -- objectif "tout tient sur un ecran" toujours en cours. */
+  /* .colonne a disparu (28/08) : Format/Couleur/Inserer sont maintenant tous
+     des icones dans les rails, plus aucune carte permanente -- .atelier n'a
+     plus qu'un seul enfant (.zone-travail), simple centrage. Espace lateral
+     ainsi libere, en reserve pour agrandir le canevas (prochaine etape). */
+  .atelier{ max-width:1180px; margin:22px auto 16px; padding:0 20px; }
 
   .grille-formes{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
   .btn-forme{
@@ -67,34 +71,84 @@
   .rang-joint input[type="range"]{ flex:1; }
   .rang-joint b{ font-variant-numeric:tabular-nums; font-size:12px; min-width:2.6em; text-align:right; }
 
-  .zone-travail{ display:flex; justify-content:center; }
-  .canevas-cadre{ position:relative; background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:16px; box-shadow:0 20px 50px -30px #2b353e55; }
-  .zone-zoom{ overflow:auto; max-width:min(600px,80vw); max-height:min(600px,70vh); border-radius:10px; }
+  .zone-travail{ display:flex; flex-direction:column; align-items:center; width:100%; }
+  /* Format actuel, juste reference (28/08) : simple rappel en texte, pas
+     interactif -- pour voir le format choisi sans avoir a rouvrir le
+     popover Format. Mis a jour au meme point que la regle (construireRegles). */
+  .format-actuel{ margin-top:10px; font-size:11.5px; color:#fff; font-variant-numeric:tabular-nums; }
+  /* Cadre du canevas en angle droit (28/08) : avec les regles ajoutees, le
+     cadre se lit comme un seul instrument (regles + grille + dessin) --
+     un coin arrondi sur le cadre exterieur jurait avec les coins droits
+     des regles a l'interieur. Coherence visuelle complete desormais. */
+  /* Bordure blanche reduite au maximum (28/08, demande explicite) : le
+     padding servait juste a "respirer" autour des regles/canevas -- retire,
+     seul le trait de contour (border:1px) reste comme limite visuelle. */
+  .canevas-cadre{ position:relative; background:var(--surface); border:1px solid var(--bord); box-shadow:0 20px 50px -30px #2b353e55; }
+  /* Angles droits obligatoires sur la zone imprimable (28/08, demande
+     explicite du fondateur) : le PNG exporte est deja parfaitement carre
+     dans ses angles (btnTelecharger redessine chaque piece vectoriellement,
+     ne clone jamais ce DOM) -- mais AVANT ce correctif, .zone-zoom et
+     .canevas-hote arrondissaient visuellement les coins a l'ecran
+     (border-radius + overflow:hidden), ce qui pouvait laisser croire qu'une
+     piece posee dans un coin serait coupee -- faux WYSIWYG pour un produit
+     qui part a l'impression. border-radius retire ici (et sur .repere-tuiles
+     plus bas, le cadre-guide qui se superpose au canevas). */
+  /* Canevas agrandi au maximum (28/08) : espace lateral libere par les
+     rails d'icones (plus de colonne fixe) -- le canevas peut desormais
+     remplir presque tout l'ecran, marge gardee de chaque cote. Largeur en
+     calc() plutot qu'en vw pur : soustrait la place reelle des deux rails +
+     paddings pour ne JAMAIS depasser l'espace disponible (sinon risque de
+     redeclencher le defilement horizontal de page qu'on a corrige plus
+     tot). Le canevas RESTE en 600x600 en interne (LARGEUR/HAUTEUR, voir JS)
+     -- seul l'affichage grandit via le zoom existant, aucun impact sur
+     l'export (deja independant de la taille ecran, cf. reponse precedente). */
+  .zone-zoom{ overflow:auto; max-width:min(900px, calc(100vw - 140px)); max-height:min(900px, 82vh); }
+
+  /* Regles horizontale/verticale (28/08) : graduees en cm REELS, alignees
+     sur le format choisi (meme --nb-cm que .sous-grille-cm). Largeur/hauteur
+     des bandes de graduation recalculees a chaque zoom (elles doivent
+     matcher exactement la taille ecran courante de .canevas-hote), et
+     translatees au defilement de .zone-zoom pour rester justes pendant un
+     panoramique (bandes elles-memes en overflow:hidden, en dehors de la
+     zone qui defile). */
+  /* Regles sur les 4 cotes (28/08, demande explicite) : grille 3x3 -- coin,
+     regle, coin / regle, canevas, regle / coin, regle, coin. Les 4 bandes
+     partagent la meme fonction de construction (construireRegles) et le
+     meme scroll-sync, juste dupliquees pour bas/droite. */
+  .grille-regles{ display:grid; grid-template-columns:20px auto 20px; grid-template-rows:20px auto 20px; }
+  .coin-regle{ background:var(--papier); border:1px solid var(--bord); }
+  .regle-h-conteneur, .regle-v-conteneur{ background:var(--papier); overflow:hidden; position:relative; border:1px solid var(--bord); }
+  .regle-h, .regle-v{ position:absolute; top:0; left:0; }
+  .regle-tick{ position:absolute; }
+  .regle-tick-h{ top:0; bottom:0; width:1px; background:var(--bord); }
+  .regle-tick-h.regle-tick-forte{ background:var(--doux); }
+  .regle-tick-v{ left:0; right:0; height:1px; background:var(--bord); }
+  .regle-tick-v.regle-tick-forte{ background:var(--doux); }
+  .regle-label{ position:absolute; font-size:8px; color:var(--doux); font-variant-numeric:tabular-nums; line-height:1; white-space:nowrap; }
+  .regle-tick-h .regle-label{ top:2px; left:2px; }
+  .regle-tick-v .regle-label{ top:2px; left:2px; writing-mode:vertical-rl; }
   .canevas-hote{
-    position:relative; width:600px; height:600px; background:#EAE0C8; border-radius:10px;
+    position:relative; width:600px; height:600px; background:#EAE0C8;
     overflow:hidden; touch-action:none; cursor:grab;
   }
   .canevas-hote.saisi-pan{ cursor:grabbing; }
   canvas{ display:block; width:100%; height:100%; }
   p.note{ font-size:11px; color:var(--doux); text-align:center; margin-top:8px; line-height:1.5; }
 
-  /* Controle de zoom flottant pose sur le coin bas-droit du CANEVAS (pas dans
-     le panneau lateral) -- inspire de Canva, demande explicitement par le
-     fondateur comme piece prioritaire du zoom repense. Positionne en absolu
-     par rapport a .canevas-cadre (jamais .zone-zoom, qui defile) pour rester
-     fixe a l'ecran meme en plein panoramique dans un canevas zoome. */
-  .zoom-flottant{
-    position:absolute; right:26px; bottom:26px; z-index:100;
-    display:flex; align-items:center; gap:3px; background:var(--surface);
-    border:1px solid var(--bord); border-radius:999px; padding:5px; box-shadow:0 10px 30px -12px #2b353e4d;
-  }
-  .btn-zoom, .btn-ajuster{
-    width:28px; height:28px; border-radius:50%; border:1.5px solid var(--bord); background:var(--papier);
-    color:var(--doux); font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
-  }
-  .btn-zoom:hover, .btn-ajuster:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .btn-ajuster{ font-size:13px; }
-  .zoom-flottant b{ font-variant-numeric:tabular-nums; font-size:12px; color:var(--doux); min-width:3.4em; text-align:center; }
+  /* Zoom + Aide verticaux, dans le rail (28/08) : encore une demande du
+     fondateur pour liberer de la place -- d'abord une barre horizontale
+     flottante sur le canevas, puis sortie en bandeau sous le canevas,
+     desormais integree au rail-droite comme les autres icones (empilee a
+     la verticale). btnZoomMoins/valeurZoom/btnZoomPlus/btnAjuster gardent
+     leurs id -- aucun changement cote logique de zoom. Aide migre
+     entierement dans le systeme generique .icone-outil/.popover-outil
+     (popoverAide, wiring OUTILS automatique) plutot que son ancien systeme
+     dedie -- une seule mecanique d'ouverture/fermeture pour tous. */
+  .separateur-rail{ height:1px; background:#ffffff26; margin:4px 2px; }
+  .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; color:var(--creme); text-align:center; padding:2px 0; }
+  .aide-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .aide-liste li{ font-size:12.5px; color:var(--texte); line-height:1.5; }
+  .aide-liste b{ font-family:'Quicksand',sans-serif; }
 
   /* Loupe de zoom : ne suit le curseur QUE pendant l'ajustement d'une
      poignee (redimensionnement ou courbure de bord) -- c'est le seul moment
@@ -114,7 +168,7 @@
      Purement visuel (pointer-events:none), ne gene jamais le clic. */
   .repere-tuiles{
     position:absolute; inset:0; z-index:50; pointer-events:none;
-    border:1.5px solid #2b353ed9; border-radius:8px;
+    border:1.5px solid #2b353ed9;
     background-image:
       linear-gradient(to right, #2b353e55 0, #2b353e55 1px, transparent 1px),
       linear-gradient(to bottom, #2b353e55 0, #2b353e55 1px, transparent 1px);
@@ -143,6 +197,26 @@
   }
   .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
 
+  /* Carrousel Format (cm) (28/08) : remplace la grille de 5 boutons -- gagne
+     de la place verticale (objectif "tout tient sur un ecran") et les
+     fleches signalent tout de suite qu'il y a d'autres tailles a decouvrir,
+     sans avoir a lire 5 libelles d'un coup. Reutilise les MEMES 5 boutons
+     .btn-format (mecanique de clic/etat "actif" deja verifiee, y compris la
+     lecture par Telecharger PNG et les reperes de tuiles) -- seul UN
+     bouton, le .actif, reste visible a la fois ; les fleches se contentent
+     de declencher un .click() sur le bouton voisin, aucun etat duplique. */
+  .carrousel-format{ display:flex; align-items:center; gap:8px; }
+  .carrousel-format .grille-formats{ flex:1; display:block; min-width:0; }
+  .carrousel-format .btn-format{ display:none; width:100%; padding:9px 2px; font-size:12.5px; }
+  .carrousel-format .btn-format.actif{ display:block; }
+  .fleche-format{
+    width:30px; height:30px; border-radius:50%; border:1.5px solid var(--bord); background:var(--papier);
+    color:var(--doux); font-size:17px; font-weight:700; cursor:pointer; display:flex; align-items:center;
+    justify-content:center; padding:0; flex-shrink:0; line-height:1;
+  }
+  .fleche-format:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .fleche-format:disabled{ opacity:.35; cursor:default; border-color:var(--bord); color:var(--doux); }
+
   .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
   .btn:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .btn:disabled{ opacity:.4; cursor:default; border-color:var(--bord); color:var(--doux); }
@@ -151,6 +225,7 @@
   .menu-contextuel{
     position:fixed; z-index:200; background:var(--surface); border:1px solid var(--bord); border-radius:12px;
     box-shadow:0 14px 40px rgba(43,53,62,.25); padding:8px; display:none; width:230px; font-family:'Quicksand',sans-serif;
+    color:var(--charbon);
   }
   .menu-contextuel.ouvert{ display:block; }
   .mc-section{ padding:6px 6px 8px; border-bottom:1px solid var(--bord); }
@@ -194,7 +269,7 @@
   .mcd-couverture.ouverte{ display:flex; }
   .mcd-popup{
     background:var(--surface); border-radius:16px; max-width:420px; width:100%; max-height:82vh; overflow:auto;
-    padding:18px 20px 22px; box-shadow:0 24px 60px -12px #2b353e55;
+    padding:18px 20px 22px; box-shadow:0 24px 60px -12px #2b353e55; color:var(--charbon);
   }
   .mcd-entete{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -239,105 +314,344 @@
     background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
   }
   .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+
+  /* ================= Rails d'outils, un icone par outil (28/08) =================
+     Quatrieme et derniere passe -- validee sur maquette avant construction
+     ("mockup tes idees", demande du fondateur pour ne plus perdre de temps
+     en aller-retours texte). Plus de regroupement par famille : CHAQUE outil
+     a son propre icone, range en rail vertical de part et d'autre du
+     canevas -- Decoupe/Historique/Verrouillage/Symetrie a gauche, Clic
+     droit/Calque de reference/Composition a droite (meme repartition
+     "edition vs fichier" que precedemment, juste un icone par outil au lieu
+     d'un icone par famille). Chaque popover s'ouvre vers l'EXTERIEUR
+     (jamais vers le canevas) et se ferme au clic dehors / Echap / croix. */
+  /* Rails aeres aux bords (28/08) : avant colles au canevas (gap:14px,
+     centres en groupe) -- desormais chaque rail pousse jusqu'au bord de
+     .atelier (space-between), le canevas reste centre entre les deux.
+     Popovers s'ouvrant deja VERS le canevas (voir .popover-outil), le
+     padding de .atelier (20px) suffit comme marge avant l'ouverture. */
+  .rangee-canevas{ display:flex; align-items:stretch; justify-content:space-between; width:100%; }
+  /* Format+Couleur separes en bas du rail (28/08, demande explicite) :
+     .rail-gauche s'etire desormais a la hauteur du canevas (align-items:
+     stretch ci-dessus) et .icone-outil-separateur pousse tout ce qui suit
+     (Format, Couleur) tout en bas via margin-top:auto -- technique
+     classique en flex-column, cree un vrai vide visible entre les deux
+     groupes plutot qu'un simple gap fixe. */
+  .icone-outil-separateur{ margin-top:auto; }
+  /* Bouton terracotta / arriere-plan charbon (28/08, demande explicite) :
+     rail habille en bandeau sombre (charbon), boutons pleins terracotta --
+     creme pour l'icone/texte (contraste clair sur fond fonce, meme paire
+     deja utilisee ailleurs dans le fichier, ex. .mcd-case.mcd-coche). */
+  .rail-lateral{
+    display:flex; flex-direction:column; gap:6px; flex-shrink:0; margin-top:16px;
+    background:var(--charbon); border-radius:12px; padding:7px;
+  }
+  .icone-outil-conteneur{ position:relative; }
+  .icone-outil{
+    width:34px; height:34px; border-radius:10px; border:none; background:var(--terracotta);
+    color:var(--creme); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+    box-shadow:0 6px 18px -12px #2b353e4d; font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px;
+  }
+  .icone-outil:hover{ background:#c85f49; }
+  /* Couleur differenciante (28/08, demande explicite) : Format/Inserer/Clic
+     droit se distinguent du reste en kraft -- charbon pour l'icone (kraft
+     est clair, terracotta+creme n'aurait pas assez de contraste dessus). */
+  .icone-outil-kraft{ background:var(--kraft); color:var(--charbon); }
+  .icone-outil-kraft:hover{ background:#bcac7d; }
+  .icone-outil svg{ width:16px; height:16px; }
+
+  /* Popovers ouverts SUR le canevas (28/08, inversion demandee) : avant,
+     chaque popover s'etendait vers l'EXTERIEUR (loin du canevas) -- ca
+     reservait en permanence de la place laterale, meme quand rien n'est
+     ouvert, ce qui limite la taille max du canevas. Desormais chaque
+     popover s'ouvre vers l'INTERIEUR, par-dessus le canevas (temporaire,
+     seulement pendant l'ouverture) -- objectif du fondateur : liberer cet
+     espace lateral pour pouvoir agrandir le canevas lui-meme plus tard. */
+  /* color:charbon explicite (28/08) : depuis que body est passe en fond
+     charbon + texte creme (demande "arriere-plan de la page aussi en
+     charbon"), tout ce qui n'a pas sa propre couleur explicite HERITE de ce
+     creme -- illisible une fois affiche sur un popover a fond BLANC (creme
+     quasi invisible sur blanc). Pose ici, une fois, pour que tout le
+     contenu du popover (titres, listes, labels) redevienne lisible sans
+     avoir a corriger chaque regle une par une. */
+  .popover-outil{
+    position:absolute; top:0; left:0; z-index:150; display:none;
+    background:var(--surface); border:1px solid var(--bord); border-radius:16px; width:240px; max-height:70vh; overflow:auto;
+    padding:14px 16px 18px; box-shadow:0 20px 50px -20px #2b353e55; color:var(--charbon);
+  }
+  .popover-outil-droite{ left:auto; right:0; }
+  .popover-outil.ouverte{ display:block; }
+
+  /* Aide en coin bas-gauche du canevas (28/08) : plus dans le rail --
+     badge flottant directement sur .canevas-cadre (deja position:relative,
+     meme recette que l'ancien zoom flottant), coin bas-gauche. S'ouvre vers
+     le HAUT (bottom:100%) donc reste "a l'interieur" par-dessus le canevas
+     sans jamais deborder sous le cadre -- aucun impact sur la hauteur de
+     page, aucune barre de defilement declenchee. */
+  /* Aide en coin bas-gauche de la PAGE (28/08, corrige -- pas du canevas) :
+     position:fixed par rapport a la fenetre, pas au cadre du canevas --
+     reste a la meme place quel que soit le zoom/panoramique en cours.
+     S'ouvre vers le HAUT (bottom:100%), donc toujours "vers l'interieur" de
+     la page plutot que de deborder hors ecran -- aucun impact sur la
+     hauteur de page, aucune barre de defilement declenchee. */
+  .icone-aide-coin{ position:fixed; left:16px; bottom:16px; z-index:280; }
+  /* Boutique en bas-droite de la PAGE (28/08) : meme recette que l'Aide en
+     bas-gauche, symetrique. Socle minimum de toute app QuadretI ("un bouton
+     de direction vers les autres produits/outils pertinents", CLAUDE.md) --
+     ici precisement vers la boutique. Lien direct (pas de popover), meme
+     URL que le reste du site (voir mosaique-creative.html). */
+  .icone-boutique-coin{ position:fixed; right:16px; bottom:16px; z-index:280; text-decoration:none; }
+  .popover-aide-coin{ top:auto; left:0; bottom:100%; margin-bottom:10px; }
+  .popover-entete{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .popover-entete h3{ font-size:14px; margin:0; }
+  .popover-fermer{
+    width:26px; height:26px; border-radius:50%; border:none; background:var(--papier); color:var(--doux);
+    cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .popover-fermer:hover{ background:#b04a36; color:#fff; }
+  .popover-fermer svg{ width:13px; height:13px; }
 </style>
 </head>
 <body>
 
-<section class="hero">
-  <h1 class="titre">Mosaïque Créative — Mode découpe</h1>
-  <p class="accroche">Insérez des pièces, glissez-les. Activez « Les pièces se découpent entre elles » pour qu'elles se redécoupent entre elles et respectent le joint. Sélectionnez une pièce pour la redimensionner ou courber ses bords ; clic droit pour la couleur ou la verrouiller.</p>
-</section>
 
 <div class="atelier">
-  <div class="colonne">
-    <div class="carte">
-      <div class="label">Format (cm)</div>
-      <div class="grille-formats" id="grilleFormats">
-        <button class="btn-format actif" data-taille="20">20×20</button>
-        <button class="btn-format" data-taille="40">40×40</button>
-        <button class="btn-format" data-taille="60">60×60</button>
-        <button class="btn-format" data-taille="80">80×80</button>
-        <button class="btn-format" data-taille="100">100×100</button>
-      </div>
-      <label class="champ-case" style="margin-top:9px;">
-        <input type="checkbox" id="checkSousGrille"> Sous-grille (1 cm)
-      </label>
-    </div>
-    <div class="carte">
-      <div class="label">Insérer</div>
-      <div class="grille-formes" id="grilleFormes"></div>
-    </div>
-    <div class="carte">
-      <div class="label">Découpe</div>
-      <label class="champ-case" style="margin-bottom:9px;">
-        <input type="checkbox" id="checkMordre"> Les pièces se découpent entre elles
-      </label>
-      <div class="rang-joint">
-        <input type="range" id="curseurJoint" min="2" max="24" value="9" step="1" disabled>
-        <b id="valeurJoint">9px</b>
-      </div>
-    </div>
-    <div class="carte">
-      <div class="label">Historique</div>
-      <div class="grille-formats" style="grid-template-columns:1fr 1fr;">
-        <button class="btn" id="btnAnnuler" disabled>↺ Annuler</button>
-        <button class="btn" id="btnRetablir" disabled>↻ Rétablir</button>
-      </div>
-    </div>
-    <div class="carte">
-      <div class="label">Clic droit</div>
-      <button class="btn" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
-    </div>
-    <div class="carte">
-      <div class="label">Verrouillage</div>
-      <button class="btn" id="btnVerrouillage" disabled>Verrouiller tout</button>
-    </div>
-    <div class="carte">
-      <div class="label">Symétrie</div>
-      <label class="champ-case">
-        <input type="checkbox" id="checkMiroir"> Mode miroir (axe vertical)
-      </label>
-    </div>
-    <div class="carte">
-      <div class="label">Calque de référence</div>
-      <input type="file" id="inputCalque" accept="image/*" style="display:none;">
-      <div class="grille-formats" style="grid-template-columns:1fr 1fr; margin-bottom:6px;">
-        <button class="btn" id="btnInsererCalque">Insérer</button>
-        <button class="btn" id="btnRetirerCalque" disabled>Retirer</button>
-      </div>
-      <div class="rang-joint">
-        <input type="range" id="curseurOpaciteCalque" min="10" max="80" value="40" step="5" disabled>
-        <b id="valeurOpaciteCalque">40%</b>
-      </div>
-    </div>
-    <div class="carte">
-      <div class="label">Composition</div>
-      <div class="grille-formats" style="grid-template-columns:1fr 1fr; margin-bottom:6px;">
-        <button class="btn" id="btnEnregistrer">Enregistrer</button>
-        <button class="btn" id="btnCharger">Charger</button>
-      </div>
-      <button class="btn" id="btnTelecharger" style="margin-bottom:6px;">Télécharger PNG</button>
-      <button class="btn" id="btnEffacer">Tout effacer</button>
-    </div>
-  </div>
-
   <div class="zone-travail">
-    <div class="canevas-cadre">
-      <div class="zone-zoom" id="zoneZoom">
-        <div class="canevas-hote" id="canevasHote">
-          <canvas id="c" width="600" height="600"></canvas>
-          <div class="sous-grille-cm" id="sousGrilleCm"></div>
-          <div class="repere-tuiles" id="repereTuiles"></div>
+    <div class="rangee-canevas">
+      <div class="rail-lateral rail-gauche">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil icone-outil-kraft" data-cible="popoverInserer" title="Insérer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><circle cx="17.5" cy="6.5" r="3.5"/><rect x="3" y="14" width="7" height="7" rx="1"/><polygon points="17.5 13.5 21 20.5 14 20.5"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverInserer">
+            <div class="popover-entete">
+              <h3>Insérer</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <div class="grille-formes" id="grilleFormes"></div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverDecoupe" title="Découpe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverDecoupe">
+            <div class="popover-entete">
+              <h3>Découpe</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <label class="champ-case" style="margin-bottom:9px;">
+              <input type="checkbox" id="checkMordre"> Les pièces se découpent entre elles
+            </label>
+            <div class="rang-joint">
+              <input type="range" id="curseurJoint" min="2" max="24" value="9" step="1" disabled>
+              <b id="valeurJoint">9px</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverHistorique" title="Historique">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverHistorique">
+            <div class="popover-entete">
+              <h3>Historique</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <div class="grille-formats" style="grid-template-columns:1fr 1fr;">
+              <button class="btn" id="btnAnnuler" disabled>↺ Annuler</button>
+              <button class="btn" id="btnRetablir" disabled>↻ Rétablir</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil icone-outil-kraft" data-cible="popoverVerrouillage" title="Verrouillage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverVerrouillage">
+            <div class="popover-entete">
+              <h3>Verrouillage</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <button class="btn" id="btnVerrouillage" disabled>Verrouiller tout</button>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverSymetrie" title="Symétrie">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><rect x="14" y="7" width="6" height="10" rx="1"/><rect x="4" y="7" width="6" height="10" rx="1"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverSymetrie">
+            <div class="popover-entete">
+              <h3>Symétrie</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <label class="champ-case">
+              <input type="checkbox" id="checkMiroir"> Mode miroir (axe vertical)
+            </label>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur icone-outil-separateur">
+          <button class="icone-outil icone-outil-kraft" data-cible="popoverFormat" title="Format (cm)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverFormat">
+            <div class="popover-entete">
+              <h3>Format (cm)</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <div class="carrousel-format">
+              <button class="fleche-format" id="formatPrec" aria-label="Format précédent" disabled>‹</button>
+              <div class="grille-formats" id="grilleFormats">
+                <button class="btn-format actif" data-taille="20">20×20</button>
+                <button class="btn-format" data-taille="40">40×40</button>
+                <button class="btn-format" data-taille="60">60×60</button>
+                <button class="btn-format" data-taille="80">80×80</button>
+                <button class="btn-format" data-taille="100">100×100</button>
+              </div>
+              <button class="fleche-format" id="formatSuiv" aria-label="Format suivant">›</button>
+            </div>
+            <label class="champ-case" style="margin-top:9px;">
+              <input type="checkbox" id="checkSousGrille" checked> Sous-grille (1 cm)
+            </label>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverCouleur" title="Couleur">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/><path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.582 9 8 0 1.657-1.343 3-3 3h-2.5a2 2 0 0 0-2 2c0 .5.5 1 .5 1.5A2.5 2.5 0 0 1 12 21z"/></svg>
+          </button>
+          <div class="popover-outil" id="popoverCouleur">
+            <div class="popover-entete">
+              <h3>Couleur</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <div class="grille-swatches-mc" id="coSwatches"></div>
+            <div class="rang-hex-mc">
+              <input type="text" class="champ-hex-mc" id="coHex" maxlength="7">
+              <button class="btn-pipette-mc" id="coPipette" title="Pipette">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
+              </button>
+            </div>
+            <div class="palette-perso-mc" id="coPerso"></div>
+          </div>
         </div>
       </div>
-      <div class="zoom-flottant">
-        <button class="btn-zoom" id="btnZoomMoins" title="Dézoomer">−</button>
-        <b id="valeurZoom">100%</b>
-        <button class="btn-zoom" id="btnZoomPlus" title="Zoomer">+</button>
-        <button class="btn-ajuster" id="btnAjuster" title="Ajuster à l'écran">⤢</button>
+
+      <div class="canevas-cadre">
+        <div class="grille-regles">
+          <div class="coin-regle"></div>
+          <div class="regle-h-conteneur"><div class="regle-h" id="regleH"></div></div>
+          <div class="coin-regle"></div>
+          <div class="regle-v-conteneur"><div class="regle-v" id="regleV"></div></div>
+          <div class="zone-zoom" id="zoneZoom">
+            <div class="canevas-hote" id="canevasHote">
+              <canvas id="c" width="600" height="600"></canvas>
+              <div class="sous-grille-cm" id="sousGrilleCm"></div>
+              <div class="repere-tuiles" id="repereTuiles"></div>
+            </div>
+          </div>
+          <div class="regle-v-conteneur regle-v-droite-conteneur"><div class="regle-v" id="regleVDroite"></div></div>
+          <div class="coin-regle"></div>
+          <div class="regle-h-conteneur regle-h-bas-conteneur"><div class="regle-h" id="regleHBas"></div></div>
+          <div class="coin-regle"></div>
+        </div>
       </div>
-      <p class="note">Glisser une pièce = la déplacer et mordre celles du dessous. Glisser un espace vide = déplacer la vue. <b>Ctrl/Cmd + molette</b> = zoomer sous le curseur. Poignées : coin = redimensionner, milieu d'un bord = courber. Clic droit = couleur / verrouiller / dupliquer / supprimer. <b>Maj + clic</b> = sélection de groupe, <b>Maj + glisser sur le vide</b> = rectangle de sélection multiple. <b>L</b> = verrouiller/déverrouiller le groupe sélectionné, ou tout s'il n'y en a pas. <b>Ctrl+Z</b> / <b>Ctrl+Maj+Z</b> = annuler / rétablir. Une loupe apparaît pendant l'ajustement d'une poignée ; des guides roses s'affichent en approchant du centre ou d'une autre pièce.</p>
+
+      <div class="rail-lateral rail-droite">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil icone-outil-kraft" data-cible="popoverClicDroit" title="Clic droit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="12"/><line x1="12" y1="12" x2="18" y2="12"/></svg>
+          </button>
+          <div class="popover-outil popover-outil-droite" id="popoverClicDroit">
+            <div class="popover-entete">
+              <h3>Clic droit</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <button class="btn" id="btnOuvrirReglagesMenu">Personnaliser le clic droit</button>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverCalque" title="Calque de référence">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/><polyline points="2 15.5 12 22 22 15.5"/></svg>
+          </button>
+          <div class="popover-outil popover-outil-droite" id="popoverCalque">
+            <div class="popover-entete">
+              <h3>Calque de référence</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <input type="file" id="inputCalque" accept="image/*" style="display:none;">
+            <div class="grille-formats" style="grid-template-columns:1fr 1fr; margin-bottom:6px;">
+              <button class="btn" id="btnInsererCalque">Insérer</button>
+              <button class="btn" id="btnRetirerCalque" disabled>Retirer</button>
+            </div>
+            <div class="rang-joint">
+              <input type="range" id="curseurOpaciteCalque" min="10" max="80" value="40" step="5" disabled>
+              <b id="valeurOpaciteCalque">40%</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverComposition" title="Composition">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <div class="popover-outil popover-outil-droite" id="popoverComposition">
+            <div class="popover-entete">
+              <h3>Composition</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <div class="grille-formats" style="grid-template-columns:1fr 1fr; margin-bottom:6px;">
+              <button class="btn" id="btnEnregistrer">Enregistrer</button>
+              <button class="btn" id="btnCharger">Charger</button>
+            </div>
+            <button class="btn" id="btnTelecharger" style="margin-bottom:6px;">Télécharger PNG</button>
+            <button class="btn" id="btnEffacer">Tout effacer</button>
+          </div>
+        </div>
+
+        <div class="separateur-rail icone-outil-separateur"></div>
+
+        <button class="icone-outil" id="btnZoomMoins" title="Dézoomer">−</button>
+        <div class="valeur-zoom-rail" id="valeurZoom">100%</div>
+        <button class="icone-outil" id="btnZoomPlus" title="Zoomer">+</button>
+        <button class="icone-outil icone-outil-kraft" id="btnAjuster" title="Ajuster à l'écran">⤢</button>
+      </div>
     </div>
+
+    <div class="format-actuel" id="formatActuelLabel">20 × 20 cm</div>
+  </div>
+</div>
+</div>
+
+<a class="icone-outil icone-boutique-coin" href="https://www.quadreti.fr/boutique/" target="_blank" rel="noopener" title="Voir la boutique QuadretI">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+</a>
+
+<div class="icone-outil-conteneur icone-aide-coin">
+  <button class="icone-outil" data-cible="popoverAide" title="Aide (raccourcis)">?</button>
+  <div class="popover-outil popover-aide-coin" id="popoverAide">
+    <div class="popover-entete">
+      <h3>Aide</h3>
+      <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    </div>
+    <p class="aide-intro">Insérez des pièces, glissez-les. Activez « Les pièces se découpent entre elles » pour qu'elles se redécoupent entre elles et respectent le joint. Sélectionnez une pièce pour la redimensionner ou courber ses bords.</p>
+    <ul class="aide-liste">
+      <li><b>Glisser une pièce</b> = la déplacer (et mordre celles du dessous si la découpe entre pièces est activée).</li>
+      <li><b>Glisser un espace vide</b> = déplacer la vue.</li>
+      <li><b>Ctrl/Cmd + molette</b> = zoomer sous le curseur.</li>
+      <li><b>Poignées</b> : coin = redimensionner, milieu d'un bord = courber.</li>
+      <li><b>Clic droit</b> = couleur / verrouiller / dupliquer / supprimer.</li>
+      <li><b>Maj + clic</b> = sélection de groupe. <b>Maj + glisser sur le vide</b> = rectangle de sélection multiple.</li>
+      <li><b>L</b> = verrouiller/déverrouiller le groupe sélectionné, ou tout s'il n'y en a pas.</li>
+      <li><b>Ctrl+Z</b> / <b>Ctrl+Maj+Z</b> = annuler / rétablir.</li>
+      <li>Une loupe apparaît pendant l'ajustement d'une poignée ; des guides roses s'affichent en approchant du centre ou d'une autre pièce.</li>
+    </ul>
   </div>
 </div>
 
@@ -440,8 +754,37 @@
     return null; // rond/ovale : pas de coins, gere a part
   }
 
+  /* ================= Rotation par paliers (28/08) =================
+     tournerPoint fait pivoter un POINT autour du centre de la piece --
+     utilise pour les coins/poignees affiches et testes au clic.
+     tournerVecteur fait pivoter un simple VECTEUR (pas de translation par
+     rapport a un centre) -- utilise pour le decalage dx/dy d'une poignee de
+     courbure, qui represente une direction relative au bord, pas un point
+     absolu. Angle en degres, sens horaire (coherent avec un canevas dont
+     l'axe Y pointe vers le bas). */
+  function versRadians(deg){ return deg * Math.PI / 180; }
+  function tournerPoint(x, y, cx, cy, deg){
+    if (!deg) return [x, y];
+    var rad = versRadians(deg), cos = Math.cos(rad), sin = Math.sin(rad);
+    var dx = x - cx, dy = y - cy;
+    return [cx + dx * cos - dy * sin, cy + dx * sin + dy * cos];
+  }
+  function tournerVecteur(dx, dy, deg){
+    if (!deg) return [dx, dy];
+    var rad = versRadians(deg), cos = Math.cos(rad), sin = Math.sin(rad);
+    return [dx * cos - dy * sin, dx * sin + dy * cos];
+  }
+  // Coins de la piece, DEJA tournes de p.rotation -- point d'entree unique
+  // reutilise par le rendu (cheminPiece), les poignees affichees
+  // (positionPoigneesEcran) et le glisser d'une poignee de courbure.
+  function coinsFormeTournes(p, r){
+    var coins = coinsForme(p.forme, p.x, p.y, r);
+    if (!coins || !p.rotation) return coins;
+    return coins.map(function(pt){ return tournerPoint(pt[0], pt[1], p.x, p.y, p.rotation); });
+  }
+
   var FORMES = [
-    { id:'carre', label:'Carré', icone:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>' },
+    { id:'carre', label:'Carré', icone:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16"/></svg>' },
     { id:'rond', label:'Rond', icone:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>' },
     { id:'triangle', label:'Triangle', icone:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 21,20 3,20"/></svg>' },
     { id:'losange', label:'Losange', icone:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,12 12,22 2,12"/></svg>' },
@@ -453,6 +796,13 @@
   var PIECES = [];
   var compteurId = 0;
   var selectionId = null;
+  // Couleur courante (28/08) : la couleur appliquee a toute NOUVELLE piece
+  // inseree -- pilotee par l'outil "Couleur" du panneau lateral (voir plus
+  // bas, reutilise PALETTE_AVANCEE/CLE_PALETTE_PERSO deja construits pour le
+  // clic droit). Volontairement INDEPENDANTE de la piece selectionnee -- ne
+  // recolore jamais une piece existante, seul le clic droit fait ca (deja
+  // construit, deja verifie) ; pas de risque de melanger les deux logiques.
+  var couleurCourante = '#E2725B';
 
   var NB_COTES = { carre:4, triangle:3, losange:4, hexagone:6 };
 
@@ -474,7 +824,10 @@
     // meme si le reglage global est actif. Absent des anciennes sauvegardes
     // (Charger) => undefined => falsy => mord normalement, aucune migration
     // necessaire.
-    return { id: ++compteurId, forme: forme, x: x, y: y, taille: 100, couleur: '#E2725B', verrouille: false, poignees: poignees, morsures: [], neMordPas: false };
+    // rotation (28/08) : par paliers de 90 degres uniquement (0/90/180/270)
+    // -- decision explicite du fondateur, pas de rotation libre (aurait
+    // demande de repenser l'accroche/la selection en plus de la geometrie).
+    return { id: ++compteurId, forme: forme, x: x, y: y, taille: 100, couleur: couleurCourante, verrouille: false, poignees: poignees, morsures: [], neMordPas: false, rotation: 0 };
   }
 
   function trouverJumeau(id){
@@ -506,6 +859,10 @@
     jumeau.taille = piece.taille;
     jumeau.couleur = piece.couleur;
     jumeau.verrouille = piece.verrouille;
+    // Rotation en miroir (28/08) : un flip horizontal inverse le sens de
+    // rotation -- 90 degres (horaire) sur l'original devient 270 (sens
+    // inverse) sur le reflet, pas la meme valeur copiee telle quelle.
+    jumeau.rotation = (360 - (piece.rotation || 0)) % 360;
     if (piece.poignees && jumeau.poignees){
       var ordre = MIROIR_INDICES[piece.forme];
       jumeau.poignees = ordre.map(function(idxSource){
@@ -548,7 +905,7 @@
       victime.morsures.push({
         forme: pieceMordante.forme, x: pieceMordante.x, y: pieceMordante.y, taille: pieceMordante.taille,
         poignees: pieceMordante.poignees ? pieceMordante.poignees.map(function(pg){ return { dx:pg.dx, dy:pg.dy }; }) : null,
-        margeJoint: MARGE_JOINT
+        margeJoint: MARGE_JOINT, rotation: pieceMordante.rotation || 0
       });
       // Piece entierement mangee : si elle etait selectionnee, la deselectionner
       // -- sinon ses poignees/contour restaient affiches comme si elle etait
@@ -561,7 +918,7 @@
      ABSOLUES que cheminPiece (plus besoin de repere local -- chaque piece se
      redessine entierement a chaque frame, il n'y a plus de bitmap a repositionner). */
   function cheminMorsure(m){
-    return cheminPiece({ forme:m.forme, x:m.x, y:m.y, taille:m.taille, poignees:m.poignees }, m.margeJoint);
+    return cheminPiece({ forme:m.forme, x:m.x, y:m.y, taille:m.taille, poignees:m.poignees, rotation:m.rotation }, m.margeJoint);
   }
 
   /* Vrai si AUCUN point echantillonne de la piece ne reste visible -- piece
@@ -652,17 +1009,18 @@
     var path = new Path2D();
     if (p.forme === 'rond' || p.forme === 'ovale'){
       var rx = r, ry = p.forme === 'ovale' ? r * 0.68 : r;
-      path.ellipse(p.x, p.y, rx, ry, 0, 0, Math.PI * 2);
+      path.ellipse(p.x, p.y, rx, ry, versRadians(p.rotation || 0), 0, Math.PI * 2);
       return path;
     }
-    var coins = coinsForme(p.forme, p.x, p.y, r);
+    var coins = coinsFormeTournes(p, r);
     var n = coins.length;
     path.moveTo(coins[0][0], coins[0][1]);
     for (var i = 0; i < n; i++){
       var suivant = coins[(i + 1) % n];
       var milieu = { x:(coins[i][0] + suivant[0]) / 2, y:(coins[i][1] + suivant[1]) / 2 };
       var poignee = p.poignees[i] || { dx:0, dy:0 };
-      path.quadraticCurveTo(milieu.x + poignee.dx, milieu.y + poignee.dy, suivant[0], suivant[1]);
+      var vec = tournerVecteur(poignee.dx, poignee.dy, p.rotation || 0);
+      path.quadraticCurveTo(milieu.x + vec[0], milieu.y + vec[1], suivant[0], suivant[1]);
     }
     path.closePath();
     return path;
@@ -671,13 +1029,14 @@
   function positionPoigneesEcran(p){
     if (!p.poignees) return [];
     var r = p.taille / 2;
-    var coins = coinsForme(p.forme, p.x, p.y, r);
+    var coins = coinsFormeTournes(p, r);
     var n = coins.length;
     var pts = [];
     for (var i = 0; i < n; i++){
       var suivant = coins[(i + 1) % n];
       var milieu = { x:(coins[i][0] + suivant[0]) / 2, y:(coins[i][1] + suivant[1]) / 2 };
-      pts.push({ x: milieu.x + p.poignees[i].dx, y: milieu.y + p.poignees[i].dy });
+      var vec = tournerVecteur(p.poignees[i].dx, p.poignees[i].dy, p.rotation || 0);
+      pts.push({ x: milieu.x + vec[0], y: milieu.y + vec[1] });
     }
     return pts;
   }
@@ -715,9 +1074,11 @@
   function masquerLoupe(){ loupeZoom.style.display = 'none'; }
 
   function poigneeRedimensionnement(p){
-    // Coin bas-droit approximatif de la boite englobante (r,r depuis le centre).
+    // Coin bas-droit approximatif de la boite englobante (r,r depuis le centre),
+    // tourne avec la piece pour rester visuellement a son coin.
     var r = p.taille / 2;
-    return { x: p.x + r * 0.9, y: p.y + r * 0.9 };
+    var pt = tournerPoint(p.x + r * 0.9, p.y + r * 0.9, p.x, p.y, p.rotation || 0);
+    return { x: pt[0], y: pt[1] };
   }
 
   /* ================= Rendu =================
@@ -871,6 +1232,13 @@
 
   /* ================= Insertion depuis la bibliotheque ================= */
   var grilleFormes = $('grilleFormes');
+  // Insertion depuis le popover "Inserer" (28/08) : le popover se referme
+  // tout seul une fois la piece posee (pointerup) -- meme geste qu'avant
+  // (appuyer/pointer/glisser), juste range automatiquement apres usage
+  // plutot que de rester ouvert en permanence. Drapeau simple plutot que de
+  // coupler cette section au systeme de popovers (defini plus bas dans le
+  // fichier) -- pas besoin de plus qu'un id direct ici.
+  var insertionDepuisPopover = false;
   FORMES.forEach(function(f){
     var b = document.createElement('button');
     b.className = 'btn-forme';
@@ -889,6 +1257,7 @@
       mode = 'deplacer';
       etatModifiePendantGeste = true; // l'insertion elle-meme est deja un vrai changement
       decalage.x = 0; decalage.y = 0; // saisie pile a son propre centre
+      insertionDepuisPopover = true;
       saisirPointeurSansRisque(e);
       rendre();
     });
@@ -1047,12 +1416,18 @@
       calculerAccroche(pieceActive);
     } else if (mode === 'poignee'){
       var r = pieceActive.taille / 2;
-      var coins = coinsForme(pieceActive.forme, pieceActive.x, pieceActive.y, r);
+      var coins = coinsFormeTournes(pieceActive, r);
       var n = coins.length;
       var suivant = coins[(indexPoignee + 1) % n];
       var milieu = { x:(coins[indexPoignee][0] + suivant[0]) / 2, y:(coins[indexPoignee][1] + suivant[1]) / 2 };
-      pieceActive.poignees[indexPoignee].dx = pos.x - milieu.x;
-      pieceActive.poignees[indexPoignee].dy = pos.y - milieu.y;
+      // La souris donne un vecteur en repere ECRAN (deja tourne visuellement) --
+      // rotation inverse pour retrouver le dx/dy LOCAL stocke sur la piece
+      // (celui que cheminPiece/positionPoigneesEcran retournent ensuite en
+      // sens direct). Sans ca, une piece tournee se deformerait de travers
+      // des qu'on essaie de courber un bord.
+      var brut = tournerVecteur(pos.x - milieu.x, pos.y - milieu.y, -(pieceActive.rotation || 0));
+      pieceActive.poignees[indexPoignee].dx = brut[0];
+      pieceActive.poignees[indexPoignee].dy = brut[1];
     } else if (mode === 'redim'){
       // La poignee est a (r*0.9, r*0.9) du centre -> distance = r*0.9*racine(2).
       var dist = distance(pos, { x: pieceActive.x, y: pieceActive.y });
@@ -1080,6 +1455,11 @@
   });
 
   document.addEventListener('pointerup', function(){
+    if (insertionDepuisPopover){
+      insertionDepuisPopover = false;
+      var popInserer = $('popoverInserer');
+      if (popInserer) popInserer.classList.remove('ouverte');
+    }
     if (mode === 'marquee'){
       // Un rectangle qui n'a quasi pas bouge = c'etait en realite un simple
       // Maj+clic sur le vide -> ne change rien (meme logique que le pan).
@@ -1144,6 +1524,54 @@
   var CLE_PALETTE_PERSO = 'mosaiqueCreativePalettePerso';
   function chargerPalettePerso(){ try { return JSON.parse(localStorage.getItem(CLE_PALETTE_PERSO)) || []; } catch(e){ return []; } }
   function sauverPalettePerso(pal){ try { localStorage.setItem(CLE_PALETTE_PERSO, JSON.stringify(pal)); } catch(e){} }
+
+  /* ================= Outil "Couleur" du panneau (28/08) =================
+     Panneau permanent (pas seulement au clic droit) pour choisir la couleur
+     des PROCHAINES pieces inserees -- palette configurable "type Canva" avec
+     memorisation demandee par le fondateur. Reutilise PALETTE_AVANCEE et la
+     palette perso partagee (CLE_PALETTE_PERSO) ci-dessus -- ajouter une
+     couleur ici l'ajoute aussi au clic droit, et inversement, meme liste. */
+  function peuplerCouleurCourante(){
+    var grilleEl = $('coSwatches');
+    var hexEl = $('coHex');
+    var pipetteEl = $('coPipette');
+    var persoEl = $('coPerso');
+
+    hexEl.value = couleurCourante;
+
+    function appliquer(c){ couleurCourante = c; peuplerCouleurCourante(); }
+
+    grilleEl.innerHTML = PALETTE_AVANCEE.map(function(c){
+      return '<button class="swatch-mc' + (c.toUpperCase() === couleurCourante.toUpperCase() ? ' actif' : '') + '" style="background:' + c + '" data-c="' + c + '"></button>';
+    }).join('');
+    grilleEl.querySelectorAll('.swatch-mc').forEach(function(b){
+      b.addEventListener('click', function(){ appliquer(b.dataset.c); });
+    });
+
+    hexEl.oninput = function(){ if (/^#[0-9a-fA-F]{6}$/.test(hexEl.value)) appliquer(hexEl.value); };
+
+    if (window.EyeDropper){
+      pipetteEl.disabled = false;
+      pipetteEl.onclick = function(){
+        new window.EyeDropper().open().then(function(r){ appliquer(r.sRGBHex); }).catch(function(){});
+      };
+    } else {
+      pipetteEl.disabled = true;
+    }
+
+    var perso = chargerPalettePerso();
+    persoEl.innerHTML = perso.map(function(c){ return '<button class="swatch-mc" style="background:' + c + '" data-c="' + c + '"></button>'; }).join('') +
+      '<button class="ajouter-perso-mc" title="Ajouter la couleur actuelle">+</button>';
+    persoEl.querySelectorAll('.swatch-mc').forEach(function(b){
+      b.addEventListener('click', function(){ appliquer(b.dataset.c); });
+    });
+    persoEl.querySelector('.ajouter-perso-mc').addEventListener('click', function(){
+      var p = chargerPalettePerso();
+      if (p.indexOf(hexEl.value) === -1){ p.push(hexEl.value); sauverPalettePerso(p); }
+      peuplerCouleurCourante();
+    });
+  }
+  peuplerCouleurCourante();
 
   function peuplerRemplissage(piece){
     var valeurActuelle = piece.couleur;
@@ -1379,6 +1807,18 @@
     enregistrerHistorique();
   }
 
+  // Rotation par paliers de 90 degres (28/08, decision explicite du
+  // fondateur -- pas de rotation libre). Simple incrementation de
+  // piece.rotation, toute la geometrie (chemin, poignees, morsures) lit
+  // deja cette valeur via coinsFormeTournes/tournerVecteur.
+  function actionTourner(){
+    pieceMenu.rotation = ((pieceMenu.rotation || 0) + 90) % 360;
+    if (miroirActif) synchroniserMiroir(pieceMenu);
+    fermerMenuContextuel();
+    rendre();
+    enregistrerHistorique();
+  }
+
   // Ordre d'empilement : PIECES est deja l'ordre de rendu reel (rendre()
   // dessine dans l'ordre du tableau, dernier = dessus) -- reordonner le
   // tableau suffit, aucune donnee de "z-index" separee a maintenir. A noter :
@@ -1500,6 +1940,8 @@
       cache:function(p){ return !p.poignees; } },
     'retourner': { label:'Retourner (horizontal)', run:actionRetourner,
       cache:function(p){ return !p.poignees; } },
+    'tourner': { label:'Tourner (90°)', run:actionTourner,
+      cache:function(p){ return p.forme === 'rond'; } },
     'avancer': { label:"Avancer d'un plan", run:actionAvancerPlan },
     'reculer': { label:"Reculer d'un plan", run:actionReculerPlan },
     'premier-plan': { label:'Premier plan', run:actionPremierPlan },
@@ -1533,7 +1975,8 @@
     ]},
     { id:'transformation', label:'Transformation', items:[
       { id:'reinit-forme', actif:true },
-      { id:'retourner', actif:true }
+      { id:'retourner', actif:true },
+      { id:'tourner', actif:true }
     ]},
     { id:'ordre', label:"Ordre d'empilement", items:[
       { id:'avancer', actif:false },
@@ -1755,6 +2198,45 @@
 
   rendrePanneauMcd();
 
+  /* ================= Rails d'outils, un icone par outil (28/08) =================
+     Quatrieme et derniere passe -- validee sur maquette avant construction
+     ("mockup tes idees", demande du fondateur pour ne plus perdre de temps
+     en aller-retours texte). Un icone = un popover = UN outil (plus de
+     regroupement par famille comme les passes precedentes) -- chaque bouton
+     .icone-outil porte un data-cible pointant l'id de son popover, construit
+     generiquement plutot qu'un tableau code en dur par outil. */
+  // Filtre sur data-cible (28/08) : .icone-outil sert aussi aux boutons zoom
+  // (−/+/⤢), qui n'ouvrent aucun popover -- seuls les boutons portant un
+  // data-cible entrent dans le systeme d'ouverture/fermeture generique.
+  var OUTILS = Array.prototype.slice.call(document.querySelectorAll('.icone-outil[data-cible]')).map(function(bouton){
+    return { bouton: bouton, popover: $(bouton.dataset.cible) };
+  });
+  function ouvrirOutil(o){ o.popover.classList.add('ouverte'); }
+  function fermerOutil(o){ o.popover.classList.remove('ouverte'); }
+  function fermerTousLesOutils(){ OUTILS.forEach(fermerOutil); }
+  OUTILS.forEach(function(o){
+    o.bouton.addEventListener('click', function(){
+      if (o.popover.classList.contains('ouverte')) fermerOutil(o);
+      else { fermerTousLesOutils(); ouvrirOutil(o); }
+    });
+    o.popover.querySelector('[data-fermer-outil]').addEventListener('click', function(){ fermerOutil(o); });
+  });
+  document.addEventListener('pointerdown', function(e){
+    OUTILS.forEach(function(o){
+      if (!o.popover.classList.contains('ouverte')) return;
+      if (o.popover.contains(e.target) || o.bouton.contains(e.target)) return;
+      fermerOutil(o);
+    });
+  });
+
+  // Aide (28/08) : migree dans le systeme generique OUTILS ci-dessus (son
+  // bouton porte data-cible="popoverAide", meme mecanique d'ouverture/
+  // fermeture/Echap que tous les autres outils desormais).
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    fermerTousLesOutils();
+  });
+
   /* ================= Reglages generaux ================= */
   var curseurJoint = $('curseurJoint');
   curseurJoint.addEventListener('input', function(){
@@ -1891,12 +2373,37 @@
   function majSousGrilleCm(formatCm){
     $('sousGrilleCm').style.setProperty('--nb-cm', formatCm);
   }
+  // Fleches du carrousel Format (cm) : se contentent de declencher un clic
+  // sur le bouton .btn-format voisin -- aucun etat duplique, la logique de
+  // selection reste entierement dans le forEach ci-dessous.
+  function boutonsFormat(){ return Array.prototype.slice.call(document.querySelectorAll('.btn-format')); }
+  function indexFormatActif(){
+    var i = boutonsFormat().findIndex(function(b){ return b.classList.contains('actif'); });
+    return i === -1 ? 0 : i;
+  }
+  function majFlechesFormat(){
+    var boutons = boutonsFormat();
+    var i = indexFormatActif();
+    $('formatPrec').disabled = i <= 0;
+    $('formatSuiv').disabled = i >= boutons.length - 1;
+  }
+  $('formatPrec').addEventListener('click', function(){
+    var boutons = boutonsFormat(), i = indexFormatActif();
+    if (i > 0) boutons[i - 1].click();
+  });
+  $('formatSuiv').addEventListener('click', function(){
+    var boutons = boutonsFormat(), i = indexFormatActif();
+    if (i < boutons.length - 1) boutons[i + 1].click();
+  });
+
   document.querySelectorAll('.btn-format').forEach(function(b){
     b.addEventListener('click', function(){
       document.querySelectorAll('.btn-format').forEach(function(x){ x.classList.remove('actif'); });
       b.classList.add('actif');
       majRepereTuiles(parseInt(b.dataset.taille, 10));
       majSousGrilleCm(parseInt(b.dataset.taille, 10));
+      majFlechesFormat();
+      construireRegles();
     });
   });
   majRepereTuiles(20);
@@ -1904,6 +2411,9 @@
   $('checkSousGrille').addEventListener('change', function(){
     $('sousGrilleCm').classList.toggle('visible', this.checked);
   });
+  // Cochee par defaut (28/08) -- synchronise l'affichage initial, le
+  // listener 'change' seul ne suffit pas a appliquer l'etat au chargement.
+  $('sousGrilleCm').classList.toggle('visible', $('checkSousGrille').checked);
 
   /* ================= Zoom repense (27/08) =================
      Piege evite par rapport a la toute premiere version : celle-ci zoomait
@@ -1920,12 +2430,67 @@
   var niveauZoom = 1;
   var canevasHote = $('canevasHote');
   var zoneZoom = $('zoneZoom');
+  var regleH = $('regleH');
+  var regleV = $('regleV');
+  var regleHBas = $('regleHBas');
+  var regleVDroite = $('regleVDroite');
+
+  /* Regles graduees en cm reels sur les 4 cotes (28/08) : reconstruites a
+     chaque zoom (la largeur/hauteur en pixels de .canevas-hote change avec
+     niveauZoom) et a chaque changement de format (le nombre de cm total
+     change). Graduation forte + etiquette tous les 5 cm, fine sinon -- meme
+     esprit que .sous-grille-cm (1 cm) et .repere-tuiles (tuiles de 20 cm),
+     juste affiche sous forme de regle plutot que de grille superposee au
+     dessin. remplirRegle() factorise la construction, appelee une fois par
+     bande (haut/bas partagent le meme axe horizontal, gauche/droite le
+     meme axe vertical). */
+  function remplirRegle(el, nbCm, pxParCm, horizontale){
+    el.innerHTML = '';
+    if (horizontale) el.style.width = Math.round(nbCm * pxParCm) + 'px';
+    else el.style.height = Math.round(nbCm * pxParCm) + 'px';
+    for (var i = 0; i <= nbCm; i++){
+      var forte = (i % 5 === 0);
+      var tick = document.createElement('div');
+      tick.className = 'regle-tick regle-tick-' + (horizontale ? 'h' : 'v') + (forte ? ' regle-tick-forte' : '');
+      tick.style[horizontale ? 'left' : 'top'] = Math.round(i * pxParCm) + 'px';
+      if (forte){
+        var lbl = document.createElement('span');
+        lbl.className = 'regle-label';
+        lbl.textContent = i;
+        tick.appendChild(lbl);
+      }
+      el.appendChild(tick);
+    }
+  }
+  function construireRegles(){
+    var boutonActif = document.querySelector('.btn-format.actif');
+    var nbCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
+    $('formatActuelLabel').textContent = nbCm + ' × ' + nbCm + ' cm';
+    var taillePx = Math.round(LARGEUR * niveauZoom);
+    var pxParCm = taillePx / nbCm;
+    remplirRegle(regleH, nbCm, pxParCm, true);
+    remplirRegle(regleV, nbCm, pxParCm, false);
+    remplirRegle(regleHBas, nbCm, pxParCm, true);
+    remplirRegle(regleVDroite, nbCm, pxParCm, false);
+  }
+  // Panoramique (28/08) : les bandes de regle vivent HORS de .zone-zoom (qui
+  // defile), donc translatees manuellement au scroll pour rester justes --
+  // leurs conteneurs sont en overflow:hidden pour ne jamais deborder.
+  zoneZoom.addEventListener('scroll', function(){
+    var tx = 'translateX(' + (-zoneZoom.scrollLeft) + 'px)';
+    var ty = 'translateY(' + (-zoneZoom.scrollTop) + 'px)';
+    regleH.style.transform = tx;
+    regleHBas.style.transform = tx;
+    regleV.style.transform = ty;
+    regleVDroite.style.transform = ty;
+  });
 
   function appliquerZoom(){
     var taillePx = Math.round(LARGEUR * niveauZoom);
     canevasHote.style.width = taillePx + 'px';
     canevasHote.style.height = taillePx + 'px';
     $('valeurZoom').textContent = Math.round(niveauZoom * 100) + '%';
+    construireRegles();
   }
 
   /* Zoome en gardant fixe le point ecran (xEcran,yEcran) -- sous le curseur
@@ -1946,13 +2511,14 @@
 
   $('btnZoomPlus').addEventListener('click', function(){ zoomVers(niveauZoom + 0.25); });
   $('btnZoomMoins').addEventListener('click', function(){ zoomVers(niveauZoom - 0.25); });
-  $('btnAjuster').addEventListener('click', function(){
+  function ajusterEcran(){
     var rect = zoneZoom.getBoundingClientRect();
     var echelle = Math.min(rect.width / LARGEUR, rect.height / HAUTEUR, 3);
     niveauZoom = Math.max(0.3, +echelle.toFixed(2));
     appliquerZoom();
     zoneZoom.scrollLeft = 0; zoneZoom.scrollTop = 0;
-  });
+  }
+  $('btnAjuster').addEventListener('click', ajusterEcran);
 
   // Ctrl/Cmd + molette = zoomer sous le curseur (comme Canva/Figma) ; la
   // molette seule garde son role natif (defilement normal de la zone).
@@ -1963,6 +2529,10 @@
     zoomVers(niveauZoom + delta, e.clientX, e.clientY);
   }, { passive:false });
 
+  // Ouverture par defaut a 80% (28/08, demande explicite -- pas un "ajuster
+  // a l'ecran" qui varie trop selon la fenetre). Format 20x20 deja par
+  // defaut sur .btn-format.actif, aucun changement necessaire de ce cote.
+  niveauZoom = 0.8;
   appliquerZoom();
 
   /* Expose pour verification/tests. */
