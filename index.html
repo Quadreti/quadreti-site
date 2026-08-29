@@ -249,6 +249,12 @@
     transition:transform .15s ease;
   }
   .cta:hover{ transform:translateY(-2px); }
+  /* 29/08 (signale par le fondateur : "ce bouton qui s'echappe") : le bouton
+     hero est centre par transform:translateX(-50%) -- la regle de survol
+     generique ci-dessus REMPLACE ce transform au lieu de s'y ajouter, le
+     bouton perdait son centrage et sautait d'une demi-largeur vers la droite
+     au survol. Le survol combine desormais centrage + levee douce. */
+  .hero-cta.cta:hover{ transform:translateX(-50%) translateY(-2px); }
   .cta.light{ background:#fff; color:var(--charbon); border:1.5px solid var(--charbon); box-shadow:none; }
 
   /* ===== Sections communes ===== */
