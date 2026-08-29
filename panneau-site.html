@@ -2266,7 +2266,11 @@ function rendreSectionMenu(){
 }
 
 function rendreSectionBandeau(){
-  var bv = Object.assign({ actif:true, voile:false, vitesse:0.6, pause_ms:1500 }, reglages.bandeau_video || {});
+  /* position_ticker ajoute (29/08) : le mecanisme existait dans
+     reglages-site.js (appliquerPositionTicker) mais n'avait jamais ete
+     expose dans le panneau — le fondateur pensait pouvoir deplacer le
+     bandeau defilant, il avait raison sur le principe, le bouton manquait. */
+  var bv = Object.assign({ actif:true, voile:false, vitesse:0.6, pause_ms:1500, position_ticker:'sous_bandeau' }, reglages.bandeau_video || {});
   var img = Object.assign({}, reglages.images || {});
   var repli = img.bandeau || 'img/bandeau-1-impression.jpg';
 
@@ -2284,6 +2288,13 @@ function rendreSectionBandeau(){
       '<div class="toggle-ligne">' +
         '<div class="toggle-txt"><b>Voile sombre</b><span>Assombrit légèrement la vidéo pour que le texte ressorte</span></div>' +
         '<button class="interrupteur' + (bv.voile ? ' on' : '') + '" id="bvVoile"><i></i></button>' +
+      '</div>' +
+      '<div class="champ" style="margin-top:14px"><label>Position du bandeau défilant</label>' +
+        '<select id="bvPositionTicker">' +
+          '<option value="haut"' + (bv.position_ticker === 'haut' ? ' selected' : '') + '>Tout en haut de la page</option>' +
+          '<option value="sous_bandeau"' + (bv.position_ticker === 'sous_bandeau' || !bv.position_ticker ? ' selected' : '') + '>Sous le bandeau animé</option>' +
+          '<option value="aucun"' + (bv.position_ticker === 'aucun' ? ' selected' : '') + '>Masqué</option>' +
+        '</select>' +
       '</div>' +
     '</div>' +
 
@@ -2324,7 +2335,8 @@ function rendreSectionBandeau(){
       actif: $('bvActif').classList.contains('on'),
       voile: $('bvVoile').classList.contains('on'),
       vitesse: parseFloat($('bvVitesse').value) || 0.6,
-      pause_ms: parseInt($('bvPause').value, 10) || 0
+      pause_ms: parseInt($('bvPause').value, 10) || 0,
+      position_ticker: $('bvPositionTicker').value
     };
     if (videoDesktopActuelle) out.video_url = videoDesktopActuelle;
     if (videoMobileActuelle) out.video_url_mobile = videoMobileActuelle;
@@ -2352,6 +2364,7 @@ function rendreSectionBandeau(){
 
   $('bvActif').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
   $('bvVoile').onclick = function(){ this.classList.toggle('on'); previsualiser(); };
+  $('bvPositionTicker').onchange = previsualiser;
   $('bvVitesse').oninput = function(){ $('bvVitesseVal').textContent = parseFloat(this.value).toFixed(1) + '×'; previsualiser(); };
   $('bvPause').oninput = previsualiser;
 
