@@ -231,7 +231,17 @@
        aucune coincidence a esperer, correct meme si les couleurs divergent
        un jour. */
     if (arrierePlanTexte) {
-      css += '\n.step,.reason,.c-form-compact,.gift,.premium,.trust-card,.qz-legal a.qz-leg{background:' + arrierePlanTexte + '!important}';
+      /* .qz-legal a.qz-leg RETIRE de cette liste (29/08, vrai bug trouve en
+         prod) : cette regle arrivait PLUS BAS dans le style injecte que la
+         regle kraft dediee (mentionsKraft, plus haut) -- meme poids, la
+         derniere ecrite gagne, le fond du cartouche repassait donc charbon
+         par-dessus le kraft. Combine au texte/icone charbon fixes de
+         commun.css : charbon sur charbon, cartouches invisibles -- le
+         symptome exact signale par le fondateur ("c'est invisible", persistant
+         apres vidage de cache, car ce n'etait justement pas du cache). Les
+         cartouches ont leur propre reglage de fond (mentionsKraft), ils
+         n'ont rien a faire dans la liste arriere-plan-texte generique. */
+      css += '\n.step,.reason,.c-form-compact,.gift,.premium,.trust-card{background:' + arrierePlanTexte + '!important}';
       var texteSurCarte = couleurLisibleSur(arrierePlanTexte, texte);
       css += '\n.step p,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + texteSurCarte + '}';
       css += '\n.trust-card li b{color:' + texteSurCarte + '!important}';
