@@ -684,7 +684,10 @@ function rendreSectionPalette(){
     titre: c.titres || c.titre || c.accent,
     sousTitre: c.sousTitre || c.accent,
     bouton: c.bouton || c.accent,
-    arrierePlanTexte: c.arrierePlanTexte || c.carte || c.encartFond || '#ffffff'
+    arrierePlanTexte: c.arrierePlanTexte || c.carte || c.encartFond || '#ffffff',
+    /* 29/08 : fond du bandeau/menu/pied de page, separable du centre de
+       page (demande fondateur : bandeau+pied charbon, centre kraft). */
+    fondBandeau: c.fondBandeau || c.fond || '#F5F5F5'
   };
 
   var chipsHtml = [1,2,3,4,5].map(function(n){
@@ -743,6 +746,7 @@ function rendreSectionPalette(){
         '<div class="champ"><label>Sous-titre</label><div class="rang-couleur"><input type="color" id="cSousTitre" value="' + CHAMPS_MAITRES.sousTitre + '"><code id="cSousTitreHex">' + CHAMPS_MAITRES.sousTitre + '</code></div></div>' +
         '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="cTexte" value="' + c.texte + '"><code id="cTexteHex">' + c.texte + '</code></div></div>' +
         '<div class="champ"><label>Général</label><div class="rang-couleur"><input type="color" id="cFond" value="' + c.fond + '"><code id="cFondHex">' + c.fond + '</code></div></div>' +
+        '<div class="champ"><label>Fond bandeau &amp; pied de page</label><div class="rang-couleur"><input type="color" id="cFondBandeau" value="' + CHAMPS_MAITRES.fondBandeau + '"><code id="cFondBandeauHex">' + CHAMPS_MAITRES.fondBandeau + '</code></div></div>' +
         '<div class="champ"><label>Bouton</label><div class="rang-couleur"><input type="color" id="cBouton" value="' + CHAMPS_MAITRES.bouton + '"><code id="cBoutonHex">' + CHAMPS_MAITRES.bouton + '</code></div></div>' +
         '<div class="champ"><label>Arrière-plan texte</label><div class="rang-couleur"><input type="color" id="cArrierePlanTexte" value="' + CHAMPS_MAITRES.arrierePlanTexte + '"><code id="cArrierePlanTexteHex">' + CHAMPS_MAITRES.arrierePlanTexte + '</code></div></div>' +
         '<div class="champ"><label>Accent</label><div class="rang-couleur"><input type="color" id="cAccent" value="' + c.accent + '"><code id="cAccentHex">' + c.accent + '</code></div></div>' +
@@ -771,6 +775,7 @@ function rendreSectionPalette(){
     out.fond = $('cFond').value; out.texte = $('cTexte').value; out.accent = $('cAccent').value; out.survol = $('cSurvol').value;
     out.titres = $('cTitre').value; out.sousTitre = $('cSousTitre').value;
     out.bouton = $('cBouton').value; out.arrierePlanTexte = $('cArrierePlanTexte').value;
+    out.fondBandeau = $('cFondBandeau').value;
     /* Ces 4 champs vivent desormais dans la palette maitresse elle-meme --
        les anciens noms de champs "fins" retires (carte/encartFond/titre au
        singulier) ne doivent plus trainer dans les donnees enregistrees. */
@@ -788,7 +793,7 @@ function rendreSectionPalette(){
   function previsualiser(){ envoyerApercu('couleurs', draft()); }
 
   document.querySelectorAll('input[name=cTheme]').forEach(function(r){ r.onchange = previsualiser; });
-  ['cFond','cTexte','cAccent','cSurvol','cTitre','cSousTitre','cBouton','cArrierePlanTexte'].forEach(function(id){
+  ['cFond','cTexte','cAccent','cSurvol','cTitre','cSousTitre','cBouton','cArrierePlanTexte','cFondBandeau'].forEach(function(id){
     $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
   });
   ['secBandeau','secAccueil','secWidgets'].forEach(function(id){
@@ -820,6 +825,7 @@ function rendreSectionPalette(){
       if (pc.sousTitre) { $('cSousTitre').value = pc.sousTitre; $('cSousTitreHex').textContent = pc.sousTitre; }
       if (pc.bouton) { $('cBouton').value = pc.bouton; $('cBoutonHex').textContent = pc.bouton; }
       if (pc.arrierePlanTexte) { $('cArrierePlanTexte').value = pc.arrierePlanTexte; $('cArrierePlanTexteHex').textContent = pc.arrierePlanTexte; }
+      if (pc.fondBandeau) { $('cFondBandeau').value = pc.fondBandeau; $('cFondBandeauHex').textContent = pc.fondBandeau; }
       toast('Palette « ' + (p.nom || '') + ' » chargée dans le formulaire — Enregistrer pour l\'appliquer.');
       previsualiser();
     };
@@ -835,7 +841,8 @@ function rendreSectionPalette(){
     nouvelles[slot] = { nom: nom, couleurs: {
       theme: document.querySelector('input[name=cTheme]:checked').value,
       fond: $('cFond').value, texte: $('cTexte').value, accent: $('cAccent').value, survol: $('cSurvol').value,
-      titres: $('cTitre').value, sousTitre: $('cSousTitre').value, bouton: $('cBouton').value, arrierePlanTexte: $('cArrierePlanTexte').value
+      titres: $('cTitre').value, sousTitre: $('cSousTitre').value, bouton: $('cBouton').value, arrierePlanTexte: $('cArrierePlanTexte').value,
+      fondBandeau: $('cFondBandeau').value
     } };
     enregistrer('palettes', nouvelles).then(function(){ $('memNom').value = ''; rendreSectionPalette(); });
   };

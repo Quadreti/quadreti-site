@@ -78,15 +78,22 @@
     var accent = v.accent || DEFAUTS.couleurs.accent;
     var survol = v.survol || DEFAUTS.couleurs.survol;
     var palette = { fond: fond, texte: texte, accent: accent, survol: survol };
+    /* Fond bandeau & pied de page (29/08, demande fondateur : pouvoir mettre
+       bandeau/menu/pied en charbon et le centre de page en kraft, par ex.).
+       Repli sur Général = comportement historique inchangé tant que non
+       personnalisé. Transmis dans la palette pour que le menu (appliquerMenuNav)
+       s'harmonise avec le bandeau plutot qu'avec le centre de page. */
+    var fondBandeau = c.fondBandeau || fond;
+    palette.fondBandeau = fondBandeau;
     var titre = c.titres || c.titre; /* "titres" = nom historique du champ, meme role */
     var sousTitre = c.sousTitre;
     var arrierePlanTexte = c.arrierePlanTexte || c.carte || c.encartFond; /* migration douce depuis les anciens champs */
-    /* c.logo/c.mentionsKraft/c.boutiqueFond ajoutes a cette garde (28/08) :
-       sans ca, un reglage fin personnalise seul (aucun autre champ de la
-       palette maitresse touche) faisait sortir la fonction avant meme
-       d'atteindre le CSS qui les applique plus bas -- exactement le genre
-       de silence qui a fait perdre le reglage "Logo" avant ce correctif. */
-    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft && !c.boutiqueFond) return palette;
+    /* c.logo/c.mentionsKraft/c.boutiqueFond/c.fondBandeau ajoutes a cette
+       garde (28-29/08) : sans ca, un reglage personnalise seul (aucun autre
+       champ de la palette maitresse touche) faisait sortir la fonction avant
+       meme d'atteindre le CSS qui les applique plus bas -- exactement le
+       genre de silence qui a fait perdre le reglage "Logo". */
+    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft && !c.boutiqueFond && !c.fondBandeau) return palette;
     /* --charbon / --qz-charbon (28/08, correctif racine) : ces deux variables
        ETAIENT reinjectees ici avec la valeur de "Texte" -- pratique tant que
        Texte restait sombre (les deux se confondaient), mais des qu'un theme
@@ -104,7 +111,9 @@
        deja via leurs propres regles plus bas, independantes de --charbon. */
     var css = ':root{' +
       '--fond:' + fond + ';--terracotta:' + accent + ';' +
-      '--qz-clair:' + fond + ';--qz-terracotta:' + accent + ';' +
+      /* --qz-clair = fond du bandeau du haut : suit "Fond bandeau & pied de
+         page" (repli Général) depuis le 29/08. */
+      '--qz-clair:' + fondBandeau + ';--qz-terracotta:' + accent + ';' +
       '}' +
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
@@ -142,7 +151,11 @@
        sinon repli sur Texte (comme declare dans ZONES_FINES du panneau) --
        Texte est deja pense pour rester lisible sur General, pas une
        coincidence a esperer comme les bugs precedents. */
-    var couleurLogo = c.logo || texte;
+    /* 29/08 : repli recalcule contre le fond REEL du bandeau (fondBandeau)
+       plutot que Texte brut -- si le bandeau diverge du centre de page, le
+       logo par defaut reste lisible. Un choix explicite (c.logo, reglage
+       fin) est toujours respecte tel quel. */
+    var couleurLogo = c.logo || couleurLisibleSur(fondBandeau, texte);
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
 
@@ -181,8 +194,11 @@
        Corrige en lui donnant enfin son propre calque, aligne sur la vraie
        palette plutot que sur une variable partagee mal reliee -- c'est ce
        qui restait fige en creme via l'ancien theme "Magazine", retire. */
-    var texteSurFooter = couleurLisibleSur(fond, texte);
-    css += '\n.qz-basdepage,.qz-reseaux,.qz-legal{background:' + fond + '}' +
+    /* 29/08 : tout le calque pied de page se calcule contre fondBandeau
+       (= "Fond bandeau & pied de page", repli Général) et non plus contre
+       le fond du centre de page. */
+    var texteSurFooter = couleurLisibleSur(fondBandeau, texte);
+    css += '\n.qz-basdepage,.qz-reseaux,.qz-legal{background:' + fondBandeau + '}' +
       '\n.qz-basdepage .qz-wordmark,.qz-baseline,.qz-reseaux .qz-accroche{color:' + texteSurFooter + '}' +
       '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
       /* .qz-legal a.qz-leg span et .qz-legal .qz-picto retires de ces deux
@@ -191,7 +207,7 @@
          SOMBRE), alors que leur cartouche a desormais son PROPRE fond kraft
          clair (voir plus haut, .qz-legal a.qz-leg) -- texte/icone noir fixe
          geres dans commun.css, plus rien a calculer ici pour ces deux-la. */
-      '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fond) + '}' +
+      '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fondBandeau) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
       '\n.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:' + accent + ';border-color:' + accent + '}' +
@@ -325,6 +341,13 @@
     /* Bandeau de cloture (.finale) : sa phrase etait en blanc fige --
        invisible des que Général devient clair. */
     css += '\n.finale .phrase{color:' + couleurLisibleSur(fond, '#ffffff') + '!important}';
+    /* Complements trouves au banc "fond bandeau separe" (29/08) : petits
+       gris figes de l'accueil (.lbl gamme, .clic de cloture) et span accent
+       de la phrase finale -- gardent leur couleur tant qu'elle reste lisible
+       sur Général, repli calcule sinon. */
+    css += '\n.scal .lbl{color:' + couleurLisibleSur(fond, '#8a9099') + '}';
+    css += '\n.finale .clic{color:' + couleurLisibleSur(fond, '#8a939c') + '}';
+    css += '\n.finale .phrase span{color:' + couleurLisibleSur(fond, accent) + '!important}';
 
     /* Contact : texte gris des cartes raisons (fige #5a636b, faible sur
        carte sombre) + lien contact@quadreti.fr (charbon fige, invisible
@@ -354,6 +377,7 @@
       css += '\n.shop-head p{color:' + grisLisibleSur(fond) + '}';
       css += '\n#my-store-139886004 .grid-product__title-inner,#my-store-139886004 .grid-product__price-value,' +
         '#my-store-139886004 .page-title__name,#my-store-139886004 .grid-category__title-inner{color:' + texteSurFond + '!important}';
+      css += '\n#my-store-139886004 .ec-footer__link{color:' + couleurLisibleSur(fond, '#757575') + '!important}';
     }
 
     /* Coloriages (hors zone imprimable, exemptee volontairement) : fil
@@ -857,11 +881,21 @@
   function appliquerMenuNav(m, palette, suit) {
     if (!m) return;
     var css = '';
-    var bouton = suit && palette ? plusFonce(palette) : m.bouton;
-    var traits = suit && palette ? plusClair(palette) : m.traits;
-    var fond = suit && palette ? plusFonce(palette) : m.fond;
-    var texte = suit && palette ? plusClair(palette) : m.texte;
-    var sousBouton = suit && palette ? plusClair(palette) : m.sousBouton;
+    /* 29/08 : en mode "suivre la palette", le menu s'harmonise avec le fond
+       REEL du bandeau (champ "Fond bandeau & pied de page", repli Général)
+       -- si le bandeau diverge du centre de page, le menu suit le bandeau,
+       pas le centre. Identique a avant tant que le champ n'est pas
+       personnalise (fondBandeau == fond). */
+    var pm = palette ? { fond: palette.fondBandeau || palette.fond, texte: palette.texte } : null;
+    /* Gardes de contraste (29/08) : si Fond bandeau et Texte sont du meme
+       cote (ex. bandeau charbon + Texte charbon choisi pour un centre de
+       page clair), plusClair(pm) rendrait le menu illisible sur lui-meme --
+       chaque texte du menu passe par couleurLisibleSur contre son vrai fond. */
+    var fond = suit && palette ? plusFonce(pm) : m.fond;
+    var texte = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.texte;
+    var bouton = suit && palette ? plusFonce(pm) : m.bouton;
+    var traits = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.traits;
+    var sousBouton = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.sousBouton;
     if (bouton) css += '\n.qz-burger{background:' + bouton + '}';
     if (traits) css += '\n.qz-burger span{background:' + traits + '}';
     if (typeof m.transparence === 'number' && m.transparence > 0) {
@@ -900,8 +934,8 @@
              '\n}';
     }
     /* Reglages propres au sous-menu (volet « Comment ca marche ») */
-    var sousFond = suit && palette ? plusFonce(palette) : m.sousFond;
-    var sousTexte = suit && palette ? plusClair(palette) : m.sousTexte;
+    var sousFond = suit && palette ? plusFonce(pm) : m.sousFond;
+    var sousTexte = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.sousTexte;
     if (sousFond) css += '\n.qz-navpanel .qz-sublist{background:' + sousFond + '}';
     if (sousTexte) css += '\n.qz-navpanel .qz-sublist a{color:' + sousTexte + '}';
     if (m.sousDisposition === 'horizontale') {
