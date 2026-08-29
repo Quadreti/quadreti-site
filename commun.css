@@ -114,7 +114,10 @@ footer.qz-footer{
   padding:46px 36px 38px;
   display:grid; grid-template-columns:1.2fr 1fr 1.2fr; gap:36px; align-items:start;
   max-width:none;
+  /* signature "a la Claudus" (29/08) : joint de tesselle en liseret accent */
+  border-top:3px solid var(--qz-terracotta);
 }
+.qz-baseline-accent{ color:var(--qz-terracotta); }
 .qz-pied3 .qz-col{ min-width:0; }
 .qz-basdepage{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
 .qz-basdepage .qz-qlogo{ grid-template-columns:repeat(4,8px); grid-template-rows:repeat(4,8px); gap:1.6px; opacity:1; animation:none; }
@@ -128,9 +131,24 @@ footer.qz-footer{
   font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px;
   letter-spacing:.16em; text-transform:uppercase; color:var(--qz-kraft); margin:2px 0 14px;
 }
+/* petite tesselle devant chaque titre de colonne */
+.qz-coltitre::before{
+  content:''; display:inline-block; width:8px; height:8px; border-radius:2px;
+  background:var(--qz-terracotta); margin-right:9px; vertical-align:0;
+}
 .qz-pied-infos ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
-.qz-pied-infos a{ color:var(--qz-creme); opacity:.85; text-decoration:none; font-size:14px; font-family:'Karla',sans-serif; }
+.qz-pied-infos a{
+  color:var(--qz-creme); opacity:.85; text-decoration:none; font-size:14px; font-family:'Karla',sans-serif;
+  position:relative; display:inline-block;
+}
+/* soulignement anime CSS pur : un trait accent qui glisse au survol */
+.qz-pied-infos a::after{
+  content:''; position:absolute; left:0; bottom:-2px; width:0; height:1.5px;
+  background:var(--qz-terracotta); transition:width .22s ease;
+}
 .qz-pied-infos a:hover, .qz-pied-infos a:focus-visible{ color:var(--qz-terracotta); opacity:1; }
+.qz-pied-infos a:hover::after, .qz-pied-infos a:focus-visible::after{ width:100%; }
+@media (prefers-reduced-motion: reduce){ .qz-pied-infos a::after{ transition:none; } }
 .qz-reseaux .qz-sub{ font-size:12.5px; color:#9aa2a9; margin:0 0 16px; font-family:'Karla',sans-serif; }
 .qz-reseaux .qz-grid{ display:flex; flex-wrap:wrap; gap:12px; }
 .qz-reseaux .qz-grid a{

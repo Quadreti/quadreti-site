@@ -19,7 +19,7 @@ document.write(
         '<div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>' +
         '<span class="qz-wordmark"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>' +
       '</div>' +
-      '<div class="qz-baseline">Composez, imprimez, clipsez, changez à volonté.</div>' +
+      '<div class="qz-baseline">Composez, imprimez, clipsez, <span class="qz-baseline-accent">changez à volonté.</span></div>' +
     '</div>' +
 
     '<nav class="qz-col qz-pied-infos" aria-label="Informations">' +

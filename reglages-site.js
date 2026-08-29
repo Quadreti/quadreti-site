@@ -203,7 +203,13 @@
       '\n.qz-pied-infos a:hover,.qz-pied-infos a:focus-visible{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fondBandeau) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
-      '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}';
+      '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
+      /* touches "a la Claudus" (29/08) : liseret superieur, accent de la
+         baseline, tesselle des titres de colonnes, soulignement des liens
+         -- tous pilotes par Accent, avec garde de contraste sur le texte. */
+      '\n.qz-pied3{border-top-color:' + accent + '}' +
+      '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
+      '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
     /* Bouton (28/08, correctif majeur) : la base CSS du site pose le fond
        de PLUSIEURS elements (bouton principal .cta, pastilles numerotees
@@ -583,6 +589,27 @@
     if (!b) return;
     texte('.qz-baseline', b.produit);
     texte('.qz-cat', b.categorie);
+    /* Touche "a la Claudus" (29/08) : le reglage ci-dessus reecrit la
+       baseline du pied de page en texte brut, ce qui efface le span accent
+       pose par commun-pied.js. On le repose ici, uniquement si le texte se
+       termine par la signature "changez a volonte." (avec ou sans point) --
+       le texte reste librement editable depuis le panneau, l'accent suit
+       tant que la signature est presente. Construction DOM, jamais de HTML
+       injecte depuis un champ texte. */
+    var bl = document.querySelector('.qz-baseline');
+    if (bl && !bl.querySelector('.qz-baseline-accent')) {
+      var t = bl.textContent;
+      var m = t.match(/changez à volonté\.?\s*$/i);
+      if (m) {
+        var idx = t.length - m[0].length;
+        bl.textContent = '';
+        bl.appendChild(document.createTextNode(t.slice(0, idx)));
+        var span = document.createElement('span');
+        span.className = 'qz-baseline-accent';
+        span.textContent = t.slice(idx);
+        bl.appendChild(span);
+      }
+    }
   }
 
   /* Reconstruit entièrement les liens du menu (#qzNavPanel > ul) à partir d'une liste
