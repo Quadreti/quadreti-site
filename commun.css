@@ -18,9 +18,12 @@
 }
 .qz-header{
   width:100%; background:var(--qz-clair); border-bottom:1px solid #2b353e14;
-  padding:14px 32px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px;
+  /* 29/08 soir : logo decale du bord gauche (padding-left 32 -> 56px),
+     demande fondateur ; mobile reste plus serre plus bas. */
+  padding:14px 32px 14px 56px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px;
   position:relative; z-index:60; box-sizing:border-box;
 }
+@media (max-width:640px){ .qz-header{ padding-left:24px; } }
 .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
 .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
 .qz-qlogo i{ border-radius:1.4px; background:transparent; }
@@ -34,10 +37,11 @@
    taille de logo (8px, plus bas dans ce fichier), pas concerne par cette
    demande, ne doit pas grossir avec. .qz-dot/.qz-doti utilisent des unites
    em relatives a la police du mot-symbole : suivent automatiquement. */
-.qz-header .qz-logorow{ gap:9.6px; }
-.qz-header .qz-qlogo{ grid-template-columns:repeat(4,8.4px); grid-template-rows:repeat(4,8.4px); gap:1.68px; }
-.qz-header .qz-qlogo i{ border-radius:1.68px; }
-.qz-header .qz-wordmark{ font-size:19.2px; }
+/* 29/08 soir : +10% supplementaires ("agrandis encore un petit peu"). */
+.qz-header .qz-logorow{ gap:10.5px; }
+.qz-header .qz-qlogo{ grid-template-columns:repeat(4,9.2px); grid-template-rows:repeat(4,9.2px); gap:1.84px; }
+.qz-header .qz-qlogo i{ border-radius:1.84px; }
+.qz-header .qz-wordmark{ font-size:21px; }
 .qz-doti{ position:relative; display:inline-block; }
 .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
 .qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }
@@ -49,12 +53,18 @@
 .qz-wordmark b:nth-child(6){ animation-delay:1.50s; }
 .qz-wordmark b:nth-child(7){ animation-delay:1.72s; }
 .qz-wordmark b:nth-child(8){ animation-delay:1.94s; }
-.qz-wordmark .qz-dot{ opacity:0; animation:qzLettre .05s steps(1) forwards; animation-delay:2.30s; }
+/* 29/08 soir : le point du i avait SA PROPRE animation retardee (2.30s),
+   separee de sa lettre -- signale disparu par le fondateur a la fin de la
+   sequence. Animation dediee supprimee : le point nait AVEC son i (le fondu
+   du b parent a 1.94s revele les deux ensemble) -- une animation de moins,
+   plus aucun moyen pour le point d'avoir une vie independante. */
 .qz-qlogo{ opacity:0; animation:qzLettre .4s ease forwards; animation-delay:.15s; }
 @keyframes qzLettre{ to{ opacity:1; } }
 .qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
 .qz-cat{
-  font-family:'Quicksand',sans-serif; font-weight:600; font-size:8.5px; letter-spacing:.08em;
+  /* 29/08 soir : categorie agrandie au maximum raisonnable (8.5 -> 12px,
+     demande fondateur) -- au-dela elle depasse nettement le mot-symbole. */
+  font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; letter-spacing:.09em;
   color:var(--qz-terracotta); white-space:nowrap;
   opacity:0; animation:qzLettre .45s ease forwards; animation-delay:2.55s;
 }
