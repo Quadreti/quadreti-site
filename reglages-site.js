@@ -93,7 +93,7 @@
        champ de la palette maitresse touche) faisait sortir la fonction avant
        meme d'atteindre le CSS qui les applique plus bas -- exactement le
        genre de silence qui a fait perdre le reglage "Logo". */
-    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft && !c.boutiqueFond && !c.fondBandeau) return palette;
+    if (!Object.keys(v).length && !titre && !sousTitre && !arrierePlanTexte && !c.logo && !c.mentionsKraft && !c.boutiqueFond && !c.fondBandeau && !c.enumerations) return palette;
     /* --charbon / --qz-charbon (28/08, correctif racine) : ces deux variables
        ETAIENT reinjectees ici avec la valeur de "Texte" -- pratique tant que
        Texte restait sombre (les deux se confondaient), mais des qu'un theme
@@ -228,8 +228,15 @@
     var bouton = c.bouton || accent;
     /* .c-submit ajoute (29/08) : le bouton "Envoyer le message" du formulaire
        Contact etait fige sur var(--charbon) -- invisible sur la carte devenue
-       charbon. Il suit desormais le role "Bouton" de la palette, comme .cta. */
-    css += '\n.cta,.step .num,.offer .flag,.chip,.c-submit{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+       charbon. Il suit desormais le role "Bouton" de la palette, comme .cta.
+       29/08 (suite, observation fondateur "les enumerations dans les cartes
+       sont des boutons") : les pastilles numerotees/badges/puces (.step .num,
+       .offer .flag, .chip) ne sont PAS de vrais boutons -- separees dans leur
+       propre reglage fin "enumerations" (repli sur Bouton = zero changement
+       tant que non personnalise), seuls les vrais boutons restent ici. */
+    css += '\n.cta,.c-submit{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+    var enumerations = c.enumerations || bouton;
+    css += '\n.step .num,.offer .flag,.chip{background:' + enumerations + '!important;color:' + couleurLisibleSur(enumerations, texte) + '!important}';
     if (titre) css += '\nh2,h3{color:' + titre + '}';
     if (sousTitre) css += '\n.eyebrow{color:' + sousTitre + '}';
 
