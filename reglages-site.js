@@ -56,6 +56,15 @@
     return luminance(fondHex) > 128 ? '#2b353e' : '#ffffff';
   }
 
+  /* Gris "doux" (texte secondaire : sous-titres, copyright, notes) adapte au
+     fond -- gris fonce sur fond clair, gris clair sur fond sombre. Introduit
+     par la Phase 1 de l'audit couleurs (29/08) : les gris figes (#5c646c,
+     #9aa2a9, #5a636b...) passaient sous le seuil de lisibilite des que la
+     palette changeait de camp clair/sombre. */
+  function grisLisibleSur(fondHex) {
+    return luminance(fondHex) > 128 ? '#5c646c' : '#aab2ba';
+  }
+
   function appliquerCouleurs(c) {
     if (!c) return DEFAUTS.couleurs;
     var v = {};
@@ -108,7 +117,15 @@
        disparaissaient sur fond devenu charbon. Le bandeau/pied de page
        communs de ces pages continuent, eux, de suivre la palette maitresse
        (regles qz-* separees, non concernees par ce garde). */
-    if (!estPageJeu()) css += '\nbody{background:' + fond + ';color:' + texte + '}';
+    /* 404 exemptee aussi (Phase 1 audit, 29/08) : page a identite propre
+       (photo de fond + textes creme sur charbon, concue comme un tout).
+       En plus du probleme de textes, le body{background:couleur} generique
+       est un raccourci CSS qui EFFACE background-image -- la photo de fond
+       de la 404 avait disparu depuis la refonte palette sans que personne
+       ne le voie. Detection par son contenu (.code404), pas par l'URL :
+       GitHub Pages sert cette page sous n'importe quelle adresse inexistante. */
+    var estPage404 = !!document.querySelector('.code404');
+    if (!estPageJeu() && !estPage404) css += '\nbody{background:' + fond + ';color:' + texte + '}';
 
     /* Logo du bandeau du haut (tesselles + "Quadretı") : jamais couvert par
        appliquerMenuNav (qui ne pose que le burger/le panneau) -- restait
@@ -173,7 +190,7 @@
          SOMBRE), alors que leur cartouche a desormais son PROPRE fond kraft
          clair (voir plus haut, .qz-legal a.qz-leg) -- texte/icone noir fixe
          geres dans commun.css, plus rien a calculer ici pour ces deux-la. */
-      '\n.qz-reseaux .qz-sub,.qz-copy{color:' + couleurLisibleSur(fond, '#9aa2a9') + '}' +
+      '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fond) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
       '\n.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:' + accent + ';border-color:' + accent + '}' +
@@ -296,6 +313,80 @@
        arrierePlanTexte (c'est exactement le melange qui rendait ce texte
        invisible). */
     css += '\n.mode p{color:' + couleurLisibleSur('#ffffff', texte) + '!important}';
+
+    /* ============ Phase 1 de l'audit couleurs (29/08) ============
+       Branchements issus du banc de test 2 palettes (sombre actuelle +
+       claire de stress) sur les 10 gabarits de pages generales. Chaque
+       regle est CALCULEE contre le vrai fond de l'element -- jamais une
+       valeur recopiee. Zero changement visuel avec la palette actuelle
+       (verifie), robuste si la palette change de camp un jour. */
+
+    /* Bandeau de cloture (.finale) : sa phrase etait en blanc fige --
+       invisible des que Général devient clair. */
+    css += '\n.finale .phrase{color:' + couleurLisibleSur(fond, '#ffffff') + '!important}';
+
+    /* Contact : texte gris des cartes raisons (fige #5a636b, faible sur
+       carte sombre) + lien contact@quadreti.fr (charbon fige, invisible
+       sur fond sombre -- vrai bug present en production). */
+    css += '\n.reason p{color:' + grisLisibleSur(arrierePlanTexte || fond) + '}';
+    css += '\n.direct-note a{color:' + texteSurFond + '!important}';
+
+    /* Encarts fondus : quand Arriere-plan texte et Général sont proches,
+       les cartes se fondent dans la page (bordure d'origine invisible).
+       Bordure calculee depuis la couleur de texte des cartes, discrete. */
+    if (arrierePlanTexte && Math.abs(luminance(arrierePlanTexte) - luminance(fond)) < 30) {
+      css += '\n.step,.reason,.c-form-compact,.gift,.premium,.trust-card,.offer{border:1px solid ' + hexEnRgba(couleurLisibleSur(arrierePlanTexte, texte), 0.22) + '!important}';
+    }
+
+    /* Blog : intro grise figee + lien "Retour au blog" (charbon fige) +
+       les liens sans classe du contenu d'article (bleu navigateur). */
+    if (/\/blog\//.test(location.pathname)) {
+      css += '\n.blog-entete p{color:' + grisLisibleSur(fond) + '}';
+      css += '\nmain.blog a:not([class]){color:' + accent + '}';
+      css += '\n.blog-article .retour,main.blog a.retour{color:' + texteSurFond + '!important}';
+    }
+
+    /* Boutique : intro grise figee + textes du widget Ecwid (titres/prix
+       en gris fonce fige par Ecwid, illisibles sur fond sombre -- vrai
+       bug present en production). */
+    if (/\/boutique\//.test(location.pathname)) {
+      css += '\n.shop-head p{color:' + grisLisibleSur(fond) + '}';
+      css += '\n#my-store-139886004 .grid-product__title-inner,#my-store-139886004 .grid-product__price-value,' +
+        '#my-store-139886004 .page-title__name,#my-store-139886004 .grid-category__title-inner{color:' + texteSurFond + '!important}';
+    }
+
+    /* Coloriages (hors zone imprimable, exemptee volontairement) : fil
+       d'Ariane gris fige, cartes "autres coloriages" au texte charbon fige,
+       bouton Imprimer rattache au role Bouton comme les autres boutons. */
+    if (/\/coloriages\//.test(location.pathname)) {
+      css += '\n.fil,.fil a{color:' + grisLisibleSur(fond) + '}';
+      css += '\n.carte-autre span{color:' + texteSurFond + '!important}';
+      css += '\n.btn-imprimer{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+      css += '\n.btn-imprimer:hover{background:' + survol + '!important}';
+    }
+
+    /* Guide de montage (codification) : page a sections claires FIXES
+       (hero creme, cartes blanches, quiz gris clair) dont les textes
+       heritaient de la couleur Texte du site (blanc sur clair = invisible,
+       vrai bug present en production). Calcules contre LEURS fonds fixes.
+       Les pastilles "D5" terracotta-sur-kraft sont exemptees : elles
+       reproduisent l'aspect reel du code imprime sur le produit physique
+       (contenu, pas habillage). */
+    if (/quadreti-guide-codification/.test(location.pathname)) {
+      css += '\nheader.hero h1{color:' + couleurLisibleSur('#F2EEDF', texte) + '}';
+      css += '\n.legende .item,.lecture,.album-page{color:' + couleurLisibleSur('#ffffff', texte) + '}';
+      css += '\n.quiz .q-txt{color:' + couleurLisibleSur('#F5F5F5', texte) + '}';
+    }
+
+    /* Guide de l'app (interactif) : intro grise figee + signature et gras
+       en charbon fige sur le fond de page, + bordure calculee sur les
+       boutons factices des maquettes (fondus sur carte claire). */
+    if (/quadreti-guide-interactif/.test(location.pathname)) {
+      css += '\nheader p{color:' + grisLisibleSur(fond) + '}';
+      css += '\nheader p b{color:' + texteSurFond + '!important}';
+      css += '\nfooter.guide-foot .sig{color:' + texteSurFond + '!important}';
+      css += '\n.mockbtn{border-color:' + hexEnRgba(couleurLisibleSur('#ffffff', texte), 0.3) + '!important}';
+    }
 
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
@@ -809,7 +900,11 @@
   function appliquerHeroBaseline(hb, palette, suit) {
     if (!hb) return;
     var css = '';
-    var couleur = suit && palette ? plusClair(palette) : hb.couleur;
+    /* Garde de contraste (Phase 1 audit, 29/08) : la video du bandeau est
+       transparente depuis le 28/08 -- ces textes sont donc poses sur le fond
+       Général. plusClair seul donnait un texte quasi identique au fond des
+       que la palette est claire. */
+    var couleur = suit && palette ? couleurLisibleSur(palette.fond, plusClair(palette)) : hb.couleur;
     if (hb.taille) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-size:' + hb.taille + 'px}';
     if (couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + couleur + '}';
     if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
@@ -833,7 +928,8 @@
   function appliquerHeroChangez(hc, palette, suit) {
     if (!hc) return;
     var css = '';
-    var couleur = suit && palette ? plusClair(palette) : hc.couleur;
+    /* Meme garde de contraste que appliquerHeroBaseline (Phase 1, 29/08). */
+    var couleur = suit && palette ? couleurLisibleSur(palette.fond, plusClair(palette)) : hc.couleur;
     if (hc.taille) css += '\n.h-line.l4{font-size:' + hc.taille + 'px}';
     if (couleur) css += '\n.h-line.l4{color:' + couleur + '}';
     if (hc.police === 'titres') css += '\n.h-line.l4{font-family:\'Quicksand\',sans-serif}';
