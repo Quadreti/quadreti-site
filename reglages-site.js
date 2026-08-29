@@ -341,6 +341,22 @@
     /* Bandeau de cloture (.finale) : sa phrase etait en blanc fige --
        invisible des que Général devient clair. */
     css += '\n.finale .phrase{color:' + couleurLisibleSur(fond, '#ffffff') + '!important}';
+
+    /* Animation "tesselles fuyantes" de l'accueil (29/08, signalement
+       fondateur : l'animation revele des "frontieres" entre sections).
+       L'animation vit en z-index:-1 derriere la page ; les sections
+       alternees (.blk.alt) et le bandeau de cloture (.finale) peignaient
+       un fond opaque par-dessus -- or ce fond suit le MEME champ Général
+       que le body : le rendre transparent est visuellement identique par
+       construction (quelle que soit la palette), et l'animation circule
+       enfin en continu du bandeau au pied de page. Accueil uniquement :
+       ailleurs l'animation n'existe pas, et la Boutique peut avoir son
+       propre fond de page (boutiqueFond) qu'on ne veut pas reveler sous
+       ses sections. */
+    if (/^\/(index\.html)?$/.test(location.pathname)) {
+      css += '\nsection.blk.alt{background:transparent!important}';
+      css += '\n.finale{background:transparent!important}';
+    }
     /* Complements trouves au banc "fond bandeau separe" (29/08) : petits
        gris figes de l'accueil (.lbl gamme, .clic de cloture) et span accent
        de la phrase finale -- gardent leur couleur tant qu'elle reste lisible
