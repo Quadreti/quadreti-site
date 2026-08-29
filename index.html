@@ -129,8 +129,13 @@
   .burger span{ width:15px; height:2px; background:var(--charbon); border-radius:2px; }
 
   /* ===== Hero (variante B verrouillée) ===== */
-  .hero{ position:relative; min-height:636px; display:flex; align-items:center; }
-  @media (max-width:760px){ .hero{ min-height:576px; } }
+  .hero{ position:relative; min-height:606px; display:flex; align-items:center; }
+  @media (max-width:760px){ .hero{ min-height:546px; } }
+  /* 29/08 soir : espace sous la video reduit de 56 -> 26px (demande fondateur,
+     capture a l'appui) pour que le bouton CTA remonte "a cheval" sur le
+     bandeau. Changez-a-volonte (decalage panneau 141 -> 111) et bouton pause
+     (88 -> 58) compenses du meme delta : ils ne bougent PAS par rapport a la
+     grille, seul le CTA remonte (~31px d'ecart avec le texte, aere). */
   /* 28/08 : "Changez à volonté." et le bouton CTA étaient trop proches (~21px d'écart
      réel une fois les hauteurs de ligne/bouton retirées). Corrigé SANS déplacer la
      grille animée : le bandeau vidéo (.bg-slides) est épinglé à sa hauteur d'ORIGINE
@@ -198,7 +203,7 @@
   .h-line.l1, .h-line.l2, .h-line.l3{ font-size:clamp(24px,3vw,34px); color:var(--blanc); text-shadow:0 2px 10px rgba(0,0,0,.45); }
   .hero.voile-actif .h-line.l1, .hero.voile-actif .h-line.l2, .hero.voile-actif .h-line.l3{ color:var(--charbon); text-shadow:none; }
   .h-line.l4{
-    position:absolute; bottom:152px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:122px; left:50%; transform:translateX(-50%);
     z-index:4; width:100%; padding:0 18px;
     font-size:clamp(28px,3.6vw,46px); color:var(--blanc);
     text-align:center; line-height:1.08;
@@ -231,7 +236,7 @@
      Coin bas-droit a la place -- #dots n'affiche plus rien depuis le passage de la
      photo a la video (une seule .slide), la place est libre. */
   .hero-pause{
-    position:absolute; bottom:88px; right:20px; z-index:4;
+    position:absolute; bottom:58px; right:20px; z-index:4;
     width:38px; height:38px; border-radius:50%; padding:0;
     background:#2b353e99; border:1px solid #ffffff33; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
