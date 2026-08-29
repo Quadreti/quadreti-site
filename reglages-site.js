@@ -10,7 +10,8 @@
 
   var DEFAUTS = {
     couleurs: { theme: 'actuel', fond: '#F5F5F5', texte: '#2b353e', accent: '#e2725b', survol: '#cf6450' },
-    couleursJeux: { fondJeu: '#2B353E', carteJeu: '#FFFFFF', accentJeu: '#E2725B', texteJeu: '#F2EEDF' },
+    couleursJeux: { fondJeu: '#2B353E', carteJeu: '#FFFFFF', accentJeu: '#E2725B', texteJeu: '#F2EEDF',
+      fondPageJeu: '#FBF8F1', textePageJeu: '#2B353E', grisJeu: '#5c646c' },
     polices: { titres: 'Quicksand', texte: 'Karla' }
   };
 
@@ -412,7 +413,48 @@
     var carteJeu = (cj && cj.carteJeu) || d.carteJeu;
     var accentJeu = (cj && cj.accentJeu) || d.accentJeu;
     var texteJeu = (cj && cj.texteJeu) || d.texteJeu;
-    var css = ':root{--charbon:' + fondJeu + ';--surface:' + carteJeu + ';--terracotta:' + accentJeu + ';--creme:' + texteJeu + ';}';
+    /* Phase 2 de l'audit couleurs (29/08) : 3 nouveaux champs — la Palette
+       Jeux gouverne desormais AUSSI le fond de page (--papier), le texte
+       principal (--texte) et le gris secondaire (--doux), jusqu'ici figes
+       dans les 6 pages. C'est par "Fond de page" que le fondateur peut
+       passer les jeux en sombre lui-meme, depuis le panneau. Les couleurs
+       posees sur la page passent par couleurLisibleSur (jamais collees
+       telles quelles), et les textes poses sur les CARTES sont recalcules
+       contre le fond de carte -- deux fonds differents, deux calculs,
+       jamais le melange qui a cause les bugs "texte invisible". Avec les
+       valeurs par defaut, tout se recalcule a l'identique de l'existant
+       (verifie) : zero changement visuel tant qu'on n'y touche pas. */
+    var fondPageJeu = (cj && cj.fondPageJeu) || d.fondPageJeu;
+    var textePageJeu = (cj && cj.textePageJeu) || d.textePageJeu;
+    var grisJeu = (cj && cj.grisJeu) || d.grisJeu;
+    var textePage = couleurLisibleSur(fondPageJeu, textePageJeu);
+    var grisPage = couleurLisibleSur(fondPageJeu, grisJeu);
+    var texteCarte = couleurLisibleSur(carteJeu, textePageJeu);
+    var grisCarte = couleurLisibleSur(carteJeu, grisJeu);
+    var css = ':root{--charbon:' + fondJeu + ';--surface:' + carteJeu + ';--terracotta:' + accentJeu + ';--creme:' + texteJeu +
+      ';--papier:' + fondPageJeu + ';--texte:' + textePage + ';--doux:' + grisPage +
+      ';--bord:' + hexEnRgba(textePage, 0.11) + ';}';
+    css += '\n.carte,.carte-stat,.carte-taille,.carte-legende{color:' + texteCarte + '}';
+    css += '\n.carte .label,.carte-stat .label,.carte-taille .label,.carte-legende .label{color:' + grisCarte + '}';
+    /* Bouton principal (fond = fondJeu) fondu dans un fond de page devenu
+       proche : liseret calcule, comme les encarts des pages generales. */
+    if (Math.abs(luminance(fondJeu) - luminance(fondPageJeu)) < 30) {
+      css += '\n.btn.principal{border:1.5px solid ' + hexEnRgba(couleurLisibleSur(fondJeu, texteJeu), 0.5) + '!important}';
+    }
+    /* Pont produit (.carte-pont, present sur les 6 jeux) et tuiles :
+       fragilite pre-existante trouvee au banc de stress — leurs textes
+       etaient figes/croises entre champs (texte pale fixe sur Fond de jeu,
+       blanc sur le kraft fixe du bouton pont, creme sur Accent des tuiles).
+       Recalcules chacun contre son vrai fond. Valeurs par defaut : aucune
+       difference (verifie au banc, config reelle = 0 signalement). */
+    css += '\n.carte-pont p{color:' + couleurLisibleSur(fondJeu, texteJeu) + '}';
+    /* estimation (Mosaique Revelee) : accent sur fond de jeu tant que le
+       contraste tient, sinon repli sur le texte calcule. Selecteur aligne
+       sur celui de la page (p.estimation-pont) pour gagner la cascade. */
+    css += '\n.carte-pont p.estimation-pont{color:' +
+      (Math.abs(luminance(fondJeu) - luminance(accentJeu)) > 55 ? accentJeu : couleurLisibleSur(fondJeu, texteJeu)) + '}';
+    css += '\n.carte-pont .btn,.carte-pont a.btn{color:' + couleurLisibleSur('#CBBD93', textePageJeu) + '!important}';
+    css += '\n.tuile{color:' + couleurLisibleSur(accentJeu, texteJeu) + '}';
     injecterStyle('qz-reglages-couleurs-jeux', css);
   }
 

@@ -856,20 +856,29 @@ function rendreSectionPalette(){
    thème, pas de zones fines, pas de palettes mémorisées : ce sont des
    couleurs de gameplay, pas une identité à décliner. */
 function rendreSectionPaletteJeux(){
-  var cj = Object.assign({ fondJeu:'#2B353E', carteJeu:'#FFFFFF', accentJeu:'#E2725B', texteJeu:'#F2EEDF' }, reglages.couleurs_jeux || {});
+  /* Phase 2 audit couleurs (29/08) : 3 champs ajoutes (Fond de page, Texte,
+     Gris doux) -- la Palette Jeux gouverne desormais tout l'habillage des 6
+     pages jeux. "Fond de page" est le champ qui permet de passer les jeux
+     en sombre (les textes/gris/bordures se recalculent automatiquement par
+     contraste cote site, jamais de texte invisible). */
+  var cj = Object.assign({ fondJeu:'#2B353E', carteJeu:'#FFFFFF', accentJeu:'#E2725B', texteJeu:'#F2EEDF',
+    fondPageJeu:'#FBF8F1', textePageJeu:'#2B353E', grisJeu:'#5c646c' }, reglages.couleurs_jeux || {});
 
   $('editeur').innerHTML =
     '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Palette Jeux</b></p>' +
     '<h1 class="titre-section">Palette Jeux</h1>' +
-    '<p class="aide-section">S\'applique à Mémo, Taquin, Mandala, Pixel Number, Set et Mosaïque Révélée — volontairement à part de la Palette maîtresse du site.</p>' +
+    '<p class="aide-section">S\'applique à Mémo, Taquin, Mandala, Pixel Number, Set et Mosaïque Révélée — volontairement à part de la Palette maîtresse du site. Les textes se recalculent automatiquement par contraste : un fond de page sombre passe les textes en clair tout seul.</p>' +
 
     '<div class="carte">' +
       '<div class="carte-entete"><h2>Couleurs</h2></div>' +
       '<div class="grille-champs">' +
-        '<div class="champ"><label>Fond de jeu</label><div class="rang-couleur"><input type="color" id="cjFondJeu" value="' + cj.fondJeu + '"><code id="cjFondJeuHex">' + cj.fondJeu + '</code></div></div>' +
+        '<div class="champ"><label>Fond de page</label><div class="rang-couleur"><input type="color" id="cjFondPageJeu" value="' + cj.fondPageJeu + '"><code id="cjFondPageJeuHex">' + cj.fondPageJeu + '</code></div></div>' +
+        '<div class="champ"><label>Fond de jeu (tuiles, boutons)</label><div class="rang-couleur"><input type="color" id="cjFondJeu" value="' + cj.fondJeu + '"><code id="cjFondJeuHex">' + cj.fondJeu + '</code></div></div>' +
         '<div class="champ"><label>Carte</label><div class="rang-couleur"><input type="color" id="cjCarteJeu" value="' + cj.carteJeu + '"><code id="cjCarteJeuHex">' + cj.carteJeu + '</code></div></div>' +
         '<div class="champ"><label>Accent de jeu</label><div class="rang-couleur"><input type="color" id="cjAccentJeu" value="' + cj.accentJeu + '"><code id="cjAccentJeuHex">' + cj.accentJeu + '</code></div></div>' +
-        '<div class="champ"><label>Texte de jeu</label><div class="rang-couleur"><input type="color" id="cjTexteJeu" value="' + cj.texteJeu + '"><code id="cjTexteJeuHex">' + cj.texteJeu + '</code></div></div>' +
+        '<div class="champ"><label>Texte sur fond de jeu</label><div class="rang-couleur"><input type="color" id="cjTexteJeu" value="' + cj.texteJeu + '"><code id="cjTexteJeuHex">' + cj.texteJeu + '</code></div></div>' +
+        '<div class="champ"><label>Texte</label><div class="rang-couleur"><input type="color" id="cjTextePageJeu" value="' + cj.textePageJeu + '"><code id="cjTextePageJeuHex">' + cj.textePageJeu + '</code></div></div>' +
+        '<div class="champ"><label>Gris doux (libellés, notes)</label><div class="rang-couleur"><input type="color" id="cjGrisJeu" value="' + cj.grisJeu + '"><code id="cjGrisJeuHex">' + cj.grisJeu + '</code></div></div>' +
       '</div>' +
       '<div class="pied-carte"><div class="historique" id="histo-couleurs-jeux"></div><button class="btn-enregistrer" id="cjEnregistrer">Enregistrer les couleurs</button></div>' +
     '</div>';
@@ -877,12 +886,13 @@ function rendreSectionPaletteJeux(){
   function draft(){
     return {
       fondJeu: $('cjFondJeu').value, carteJeu: $('cjCarteJeu').value,
-      accentJeu: $('cjAccentJeu').value, texteJeu: $('cjTexteJeu').value
+      accentJeu: $('cjAccentJeu').value, texteJeu: $('cjTexteJeu').value,
+      fondPageJeu: $('cjFondPageJeu').value, textePageJeu: $('cjTextePageJeu').value, grisJeu: $('cjGrisJeu').value
     };
   }
   function previsualiser(){ envoyerApercu('couleurs_jeux', draft()); }
 
-  ['cjFondJeu','cjCarteJeu','cjAccentJeu','cjTexteJeu'].forEach(function(id){
+  ['cjFondJeu','cjCarteJeu','cjAccentJeu','cjTexteJeu','cjFondPageJeu','cjTextePageJeu','cjGrisJeu'].forEach(function(id){
     $(id).oninput = function(){ $(id + 'Hex').textContent = this.value; previsualiser(); };
   });
   $('cjEnregistrer').onclick = function(){
