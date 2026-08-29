@@ -220,7 +220,8 @@
     border:1px solid #cfd8b8; border-radius:99px; padding:6px 14px 6px 10px;
   }
   .badge .dot{ width:15px; height:15px; border-radius:50%; background:var(--olive); color:#fff; font-size:9.5px; display:flex; align-items:center; justify-content:center; }
-  .hero-cta{ position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:4; }
+  /* 30/08 : CTA remonte de 25% de sa hauteur (~12px), bottom 26 -> 38px. */
+  .hero-cta{ position:absolute; bottom:38px; left:50%; transform:translateX(-50%); z-index:4; }
   /* 29/08 soir : "il a trop mange de souris rotie" (fondateur) -- hauteur
      utile du CTA du bandeau reduite (padding vertical 15 -> 10px). Scope au
      hero uniquement ; le CTA de cloture garde sa taille d'origine. */

@@ -211,12 +211,14 @@
       '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
-    /* Bandeau defilant (.ticker, accueil + boutique) : le "rebelle" trouve
-       par le fondateur (29/08 soir) -- reste sur var(--charbon) fige +
-       texte blanc fige depuis le gel de --charbon du 28/08, jamais
-       rebranche. Rallie au role "Fond bandeau & pied de page" : place tout
-       en haut il fusionne avec le bandeau, et son texte est recalcule. */
-    css += '\n.ticker{background:' + fondBandeau + '!important;color:' + couleurLisibleSur(fondBandeau, texte) + '!important}';
+    /* Bandeau defilant (.ticker, accueil + boutique) : suit "Fond bandeau &
+       pied de page" par defaut. SANS !important (30/08) : la carte "Bandeau
+       defilant" du panneau a ses propres champs Couleur de fond / Couleur du
+       texte (cle 'bandeau', appliques par appliquerBandeau dans une feuille
+       injectee APRES celle-ci) -- le !important du ralliement d'hier les
+       ecrasait, d'ou le "aucun controle sur la couleur" du fondateur. Ordre
+       de cascade retabli : CSS de page < palette (ici) < choix explicite. */
+    css += '\n.ticker{background:' + fondBandeau + ';color:' + couleurLisibleSur(fondBandeau, texte) + '}';
 
     /* Bouton (28/08, correctif majeur) : la base CSS du site pose le fond
        de PLUSIEURS elements (bouton principal .cta, pastilles numerotees
@@ -943,7 +945,11 @@
     var fond = suit && palette ? plusFonce(pm) : m.fond;
     var texte = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.texte;
     var bouton = suit && palette ? plusFonce(pm) : m.bouton;
-    var traits = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.traits;
+    /* 30/08, demande fondateur : en mode "suivre la palette", les traits du
+       burger prennent l'ACCENT (orange brule aujourd'hui) -- signature de
+       marque, avec garde de contraste contre le fond du bouton (repli sur le
+       calcul clair/sombre si l'accent ne se lit pas dessus). */
+    var traits = suit && palette ? couleurLisibleSur(plusFonce(pm), palette.accent || plusClair(pm)) : m.traits;
     var sousBouton = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.sousBouton;
     if (bouton) css += '\n.qz-burger{background:' + bouton + '}';
     if (traits) css += '\n.qz-burger span{background:' + traits + '}';
