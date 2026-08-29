@@ -211,6 +211,13 @@
       '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
+    /* Bandeau defilant (.ticker, accueil + boutique) : le "rebelle" trouve
+       par le fondateur (29/08 soir) -- reste sur var(--charbon) fige +
+       texte blanc fige depuis le gel de --charbon du 28/08, jamais
+       rebranche. Rallie au role "Fond bandeau & pied de page" : place tout
+       en haut il fusionne avec le bandeau, et son texte est recalcule. */
+    css += '\n.ticker{background:' + fondBandeau + '!important;color:' + couleurLisibleSur(fondBandeau, texte) + '!important}';
+
     /* Bouton (28/08, correctif majeur) : la base CSS du site pose le fond
        de PLUSIEURS elements (bouton principal .cta, pastilles numerotees
        .step .num, badge "Le plus choisi" .offer .flag, puces .chip) sur
