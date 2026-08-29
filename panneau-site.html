@@ -120,6 +120,10 @@
   .rang-couleur{ display:flex; align-items:center; gap:10px; }
   .rang-couleur input[type=color]{ width:40px; height:36px; border:1px solid var(--bord); border-radius:8px; padding:2px; background:var(--surface); cursor:pointer; }
   .rang-couleur code{ font-size:12px; color:var(--doux); }
+  /* hex copiable/collable : montrer que c'est cliquable/editable */
+  code[id$="Hex"]{ cursor:text; border-bottom:1px dashed transparent; padding:1px 3px; border-radius:4px; }
+  code[id$="Hex"]:hover{ border-bottom-color:currentColor; }
+  code[id$="Hex"][contenteditable="true"]{ outline:2px solid var(--terracotta, #E2725B); background:#fff2; }
   .choix-radio{ display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px 0; font-size:13px; }
   .choix-radio input{ accent-color:var(--terracotta); width:16px; height:16px; }
 
@@ -261,6 +265,48 @@ var CLE_SESSION = 'quadretiPanneauV2Session';
 var $ = function(id){ return document.getElementById(id); };
 var phrase = null;
 var reglages = {};
+
+/* Hex copiable/collable (29/08, demande fondateur : "l'hex disponible pour
+   des copiés-collés, beaucoup mieux que la pipette ou le sélecteur").
+   Chaque <code id="...Hex"> affiché à côté d'une pastille devient éditable :
+   un clic sélectionne tout le code (Ctrl+C direct), et on peut y COLLER ou
+   taper un hex (#D96C2F, avec ou sans #) — Entrée ou clic ailleurs
+   l'applique à la pastille associée et déclenche l'aperçu, exactement comme
+   si on avait utilisé le sélecteur. Délégation sur document : marche pour
+   toutes les cartes, y compris celles re-rendues dynamiquement, sans
+   toucher aux fonctions de rendu existantes. */
+document.addEventListener('click', function(e){
+  var code = e.target.closest('code[id$="Hex"]');
+  if (!code || code.isContentEditable) return;
+  code.contentEditable = 'true';
+  code.spellcheck = false;
+  code.focus();
+  var sel = window.getSelection(); var r = document.createRange();
+  r.selectNodeContents(code); sel.removeAllRanges(); sel.addRange(r);
+});
+function appliquerHexTape(code){
+  var idCouleur = code.id.slice(0, -3); /* retire "Hex" */
+  var input = $(idCouleur);
+  var brut = (code.textContent || '').trim().replace(/^#?/, '#').toLowerCase();
+  if (input && /^#[0-9a-f]{6}$/.test(brut)) {
+    input.value = brut;
+    input.dispatchEvent(new Event('input', { bubbles: false }));
+    code.textContent = brut; /* au cas où le handler ne le réécrit pas */
+  } else if (input) {
+    code.textContent = input.value; /* saisie invalide : on restaure */
+  }
+  code.contentEditable = 'false';
+}
+document.addEventListener('focusout', function(e){
+  var code = e.target.closest && e.target.closest('code[id$="Hex"]');
+  if (code && code.isContentEditable) appliquerHexTape(code);
+});
+document.addEventListener('keydown', function(e){
+  var code = e.target.closest && e.target.closest('code[id$="Hex"]');
+  if (!code || !code.isContentEditable) return;
+  if (e.key === 'Enter') { e.preventDefault(); appliquerHexTape(code); }
+  if (e.key === 'Escape') { var input = $(code.id.slice(0, -3)); if (input) code.textContent = input.value; code.contentEditable = 'false'; }
+});
 
 function toast(msg, erreur){
   var t = $('toast'); t.textContent = msg;
