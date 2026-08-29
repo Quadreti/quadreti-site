@@ -95,9 +95,20 @@
     var css = ':root{' +
       '--fond:' + fond + ';--terracotta:' + accent + ';' +
       '--qz-clair:' + fond + ';--qz-terracotta:' + accent + ';' +
-      '}\nbody{background:' + fond + ';color:' + texte + '}' +
+      '}' +
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
+    /* body PAS repeint sur les pages jeux (29/08, captures fondateur SET/
+       Memo/Taquin) : ces 6 pages ont leur propre fond clair (--papier) et
+       leur texte charbon, gouvernes par la Palette Jeux (decision actee du
+       28/08 : "les jeux restent volontairement distincts de la marque").
+       La regle generique body{fond sombre + texte blanc} les ecrasait :
+       les valeurs des encarts (Coups, Temps...) heritaient du blanc sur
+       cartes blanches, et les boutons charbon (Melanger, Nouvelle partie)
+       disparaissaient sur fond devenu charbon. Le bandeau/pied de page
+       communs de ces pages continuent, eux, de suivre la palette maitresse
+       (regles qz-* separees, non concernees par ce garde). */
+    if (!estPageJeu()) css += '\nbody{background:' + fond + ';color:' + texte + '}';
 
     /* Logo du bandeau du haut (tesselles + "Quadretı") : jamais couvert par
        appliquerMenuNav (qui ne pose que le burger/le panneau) -- restait
@@ -181,7 +192,10 @@
        (avec un repli sur Accent si rien n'est personnalise), pour que ces
        elements ne dependent plus jamais de --charbon. */
     var bouton = c.bouton || accent;
-    css += '\n.cta,.step .num,.offer .flag,.chip{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+    /* .c-submit ajoute (29/08) : le bouton "Envoyer le message" du formulaire
+       Contact etait fige sur var(--charbon) -- invisible sur la carte devenue
+       charbon. Il suit desormais le role "Bouton" de la palette, comme .cta. */
+    css += '\n.cta,.step .num,.offer .flag,.chip,.c-submit{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
     if (titre) css += '\nh2,h3{color:' + titre + '}';
     if (sousTitre) css += '\n.eyebrow{color:' + sousTitre + '}';
 
@@ -245,13 +259,30 @@
       var texteSurCarte = couleurLisibleSur(arrierePlanTexte, texte);
       css += '\n.step p,.premium p,.gift p,.trust-card>p,.trust-card li,.qa .a p{color:' + texteSurCarte + '}';
       css += '\n.trust-card li b{color:' + texteSurCarte + '!important}';
+
+      /* Formulaire Contact (29/08, capture fondateur : champs entierement
+         invisibles). La carte .c-form-compact recoit arrierePlanTexte juste
+         au-dessus, mais ses CHAMPS gardaient background:var(--fond) (devenu
+         charbon aussi) + texte charbon fige : tout se confondait. Corrige
+         par calcul, jamais par valeur figee : les champs prennent la couleur
+         lisible SUR la carte (blanc si carte sombre, charbon si claire), et
+         leur texte est recalcule contre ce nouveau fond de champ -- des
+         cartouches clairs au texte charbon avec la palette actuelle, et ca
+         s'inverse proprement si la carte redevient claire un jour. Labels et
+         textes d'aide poses sur la carte suivent texteSurCarte (l'aide
+         "Formats acceptes" a une couleur INLINE dans le HTML, d'ou le
+         !important). */
+      var champFond = couleurLisibleSur(arrierePlanTexte, '#ffffff');
+      css += '\n.c-field input,.c-field select,.c-field textarea{background:' + champFond + '!important;color:' + couleurLisibleSur(champFond, texte) + '!important}';
+      css += '\n.c-field label{color:' + texteSurCarte + '}';
+      css += '\n.c-form-compact p{color:' + texteSurCarte + '!important}';
     }
 
     /* Texte pose directement sur le fond general de la page (pas une carte
        a part) : calcule contre "fond", jamais contre arrierePlanTexte. */
     var texteSurFond = couleurLisibleSur(fond, texte);
     css += '\n.blk p.lead,.story .txt p,.how-foot,.app-reassure,' +
-      '.scal-foot,.change li,.gamme-notes{color:' + texteSurFond + '}';
+      '.scal-foot,.change li,.gamme-notes,.direct-note{color:' + texteSurFond + '}';
     css += '\n.story .txt p b,.story .txt .reinvente,.app-reassure b,.scal-foot b,' +
       '.change li b,.gamme-notes b,.how-foot a' +
       '{color:' + texteSurFond + '!important}';
