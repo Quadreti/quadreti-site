@@ -697,9 +697,11 @@ function rendreSectionReseaux(){
 var ZONES_FINES = [
   ['boutiqueFond', 'Arrière-plan boutique', 'Page Boutique uniquement', 'fond'],
   ['logo', 'Logo', 'Tesselles + nom, bandeau du haut', 'texte'],
-  ['mentionsKraft', 'Mentions légales', 'Fond des cartouches de liens légaux, bas de page (kraft par défaut)', '#CBBD93'],
   ['enumerations', 'Énumérations', 'Pastilles numérotées, badges et puces des cartes — pas de vrais boutons', 'bouton']
 ];
+/* 'mentionsKraft' retire (29/08 soir) : les cartouches kraft du pied de page
+   ont ete remplaces par des liens texte (pied "Trois colonnes", variante A
+   validee par le fondateur) — le reglage n'avait plus de cible. */
 /* 'menu' retire de cette liste (28/08) : le bandeau/menu herite deja
    automatiquement de la Palette maitresse (General), un reglage fin a part
    n'avait plus de raison d'etre -- vestige de l'ancien systeme, confirme

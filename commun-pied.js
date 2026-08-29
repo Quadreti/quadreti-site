@@ -5,9 +5,16 @@
      <script src="/commun-pied.js"></script>
    a l'endroit ou le pied de page doit apparaitre (juste avant les scripts de
    page). Journal : JOURNAL.md, entree du 28/08 "Bandeau commun". */
+/* 29/08 : disposition "Trois colonnes" (variante A validee par le fondateur
+   sur maquette — artifact "Bas de Page Quadreti") : identite a gauche,
+   informations au centre en liens sobres (les cartouches kraft disparaissent),
+   reseaux a droite, copyright en barre du bas. Toutes les couleurs restent
+   pilotees par la palette (reglages-site.js), aucune valeur figee ici. */
 document.write(
   '<footer class="qz-footer">' +
-    '<div class="qz-basdepage">' +
+    '<div class="qz-pied3">' +
+
+    '<div class="qz-col qz-basdepage">' +
       '<div class="qz-logorow">' +
         '<div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>' +
         '<span class="qz-wordmark"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>' +
@@ -15,8 +22,19 @@ document.write(
       '<div class="qz-baseline">Composez, imprimez, clipsez, changez à volonté.</div>' +
     '</div>' +
 
-    '<div class="qz-reseaux">' +
-      '<p class="qz-accroche">Nos réseaux, à leur tour clipsés</p>' +
+    '<nav class="qz-col qz-pied-infos" aria-label="Informations">' +
+      '<h4 class="qz-coltitre">Informations</h4>' +
+      '<ul>' +
+        '<li><a href="/mentions-legales.html">Mentions légales</a></li>' +
+        '<li><a href="/cgv.html">CGV</a></li>' +
+        '<li><a href="/cgu.html">CGU &amp; RGPD</a></li>' +
+        '<li><a href="/index.html#livraison">Livraison &amp; paiement</a></li>' +
+        '<li><a href="/contact.html">Contact</a></li>' +
+      '</ul>' +
+    '</nav>' +
+
+    '<div class="qz-col qz-reseaux">' +
+      '<h4 class="qz-coltitre">Nos réseaux, à leur tour clipsés</h4>' +
       '<p class="qz-sub">Facebook · Snapchat · TikTok · YouTube · WhatsApp</p>' +
       '<div class="qz-grid">' +
         '<a href="#" aria-label="Facebook" target="_blank" rel="noopener"><svg class="qz-ico" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9H16l-.4 2.9h-2.1v7A10 10 0 0 0 22 12z"/></svg></a>' +
@@ -27,29 +45,8 @@ document.write(
       '</div>' +
     '</div>' +
 
-    '<div class="qz-legal">' +
-      '<div class="qz-row">' +
-        '<a class="qz-leg" href="/mentions-legales.html">' +
-          '<svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>' +
-          '<span>Mentions<br>légales</span>' +
-        '</a>' +
-        '<a class="qz-leg" href="/cgv.html">' +
-          '<svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>' +
-          '<span>CGV</span>' +
-        '</a>' +
-        '<a class="qz-leg" href="/cgu.html">' +
-          '<svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r=".6" fill="currentColor" stroke="none"/></svg>' +
-          '<span>CGU &amp;<br>RGPD</span>' +
-        '</a>' +
-        '<a class="qz-leg" href="/index.html#livraison">' +
-          '<svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8h11v9H2z"/><path d="M13 11h4l4 3v3h-8z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>' +
-          '<span>Livraison &amp;<br>paiement</span>' +
-        '</a>' +
-        '<a class="qz-leg" href="mailto:contact@quadreti.fr">' +
-          '<svg class="qz-picto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 7l10 6 10-6"/></svg>' +
-          '<span>Contact</span>' +
-        '</a>' +
-      '</div>' +
+    '</div>' +
+    '<div class="qz-pied-barre">' +
       '<div class="qz-copy">© 2026 Quadreti — Tous droits réservés · Brevet déposé · Conçu et fabriqué en France</div>' +
     '</div>' +
   '</footer>' +

@@ -159,18 +159,11 @@
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
 
-    /* Mentions legales (cartouches "Mentions legales/CGV/CGU & RGPD/
-       Livraison & paiement/Contact", bas de page) : fond fixe dans
-       commun.css, jamais relie au panneau -- demande fondateur (28/08) de
-       pouvoir le regler. Nouveau reglage fin dans le panneau (ZONES_FINES,
-       cle "mentionsKraft", repli sur le kraft actuel -- zero changement
-       visuel tant que personne n'y touche).
-       28/08 (suite) : precise par le fondateur -- c'est bien le FOND du
-       cartouche qui doit rester kraft (pas l'icone comme suppose au premier
-       jet), texte et icone repasses en noir/charbon fixe (pas un reglage,
-       choix de design assume) directement dans commun.css. */
-    var couleurMentions = c.mentionsKraft || '#CBBD93';
-    css += '\n.qz-legal a.qz-leg{background:' + couleurMentions + '!important}';
+    /* Mentions legales : les cartouches kraft ont ete remplaces par des
+       liens texte dans le pied "Trois colonnes" (29/08 soir, variante A
+       validee par le fondateur) — le reglage fin "mentionsKraft" (28/08)
+       n'a plus de cible et a ete retire du panneau ; la donnee eventuelle
+       en base reste ignoree sans danger. */
 
     /* Arriere-plan boutique (28/08) : meme bug que Logo ci-dessus, trouve en
        corrigeant celui-ci -- 3e reglage fin du panneau (ZONES_FINES,
@@ -196,22 +189,21 @@
        qui restait fige en creme via l'ancien theme "Magazine", retire. */
     /* 29/08 : tout le calque pied de page se calcule contre fondBandeau
        (= "Fond bandeau & pied de page", repli Général) et non plus contre
-       le fond du centre de page. */
+       le fond du centre de page.
+       29/08 soir : disposition "Trois colonnes" (variante A validee par le
+       fondateur) — les cartouches kraft ont disparu au profit de liens
+       texte (.qz-pied-infos), les titres de colonnes (.qz-coltitre) suivent
+       Sous-titre (repli kraft), tout reste calcule par contraste. */
     var texteSurFooter = couleurLisibleSur(fondBandeau, texte);
-    css += '\n.qz-basdepage,.qz-reseaux,.qz-legal{background:' + fondBandeau + '}' +
-      '\n.qz-basdepage .qz-wordmark,.qz-baseline,.qz-reseaux .qz-accroche{color:' + texteSurFooter + '}' +
+    css += '\n.qz-pied3,.qz-pied-barre{background:' + fondBandeau + '}' +
+      '\n.qz-basdepage .qz-wordmark,.qz-baseline{color:' + texteSurFooter + '}' +
       '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
-      /* .qz-legal a.qz-leg span et .qz-legal .qz-picto retires de ces deux
-         listes (28/08, suite) : ils suivaient a tort la meme logique de
-         contraste que le reste du pied de page (texte clair sur fond
-         SOMBRE), alors que leur cartouche a desormais son PROPRE fond kraft
-         clair (voir plus haut, .qz-legal a.qz-leg) -- texte/icone noir fixe
-         geres dans commun.css, plus rien a calculer ici pour ces deux-la. */
+      '\n.qz-coltitre{color:' + couleurLisibleSur(fondBandeau, sousTitre || '#CBBD93') + '}' +
+      '\n.qz-pied-infos a{color:' + texteSurFooter + '}' +
+      '\n.qz-pied-infos a:hover,.qz-pied-infos a:focus-visible{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fondBandeau) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
-      '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
-      '\n.qz-legal a.qz-leg:hover,.qz-legal a.qz-leg:focus-visible{background:' + accent + ';border-color:' + accent + '}' +
-      '\n.qz-legal a.qz-leg:hover span,.qz-legal a.qz-leg:hover .qz-picto{color:' + couleurLisibleSur(accent, texte) + '}';
+      '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}';
 
     /* Bouton (28/08, correctif majeur) : la base CSS du site pose le fond
        de PLUSIEURS elements (bouton principal .cta, pastilles numerotees
