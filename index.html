@@ -221,6 +221,10 @@
   }
   .badge .dot{ width:15px; height:15px; border-radius:50%; background:var(--olive); color:#fff; font-size:9.5px; display:flex; align-items:center; justify-content:center; }
   .hero-cta{ position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:4; }
+  /* 29/08 soir : "il a trop mange de souris rotie" (fondateur) -- hauteur
+     utile du CTA du bandeau reduite (padding vertical 15 -> 10px). Scope au
+     hero uniquement ; le CTA de cloture garde sa taille d'origine. */
+  @media (min-width:760px){ .hero-cta.cta{ padding:10px 30px; } }
   /* Sur mobile, le padding/taille du .cta d'origine (pense pour desktop) fait passer
      "Composer mon mur" sur 2 lignes : bouton trop haut, qui recouvre le bouton pause
      juste a cote. Version compacte, une seule ligne, verifiee sur 375px. */
