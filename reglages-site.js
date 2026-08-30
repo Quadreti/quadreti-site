@@ -117,6 +117,10 @@
       '}' +
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
+    /* Fondu de fin d'animation (30/08, accueil uniquement -- l'element
+       n'existe pas ailleurs, regle sans effet). Doit matcher le VRAI fond de
+       la page (Général), pas le repli CSS statique #F5F5F5. */
+    css += '\n.hero-fondu{background:linear-gradient(180deg,transparent 0%,' + fond + ' 100%)}';
     /* body PAS repeint sur les pages jeux (29/08, captures fondateur SET/
        Memo/Taquin) : ces 6 pages ont leur propre fond clair (--papier) et
        leur texte charbon, gouvernes par la Palette Jeux (decision actee du
