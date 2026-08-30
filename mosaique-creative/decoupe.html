@@ -447,8 +447,16 @@
      le meme habillage clair+transparent que le reste. Pas de libelle ici
      (controles annexes -/+/ajuster, pas des categories d'outils), juste la
      meme palette. */
+  /* align-self:center (30/08, retour fondateur "centre horizontale des
+     icones qui le sont pas") : ces 3 boutons gardent une largeur FIXE
+     (34px, carre compact) alors que .rail-lateral est en colonne flex avec
+     align-items:stretch par defaut -- stretch ne s'applique qu'aux enfants
+     de largeur auto (c'est pour ca que "80%"/valeurZoom, largeur auto, se
+     retrouve deja centre) ; un enfant a largeur explicite retombe sur
+     flex-start, donc colle a gauche du rail au lieu d'etre centre sous
+     "80%". */
   .rail-lateral #btnZoomMoins, .rail-lateral #btnZoomPlus, .rail-lateral #btnAjuster{
-    background:transparent; color:var(--doux); box-shadow:none; font-weight:700;
+    background:transparent; color:var(--doux); box-shadow:none; font-weight:700; align-self:center;
   }
   .rail-lateral #btnZoomMoins:hover, .rail-lateral #btnZoomPlus:hover, .rail-lateral #btnAjuster:hover{
     background:var(--teinte-actif); color:var(--terracotta);
@@ -461,12 +469,25 @@
      vide ou attraper le panoramique existant). Retour fondateur, habitude
      prise sur xTool Creative Space. */
   .groupe-outils-mode{ display:flex; flex-direction:column; gap:4px; width:100%; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid var(--bord); }
+  /* Libelle ajoute (30/08, retour fondateur "le naming icone aide ux a s'y
+     retrouver") : ces deux boutons etaient les seuls du rail encore
+     icone-seule (juste un title, invisible sans survol) -- meme traitement
+     que les autres (icone + mot sous l'icone) pour rester reperable au
+     premier coup d'oeil, pas seulement au survol. */
   .groupe-outils-mode .icone-outil{
-    width:100%; height:auto; padding:9px 3px; border-radius:11px; background:transparent; color:var(--doux);
+    width:100%; height:auto; flex-direction:column; gap:4px; padding:8px 3px 7px; border-radius:11px; background:transparent; color:var(--doux);
   }
-  .groupe-outils-mode .icone-outil svg{ width:17px; height:17px; }
+  .groupe-outils-mode .icone-outil svg{ width:17px; height:17px; flex-shrink:0; }
+  .groupe-outils-mode .icone-outil .etiquette{
+    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center;
+  }
   .groupe-outils-mode .icone-outil:hover{ background:var(--teinte-actif); color:var(--terracotta); }
   .groupe-outils-mode .icone-outil.actif{ background:var(--terracotta); color:#fff; }
+  @media (max-width:760px){
+    .groupe-outils-mode .icone-outil{ padding:6px 2px 5px; }
+    .groupe-outils-mode .icone-outil svg{ width:16px; height:16px; }
+    .groupe-outils-mode .icone-outil .etiquette{ font-size:8px; }
+  }
 
   /* ===== Barre d'actions contextuelle (30/08) : meme principe qu'Editeur
      Creatif -- apparait au-dessus (ou en dessous si pas de place) de la
@@ -559,9 +580,11 @@
         <div class="groupe-outils-mode" role="group" aria-label="Outil actif">
           <button class="icone-outil actif" id="btnOutilSelection" title="Sélection">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/></svg>
+            <span class="etiquette">Sélection</span>
           </button>
           <button class="icone-outil" id="btnOutilMain" title="Main (panoramique)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 11.5V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12V6.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 13.5V10a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7l-2.4-3.6a1.5 1.5 0 0 1 2.4-1.8L8 13"/></svg>
+            <span class="etiquette">Main</span>
           </button>
         </div>
         <div class="icone-outil-conteneur">
