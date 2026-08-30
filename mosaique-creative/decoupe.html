@@ -850,7 +850,7 @@
 
         <div class="icone-outil-conteneur">
           <button class="icone-outil icone-outil-kraft" id="btnApercu" title="Aperçu du résultat réel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6" y="6" width="5" height="5" rx="0.5"/><rect x="13" y="6" width="5" height="5" rx="0.5"/><rect x="6" y="13" width="5" height="5" rx="0.5"/><rect x="13" y="13" width="5" height="5" rx="0.5"/></svg>
             <span class="etiquette">Aperçu</span>
           </button>
         </div>
@@ -2759,16 +2759,44 @@
      ce qu'on voit ici est garanti fidele a ce qui sort vraiment a
      l'impression, jamais un rendu invente a part qui pourrait diverger. */
   var apercuCouverture = $('apercuCouverture');
+  // Tesselles physiques par carreau (30/08, retour fondateur "se projeter
+  // sur un vrai produit QuadretI") : le produit reel est assemble de
+  // petites tesselles (~25,5mm, standard deja etabli ailleurs dans
+  // l'ecosysteme QuadretI -- meme mesure que QR Code Designer) sur un
+  // carreau de 20cm -- 8 par cote (20/8 = 2,5cm, tres proche du standard
+  // reel, en nombre entier pour une grille propre).
+  var TESSELLES_PAR_CARREAU = 8;
   function ouvrirApercu(){
     var actx = $('apercuCanvas').getContext('2d');
     actx.clearRect(0, 0, LARGEUR, HAUTEUR);
     actx.fillStyle = '#fff';
     actx.fillRect(0, 0, LARGEUR, HAUTEUR);
     PIECES.forEach(function(p){ dessinerPiece(actx, p); });
+
     var boutonActif = document.querySelector('.btn-format.actif');
     var formatCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
     var nbTuiles = Math.max(1, Math.round(formatCm / 20));
-    $('apercuTitre').textContent = 'Aperçu — ' + nbTuiles + '×' + nbTuiles + ' tuile' + (nbTuiles > 1 ? 's' : '') + ' (' + formatCm + '×' + formatCm + ' cm)';
+
+    // Grille des joints de tesselles : "multiply" + tres faible opacite --
+    // JAMAIS "source-over" (c'est exactement ce qui delavait le repere de
+    // travail, retire plus tot ce soir) -- assez visible pour montrer la
+    // structure physique reelle, sans jamais eclipser la couleur pure du
+    // projet.
+    var nbTessellesCote = nbTuiles * TESSELLES_PAR_CARREAU;
+    var pasTesselle = LARGEUR / nbTessellesCote;
+    actx.globalCompositeOperation = 'multiply';
+    actx.strokeStyle = 'rgba(43,53,62,0.12)';
+    actx.lineWidth = 1;
+    actx.beginPath();
+    for (var i = 1; i < nbTessellesCote; i++){
+      var pos = Math.round(i * pasTesselle) + 0.5;
+      actx.moveTo(pos, 0); actx.lineTo(pos, HAUTEUR);
+      actx.moveTo(0, pos); actx.lineTo(LARGEUR, pos);
+    }
+    actx.stroke();
+    actx.globalCompositeOperation = 'source-over';
+
+    $('apercuTitre').textContent = 'Aperçu — ' + nbTuiles + '×' + nbTuiles + ' tuile' + (nbTuiles > 1 ? 's' : '') + ' (' + formatCm + '×' + formatCm + ' cm, ' + nbTessellesCote + '×' + nbTessellesCote + ' tesselles)';
     apercuCouverture.classList.add('ouverte');
   }
   function fermerApercu(){ apercuCouverture.classList.remove('ouverte'); }
