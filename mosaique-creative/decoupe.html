@@ -1540,7 +1540,7 @@
     if (imageCalque){
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = opaciteCalque;
-      ctx.drawImage(imageCalque, 0, 0, LARGEUR, HAUTEUR);
+      ctx.drawImage(imageCalque, calqueX, calqueY, calqueW, calqueH);
       ctx.globalAlpha = 1;
     }
 
@@ -1611,6 +1611,21 @@
         var pr = poigneeRedimensionnement(sel);
         dessinerPoignee(pr.x, pr.y, '#E2725B', rPoignee);
       }
+    }
+
+    // Contour + poignee du calque de reference (30/08) : dessines EN
+    // DERNIER (comme les poignees de piece ci-dessus) pour rester cliquables
+    // et visibles meme quand des pieces recouvrent visuellement le calque.
+    // Une seule poignee (coin bas-droit) -- redimensionnement TOUJOURS
+    // proportionnel, pas de deformation libre a controler.
+    if (imageCalque){
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = '#2A9DF4';
+      ctx.setLineDash([4, 3]);
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(calqueX, calqueY, calqueW, calqueH);
+      ctx.setLineDash([]);
+      dessinerPoignee(calqueX + calqueW, calqueY + calqueH, '#E2725B', RAYON_POIGNEE_MAX);
     }
 
     // Apercu de la grille deployee (30/08) : contour pointille de chaque
@@ -1805,6 +1820,18 @@
 
   function distance(a, b){ return Math.hypot(a.x - b.x, a.y - b.y); }
 
+  /* Hit-tests du calque de reference (30/08) -- dependent de calqueX/Y/W/H,
+     definies plus bas avec le reste de la logique du calque ; en JS un `var`
+     est hoiste au sommet de la fonction englobante donc ces variables
+     existent deja (valant `undefined` jusqu'a leur ligne d'affectation) au
+     moment ou ces fonctions sont DEFINIES ici -- aucun souci puisqu'elles ne
+     sont APPELEES qu'au tout premier pointerdown, bien apres que tout le
+     script (calque compris) ait fini de s'executer une premiere fois. */
+  function poigneeRedimCalque(){ return { x: calqueX + calqueW, y: calqueY + calqueH }; }
+  function dansCalque(x, y){
+    return !!imageCalque && x >= calqueX && x <= calqueX + calqueW && y >= calqueY && y <= calqueY + calqueH;
+  }
+
   /* ================= Insertion depuis la bibliotheque ================= */
   var grilleFormes = $('grilleFormes');
   // Insertion depuis le popover "Inserer" (28/08) : le popover se referme
@@ -1850,11 +1877,13 @@
     if (btnSel) btnSel.classList.toggle('actif', nom === 'selection');
     if (btnMain) btnMain.classList.toggle('actif', nom === 'main');
   }
-  var mode = null; // 'deplacer' | 'poignee' | 'redim' | 'groupe'
+  var mode = null; // 'deplacer' | 'poignee' | 'redim' | 'groupe' | 'calque-deplacer' | 'calque-redim'
   var pieceActive = null;
   var indexPoignee = -1;
   var decalage = { x:0, y:0 };
   var tailleDepart = 0;
+  var calqueDecalage = { x:0, y:0 }; // glisser le calque de reference
+  var calqueRatioDepart = 1; // ratio fige au debut d'un redimensionnement du calque
   var selectionGroupe = []; // ids des pieces prises ensemble (Maj + clic), pour un deplacement groupe
   var decalageGroupe = { x:0, y:0 };
   var etatModifiePendantGeste = false; // n'enregistre l'historique que si le geste a REELLEMENT change quelque chose
@@ -1925,6 +1954,19 @@
       }
     }
 
+    // 2bis) Poignee de redimensionnement du calque de reference ? (30/08)
+    //       Verifiee avant les pieces -- c'est une cible precise et volontaire,
+    //       meme priorite que les poignees d'une piece selectionnee ci-dessus.
+    if (imageCalque){
+      var prCalque = poigneeRedimCalque();
+      if (distance(pos, prCalque) <= RAYON_POIGNEE_MAX + 3){
+        mode = 'calque-redim';
+        calqueRatioDepart = calqueW / calqueH;
+        saisirPointeurSansRisque(e);
+        return;
+      }
+    }
+
     // 3) Sinon, saisie d'une piece (du dessus vers le dessous).
     for (var j = PIECES.length - 1; j >= 0; j--){
       if (dansPiece(PIECES[j], pos.x, pos.y)){
@@ -1965,6 +2007,18 @@
         rendre();
         return;
       }
+    }
+
+    // 3bis) Aucune piece touchee : glisser le CORPS du calque de reference le
+    //       deplace, si le clic tombe dedans -- les pieces (dessus visuel)
+    //       gardent la priorite, verifie seulement une fois la boucle
+    //       ci-dessus vide. (30/08)
+    if (dansCalque(pos.x, pos.y)){
+      mode = 'calque-deplacer';
+      calqueDecalage.x = pos.x - calqueX;
+      calqueDecalage.y = pos.y - calqueY;
+      saisirPointeurSansRisque(e);
+      return;
     }
 
     // 4) Rien touche : soit on demarre un PANORAMIQUE (glisser sur le vide
@@ -2042,6 +2096,16 @@
         if (p){ p.x += dxGroupe; p.y += dyGroupe; }
       });
       decalageGroupe.x = pos.x; decalageGroupe.y = pos.y;
+    } else if (mode === 'calque-deplacer'){
+      calqueX = pos.x - calqueDecalage.x;
+      calqueY = pos.y - calqueDecalage.y;
+    } else if (mode === 'calque-redim'){
+      // Ancre = coin haut-gauche (calqueX/Y inchanges) -- la largeur suit le
+      // pointeur, la hauteur suit TOUJOURS le ratio fige au debut du geste
+      // (calqueRatioDepart), jamais de deformation libre.
+      var nouvelleLargeur = Math.max(TAILLE_MIN_CALQUE, pos.x - calqueX);
+      calqueW = nouvelleLargeur;
+      calqueH = nouvelleLargeur / calqueRatioDepart;
     }
     // (La refonte vectorielle des morsures signifie que courber un bord ou
     // redimensionner NE PERD PLUS les morsures deja recues -- chaque piece se
@@ -2080,6 +2144,14 @@
       }
       mode = null; pieceActive = null; indexPoignee = -1; marqueeDepart = null; marqueeActuel = null;
       rendre();
+      return;
+    }
+    if (mode === 'calque-deplacer' || mode === 'calque-redim'){
+      // Retour anticipe (meme forme que 'marquee'/'pan' ci-dessus) : le
+      // calque n'est jamais capture dans HISTORIQUE (pur guide de travail,
+      // voir le commentaire a sa definition) -- pas d'appel a
+      // enregistrerHistorique ici, volontairement.
+      mode = null;
       return;
     }
     if (mode === 'pan'){
@@ -2962,9 +3034,21 @@
      Volontairement PAS persiste dans Enregistrer/Charger (session courante
      uniquement) -- c'est un pur guide de travail, pas une donnee de
      composition ; le reimporter au besoin reste une action simple (Inserer),
-     conforme au cahier des charges ("Actions simples : Inserer / Retirer"). */
+     conforme au cahier des charges ("Actions simples : Inserer / Retirer").
+     Redimensionnable/deplacable au glisser (30/08, retour fondateur -- avant
+     ce jour, l'image etait etiree de force sur tout le canevas 600x600, sans
+     respect de son propre ratio et sans aucun controle). Coin haut-gauche +
+     largeur/hauteur (comme les calques d'Editeur Creatif) plutot que
+     centre+taille (comme les pieces) -- l'image importee n'est pas forcement
+     carree, un systeme largeur/hauteur independantes colle mieux a son
+     rectangle naturel. Redimensionnement TOUJOURS proportionnel (demande
+     explicite du fondateur) : la poignee unique (coin bas-droit, ancre
+     haut-gauche fixe) fait varier la largeur, la hauteur suit le ratio
+     d'origine de l'image -- jamais de deformation libre. */
   var imageCalque = null;
   var opaciteCalque = 0.4;
+  var calqueX = 0, calqueY = 0, calqueW = LARGEUR, calqueH = HAUTEUR, calqueRatio = 1;
+  var TAILLE_MIN_CALQUE = 24;
 
   $('btnInsererCalque').addEventListener('click', function(){ $('inputCalque').click(); });
   $('inputCalque').addEventListener('change', function(e){
@@ -2975,6 +3059,15 @@
       var img = new Image();
       img.onload = function(){
         imageCalque = img;
+        // Cadrage initial "contain" centre -- l'image entiere est visible
+        // d'un coup, jamais rognee ni etiree, point de depart naturel avant
+        // ajustement manuel au glisser.
+        calqueRatio = img.naturalWidth / img.naturalHeight;
+        var ratioCanevas = LARGEUR / HAUTEUR;
+        if (calqueRatio > ratioCanevas){ calqueW = LARGEUR; calqueH = LARGEUR / calqueRatio; }
+        else { calqueH = HAUTEUR; calqueW = HAUTEUR * calqueRatio; }
+        calqueX = (LARGEUR - calqueW) / 2;
+        calqueY = (HAUTEUR - calqueH) / 2;
         $('btnRetirerCalque').disabled = false;
         $('curseurOpaciteCalque').disabled = false;
         rendre();
@@ -2985,6 +3078,7 @@
   });
   $('btnRetirerCalque').addEventListener('click', function(){
     imageCalque = null;
+    calqueX = 0; calqueY = 0; calqueW = LARGEUR; calqueH = HAUTEUR;
     $('btnRetirerCalque').disabled = true;
     $('curseurOpaciteCalque').disabled = true;
     $('inputCalque').value = '';
@@ -3240,7 +3334,8 @@
     estVisible: estVisible, dessinerPiece: dessinerPiece,
     get configMenu(){ return configMenu; }, get pieceMenu(){ return pieceMenu; }, get pieceCopiee(){ return pieceCopiee; },
     get styleCopie(){ return styleCopie; }, ouvrirMenuContextuel: ouvrirMenuContextuel, ouvrirPopupMcd: ouvrirPopupMcd,
-    fermerPopupMcd: fermerPopupMcd
+    fermerPopupMcd: fermerPopupMcd,
+    get calque(){ return imageCalque ? { x:calqueX, y:calqueY, w:calqueW, h:calqueH } : null; }
   };
 
   rendre();
