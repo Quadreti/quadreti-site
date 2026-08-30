@@ -80,6 +80,13 @@
 
   .rang-joint{ display:flex; align-items:center; gap:8px; }
   .rang-joint input[type="range"]{ flex:1; }
+
+  /* Rognage du calque de reference (30/08) : le groupe Annuler/Valider ne
+     s'affiche que PENDANT le mode rognage -- specificite (2 classes) pour
+     gagner face a .grille-formats{display:grid} quel que soit l'ordre des
+     regles dans la feuille. */
+  .grille-formats.groupe-rognage{ display:none; }
+  .grille-formats.groupe-rognage.actif{ display:grid; }
   .rang-joint b{ font-variant-numeric:tabular-nums; font-size:12px; min-width:2.6em; text-align:right; }
 
   .zone-travail{ display:flex; flex-direction:column; align-items:center; width:100%; }
@@ -876,6 +883,12 @@
               <button class="btn" id="btnInsererCalque">Insérer</button>
               <button class="btn" id="btnRetirerCalque" disabled>Retirer</button>
             </div>
+            <button class="btn" id="btnRognerCalque" disabled style="margin-bottom:6px;">Rogner l'image</button>
+            <div class="grille-formats groupe-rognage" id="groupeRognage" style="grid-template-columns:1fr 1fr; margin-bottom:6px;">
+              <button class="btn" id="btnRognerAnnuler">Annuler</button>
+              <button class="btn" id="btnRognerValider">Valider le rognage</button>
+            </div>
+            <p class="note" id="noteRognage" style="display:none; margin:0 0 9px;">Glissez les coins pour choisir la zone visible de l'image entière, affichée en clair -- le reste s'assombrit. Aucune forme/proportion imposée ici.</p>
             <div class="rang-joint">
               <input type="range" id="curseurOpaciteCalque" min="10" max="80" value="40" step="5" disabled>
               <b id="valeurOpaciteCalque">40%</b>
@@ -1540,7 +1553,13 @@
     if (imageCalque){
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = opaciteCalque;
-      ctx.drawImage(imageCalque, calqueX, calqueY, calqueW, calqueH);
+      if (modeRognage){
+        // Mode rognage : l'image COMPLETE redevient visible (pas juste la
+        // portion deja rognee) pour pouvoir choisir une nouvelle zone.
+        ctx.drawImage(imageCalque, pleinCadre.x, pleinCadre.y, pleinCadre.w, pleinCadre.h);
+      } else {
+        ctx.drawImage(imageCalque, calqueRognageX, calqueRognageY, calqueRognageW, calqueRognageH, calqueX, calqueY, calqueW, calqueH);
+      }
       ctx.globalAlpha = 1;
     }
 
@@ -1613,12 +1632,34 @@
       }
     }
 
-    // Contour + poignee du calque de reference (30/08) : dessines EN
+    // Contour + poignee(s) du calque de reference (30/08) : dessines EN
     // DERNIER (comme les poignees de piece ci-dessus) pour rester cliquables
     // et visibles meme quand des pieces recouvrent visuellement le calque.
-    // Une seule poignee (coin bas-droit) -- redimensionnement TOUJOURS
-    // proportionnel, pas de deformation libre a controler.
-    if (imageCalque){
+    if (imageCalque && modeRognage && rognageTravail){
+      // Mode rognage : le PLEIN CADRE entier s'assombrit (evenodd -- un
+      // rectangle "trou" dans un rectangle plus grand) sauf la zone de
+      // rognage en cours, avec ses 4 coins INDEPENDANTS (pas de ratio
+      // impose, contrairement au redimensionnement normal du calque).
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pleinCadre.x, pleinCadre.y, pleinCadre.w, pleinCadre.h);
+      ctx.rect(rognageTravail.x, rognageTravail.y, rognageTravail.w, rognageTravail.h);
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fill('evenodd');
+      ctx.restore();
+      ctx.strokeStyle = '#2A9DF4';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(rognageTravail.x, rognageTravail.y, rognageTravail.w, rognageTravail.h);
+      [
+        { x: rognageTravail.x, y: rognageTravail.y },
+        { x: rognageTravail.x + rognageTravail.w, y: rognageTravail.y },
+        { x: rognageTravail.x, y: rognageTravail.y + rognageTravail.h },
+        { x: rognageTravail.x + rognageTravail.w, y: rognageTravail.y + rognageTravail.h }
+      ].forEach(function(c){ dessinerPoignee(c.x, c.y, '#E2725B', RAYON_POIGNEE_MAX); });
+    } else if (imageCalque){
+      // Une seule poignee (coin bas-droit) -- redimensionnement TOUJOURS
+      // proportionnel, pas de deformation libre a controler ici.
       ctx.globalCompositeOperation = 'source-over';
       ctx.strokeStyle = '#2A9DF4';
       ctx.setLineDash([4, 3]);
@@ -1915,6 +1956,35 @@
   canvas.addEventListener('pointerdown', function(e){
     var pos = positionCanevas(e);
 
+    // -1) Mode rognage actif (30/08) : prend le controle EXCLUSIF du
+    //     canevas -- aucune piece, aucun panoramique, aucun outil Main tant
+    //     qu'il reste actif (evite toute ambiguite pendant cette operation
+    //     modale). Retour immediat dans tous les cas, meme un clic dans le
+    //     vide ne doit rien declencher d'autre.
+    if (modeRognage && rognageTravail){
+      var poigneesRognage = [
+        { x: rognageTravail.x, y: rognageTravail.y, coin: 'hg' },
+        { x: rognageTravail.x + rognageTravail.w, y: rognageTravail.y, coin: 'hd' },
+        { x: rognageTravail.x, y: rognageTravail.y + rognageTravail.h, coin: 'bg' },
+        { x: rognageTravail.x + rognageTravail.w, y: rognageTravail.y + rognageTravail.h, coin: 'bd' }
+      ];
+      for (var kRognage = 0; kRognage < poigneesRognage.length; kRognage++){
+        if (distance(pos, poigneesRognage[kRognage]) <= RAYON_POIGNEE_MAX + 3){
+          mode = 'rognage-coin'; coinRognageActif = poigneesRognage[kRognage].coin;
+          saisirPointeurSansRisque(e);
+          return;
+        }
+      }
+      if (pos.x >= rognageTravail.x && pos.x <= rognageTravail.x + rognageTravail.w &&
+          pos.y >= rognageTravail.y && pos.y <= rognageTravail.y + rognageTravail.h){
+        mode = 'rognage-deplacer';
+        calqueDecalage.x = pos.x - rognageTravail.x;
+        calqueDecalage.y = pos.y - rognageTravail.y;
+        saisirPointeurSansRisque(e);
+      }
+      return;
+    }
+
     // 0) Outil Main actif (30/08, retour fondateur -- habitude prise sur
     //    xTool Creative Space) : TOUT glisser panoramique, meme en partant
     //    sur une piece -- sans ca, un mur bien rempli ne laisse plus aucun
@@ -2106,6 +2176,14 @@
       var nouvelleLargeur = Math.max(TAILLE_MIN_CALQUE, pos.x - calqueX);
       calqueW = nouvelleLargeur;
       calqueH = nouvelleLargeur / calqueRatioDepart;
+    } else if (mode === 'rognage-deplacer'){
+      var rx = pos.x - calqueDecalage.x, ry = pos.y - calqueDecalage.y;
+      // Le rectangle de rognage doit rester entierement DANS le plein cadre.
+      rx = Math.max(pleinCadre.x, Math.min(rx, pleinCadre.x + pleinCadre.w - rognageTravail.w));
+      ry = Math.max(pleinCadre.y, Math.min(ry, pleinCadre.y + pleinCadre.h - rognageTravail.h));
+      rognageTravail.x = rx; rognageTravail.y = ry;
+    } else if (mode === 'rognage-coin'){
+      redimensionnerRognage(pos);
     }
     // (La refonte vectorielle des morsures signifie que courber un bord ou
     // redimensionner NE PERD PLUS les morsures deja recues -- chaque piece se
@@ -2146,12 +2224,12 @@
       rendre();
       return;
     }
-    if (mode === 'calque-deplacer' || mode === 'calque-redim'){
+    if (mode === 'calque-deplacer' || mode === 'calque-redim' || mode === 'rognage-deplacer' || mode === 'rognage-coin'){
       // Retour anticipe (meme forme que 'marquee'/'pan' ci-dessus) : le
-      // calque n'est jamais capture dans HISTORIQUE (pur guide de travail,
-      // voir le commentaire a sa definition) -- pas d'appel a
-      // enregistrerHistorique ici, volontairement.
-      mode = null;
+      // calque (rognage compris) n'est jamais capture dans HISTORIQUE (pur
+      // guide de travail, voir le commentaire a sa definition) -- pas
+      // d'appel a enregistrerHistorique ici, volontairement.
+      mode = null; coinRognageActif = null;
       return;
     }
     if (mode === 'pan'){
@@ -2968,7 +3046,15 @@
     return { bouton: bouton, popover: $(bouton.dataset.cible) };
   });
   function ouvrirOutil(o){ o.popover.classList.add('ouverte'); }
-  function fermerOutil(o){ o.popover.classList.remove('ouverte'); }
+  function fermerOutil(o){
+    o.popover.classList.remove('ouverte');
+    // Filet de securite (30/08) : si le popover Calque de reference se ferme
+    // (Echap, clic dehors, croix) alors que le mode rognage est encore actif,
+    // on l'annule proprement -- sinon le canevas resterait bloque en mode
+    // rognage exclusif (plus aucune piece cliquable) sans indice visuel une
+    // fois le popover disparu.
+    if (o.popover.id === 'popoverCalque' && modeRognage) sortirModeRognage();
+  }
   function fermerTousLesOutils(){ OUTILS.forEach(fermerOutil); }
   OUTILS.forEach(function(o){
     o.bouton.addEventListener('click', function(){
@@ -2981,6 +3067,15 @@
     OUTILS.forEach(function(o){
       if (!o.popover.classList.contains('ouverte')) return;
       if (o.popover.contains(e.target) || o.bouton.contains(e.target)) return;
+      // Piege trouve en testant le rognage (30/08) : ce clic "en dehors du
+      // popover" se declenche AUSSI pour un clic sur le CANEVAS -- exactement
+      // ou se fait tout le geste de rognage. Sans cette exception, le tout
+      // premier pointerdown sur une poignee de rognage fermait popoverCalque
+      // avant meme que le geste ne commence (fermerOutil annule le mode
+      // rognage en cascade, voir plus bas), qui reinitialisait rognageTravail
+      // a null EN PLEIN MILIEU du meme pointerdown -- crash au pointermove
+      // suivant (lecture de proprietes sur null).
+      if (o.popover.id === 'popoverCalque' && modeRognage && canvas.contains(e.target)) return;
       fermerOutil(o);
     });
   });
@@ -3049,6 +3144,21 @@
   var opaciteCalque = 0.4;
   var calqueX = 0, calqueY = 0, calqueW = LARGEUR, calqueH = HAUTEUR, calqueRatio = 1;
   var TAILLE_MIN_CALQUE = 24;
+  // Rognage (30/08, suite directe du redimensionnement ci-dessus -- meme
+  // demande fondateur, "rogner l'image"). calqueRognageX/Y/W/H = portion
+  // actuellement visible, en pixels NATURELS de l'image source (independants
+  // de calqueX/Y/W/H, qui restent le rectangle d'AFFICHAGE sur le canevas).
+  // Sans rognage, cette portion = l'image entiere. Mode dedie et EXCLUSIF
+  // (voir le tout debut de pointerdown) plutot que meles aux poignees de
+  // deplacement/redimensionnement deja en place -- un coin qui a parfois un
+  // sens (redim, proportionnel) et parfois un autre (rognage, libre) sur les
+  // memes pixels aurait ete source d'erreurs de manipulation.
+  var calqueRognageX = 0, calqueRognageY = 0, calqueRognageW = 0, calqueRognageH = 0;
+  var modeRognage = false;
+  var rognageTravail = null; // { x, y, w, h } en coordonnees DESTINATION (canevas), rectangle en cours d'ajustement
+  var pleinCadre = null; // { x, y, w, h } : ou/a quelle taille afficher l'image ENTIERE pendant le mode rognage
+  var coinRognageActif = null; // 'hg' | 'hd' | 'bg' | 'bd'
+  var MIN_ROGNAGE = 20;
 
   $('btnInsererCalque').addEventListener('click', function(){ $('inputCalque').click(); });
   $('inputCalque').addEventListener('change', function(e){
@@ -3061,14 +3171,18 @@
         imageCalque = img;
         // Cadrage initial "contain" centre -- l'image entiere est visible
         // d'un coup, jamais rognee ni etiree, point de depart naturel avant
-        // ajustement manuel au glisser.
+        // ajustement manuel au glisser. Aucun rognage au depart (portion
+        // visible = image entiere).
         calqueRatio = img.naturalWidth / img.naturalHeight;
         var ratioCanevas = LARGEUR / HAUTEUR;
         if (calqueRatio > ratioCanevas){ calqueW = LARGEUR; calqueH = LARGEUR / calqueRatio; }
         else { calqueH = HAUTEUR; calqueW = HAUTEUR * calqueRatio; }
         calqueX = (LARGEUR - calqueW) / 2;
         calqueY = (HAUTEUR - calqueH) / 2;
+        calqueRognageX = 0; calqueRognageY = 0;
+        calqueRognageW = img.naturalWidth; calqueRognageH = img.naturalHeight;
         $('btnRetirerCalque').disabled = false;
+        $('btnRognerCalque').disabled = false;
         $('curseurOpaciteCalque').disabled = false;
         rendre();
       };
@@ -3077,9 +3191,12 @@
     lecteur.readAsDataURL(fichier);
   });
   $('btnRetirerCalque').addEventListener('click', function(){
+    if (modeRognage) sortirModeRognage();
     imageCalque = null;
     calqueX = 0; calqueY = 0; calqueW = LARGEUR; calqueH = HAUTEUR;
+    calqueRognageX = 0; calqueRognageY = 0; calqueRognageW = 0; calqueRognageH = 0;
     $('btnRetirerCalque').disabled = true;
+    $('btnRognerCalque').disabled = true;
     $('curseurOpaciteCalque').disabled = true;
     $('inputCalque').value = '';
     rendre();
@@ -3089,6 +3206,68 @@
     $('valeurOpaciteCalque').textContent = this.value + '%';
     rendre();
   });
+
+  /* Entrer en mode rognage : reconstruit ou afficher l'image COMPLETE
+     (pleinCadre) a partir de l'echelle actuelle (calqueW / calqueRognageW,
+     verrouillee) -- necessaire car calqueX/Y/W/H ne decrivent que la portion
+     deja rognee, jamais l'image source entiere. Le rectangle de travail
+     demarre exactement sur le rognage actuel (aucun changement visuel a
+     l'ouverture), les bords qui depassent restent visibles autour, assombris. */
+  $('btnRognerCalque').addEventListener('click', function(){
+    if (!imageCalque) return;
+    var echelle = calqueW / calqueRognageW;
+    pleinCadre = {
+      x: calqueX - calqueRognageX * echelle,
+      y: calqueY - calqueRognageY * echelle,
+      w: imageCalque.naturalWidth * echelle,
+      h: imageCalque.naturalHeight * echelle
+    };
+    rognageTravail = { x: calqueX, y: calqueY, w: calqueW, h: calqueH };
+    modeRognage = true;
+    $('btnRognerCalque').style.display = 'none';
+    $('groupeRognage').classList.add('actif');
+    $('noteRognage').style.display = 'block';
+    rendre();
+  });
+  $('btnRognerValider').addEventListener('click', function(){
+    var echelle = pleinCadre.w / imageCalque.naturalWidth;
+    calqueRognageX = (rognageTravail.x - pleinCadre.x) / echelle;
+    calqueRognageY = (rognageTravail.y - pleinCadre.y) / echelle;
+    calqueRognageW = rognageTravail.w / echelle;
+    calqueRognageH = rognageTravail.h / echelle;
+    calqueX = rognageTravail.x; calqueY = rognageTravail.y;
+    calqueW = rognageTravail.w; calqueH = rognageTravail.h;
+    calqueRatio = calqueRognageW / calqueRognageH; // le prochain redim. proportionnel suit desormais CE ratio
+    sortirModeRognage();
+    rendre();
+  });
+  $('btnRognerAnnuler').addEventListener('click', function(){
+    sortirModeRognage();
+    rendre();
+  });
+  function sortirModeRognage(){
+    modeRognage = false; rognageTravail = null; pleinCadre = null; coinRognageActif = null;
+    $('btnRognerCalque').style.display = '';
+    $('groupeRognage').classList.remove('actif');
+    $('noteRognage').style.display = 'none';
+  }
+
+  /* Redimensionne rognageTravail depuis le coin actif -- coin OPPOSE fixe,
+     libre (PAS de ratio verrouille : rogner choisit une zone arbitraire,
+     contrairement au redimensionnement du calque entier). Toujours clampe a
+     l'interieur de pleinCadre -- impossible de rogner en dehors de l'image
+     source reelle. */
+  function redimensionnerRognage(pos){
+    var gauche = rognageTravail.x, droite = rognageTravail.x + rognageTravail.w;
+    var haut = rognageTravail.y, bas = rognageTravail.y + rognageTravail.h;
+    var px = Math.max(pleinCadre.x, Math.min(pos.x, pleinCadre.x + pleinCadre.w));
+    var py = Math.max(pleinCadre.y, Math.min(pos.y, pleinCadre.y + pleinCadre.h));
+    if (coinRognageActif === 'hg'){ gauche = Math.min(px, droite - MIN_ROGNAGE); haut = Math.min(py, bas - MIN_ROGNAGE); }
+    else if (coinRognageActif === 'hd'){ droite = Math.max(px, gauche + MIN_ROGNAGE); haut = Math.min(py, bas - MIN_ROGNAGE); }
+    else if (coinRognageActif === 'bg'){ gauche = Math.min(px, droite - MIN_ROGNAGE); bas = Math.max(py, haut + MIN_ROGNAGE); }
+    else if (coinRognageActif === 'bd'){ droite = Math.max(px, gauche + MIN_ROGNAGE); bas = Math.max(py, haut + MIN_ROGNAGE); }
+    rognageTravail.x = gauche; rognageTravail.y = haut; rognageTravail.w = droite - gauche; rognageTravail.h = bas - haut;
+  }
 
   /* ================= Enregistrer / Charger (local) + Telecharger PNG (27/08) =================
      Simplifie par la refonte vectorielle : les pieces (morsures comprises)
@@ -3335,7 +3514,8 @@
     get configMenu(){ return configMenu; }, get pieceMenu(){ return pieceMenu; }, get pieceCopiee(){ return pieceCopiee; },
     get styleCopie(){ return styleCopie; }, ouvrirMenuContextuel: ouvrirMenuContextuel, ouvrirPopupMcd: ouvrirPopupMcd,
     fermerPopupMcd: fermerPopupMcd,
-    get calque(){ return imageCalque ? { x:calqueX, y:calqueY, w:calqueW, h:calqueH } : null; }
+    get calque(){ return imageCalque ? { x:calqueX, y:calqueY, w:calqueW, h:calqueH, rognage:{x:calqueRognageX,y:calqueRognageY,w:calqueRognageW,h:calqueRognageH} } : null; },
+    get modeRognage(){ return modeRognage; }, get rognageTravail(){ return rognageTravail; }, get pleinCadre(){ return pleinCadre; }
   };
 
   rendre();
