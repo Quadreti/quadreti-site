@@ -144,8 +144,14 @@
      entierement dans le systeme generique .icone-outil/.popover-outil
      (popoverAide, wiring OUTILS automatique) plutot que son ancien systeme
      dedie -- une seule mecanique d'ouverture/fermeture pour tous. */
-  .separateur-rail{ height:1px; background:#ffffff26; margin:4px 2px; }
-  .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; color:var(--creme); text-align:center; padding:2px 0; }
+  /* Separateur et valeur du zoom (30/08, retour fondateur "le pourcentage
+     est invisible") : ces deux regles supposaient encore l'ANCIEN rail
+     sombre (trait blanc semi-transparent, texte creme) -- jamais mises a
+     jour quand le rail est passe clair pendant la refonte "facon Canva" du
+     30/08. Sur fond papier, un trait blanc a 15% et un texte creme
+     deviennent quasi invisibles (creme sur creme). */
+  .separateur-rail{ height:1px; background:var(--bord); margin:4px 2px; }
+  .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; font-weight:700; color:var(--doux); text-align:center; padding:2px 0; }
   .aide-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
   .aide-liste li{ font-size:12.5px; color:var(--texte); line-height:1.5; }
   .aide-liste b{ font-family:'Quicksand',sans-serif; }
@@ -433,6 +439,19 @@
     .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu{ padding:6px 2px 5px; }
     .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg{ width:16px; height:16px; }
     .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette{ font-size:8px; }
+  }
+
+  /* Boutons zoom (30/08, retour fondateur "uniformise toutes les icones de
+     couleurs au format nouvelle version") : memes carres compacts
+     terracotta/kraft qu'avant la refonte du rail -- jamais mis a jour vers
+     le meme habillage clair+transparent que le reste. Pas de libelle ici
+     (controles annexes -/+/ajuster, pas des categories d'outils), juste la
+     meme palette. */
+  .rail-lateral #btnZoomMoins, .rail-lateral #btnZoomPlus, .rail-lateral #btnAjuster{
+    background:transparent; color:var(--doux); box-shadow:none; font-weight:700;
+  }
+  .rail-lateral #btnZoomMoins:hover, .rail-lateral #btnZoomPlus:hover, .rail-lateral #btnAjuster:hover{
+    background:var(--teinte-actif); color:var(--terracotta);
   }
 
   /* ===== Outil Selection / Main (30/08) : bascule le comportement du
