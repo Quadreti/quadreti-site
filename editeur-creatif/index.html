@@ -1033,11 +1033,18 @@
       if (c.rotation) transforms.push('rotate(' + c.rotation + 'deg)');
       if (transforms.length) el.style.transform = transforms.join(' ');
       el.dataset.id = c.id;
+      // Opacite (30/08) : commune a tous les types, voir rendrePanneau.
+      el.style.opacity = (c.opacite != null ? c.opacite : 100) / 100;
 
       if (c.type === 'photo'){
         if (c.cadreActif) el.style.border = c.cadreEpaisseur + 'px solid ' + c.cadreCouleur;
         el.innerHTML = '<img src="' + c.src + '" alt="">';
-        el.querySelector('img').style.filter = 'brightness(' + (1 + c.luminosite / 100) + ') contrast(' + (1 + c.contraste / 100) + ')';
+        var imgEl = el.querySelector('img');
+        imgEl.style.filter = 'brightness(' + (1 + c.luminosite / 100) + ') contrast(' + (1 + c.contraste / 100) + ')';
+        // Rognage (30/08) : object-fit:cover (regle CSS .calque-photo img)
+        // remplit deja la boite sans deformer -- object-position choisit
+        // QUELLE partie de l'image reste visible dedans, voir rendrePanneau.
+        imgEl.style.objectPosition = (c.positionX != null ? c.positionX : 50) + '% ' + (c.positionY != null ? c.positionY : 50) + '%';
       } else if (c.type === 'sticker'){
         el.innerHTML = STICKERS.find(function(s){ return s.id === c.sticker; }).svg;
       } else if (c.type === 'forme'){
@@ -1356,6 +1363,15 @@
       '<button type="button" class="btn secondaire" id="propTournerMoins90" title="-90°">↺ -90°</button>' +
       '<button type="button" class="btn secondaire" id="propTourner90" title="+90°">↻ +90°</button>' +
     '</div></div>';
+    /* Opacite (30/08, portee depuis Mosaique -- meme demande fondateur,
+       "meme principe") : commune a TOUS les types de calque (comme la
+       rotation ci-dessus), pas juste photo -- rend n'importe quel calque
+       (photo, forme, texte) utilisable comme guide de reference a decalquer
+       en le rendant semi-transparent, sans creer un type de calque a part
+       comme sur Mosaique (l'architecture DOM d'Editeur Creatif fait deja
+       de chaque calque un objet deplacable/redimensionnable -- un calque
+       "de reference" n'est ici qu'un calque normal a opacite reduite). */
+    html += '<div class="champ-mini"><label>Opacité</label><input type="range" id="propOpacite" min="10" max="100" value="' + (c.opacite != null ? c.opacite : 100) + '"></div>';
     if (c.type === 'texte'){
       html += '<div class="champ-mini"><label>Contenu</label><input type="text" id="propTexteContenu" value="' + escHtml(c.contenu) + '"></div>';
       html += htmlSelecteurCouleur('propTexteCouleur', c.couleur, 'Couleur');
@@ -1376,6 +1392,19 @@
       html += '<div class="champ-mini"><label>Épaisseur</label><input type="range" id="propCadreEpaisseur" min="1" max="24" value="' + c.cadreEpaisseur + '"></div>';
       html += '<div class="champ-mini"><label>Luminosité</label><input type="range" id="propLuminosite" min="-60" max="60" value="' + c.luminosite + '"></div>';
       html += '<div class="champ-mini"><label>Contraste</label><input type="range" id="propContraste" min="-60" max="60" value="' + c.contraste + '"></div>';
+      /* Rognage (30/08, portee depuis Mosaique -- meme demande fondateur,
+         "image rognage"). Le redimensionnement de la BOITE (poignees deja
+         existantes) rogne deja automatiquement -- `object-fit:cover` sur
+         l'image (voir rendreCanevas) remplit toujours la boite sans jamais
+         la deformer. Ce qui manquait reellement : choisir QUELLE partie de
+         l'image reste visible dans cette boite -- object-position, ici en
+         2 curseurs plutot qu'un glisser sur le canevas (Mosaique est 100%
+         Canvas, un glisser y redessine une position ; ici glisser sur la
+         photo deplace deja tout le calque -- superposer un DEUXIEME sens au
+         meme glisser aurait ete ambigu, les curseurs restent sans ambiguite,
+         meme registre que Luminosite/Contraste juste au-dessus). */
+      html += '<div class="champ-mini"><label>Position horizontale (rognage)</label><input type="range" id="propPositionX" min="0" max="100" value="' + (c.positionX != null ? c.positionX : 50) + '"></div>';
+      html += '<div class="champ-mini"><label>Position verticale (rognage)</label><input type="range" id="propPositionY" min="0" max="100" value="' + (c.positionY != null ? c.positionY : 50) + '"></div>';
       html += '<button class="btn secondaire" id="propDetourer" style="margin-bottom:8px">Détourer</button>';
     }
     if (c.type === 'forme'){
@@ -1582,6 +1611,7 @@
     var t = function(id){ return $(id); };
     if (t('propTournerMoins90')) t('propTournerMoins90').onclick = function(){ actionTourner(c, -90); };
     if (t('propTourner90')) t('propTourner90').onclick = function(){ actionTourner(c, 90); };
+    if (t('propOpacite')){ t('propOpacite').oninput = function(){ c.opacite = parseInt(this.value, 10); rendreCanevas(); }; t('propOpacite').onchange = pousserHistorique; }
     if (t('propTexteContenu')){
       t('propTexteContenu').oninput = function(){ c.contenu = this.value; rendreCanevas(); };
       t('propTexteContenu').onblur = pousserHistorique;
@@ -1599,6 +1629,8 @@
     if (t('propCadreEpaisseur')){ t('propCadreEpaisseur').oninput = function(){ c.cadreEpaisseur = parseInt(this.value, 10); rendreCanevas(); }; t('propCadreEpaisseur').onchange = pousserHistorique; }
     if (t('propLuminosite')){ t('propLuminosite').oninput = function(){ c.luminosite = parseInt(this.value, 10); rendreCanevas(); }; t('propLuminosite').onchange = pousserHistorique; }
     if (t('propContraste')){ t('propContraste').oninput = function(){ c.contraste = parseInt(this.value, 10); rendreCanevas(); }; t('propContraste').onchange = pousserHistorique; }
+    if (t('propPositionX')){ t('propPositionX').oninput = function(){ c.positionX = parseInt(this.value, 10); rendreCanevas(); }; t('propPositionX').onchange = pousserHistorique; }
+    if (t('propPositionY')){ t('propPositionY').oninput = function(){ c.positionY = parseInt(this.value, 10); rendreCanevas(); }; t('propPositionY').onchange = pousserHistorique; }
     if (t('propDetourer')) t('propDetourer').onclick = function(){ ouvrirDetourage(c); };
 
     if (t('propFormePhoto')){
@@ -1640,7 +1672,7 @@
     if (!f) return;
     var lecteur = new FileReader();
     lecteur.onload = function(ev){
-      ajouterCalque({ type:'photo', src:ev.target.result, x:60, y:60, w:160, h:160, cadreActif:false, cadreCouleur:'#2B353E', cadreEpaisseur:6, luminosite:0, contraste:0 });
+      ajouterCalque({ type:'photo', src:ev.target.result, x:60, y:60, w:160, h:160, cadreActif:false, cadreCouleur:'#2B353E', cadreEpaisseur:6, luminosite:0, contraste:0, opacite:100, positionX:50, positionY:50 });
     };
     lecteur.readAsDataURL(f);
     this.value = '';
