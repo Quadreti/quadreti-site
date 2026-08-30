@@ -406,6 +406,24 @@
   .swatch-mini.ajouter:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .note-palette{ font-size:9.5px; color:var(--doux); margin:4px 0 0; line-height:1.4; }
 
+  /* ===== Grille deployee (30/08) : duplique le calque selectionne en
+     grille NxM espacee, meme fonctionnalite que Mosaique Creative --
+     rotation par CHAMP NUMERIQUE (pas de poignee a glisser), coherent avec
+     Tourner +/-90 deja dans l'app. */
+  .grille-champs{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; margin-bottom:10px; }
+  .grille-champ label{ display:block; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--doux); margin-bottom:4px; }
+  .grille-champ input{
+    width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px;
+    padding:6px 8px; border-radius:7px; border:1px solid var(--bord); background:var(--papier); color:var(--texte);
+  }
+  .grille-champ input:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
+  .grille-actions{ display:flex; gap:8px; }
+  .grille-actions .btn{ flex:1; }
+  .grille-fantome{
+    position:absolute; border:2px dashed var(--terracotta); border-radius:4px; background:#e2725b14;
+    pointer-events:none; z-index:60;
+  }
+
 </style>
 </head>
 <body id="qz-top">
@@ -527,6 +545,42 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <span class="etiquette">Dupliquer</span>
           </button>
+          <div class="icone-outil-conteneur">
+            <button class="icone-outil" id="btnBarreGrille" title="Grille déployée" data-cible="popGrille">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              <span class="etiquette">Grille</span>
+            </button>
+            <div class="popover-outil" id="popGrille">
+              <h3>Aire de la grille</h3>
+              <div class="grille-champs">
+                <div class="grille-champ">
+                  <label for="grilleColonnes">Colonnes X</label>
+                  <input type="number" id="grilleColonnes" min="1" max="20" step="1" value="2">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleEspX">Espacement X (mm)</label>
+                  <input type="number" id="grilleEspX" min="0" max="500" step="1" value="4">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleLignes">Lignes Y</label>
+                  <input type="number" id="grilleLignes" min="1" max="20" step="1" value="2">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleEspY">Espacement Y (mm)</label>
+                  <input type="number" id="grilleEspY" min="0" max="500" step="1" value="4">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleRotation">Rotation (°)</label>
+                  <input type="number" id="grilleRotation" min="-180" max="180" step="1" value="0">
+                </div>
+              </div>
+              <p class="note" style="margin:0 0 10px">Aperçu en pointillé sur le canevas -- rien n'est créé tant que "Fait" n'est pas cliqué.</p>
+              <div class="grille-actions">
+                <button class="btn secondaire" id="btnGrilleEffacer">Effacer</button>
+                <button class="btn principal" id="btnGrilleFait">Fait</button>
+              </div>
+            </div>
+          </div>
           <button type="button" id="btnBarreDetourer" title="Détourer / gommer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9l-6-6a2 2 0 0 1 0-2.8l8-8a2 2 0 0 1 2.8 0l6.5 6.5a2 2 0 0 1 0 2.8L14 18"/><path d="M6 12l6 6"/></svg>
             <span class="etiquette">Gommer</span>
@@ -1103,6 +1157,10 @@
     var barre = $('barreObjet');
     if (!barre) return;
     var elsSel = [].slice.call(canevas.querySelectorAll('.calque.selectionne'));
+    // Apercu de grille efface des que la selection change de calque (evite
+    // un apercu fantome qui reste affiche pour un calque qui n'est plus la
+    // cible) -- "Effacer" reste la facon explicite de l'annuler.
+    if (grillePreviewPourId !== null && (elsSel.length !== 1 || elsSel[0].dataset.id != grillePreviewPourId)) nettoyerApercuGrille();
     if (!elsSel.length){ barre.classList.remove('visible'); return; }
 
     var boutonsUnite = ['btnBarreDupliquer', 'btnBarreDetourer', 'btnBarreRetourner', 'btnBarrePremierPlan', 'btnBarreArrierePlan', 'btnBarreVerrou', 'btnBarreSupprimer'];
@@ -1411,6 +1469,93 @@
     calques = calques.filter(function(x){ return x.id !== c.id; });
     selectionId = null;
     rendreCanevas(); rendrePanneau();
+    pousserHistorique();
+  }
+
+  /* ================= Grille deployee (30/08) =================
+     Duplique le calque selectionne en grille NxM espacee (mm), rotation
+     d'ensemble optionnelle par CHAMP NUMERIQUE (meme logique que Tourner
+     +/-90 deja dans l'app -- pas de glisser libre). Apercu en pointille
+     (vrais elements DOM legers, .grille-fantome) tant que "Fait" n'est pas
+     confirme -- rien de reel n'est cree avant. Meme fonctionnalite que
+     Mosaique Creative, adaptee a l'architecture DOM (calques en x/y = coin
+     haut-gauche, pas centre ; w/h independants plutot qu'une seule
+     "taille") plutot qu'un simple port du code Canvas. */
+  var grillePreviewEls = [];
+  var grillePreviewPourId = null;
+  function nettoyerApercuGrille(){
+    grillePreviewEls.forEach(function(el){ el.remove(); });
+    grillePreviewEls = [];
+    grillePreviewPourId = null;
+  }
+  function positionsGrilleCalque(c, colonnes, lignes, espXmm, espYmm, rotationDeg){
+    var pxParMm = (canevas.clientWidth / FORMAT_CM) / 10;
+    var espXpx = espXmm * pxParMm, espYpx = espYmm * pxParMm;
+    var pasX = c.w + espXpx, pasY = c.h + espYpx;
+    var centreX = c.x + c.w / 2, centreY = c.y + c.h / 2;
+    var rad = (rotationDeg || 0) * Math.PI / 180;
+    var cos = Math.cos(rad), sin = Math.sin(rad);
+    var positions = [];
+    for (var r = 0; r < lignes; r++){
+      for (var col = 0; col < colonnes; col++){
+        if (r === 0 && col === 0) continue; // le calque d'origine reste en place
+        var dx = col * pasX, dy = r * pasY;
+        var ncx = centreX + (dx * cos - dy * sin), ncy = centreY + (dx * sin + dy * cos);
+        positions.push({ x: ncx - c.w / 2, y: ncy - c.h / 2 });
+      }
+    }
+    return positions;
+  }
+  function valeursChampsGrille(){
+    return {
+      colonnes: Math.max(1, parseInt($('grilleColonnes').value, 10) || 1),
+      lignes: Math.max(1, parseInt($('grilleLignes').value, 10) || 1),
+      espX: Math.max(0, parseFloat($('grilleEspX').value) || 0),
+      espY: Math.max(0, parseFloat($('grilleEspY').value) || 0),
+      rotation: parseFloat($('grilleRotation').value) || 0
+    };
+  }
+  function actualiserApercuGrille(){
+    nettoyerApercuGrille();
+    var c = calqueSelectionne();
+    if (!c) return;
+    grillePreviewPourId = c.id;
+    var v = valeursChampsGrille();
+    positionsGrilleCalque(c, v.colonnes, v.lignes, v.espX, v.espY, v.rotation).forEach(function(pos){
+      var fantome = document.createElement('div');
+      fantome.className = 'grille-fantome';
+      fantome.style.left = pos.x + 'px';
+      fantome.style.top = pos.y + 'px';
+      fantome.style.width = c.w + 'px';
+      fantome.style.height = c.h + 'px';
+      canevas.appendChild(fantome);
+      grillePreviewEls.push(fantome);
+    });
+  }
+  function actionEffacerGrille(){
+    $('grilleColonnes').value = 2; $('grilleLignes').value = 2;
+    $('grilleEspX').value = 4; $('grilleEspY').value = 4; $('grilleRotation').value = 0;
+    nettoyerApercuGrille();
+  }
+  function actionCreerGrille(){
+    var c = calqueSelectionne();
+    if (!c) return;
+    var v = valeursChampsGrille();
+    var positions = positionsGrilleCalque(c, v.colonnes, v.lignes, v.espX, v.espY, v.rotation);
+    if (!positions.length) return;
+    positions.forEach(function(pos){
+      var copie = Object.assign({}, c, { id: creerId(), x: pos.x, y: pos.y, z: ++compteurZ, verrouille: false });
+      calques.push(copie);
+    });
+    nettoyerApercuGrille();
+    // Ferme juste CE popover (pas de fermerTousLesOutils ici : cette
+    // fonction vit dans le 2e bloc <script>, hors de portee de cette IIFE --
+    // toucher a ses deux classes directement est plus sur qu'un couplage
+    // entre les deux scripts).
+    var popGrille = $('popGrille'), btnGrille = $('btnBarreGrille');
+    if (popGrille) popGrille.classList.remove('ouvert');
+    if (btnGrille) btnGrille.classList.remove('actif');
+    rendreCanevas();
     pousserHistorique();
   }
 
@@ -2013,6 +2158,15 @@
   $('btnZoomPlus').addEventListener('click', function(){ niveauZoom = Math.min(2.5, +(niveauZoom + 0.1).toFixed(2)); appliquerZoom(); });
   $('btnZoomMoins').addEventListener('click', function(){ niveauZoom = Math.max(0.3, +(niveauZoom - 0.1).toFixed(2)); appliquerZoom(); });
   $('btnZoomAjuster').addEventListener('click', function(){ niveauZoom = 1; appliquerZoom(); });
+
+  /* ================= Grille deployee : wiring ================= */
+  ['grilleColonnes', 'grilleLignes', 'grilleEspX', 'grilleEspY', 'grilleRotation'].forEach(function(id){
+    var el = $(id);
+    if (el) el.addEventListener('input', actualiserApercuGrille);
+  });
+  if ($('btnBarreGrille')) $('btnBarreGrille').addEventListener('click', actualiserApercuGrille);
+  if ($('btnGrilleEffacer')) $('btnGrilleEffacer').addEventListener('click', actionEffacerGrille);
+  if ($('btnGrilleFait')) $('btnGrilleFait').addEventListener('click', actionCreerGrille);
 
   rendreCanevas();
   rendrePanneau();
