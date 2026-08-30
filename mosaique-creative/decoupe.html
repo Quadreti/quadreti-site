@@ -38,9 +38,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
+  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12;
+    /* Palette rail/page (30/08, mockup valide par le fondateur) : remplace le
+       fond de PAGE charbon + rail clair "facon Canva" par l'inverse -- fond de
+       page GRIS clair, rail a nouveau fonce mais dans un bleu marine distinct
+       de --charbon, accent orange brule distinct de --terracotta. Tokens
+       dedies plutot que de reecrire --charbon/--terracotta directement : ces
+       deux variables restent utilisees ailleurs (canevas, popovers,
+       barre-objet) avec leur sens d'origine, les reecrire aurait un effet de
+       bord bien plus large que ce qui a ete demande (le rail + le fond de
+       page uniquement). */
+    --gris:#dedede; --marine:#1e2b35; --brule:#d96c2f; --blanc:#ffffff; --rail-doux:#ffffffb3; --rail-survol:#ffffff1a; --rail-filet:#ffffff1f;
+  }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--charbon); color:var(--creme); font-family:'Karla',sans-serif; }
+  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Karla',sans-serif; }
   h1,h2,h3{ font-family:'Quicksand',sans-serif; }
 
   /* Titre retire de la page (28/08, demande du fondateur) : sera porte par
@@ -75,7 +86,7 @@
   /* Format actuel, juste reference (28/08) : simple rappel en texte, pas
      interactif -- pour voir le format choisi sans avoir a rouvrir le
      popover Format. Mis a jour au meme point que la regle (construireRegles). */
-  .format-actuel{ margin-top:10px; font-size:11.5px; color:#fff; font-variant-numeric:tabular-nums; }
+  .format-actuel{ margin-top:10px; font-size:11.5px; color:var(--doux); font-variant-numeric:tabular-nums; }
   /* Cadre du canevas en angle droit (28/08) : avec les regles ajoutees, le
      cadre se lit comme un seul instrument (regles + grille + dessin) --
      un coin arrondi sur le cadre exterieur jurait avec les coins droits
@@ -150,8 +161,8 @@
      jour quand le rail est passe clair pendant la refonte "facon Canva" du
      30/08. Sur fond papier, un trait blanc a 15% et un texte creme
      deviennent quasi invisibles (creme sur creme). */
-  .separateur-rail{ height:1px; background:var(--bord); margin:4px 2px; }
-  .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; font-weight:700; color:var(--doux); text-align:center; padding:2px 0; }
+  .separateur-rail{ height:1px; background:var(--rail-filet); margin:4px 2px; }
+  .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; font-weight:700; color:var(--rail-doux); text-align:center; padding:2px 0; }
   .aide-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
   .aide-liste li{ font-size:12.5px; color:var(--texte); line-height:1.5; }
   .aide-liste b{ font-family:'Quicksand',sans-serif; }
@@ -398,6 +409,7 @@
     width:34px; height:34px; border-radius:10px; border:none; background:var(--terracotta);
     color:var(--creme); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
     box-shadow:0 6px 18px -12px #2b353e4d; font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px;
+    text-decoration:none;
   }
   .icone-outil:hover{ background:#c85f49; }
   /* Couleur differenciante (28/08, demande explicite) : Format/Inserer/Clic
@@ -407,38 +419,42 @@
   .icone-outil-kraft:hover{ background:#bcac7d; }
   .icone-outil svg{ width:16px; height:16px; }
 
-  /* ===== Rails "facon Canva" (30/08) : fond clair + un mot sous chaque
-     icone au lieu d'un pave charbon icones-seules -- meme retour fondateur
-     et meme traitement qu'Editeur Creatif ("trop technique", captures Canva
-     a l'appui). Comportement des popovers totalement inchange (meme classes
-     ouverte/data-cible/data-fermer-outil), seul l'habillage du DECLENCHEUR
-     change. Les boutons zoom (pas de data-cible, textContent seul : -/+/⤢)
-     gardent leur forme carree compacte, pas de libelle -- controles annexes,
-     pas des categories d'outils. */
-  .rail-lateral{ background:var(--papier); border:1px solid var(--bord); box-shadow:none; padding:8px 6px; }
+  /* ===== Rails (30/08, mockup valide) : fond marine + icone blanche + mot
+     en blanc attenue sous chaque icone -- remplace le rail clair "facon
+     Canva" du meme jour (fond de PAGE passe de charbon a gris clair, donc le
+     rail clair ne se distinguait plus assez -- retour a un rail fonce, mais
+     un bleu marine dedie, pas le --charbon d'origine). Comportement des
+     popovers totalement inchange (memes classes ouverte/data-cible/
+     data-fermer-outil), seul l'habillage du DECLENCHEUR change. Les boutons
+     zoom (pas de data-cible, textContent seul : -/+/⤢) gardent leur forme
+     carree compacte, pas de libelle -- controles annexes, pas des categories
+     d'outils. Plus de distinction kraft dans le rail (mockup valide sans --
+     les regles .icone-outil-kraft[data-cible] dediees ont ete retirees, ces
+     boutons retombent simplement sur le meme style que les autres). */
+  .rail-lateral{ background:var(--marine); border:none; box-shadow:0 16px 34px -18px #00000055; padding:8px 6px; }
   .rail-lateral .icone-outil-conteneur{ width:100%; }
-  /* #btnApercu (30/08) ajoute a chaque selecteur : c'est un bouton du rail
-     comme les autres, mais sans data-cible (il ouvre une fenetre modale,
-     pas un petit popover ancre) -- sans cet ajout, il retombe sur le
+  /* #btnApercu et #btnBoutique (30/08) ajoutes a chaque selecteur : ce sont
+     des boutons du rail comme les autres, mais sans data-cible (l'un ouvre
+     une fenetre modale, l'autre est un lien <a> vers la boutique -- ni l'un
+     ni l'autre n'a de popover ancre) -- sans cet ajout, ils retombent sur le
      display:flex EN LIGNE (direction par defaut) de la regle de base
      .icone-outil, qui ecrase l'icone SVG a 0px de large pour laisser la
-     place au libelle (flex-shrink par defaut) -- bug trouve en inspectant
-     le rendu reel (icone invisible, seul le mot "Apercu" restait visible). */
-  .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu{
+     place au libelle (flex-shrink par defaut) -- bug deja rencontre et
+     corrige pour #btnApercu, applique ici directement pour #btnBoutique. */
+  .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu, .rail-lateral #btnBoutique{
     width:100%; height:auto; flex-direction:column; gap:4px; padding:8px 3px 7px; border-radius:11px;
-    background:transparent; color:var(--doux); box-shadow:none;
+    background:transparent; color:var(--blanc); box-shadow:none;
   }
-  .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg{ width:18px; height:18px; flex-shrink:0; }
-  .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center;
+  .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg, .rail-lateral #btnBoutique svg{ width:18px; height:18px; flex-shrink:0; }
+  .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette, .rail-lateral #btnBoutique .etiquette{
+    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
   }
-  .rail-lateral .icone-outil[data-cible]:hover, .rail-lateral #btnApercu:hover{ background:var(--teinte-actif); color:var(--terracotta); }
-  .rail-lateral .icone-outil-kraft[data-cible], .rail-lateral .icone-outil-kraft#btnApercu{ background:transparent; color:var(--doux); }
-  .rail-lateral .icone-outil-kraft[data-cible]:hover, .rail-lateral .icone-outil-kraft#btnApercu:hover{ background:var(--teinte-actif); color:var(--terracotta); }
+  .rail-lateral .icone-outil[data-cible]:hover, .rail-lateral #btnApercu:hover, .rail-lateral #btnBoutique:hover{ background:var(--rail-survol); }
+  .rail-lateral .icone-outil[data-cible]:hover .etiquette, .rail-lateral #btnApercu:hover .etiquette, .rail-lateral #btnBoutique:hover .etiquette{ color:var(--blanc); }
   @media (max-width:760px){
-    .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu{ padding:6px 2px 5px; }
-    .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg{ width:16px; height:16px; }
-    .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette{ font-size:8px; }
+    .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu, .rail-lateral #btnBoutique{ padding:6px 2px 5px; }
+    .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg, .rail-lateral #btnBoutique svg{ width:16px; height:16px; }
+    .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette, .rail-lateral #btnBoutique .etiquette{ font-size:8px; }
   }
 
   /* Boutons zoom (30/08, retour fondateur "uniformise toutes les icones de
@@ -456,10 +472,10 @@
      flex-start, donc colle a gauche du rail au lieu d'etre centre sous
      "80%". */
   .rail-lateral #btnZoomMoins, .rail-lateral #btnZoomPlus, .rail-lateral #btnAjuster{
-    background:transparent; color:var(--doux); box-shadow:none; font-weight:700; align-self:center;
+    background:transparent; color:var(--blanc); box-shadow:none; font-weight:700; align-self:center;
   }
   .rail-lateral #btnZoomMoins:hover, .rail-lateral #btnZoomPlus:hover, .rail-lateral #btnAjuster:hover{
-    background:var(--teinte-actif); color:var(--terracotta);
+    background:var(--rail-survol); color:var(--brule);
   }
 
   /* ===== Outil Selection / Main (30/08) : bascule le comportement du
@@ -468,21 +484,23 @@
      par-dessus une piece -- utile sur un mur bien rempli sans plus aucun
      vide ou attraper le panoramique existant). Retour fondateur, habitude
      prise sur xTool Creative Space. */
-  .groupe-outils-mode{ display:flex; flex-direction:column; gap:4px; width:100%; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid var(--bord); }
+  .groupe-outils-mode{ display:flex; flex-direction:column; gap:4px; width:100%; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid var(--rail-filet); }
   /* Libelle ajoute (30/08, retour fondateur "le naming icone aide ux a s'y
      retrouver") : ces deux boutons etaient les seuls du rail encore
      icone-seule (juste un title, invisible sans survol) -- meme traitement
      que les autres (icone + mot sous l'icone) pour rester reperable au
      premier coup d'oeil, pas seulement au survol. */
   .groupe-outils-mode .icone-outil{
-    width:100%; height:auto; flex-direction:column; gap:4px; padding:8px 3px 7px; border-radius:11px; background:transparent; color:var(--doux);
+    width:100%; height:auto; flex-direction:column; gap:4px; padding:8px 3px 7px; border-radius:11px; background:transparent; color:var(--blanc);
   }
   .groupe-outils-mode .icone-outil svg{ width:17px; height:17px; flex-shrink:0; }
   .groupe-outils-mode .icone-outil .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center;
+    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
   }
-  .groupe-outils-mode .icone-outil:hover{ background:var(--teinte-actif); color:var(--terracotta); }
-  .groupe-outils-mode .icone-outil.actif{ background:var(--terracotta); color:#fff; }
+  .groupe-outils-mode .icone-outil:hover{ background:var(--rail-survol); }
+  .groupe-outils-mode .icone-outil:hover .etiquette{ color:var(--blanc); }
+  .groupe-outils-mode .icone-outil.actif{ background:var(--brule); color:#fff; }
+  .groupe-outils-mode .icone-outil.actif .etiquette{ color:#fff; }
   @media (max-width:760px){
     .groupe-outils-mode .icone-outil{ padding:6px 2px 5px; }
     .groupe-outils-mode .icone-outil svg{ width:16px; height:16px; }
@@ -540,26 +558,13 @@
   .popover-outil-droite{ left:auto; right:0; }
   .popover-outil.ouverte{ display:block; }
 
-  /* Aide en coin bas-gauche du canevas (28/08) : plus dans le rail --
-     badge flottant directement sur .canevas-cadre (deja position:relative,
-     meme recette que l'ancien zoom flottant), coin bas-gauche. S'ouvre vers
-     le HAUT (bottom:100%) donc reste "a l'interieur" par-dessus le canevas
-     sans jamais deborder sous le cadre -- aucun impact sur la hauteur de
-     page, aucune barre de defilement declenchee. */
-  /* Aide en coin bas-gauche de la PAGE (28/08, corrige -- pas du canevas) :
-     position:fixed par rapport a la fenetre, pas au cadre du canevas --
-     reste a la meme place quel que soit le zoom/panoramique en cours.
-     S'ouvre vers le HAUT (bottom:100%), donc toujours "vers l'interieur" de
-     la page plutot que de deborder hors ecran -- aucun impact sur la
-     hauteur de page, aucune barre de defilement declenchee. */
-  .icone-aide-coin{ position:fixed; left:16px; bottom:16px; z-index:280; }
-  /* Boutique en bas-droite de la PAGE (28/08) : meme recette que l'Aide en
-     bas-gauche, symetrique. Socle minimum de toute app QuadretI ("un bouton
-     de direction vers les autres produits/outils pertinents", CLAUDE.md) --
-     ici precisement vers la boutique. Lien direct (pas de popover), meme
-     URL que le reste du site (voir mosaique-creative.html). */
-  .icone-boutique-coin{ position:fixed; right:16px; bottom:16px; z-index:280; text-decoration:none; }
-  .popover-aide-coin{ top:auto; left:0; bottom:100%; margin-bottom:10px; }
+  /* Aide + Boutique integres au rail droit (30/08, mockup valide) :
+     n'etaient plus des badges flottants en coin de page (recette du 28/08,
+     retiree ici) -- rejoignent le meme systeme d'icones que le reste du
+     rail (icone + mot, popover-outil-droite pour Aide comme les autres
+     boutons du rail droit). Raison du fondateur : coherence visuelle
+     ("meme esprit que le reste") + repérabilite ("le naming icone aide ux a
+     s'y retrouver", meme demande que Selection/Main un peu plus tot). */
   .popover-entete{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
   .popover-entete h3{ font-size:14px; margin:0; }
   .popover-fermer{
@@ -910,38 +915,46 @@
         <div class="valeur-zoom-rail" id="valeurZoom">100%</div>
         <button class="icone-outil" id="btnZoomPlus" title="Zoomer">+</button>
         <button class="icone-outil icone-outil-kraft" id="btnAjuster" title="Ajuster à l'écran">⤢</button>
+
+        <div class="separateur-rail"></div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" data-cible="popoverAide" title="Aide (raccourcis)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/></svg>
+            <span class="etiquette">Aide</span>
+          </button>
+          <div class="popover-outil popover-outil-droite" id="popoverAide">
+            <div class="popover-entete">
+              <h3>Aide</h3>
+              <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+            </div>
+            <p class="aide-intro">Insérez des pièces, glissez-les. Activez « Les pièces se découpent entre elles » pour qu'elles se redécoupent entre elles et respectent le joint. Sélectionnez une pièce pour la redimensionner ou courber ses bords.</p>
+            <ul class="aide-liste">
+              <li><b>Glisser une pièce</b> = la déplacer (et mordre celles du dessous si la découpe entre pièces est activée).</li>
+              <li><b>Glisser un espace vide</b> = déplacer la vue.</li>
+              <li><b>Ctrl/Cmd + molette</b> = zoomer sous le curseur.</li>
+              <li><b>Poignées</b> : coin = redimensionner, milieu d'un bord = courber.</li>
+              <li><b>Clic droit</b> = couleur / verrouiller / dupliquer / supprimer.</li>
+              <li><b>Maj + clic</b> = sélection de groupe. <b>Maj + glisser sur le vide</b> = rectangle de sélection multiple.</li>
+              <li><b>L</b> = verrouiller/déverrouiller le groupe sélectionné, ou tout s'il n'y en a pas.</li>
+              <li><b>Ctrl+Z</b> / <b>Ctrl+Maj+Z</b> = annuler / rétablir.</li>
+              <li>Une loupe apparaît pendant l'ajustement d'une poignée ; des guides roses s'affichent en approchant du centre ou d'une autre pièce.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <a class="icone-outil" id="btnBoutique" href="https://www.quadreti.fr/boutique/" target="_blank" rel="noopener" title="Voir la boutique QuadretI">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="etiquette">Boutique</span>
+          </a>
+        </div>
       </div>
     </div>
 
     <div class="format-actuel" id="formatActuelLabel">20 × 20 cm</div>
   </div>
 </div>
-</div>
-
-<a class="icone-outil icone-boutique-coin" href="https://www.quadreti.fr/boutique/" target="_blank" rel="noopener" title="Voir la boutique QuadretI">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-</a>
-
-<div class="icone-outil-conteneur icone-aide-coin">
-  <button class="icone-outil" data-cible="popoverAide" title="Aide (raccourcis)">?</button>
-  <div class="popover-outil popover-aide-coin" id="popoverAide">
-    <div class="popover-entete">
-      <h3>Aide</h3>
-      <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-    </div>
-    <p class="aide-intro">Insérez des pièces, glissez-les. Activez « Les pièces se découpent entre elles » pour qu'elles se redécoupent entre elles et respectent le joint. Sélectionnez une pièce pour la redimensionner ou courber ses bords.</p>
-    <ul class="aide-liste">
-      <li><b>Glisser une pièce</b> = la déplacer (et mordre celles du dessous si la découpe entre pièces est activée).</li>
-      <li><b>Glisser un espace vide</b> = déplacer la vue.</li>
-      <li><b>Ctrl/Cmd + molette</b> = zoomer sous le curseur.</li>
-      <li><b>Poignées</b> : coin = redimensionner, milieu d'un bord = courber.</li>
-      <li><b>Clic droit</b> = couleur / verrouiller / dupliquer / supprimer.</li>
-      <li><b>Maj + clic</b> = sélection de groupe. <b>Maj + glisser sur le vide</b> = rectangle de sélection multiple.</li>
-      <li><b>L</b> = verrouiller/déverrouiller le groupe sélectionné, ou tout s'il n'y en a pas.</li>
-      <li><b>Ctrl+Z</b> / <b>Ctrl+Maj+Z</b> = annuler / rétablir.</li>
-      <li>Une loupe apparaît pendant l'ajustement d'une poignée ; des guides roses s'affichent en approchant du centre ou d'une autre pièce.</li>
-    </ul>
-  </div>
 </div>
 
 <div class="loupe-zoom" id="loupeZoom"><canvas id="loupeCanvas" width="160" height="160"></canvas></div>
