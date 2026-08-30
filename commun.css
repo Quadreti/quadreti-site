@@ -124,8 +124,17 @@ footer.qz-footer{
   padding:46px 36px 38px;
   display:grid; grid-template-columns:1.2fr 1fr 1.2fr; gap:36px; align-items:start;
   max-width:none;
-  /* signature "a la Claudus" (29/08) : joint de tesselle en liseret accent */
-  border-top:3px solid var(--qz-terracotta);
+  position:relative;
+}
+/* 30/08 : liseret remplace par un degrade fondu (choix fondateur, variante B
+   de la maquette "Transition Bas de Page") -- pas de ligne, la page se fond
+   dans le pied sur 40px. Pseudo-element plutot que background-image sur
+   .qz-pied3 lui-meme : le fond du pied (Fond bandeau & pied de page) reste
+   un aplat propre pour tout le reste, seul ce ruban en haut degrade. */
+.qz-pied3::before{
+  content:''; position:absolute; left:0; right:0; top:-40px; height:40px;
+  background:linear-gradient(180deg, transparent 0%, var(--qz-charbon) 100%);
+  pointer-events:none;
 }
 .qz-baseline-accent{ color:var(--qz-terracotta); }
 .qz-pied3 .qz-col{ min-width:0; }

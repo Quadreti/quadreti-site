@@ -204,10 +204,13 @@
       '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fondBandeau) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
-      /* touches "a la Claudus" (29/08) : liseret superieur, accent de la
-         baseline, tesselle des titres de colonnes, soulignement des liens
-         -- tous pilotes par Accent, avec garde de contraste sur le texte. */
-      '\n.qz-pied3{border-top-color:' + accent + '}' +
+      /* touches "a la Claudus" (29/08) : accent de la baseline, tesselle des
+         titres de colonnes, soulignement des liens -- pilotes par Accent.
+         30/08 : liseret remplace par un degrade fondu (choix fondateur) --
+         la fin du gradient (::before) doit matcher le VRAI fond du pied
+         (fondBandeau), sinon la couture redevient visible des que fondBandeau
+         diverge de la valeur figee --qz-charbon utilisee en repli CSS. */
+      '\n.qz-pied3::before{background:linear-gradient(180deg,transparent 0%,' + fondBandeau + ' 100%)}' +
       '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
