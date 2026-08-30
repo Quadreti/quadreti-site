@@ -411,21 +411,28 @@
      pas des categories d'outils. */
   .rail-lateral{ background:var(--papier); border:1px solid var(--bord); box-shadow:none; padding:8px 6px; }
   .rail-lateral .icone-outil-conteneur{ width:100%; }
-  .rail-lateral .icone-outil[data-cible]{
+  /* #btnApercu (30/08) ajoute a chaque selecteur : c'est un bouton du rail
+     comme les autres, mais sans data-cible (il ouvre une fenetre modale,
+     pas un petit popover ancre) -- sans cet ajout, il retombe sur le
+     display:flex EN LIGNE (direction par defaut) de la regle de base
+     .icone-outil, qui ecrase l'icone SVG a 0px de large pour laisser la
+     place au libelle (flex-shrink par defaut) -- bug trouve en inspectant
+     le rendu reel (icone invisible, seul le mot "Apercu" restait visible). */
+  .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu{
     width:100%; height:auto; flex-direction:column; gap:4px; padding:8px 3px 7px; border-radius:11px;
     background:transparent; color:var(--doux); box-shadow:none;
   }
-  .rail-lateral .icone-outil[data-cible] svg{ width:18px; height:18px; }
-  .rail-lateral .icone-outil[data-cible] .etiquette{
+  .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg{ width:18px; height:18px; flex-shrink:0; }
+  .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette{
     font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center;
   }
-  .rail-lateral .icone-outil[data-cible]:hover{ background:var(--teinte-actif); color:var(--terracotta); }
-  .rail-lateral .icone-outil-kraft[data-cible]{ background:transparent; color:var(--doux); }
-  .rail-lateral .icone-outil-kraft[data-cible]:hover{ background:var(--teinte-actif); color:var(--terracotta); }
+  .rail-lateral .icone-outil[data-cible]:hover, .rail-lateral #btnApercu:hover{ background:var(--teinte-actif); color:var(--terracotta); }
+  .rail-lateral .icone-outil-kraft[data-cible], .rail-lateral .icone-outil-kraft#btnApercu{ background:transparent; color:var(--doux); }
+  .rail-lateral .icone-outil-kraft[data-cible]:hover, .rail-lateral .icone-outil-kraft#btnApercu:hover{ background:var(--teinte-actif); color:var(--terracotta); }
   @media (max-width:760px){
-    .rail-lateral .icone-outil[data-cible]{ padding:6px 2px 5px; }
-    .rail-lateral .icone-outil[data-cible] svg{ width:16px; height:16px; }
-    .rail-lateral .icone-outil[data-cible] .etiquette{ font-size:8px; }
+    .rail-lateral .icone-outil[data-cible], .rail-lateral #btnApercu{ padding:6px 2px 5px; }
+    .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg{ width:16px; height:16px; }
+    .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette{ font-size:8px; }
   }
 
   /* ===== Outil Selection / Main (30/08) : bascule le comportement du
