@@ -402,6 +402,20 @@
     .rail-lateral .icone-outil[data-cible] .etiquette{ font-size:8px; }
   }
 
+  /* ===== Outil Selection / Main (30/08) : bascule le comportement du
+     glisser sur le canevas -- Selection (comportement historique, glisser
+     le vide panoramique deja) ou Main (TOUT glisser panoramique, meme
+     par-dessus une piece -- utile sur un mur bien rempli sans plus aucun
+     vide ou attraper le panoramique existant). Retour fondateur, habitude
+     prise sur xTool Creative Space. */
+  .groupe-outils-mode{ display:flex; flex-direction:column; gap:4px; width:100%; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid var(--bord); }
+  .groupe-outils-mode .icone-outil{
+    width:100%; height:auto; padding:9px 3px; border-radius:11px; background:transparent; color:var(--doux);
+  }
+  .groupe-outils-mode .icone-outil svg{ width:17px; height:17px; }
+  .groupe-outils-mode .icone-outil:hover{ background:var(--teinte-actif); color:var(--terracotta); }
+  .groupe-outils-mode .icone-outil.actif{ background:var(--terracotta); color:#fff; }
+
   /* ===== Barre d'actions contextuelle (30/08) : meme principe qu'Editeur
      Creatif -- apparait au-dessus (ou en dessous si pas de place) de la
      piece selectionnee, actions rapides directement sur les memes fonctions
@@ -490,6 +504,14 @@
   <div class="zone-travail">
     <div class="rangee-canevas">
       <div class="rail-lateral rail-gauche">
+        <div class="groupe-outils-mode" role="group" aria-label="Outil actif">
+          <button class="icone-outil actif" id="btnOutilSelection" title="Sélection">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/></svg>
+          </button>
+          <button class="icone-outil" id="btnOutilMain" title="Main (panoramique)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 11.5V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12V6.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 13.5V10a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7l-2.4-3.6a1.5 1.5 0 0 1 2.4-1.8L8 13"/></svg>
+          </button>
+        </div>
         <div class="icone-outil-conteneur">
           <button class="icone-outil icone-outil-kraft" data-cible="popoverInserer" title="Insérer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><circle cx="17.5" cy="6.5" r="3.5"/><rect x="3" y="14" width="7" height="7" rx="1"/><polygon points="17.5 13.5 21 20.5 14 20.5"/></svg>
@@ -1695,6 +1717,16 @@
   });
 
   /* ================= Glisser : deplacer une piece ou une poignee ================= */
+  // Outil Main (30/08) : 'selection' (comportement historique, glisser le
+  // vide panoramique deja) ou 'main' (TOUT glisser panoramique, y compris
+  // par-dessus une piece -- voir le court-circuit en tete de pointerdown).
+  var outilActif = 'selection';
+  function basculerOutil(nom){
+    outilActif = nom;
+    var btnSel = $('btnOutilSelection'), btnMain = $('btnOutilMain');
+    if (btnSel) btnSel.classList.toggle('actif', nom === 'selection');
+    if (btnMain) btnMain.classList.toggle('actif', nom === 'main');
+  }
   var mode = null; // 'deplacer' | 'poignee' | 'redim' | 'groupe'
   var pieceActive = null;
   var indexPoignee = -1;
@@ -1730,6 +1762,22 @@
 
   canvas.addEventListener('pointerdown', function(e){
     var pos = positionCanevas(e);
+
+    // 0) Outil Main actif (30/08, retour fondateur -- habitude prise sur
+    //    xTool Creative Space) : TOUT glisser panoramique, meme en partant
+    //    sur une piece -- sans ca, un mur bien rempli ne laisse plus aucun
+    //    vide ou attraper le panoramique existant (glisser sur le vide,
+    //    toujours actif en mode Selection, inchange). Court-circuite les
+    //    etapes 1-4 ci-dessous : ni poignee, ni piece, ni marquee tant que
+    //    l'outil Main reste actif.
+    if (outilActif === 'main'){
+      mode = 'pan';
+      panDepart = { x: e.clientX, y: e.clientY, scrollLeft: zoneZoom.scrollLeft, scrollTop: zoneZoom.scrollTop };
+      panBouge = false;
+      canevasHote.classList.add('saisi-pan');
+      saisirPointeurSansRisque(e);
+      return;
+    }
 
     // 1) Poignee de redimensionnement de la piece selectionnee ?
     var sel = PIECES.find(function(p){ return p.id === selectionId; });
@@ -2128,6 +2176,12 @@
     // explicite du fondateur : tout raccourci clavier doit avoir un
     // equivalent cliquable a la souris).
     if (e.key.toLowerCase() === 'l' && !dansUnChamp(e)) basculerVerrouillage();
+    // V/H = raccourcis clavier de l'outil Selection/Main (30/08, meme
+    // convention que Figma/xTool Creative Space) -- les deux boutons du
+    // rail restent le moyen normal, ces touches ne sont qu'un raccourci en
+    // plus (jamais la seule facon d'y acceder, meme regle que L ci-dessus).
+    if (e.key.toLowerCase() === 'v' && !dansUnChamp(e)) basculerOutil('selection');
+    if (e.key.toLowerCase() === 'h' && !dansUnChamp(e)) basculerOutil('main');
   });
 
   // S'il existe une selection de GROUPE (Maj+clic ou rectangle), n'agit que
@@ -2667,6 +2721,10 @@
     if (e.key !== 'Escape') return;
     fermerTousLesOutils();
   });
+
+  /* ================= Outil Selection / Main : wiring ================= */
+  if ($('btnOutilSelection')) $('btnOutilSelection').addEventListener('click', function(){ basculerOutil('selection'); });
+  if ($('btnOutilMain')) $('btnOutilMain').addEventListener('click', function(){ basculerOutil('main'); });
 
   /* ================= Grille deployee : wiring ================= */
   ['grilleColonnes', 'grilleLignes', 'grilleEspX', 'grilleEspY', 'grilleRotation'].forEach(function(id){
