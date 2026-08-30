@@ -29,6 +29,12 @@ document.write(
   '</header>' +
 
   '<nav class="qz-navpanel" id="qzNavPanel" aria-label="Menu principal">' +
+    /* 30/08 : menu simplifie, choix fondateur (brief BRIEF-PORTAIL-ESPACE-CLIENT.md).
+       Ex-entrees "Editeur Creatif", "Mosaique Creative" et le sous-menu "Jeux &
+       Creativite" fusionnees dans /outils.html (portail des apps), seul point
+       d'entree desormais. Ce repli statique doit rester synchronise avec la
+       vraie valeur en base (menu_liens, table reglages_site, projet Supabase
+       quadreti-site) -- mise a jour faite en meme temps que ce fichier. */
     '<ul>' +
       '<li><a href="/index.html">Accueil</a></li>' +
       '<li class="qz-hassub" id="qzCcmItem">' +
@@ -40,19 +46,7 @@ document.write(
       '</li>' +
       '<li><a href="/boutique/">Boutique</a></li>' +
       '<li><a href="/blog/">Blog</a></li>' +
-      '<li><a href="/editeur-creatif/">Éditeur Créatif</a></li>' +
-      '<li><a href="/mosaique-creative/">Mosaïque Créative</a></li>' +
-      '<li class="qz-hassub">' +
-        '<button class="qz-subtoggle" aria-expanded="false">Jeux &amp; Créativité <span class="qz-chev">▾</span></button>' +
-        '<ul class="qz-sublist">' +
-          '<li><a href="/pixel-number/">Pixel Number App</a></li>' +
-          '<li><a href="/mosaique-revelee/">Mosaïque Révélée</a></li>' +
-          '<li><a href="/mandala/">Mandala</a></li>' +
-          '<li><a href="/memo/">Mémo</a></li>' +
-          '<li><a href="/taquin/">Taquin</a></li>' +
-          '<li><a href="/set/">SET</a></li>' +
-        '</ul>' +
-      '</li>' +
+      '<li><a href="/outils.html">Nos outils</a></li>' +
       '<li><a href="/index.html#livraison">Livraison &amp; paiement</a></li>' +
       '<li><a href="/index.html#faq">FAQ</a></li>' +
       '<li><a href="/contact.html">Contact</a></li>' +
