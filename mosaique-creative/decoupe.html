@@ -303,6 +303,15 @@
     background:var(--surface); border-radius:16px; max-width:420px; width:100%; max-height:82vh; overflow:auto;
     padding:18px 20px 22px; box-shadow:0 24px 60px -12px #2b353e55; color:var(--charbon);
   }
+  /* Apercu du resultat reel (30/08) : reutilise le meme habillage de fenetre
+     que "Personnaliser le clic droit" (.mcd-popup), juste plus large --
+     un rendu couleur se juge mal a 420px de large. */
+  #apercuCouverture .mcd-popup{ max-width:560px; }
+  .apercu-cadre{
+    background:#fff; border-radius:10px; border:1px solid var(--bord); overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .apercu-cadre canvas{ display:block; width:100%; height:auto; aspect-ratio:1/1; }
   .mcd-entete{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     position:sticky; top:-18px; background:var(--surface); padding:18px 0 10px; margin:-18px 0 4px;
@@ -839,6 +848,13 @@
           </div>
         </div>
 
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil icone-outil-kraft" id="btnApercu" title="Aperçu du résultat réel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span class="etiquette">Aperçu</span>
+          </button>
+        </div>
+
         <div class="separateur-rail icone-outil-separateur"></div>
 
         <button class="icone-outil" id="btnZoomMoins" title="Dézoomer">−</button>
@@ -914,6 +930,28 @@
     <p class="mcd-note">Coche/décoche une action, glisse une poignée pour la réordonner dans son groupe. Couleur et Supprimer restent toujours actifs.</p>
     <div id="mcdListeGroupes"></div>
     <button class="mcd-reinit" id="mcdReinit">Réinitialiser</button>
+  </div>
+</div>
+
+<!-- Apercu du resultat reel (30/08) : le repere de tuiles/sous-grille CM
+     sert le travail d'edition (juger l'alignement) -- pas la peine de le
+     rendre moins visible pour ca. Ce qu'il manquait, c'etait une vue SANS
+     aucun repere, fond blanc, pour juger les couleurs telles qu'elles
+     seront reellement imprimees. Meme fonction de rendu que l'export PNG
+     (dessinerPiece), donc garanti fidele a ce qui sort vraiment -- pas un
+     rendu invente a part qui pourrait diverger. -->
+<div class="mcd-couverture" id="apercuCouverture">
+  <div class="mcd-popup">
+    <div class="mcd-entete">
+      <h3 id="apercuTitre">Aperçu</h3>
+      <button class="mcd-fermer" id="apercuFermer" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+    <p class="mcd-note">Rendu réel, fond blanc, sans aucun repère -- exactement ce que donnera l'impression.</p>
+    <div class="apercu-cadre">
+      <canvas id="apercuCanvas" width="600" height="600"></canvas>
+    </div>
   </div>
 </div>
 
@@ -2192,6 +2230,7 @@
     // des deux), sinon la fenetre de reglages du clic droit.
     if (e.key === 'Escape'){
       if (menuContextuel.classList.contains('ouvert')) fermerMenuContextuel();
+      else if (apercuCouverture.classList.contains('ouverte')) fermerApercu();
       else fermerPopupMcd();
     }
     // Ctrl/Cmd+Z = annuler, Ctrl/Cmd+Maj+Z (ou Ctrl+Y) = retablir -- meme
@@ -2714,6 +2753,28 @@
   $('btnOuvrirReglagesMenu').addEventListener('click', ouvrirPopupMcd);
   $('mcdFermer').addEventListener('click', fermerPopupMcd);
   mcdCouverture.addEventListener('click', function(e){ if (e.target === mcdCouverture) fermerPopupMcd(); });
+
+  /* ================= Apercu du resultat reel (30/08) =================
+     Meme fonction de rendu que le telechargement PNG (dessinerPiece) --
+     ce qu'on voit ici est garanti fidele a ce qui sort vraiment a
+     l'impression, jamais un rendu invente a part qui pourrait diverger. */
+  var apercuCouverture = $('apercuCouverture');
+  function ouvrirApercu(){
+    var actx = $('apercuCanvas').getContext('2d');
+    actx.clearRect(0, 0, LARGEUR, HAUTEUR);
+    actx.fillStyle = '#fff';
+    actx.fillRect(0, 0, LARGEUR, HAUTEUR);
+    PIECES.forEach(function(p){ dessinerPiece(actx, p); });
+    var boutonActif = document.querySelector('.btn-format.actif');
+    var formatCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
+    var nbTuiles = Math.max(1, Math.round(formatCm / 20));
+    $('apercuTitre').textContent = 'Aperçu — ' + nbTuiles + '×' + nbTuiles + ' tuile' + (nbTuiles > 1 ? 's' : '') + ' (' + formatCm + '×' + formatCm + ' cm)';
+    apercuCouverture.classList.add('ouverte');
+  }
+  function fermerApercu(){ apercuCouverture.classList.remove('ouverte'); }
+  $('btnApercu').addEventListener('click', ouvrirApercu);
+  $('apercuFermer').addEventListener('click', fermerApercu);
+  apercuCouverture.addEventListener('click', function(e){ if (e.target === apercuCouverture) fermerApercu(); });
 
   rendrePanneauMcd();
 
