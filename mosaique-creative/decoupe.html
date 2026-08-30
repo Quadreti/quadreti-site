@@ -1202,6 +1202,38 @@
   }
   function masquerLoupe(){ loupeZoom.style.display = 'none'; }
 
+  /* Rayon des poignees (30/08, retour fondateur) : proportionnel a la
+     taille de la piece plutot que fixe. Avant ce correctif, une piece
+     reduite finissait par avoir des poignees plus grosses que sa propre
+     boite englobante des qu'elle approchait un petit format physique
+     (variable selon le format de mur choisi, ~5cm dans le cas signale) --
+     elles se chevauchaient au point de bloquer toute reduction/deformation
+     supplementaire (impossible de viser UNE poignee precise parmi plusieurs
+     qui se recouvrent). Formule calee pour ne RIEN changer visuellement sur
+     une piece a la taille par defaut d'une insertion (100 -- rayon 7,
+     valeur historique inchangee) et retrecir proportionnellement en
+     dessous, avec un plancher pour rester cliquable meme tres petite.
+     Le hit-test garde le meme ecart de +3 par rapport au rayon dessine
+     qu'avant (7 dessine / 10 hit-test) -- les deux s'ajustent ensemble. */
+  var RAYON_POIGNEE_MIN = 2.5, RAYON_POIGNEE_MAX = 7;
+  function rayonPoignee(p){
+    return Math.max(RAYON_POIGNEE_MIN, Math.min(RAYON_POIGNEE_MAX, p.taille * 0.07));
+  }
+
+  /* Plancher de redimensionnement (30/08, retour fondateur) : avant, une
+     piece ne pouvait jamais descendre sous 30px CANEVAS quel que soit le
+     format de mur choisi -- une valeur fixe qui ne represente pas la meme
+     taille PHYSIQUE selon le format (1cm au format 20cm, jusqu'a 5cm au
+     format 100cm -- exactement le blocage signale). Desormais un plancher
+     physique constant (1cm) quel que soit le format : lu dynamiquement sur
+     le bouton de format actif plutot que stocke dans une variable a part,
+     comme construireRegles() le fait deja pour les regles graduees. */
+  function tailleMinPiece(){
+    var boutonActif = document.querySelector('.btn-format.actif');
+    var nbCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
+    return (LARGEUR / nbCm) * 1;
+  }
+
   function poigneeRedimensionnement(p){
     // Coin bas-droit approximatif de la boite englobante (r,r depuis le centre),
     // tourne avec la piece pour rester visuellement a son coin.
@@ -1306,9 +1338,10 @@
       ctx.stroke();
 
       if (!sel.verrouille){
-        positionPoigneesEcran(sel).forEach(function(pt){ dessinerPoignee(pt.x, pt.y, '#2A9DF4'); });
+        var rPoignee = rayonPoignee(sel);
+        positionPoigneesEcran(sel).forEach(function(pt){ dessinerPoignee(pt.x, pt.y, '#2A9DF4', rPoignee); });
         var pr = poigneeRedimensionnement(sel);
-        dessinerPoignee(pr.x, pr.y, '#E2725B');
+        dessinerPoignee(pr.x, pr.y, '#E2725B', rPoignee);
       }
     }
 
@@ -1446,9 +1479,9 @@
     });
   }
 
-  function dessinerPoignee(x, y, couleur){
+  function dessinerPoignee(x, y, couleur, rayon){
     ctx.beginPath();
-    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.arc(x, y, rayon || RAYON_POIGNEE_MAX, 0, Math.PI * 2);
     ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.lineWidth = 1.5;
@@ -1552,8 +1585,9 @@
     // 1) Poignee de redimensionnement de la piece selectionnee ?
     var sel = PIECES.find(function(p){ return p.id === selectionId; });
     if (sel && !sel.verrouille){
+      var rPoigneeHit = rayonPoignee(sel) + 3;
       var pr = poigneeRedimensionnement(sel);
-      if (distance(pos, pr) <= 10){
+      if (distance(pos, pr) <= rPoigneeHit){
         mode = 'redim'; pieceActive = sel; tailleDepart = sel.taille;
         etatModifiePendantGeste = false;
         saisirPointeurSansRisque(e);
@@ -1562,7 +1596,7 @@
       // 2) Poignee de deformation d'un bord ?
       var pts = positionPoigneesEcran(sel);
       for (var i = 0; i < pts.length; i++){
-        if (distance(pos, pts[i]) <= 10){
+        if (distance(pos, pts[i]) <= rPoigneeHit){
           mode = 'poignee'; pieceActive = sel; indexPoignee = i;
           etatModifiePendantGeste = false;
           saisirPointeurSansRisque(e);
@@ -1680,7 +1714,7 @@
       // La poignee est a (r*0.9, r*0.9) du centre -> distance = r*0.9*racine(2).
       var dist = distance(pos, { x: pieceActive.x, y: pieceActive.y });
       var nouveauR = dist / (0.9 * Math.SQRT2);
-      pieceActive.taille = Math.max(30, nouveauR * 2);
+      pieceActive.taille = Math.max(tailleMinPiece(), nouveauR * 2);
     } else if (mode === 'groupe'){
       var dxGroupe = pos.x - decalageGroupe.x, dyGroupe = pos.y - decalageGroupe.y;
       selectionGroupe.forEach(function(id){
