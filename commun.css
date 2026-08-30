@@ -17,13 +17,27 @@
   --qz-sombre:#1f272e;
 }
 .qz-header{
-  width:100%; background:var(--qz-clair); border-bottom:1px solid #2b353e14;
+  width:100%; background:var(--qz-clair); border-bottom:none;
   /* 29/08 soir : logo decale du bord gauche (padding-left 32 -> 56px),
      demande fondateur ; mobile reste plus serre plus bas. */
   padding:14px 32px 14px 56px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px;
   position:relative; z-index:60; box-sizing:border-box;
 }
 @media (max-width:640px){ .qz-header{ padding-left:24px; } }
+/* 30/08 : essai demande par le fondateur -- meme traitement "degrade fondu"
+   que le pied de page (variante B), applique ici au bandeau du HAUT : le
+   liseret fin d'origine (border-bottom) est retire, remplace par un
+   pseudo-element qui prolonge le fond du bandeau vers le bas et s'estompe
+   sur 40px dans le contenu de la page. Absent sur l'accueil (voir
+   index.html) : le bandeau y est deja transparent (menu en surimpression
+   sur l'animation, 30/08), un degrade par-dessus la video n'aurait pas de
+   sens. z-index inferieur au bandeau lui-meme pour ne jamais passer devant
+   le logo/burger. */
+.qz-header::after{
+  content:''; position:absolute; left:0; right:0; top:100%; height:40px;
+  background:linear-gradient(180deg, var(--qz-clair) 0%, transparent 100%);
+  pointer-events:none; z-index:-1;
+}
 .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
 .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
 .qz-qlogo i{ border-radius:1.4px; background:transparent; }

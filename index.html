@@ -137,6 +137,10 @@
      (charge APRES ce bloc sur cette page), sans !important pour laisser
      un futur reglage explicite possible. */
   body .qz-header{ background:transparent; border-bottom:none; }
+  /* le degrade fondu du bandeau (commun.css, 30/08) n'a pas de sens ici : le
+     bandeau est deja transparent (menu en surimpression sur l'animation) --
+     un degrade par-dessus la video ajouterait un voile colore non voulu. */
+  body .qz-header::after{ display:none; }
 
   /* ===== Hero (variante B verrouillée) ===== */
   .hero{ position:relative; min-height:606px; display:flex; align-items:center; }

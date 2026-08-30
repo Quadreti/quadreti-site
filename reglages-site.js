@@ -159,6 +159,14 @@
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
 
+    /* Degrade fondu du bandeau du haut (30/08, essai demande par le
+       fondateur, meme traitement que le pied de page) : le depart du
+       degrade doit matcher le VRAI fond du bandeau (fondBandeau), pas le
+       repli CSS statique --qz-clair -- sinon la couture redevient visible
+       des que ce champ diverge. Sans effet sur l'accueil (regle dediee dans
+       index.html qui masque ce pseudo-element la-bas). */
+    css += '\n.qz-header::after{background:linear-gradient(180deg,' + fondBandeau + ' 0%,transparent 100%)}';
+
     /* Mentions legales : les cartouches kraft ont ete remplaces par des
        liens texte dans le pied "Trois colonnes" (29/08 soir, variante A
        validee par le fondateur) — le reglage fin "mentionsKraft" (28/08)
