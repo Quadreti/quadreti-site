@@ -249,6 +249,21 @@
   .btn-pipette-mc:disabled{ opacity:.35; cursor:not-allowed; }
   .palette-perso-mc{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
   .palette-perso-mc .swatch-mc{ width:20px; height:20px; flex:0 0 auto; }
+
+  /* ===== Grille deployee (30/08) : duplique la piece selectionnee en
+     grille NxM espacee, apercu en direct sur le canevas avant de confirmer.
+     Rotation par CHAMP NUMERIQUE (pas de poignee a glisser) -- coherent
+     avec le choix deja fait pour "Tourner (90 degres)" sur une piece
+     individuelle (decision explicite du fondateur, pas de rotation libre). */
+  .grille-champs{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; margin-bottom:10px; }
+  .grille-champ label{ display:block; font-size:10px; font-weight:700; color:var(--doux); margin-bottom:4px; }
+  .grille-champ input{
+    width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px;
+    padding:7px 8px; border-radius:7px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte);
+  }
+  .grille-champ input:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
+  .grille-actions{ display:flex; gap:8px; }
+  .grille-actions .btn{ flex:1; }
   .ajouter-perso-mc{ width:20px; height:20px; border-radius:6px; border:1.5px dashed var(--bord); background:var(--papier); color:var(--doux); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
   .ajouter-perso-mc:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .mc-action{ display:block; width:100%; text-align:left; background:none; border:none; padding:7px 4px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); cursor:pointer; border-radius:6px; }
@@ -655,6 +670,45 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <span class="etiquette">Dupliquer</span>
           </button>
+          <div class="icone-outil-conteneur">
+            <button class="icone-outil" id="btnBarreGrille" title="Grille déployée" data-cible="popoverBarreGrille">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              <span class="etiquette">Grille</span>
+            </button>
+            <div class="popover-outil" id="popoverBarreGrille">
+              <div class="popover-entete">
+                <h3>Aire de la grille</h3>
+                <button class="popover-fermer" data-fermer-outil aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+              </div>
+              <div class="grille-champs">
+                <div class="grille-champ">
+                  <label for="grilleColonnes">Colonnes X</label>
+                  <input type="number" id="grilleColonnes" min="1" max="20" step="1" value="2">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleEspX">Espacement X (mm)</label>
+                  <input type="number" id="grilleEspX" min="0" max="500" step="1" value="4">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleLignes">Lignes Y</label>
+                  <input type="number" id="grilleLignes" min="1" max="20" step="1" value="2">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleEspY">Espacement Y (mm)</label>
+                  <input type="number" id="grilleEspY" min="0" max="500" step="1" value="4">
+                </div>
+                <div class="grille-champ">
+                  <label for="grilleRotation">Rotation (°)</label>
+                  <input type="number" id="grilleRotation" min="-180" max="180" step="1" value="0">
+                </div>
+              </div>
+              <p class="note" style="margin:0 0 10px">Aperçu en pointillé sur le canevas -- rien n'est créé tant que "Fait" n'est pas cliqué.</p>
+              <div class="grille-actions">
+                <button class="btn" id="btnGrilleEffacer">Effacer</button>
+                <button class="btn" id="btnGrilleFait">Fait</button>
+              </div>
+            </div>
+          </div>
           <button type="button" id="btnBarreReinit" title="Réinitialiser la forme">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
             <span class="etiquette">Réinit.</span>
@@ -1234,6 +1288,79 @@
     return (LARGEUR / nbCm) * 1;
   }
 
+  /* ================= Grille deployee (30/08) =================
+     Duplique la piece selectionnee en grille NxM espacee (mm), avec une
+     rotation d'ensemble optionnelle (champ numerique, meme logique que
+     "Tourner (90 degres)" -- pas de glisser libre). Previsualisation en
+     pointille sur le canevas tant que "Fait" n'est pas confirme -- rien
+     n'est cree avant. */
+  var grillePreview = null; // { pieceId, positions:[{x,y}] } ou null
+
+  function pxParMm(){
+    var boutonActif = document.querySelector('.btn-format.actif');
+    var nbCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
+    return (LARGEUR / nbCm) / 10;
+  }
+
+  function positionsGrille(piece, colonnes, lignes, espXmm, espYmm, rotationDeg){
+    var espXpx = espXmm * pxParMm(), espYpx = espYmm * pxParMm();
+    // Le pas entre CENTRES de pieces = leur propre taille + l'espacement
+    // demande entre les bords -- pas juste l'espacement seul, sinon les
+    // pieces se chevaucheraient (espacement=0 les mettrait bord a bord,
+    // pas centre sur centre).
+    var pasX = piece.taille + espXpx, pasY = piece.taille + espYpx;
+    var rad = (rotationDeg || 0) * Math.PI / 180;
+    var cos = Math.cos(rad), sin = Math.sin(rad);
+    var positions = [];
+    for (var r = 0; r < lignes; r++){
+      for (var c = 0; c < colonnes; c++){
+        if (r === 0 && c === 0) continue; // la piece d'origine reste en place, jamais dupliquee sur elle-meme
+        var dx = c * pasX, dy = r * pasY;
+        positions.push({ x: piece.x + (dx * cos - dy * sin), y: piece.y + (dx * sin + dy * cos) });
+      }
+    }
+    return positions;
+  }
+
+  function actualiserApercuGrille(){
+    var sel = PIECES.find(function(p){ return p.id === selectionId; });
+    if (!sel){ grillePreview = null; return; }
+    var colonnes = Math.max(1, parseInt($('grilleColonnes').value, 10) || 1);
+    var lignes = Math.max(1, parseInt($('grilleLignes').value, 10) || 1);
+    var espX = Math.max(0, parseFloat($('grilleEspX').value) || 0);
+    var espY = Math.max(0, parseFloat($('grilleEspY').value) || 0);
+    var rotation = parseFloat($('grilleRotation').value) || 0;
+    grillePreview = { pieceId: sel.id, positions: positionsGrille(sel, colonnes, lignes, espX, espY, rotation) };
+    rendre();
+  }
+
+  function actionEffacerGrille(){
+    $('grilleColonnes').value = 2; $('grilleLignes').value = 2;
+    $('grilleEspX').value = 4; $('grilleEspY').value = 4; $('grilleRotation').value = 0;
+    grillePreview = null;
+    rendre();
+  }
+
+  function actionCreerGrille(){
+    var sel = PIECES.find(function(p){ return p.id === selectionId; });
+    if (!sel || !grillePreview || !grillePreview.positions.length) return;
+    grillePreview.positions.forEach(function(pos){
+      var copie = JSON.parse(JSON.stringify({
+        forme: sel.forme, x: pos.x, y: pos.y, taille: sel.taille, couleur: sel.couleur,
+        verrouille: false, poignees: sel.poignees, rotation: sel.rotation || 0
+      }));
+      copie.id = ++compteurId;
+      copie.morsures = [];
+      copie.neMordPas = false;
+      PIECES.push(copie);
+      if (mordreActif) mordreLesAutres(copie);
+    });
+    grillePreview = null;
+    fermerTousLesOutils();
+    rendre();
+    enregistrerHistorique();
+  }
+
   function poigneeRedimensionnement(p){
     // Coin bas-droit approximatif de la boite englobante (r,r depuis le centre),
     // tourne avec la piece pour rester visuellement a son coin.
@@ -1345,6 +1472,24 @@
       }
     }
 
+    // Apercu de la grille deployee (30/08) : contour pointille de chaque
+    // piece a venir, tant que "Fait" n'est pas confirme -- rien de reel
+    // n'existe encore dans PIECES a ce stade.
+    if (grillePreview){
+      var pieceSource = PIECES.find(function(p){ return p.id === grillePreview.pieceId; });
+      if (pieceSource){
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = '#2A9DF4';
+        ctx.setLineDash([4, 3]);
+        ctx.lineWidth = 1.5;
+        grillePreview.positions.forEach(function(pos){
+          var fantome = Object.assign({}, pieceSource, { x: pos.x, y: pos.y });
+          ctx.stroke(cheminPiece(fantome, 0));
+        });
+        ctx.setLineDash([]);
+      }
+    }
+
     // Guides d'alignement (pendant un glisser de piece simple) -- dessines en
     // dernier pour rester visibles par-dessus tout le reste.
     if (mode === 'deplacer' && (guideActifX !== null || guideActifY !== null)){
@@ -1379,6 +1524,10 @@
     var barre = $('barreObjet');
     if (!barre) return;
     var sel = PIECES.find(function(p){ return p.id === selectionId; });
+    // Apercu de grille efface des que la selection change de piece (evite
+    // un apercu fantome qui reste affiche pour une piece qui n'est plus la
+    // cible) -- "Effacer" reste la facon explicite de l'annuler manuellement.
+    if (grillePreview && (!sel || sel.id !== grillePreview.pieceId)) grillePreview = null;
     if (!sel || selectionGroupe.length){ barre.classList.remove('visible'); return; }
 
     var boutonsConditionnels = ['btnBarreReinit', 'btnBarreRetourner'];
@@ -2518,6 +2667,15 @@
     if (e.key !== 'Escape') return;
     fermerTousLesOutils();
   });
+
+  /* ================= Grille deployee : wiring ================= */
+  ['grilleColonnes', 'grilleLignes', 'grilleEspX', 'grilleEspY', 'grilleRotation'].forEach(function(id){
+    var el = $(id);
+    if (el) el.addEventListener('input', actualiserApercuGrille);
+  });
+  if ($('btnBarreGrille')) $('btnBarreGrille').addEventListener('click', actualiserApercuGrille);
+  if ($('btnGrilleEffacer')) $('btnGrilleEffacer').addEventListener('click', actionEffacerGrille);
+  if ($('btnGrilleFait')) $('btnGrilleFait').addEventListener('click', actionCreerGrille);
 
   /* ================= Reglages generaux ================= */
   var curseurJoint = $('curseurJoint');
