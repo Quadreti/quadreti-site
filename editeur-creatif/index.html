@@ -375,7 +375,25 @@
   .btn-forme svg{ width:100%; height:100%; }
 
   .rang-couleur-avancee{ display:flex; align-items:center; gap:6px; margin-bottom:6px; }
-  .pastille-couleur-btn{ width:30px; height:30px; border-radius:8px; border:1.5px solid var(--bord); cursor:pointer; flex-shrink:0; padding:0; }
+  /* input[type=color] (30/08, "plus de choix") : palette native du navigateur
+     (roue/spectre complet) en plus de la grille de swatches + hex + pipette
+     deja en place -- remplace le simple <span> decoratif d'avant, qui ne
+     faisait qu'afficher la couleur sans jamais ouvrir de vrai selecteur.
+     Reset d'apparence necessaire (chaque moteur rend un input color tres
+     differemment par defaut) pour retomber sur le meme rond de 30px deja
+     etabli visuellement. Selecteur renforce (.rang-couleur-avancee en plus
+     de .pastille-couleur-btn) : une regle plus ancienne et plus large,
+     ".champ-mini input[type=color]{width:100%}" (ligne ~272, jamais utilisee
+     avant ce jour -- premiere fois qu'un input[type=color] existe vraiment
+     dans cette page), gagnait sinon le conflit de specificite et etirait la
+     pastille sur toute la largeur de la ligne. */
+  .rang-couleur-avancee input.pastille-couleur-btn{
+    width:30px; height:30px; border-radius:8px; border:1.5px solid var(--bord); cursor:pointer; flex-shrink:0; padding:2px;
+    -webkit-appearance:none; appearance:none; background:var(--surface);
+  }
+  .pastille-couleur-btn::-webkit-color-swatch-wrapper{ padding:0; }
+  .pastille-couleur-btn::-webkit-color-swatch{ border:none; border-radius:6px; }
+  .pastille-couleur-btn::-moz-color-swatch{ border:none; border-radius:6px; }
   .champ-hex{ flex:1; min-width:0; font-family:ui-monospace,monospace; font-size:11.5px; font-weight:600; padding:6px 8px; border:1px solid var(--bord); border-radius:7px; background:var(--papier); color:var(--texte); }
   .btn-pipette-mini{ width:30px; height:30px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--doux); padding:0; }
   .btn-pipette-mini:hover{ border-color:var(--terracotta); color:var(--terracotta); }
@@ -388,11 +406,6 @@
   .swatch-mini.ajouter:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .note-palette{ font-size:9.5px; color:var(--doux); margin:4px 0 0; line-height:1.4; }
 
-  .pont{ max-width:1000px; margin:0 auto 70px; padding:0 24px; }
-  .carte-pont{ background:var(--charbon); color:var(--creme); border-radius:20px; padding:34px 38px; display:flex; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap; }
-  .carte-pont h3{ font-size:18px; margin:0 0 6px; color:var(--creme); }
-  .carte-pont p{ font-size:13px; color:#d9d4c4; margin:0; max-width:48ch; }
-  .carte-pont .btn.principal{ background:var(--terracotta); color:#fff; flex-shrink:0; width:auto; }
 </style>
 </head>
 <body id="qz-top">
@@ -545,7 +558,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1.5 1-1.5 2.2"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
         <span class="bulle-coin">Guide interactif et FAQ de l'Éditeur Créatif →</span>
       </a>
-      <a class="coin-fonction coin-boutique" href="../index.html" title="Autres outils QuadretI">
+      <a class="coin-fonction coin-boutique" href="../outils.html" title="Autres outils QuadretI">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l1.5-4h13L20 8M4 8h16M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M9 12a3 3 0 0 0 6 0"/></svg>
         <span class="bulle-coin">Découvrir les autres outils QuadretI →</span>
       </a>
@@ -603,16 +616,6 @@
     </div>
   </div>
 </div>
-
-<section class="pont">
-  <div class="carte-pont">
-    <div>
-      <h3>Envie de le porter sur un vrai mur ?</h3>
-      <p>Composez une mosaïque Quadreti à partir de vos propres photos, avec la même logique de couleurs et de calques.</p>
-    </div>
-    <a class="btn principal" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer ma mosaïque</a>
-  </div>
-</section>
 
 <script src="/commun-pied.js"></script>
 <script src="../reglages-site.js" defer></script>
@@ -837,7 +840,7 @@
   function htmlSelecteurCouleur(prefixe, valeur, etiquette){
     return '<div class="champ-mini"><label>' + etiquette + '</label>' +
       '<div class="rang-couleur-avancee">' +
-        '<span class="pastille-couleur-btn" id="' + prefixe + 'Pastille" style="background:' + valeur + '"></span>' +
+        '<input type="color" class="pastille-couleur-btn" id="' + prefixe + 'Pastille" value="' + valeur + '" title="Sélecteur de couleur">' +
         '<input type="text" class="champ-hex" id="' + prefixe + 'Hex" value="' + valeur.toUpperCase() + '" maxlength="7">' +
         '<button type="button" class="btn-pipette-mini" id="' + prefixe + 'Pipette" title="Pipette">' + ICONE_PIPETTE + '</button>' +
       '</div>' +
@@ -879,7 +882,7 @@
     }
     function definir(h){
       valeurActuelle = h;
-      pastille.style.background = h;
+      pastille.value = h;
       hex.value = h.toUpperCase();
       onChange(h);
       dessinerGrille();
@@ -890,6 +893,11 @@
       if (/^#[0-9A-Fa-f]{6}$/.test(v)) definir(v);
       else this.value = valeurActuelle;
     });
+    /* Selecteur natif (30/08, "plus de choix") : roue/spectre complet du
+       navigateur, en plus de la grille de swatches + hex + pipette deja la --
+       "input" (pas "change") pour suivre en direct pendant qu'on glisse dans
+       la roue, comme les autres champs de l'app (curseurs, etc). */
+    pastille.addEventListener('input', function(){ definir(this.value); });
     if (window.EyeDropper){
       pipette.addEventListener('click', function(){
         new window.EyeDropper().open().then(function(res){ definir(res.sRGBHex); }).catch(function(){});
