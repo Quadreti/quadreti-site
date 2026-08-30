@@ -2763,40 +2763,54 @@
   // sur un vrai produit QuadretI") : le produit reel est assemble de
   // petites tesselles (~25,5mm, standard deja etabli ailleurs dans
   // l'ecosysteme QuadretI -- meme mesure que QR Code Designer) sur un
-  // carreau de 20cm -- 8 par cote (20/8 = 2,5cm, tres proche du standard
-  // reel, en nombre entier pour une grille propre).
-  var TESSELLES_PAR_CARREAU = 8;
+  // carreau de 20cm -- valeurs physiques REELLES du produit QuadretI
+  // (30/08, demande fondateur "un vrai apercu avec le pas de separation") :
+  // tesselle 25,5mm (standard deja etabli ailleurs dans l'ecosysteme, ex.
+  // QR Code Designer) et joint 2mm (donne directement par le fondateur --
+  // "tu adaptes sur le produit physique c'est 2mm"). Grille en angle droit
+  // du carreau (confirme par le fondateur) : jamais tournee avec une piece,
+  // toujours axee sur le mur entier -- un seul quadrillage continu, pas un
+  // quadrillage independant par piece qui desalignerait les pieces voisines.
+  var TESSELLE_MM = 25.5;
+  var JOINT_MM = 2;
+  // Dessine UNE piece en vraies tesselles carrees espacees (au lieu d'un
+  // aplat continu) : chaque case de la grille GLOBALE (alignee sur l'origine
+  // du canevas, jamais sur la piece) qui touche la silhouette REELLE de la
+  // piece (deformations + morsures deja comprises, via cheminPiece comme
+  // chemin de decoupe -- ctx.clip()) recoit un petit carre plein, retreci
+  // de la moitie du joint sur chaque bord pour laisser le vrai espace visible
+  // entre deux tesselles voisines.
+  function dessinerTessellesPiece(actx, p, pitchPx, insetPx){
+    actx.save();
+    actx.clip(cheminPiece(p, 0));
+    var r = p.taille / 2 + 2; // petite marge : une piece tournee/deformee peut deborder legerement de son rayon nominal
+    var colDebut = Math.floor((p.x - r) / pitchPx) - 1, colFin = Math.ceil((p.x + r) / pitchPx) + 1;
+    var ligneDebut = Math.floor((p.y - r) / pitchPx) - 1, ligneFin = Math.ceil((p.y + r) / pitchPx) + 1;
+    actx.fillStyle = p.couleur;
+    for (var ligne = ligneDebut; ligne <= ligneFin; ligne++){
+      for (var col = colDebut; col <= colFin; col++){
+        actx.fillRect(col * pitchPx + insetPx, ligne * pitchPx + insetPx, pitchPx - insetPx * 2, pitchPx - insetPx * 2);
+      }
+    }
+    actx.restore();
+  }
   function ouvrirApercu(){
     var actx = $('apercuCanvas').getContext('2d');
     actx.clearRect(0, 0, LARGEUR, HAUTEUR);
     actx.fillStyle = '#fff';
     actx.fillRect(0, 0, LARGEUR, HAUTEUR);
-    PIECES.forEach(function(p){ dessinerPiece(actx, p); });
 
     var boutonActif = document.querySelector('.btn-format.actif');
     var formatCm = boutonActif ? parseInt(boutonActif.dataset.taille, 10) : 20;
     var nbTuiles = Math.max(1, Math.round(formatCm / 20));
+    var pxParMm = (LARGEUR / formatCm) / 10;
+    var pitchPx = TESSELLE_MM * pxParMm;
+    var insetPx = (JOINT_MM * pxParMm) / 2;
 
-    // Grille des joints de tesselles : "multiply" + tres faible opacite --
-    // JAMAIS "source-over" (c'est exactement ce qui delavait le repere de
-    // travail, retire plus tot ce soir) -- assez visible pour montrer la
-    // structure physique reelle, sans jamais eclipser la couleur pure du
-    // projet.
-    var nbTessellesCote = nbTuiles * TESSELLES_PAR_CARREAU;
-    var pasTesselle = LARGEUR / nbTessellesCote;
-    actx.globalCompositeOperation = 'multiply';
-    actx.strokeStyle = 'rgba(43,53,62,0.12)';
-    actx.lineWidth = 1;
-    actx.beginPath();
-    for (var i = 1; i < nbTessellesCote; i++){
-      var pos = Math.round(i * pasTesselle) + 0.5;
-      actx.moveTo(pos, 0); actx.lineTo(pos, HAUTEUR);
-      actx.moveTo(0, pos); actx.lineTo(LARGEUR, pos);
-    }
-    actx.stroke();
-    actx.globalCompositeOperation = 'source-over';
+    PIECES.forEach(function(p){ dessinerTessellesPiece(actx, p, pitchPx, insetPx); });
 
-    $('apercuTitre').textContent = 'Aperçu — ' + nbTuiles + '×' + nbTuiles + ' tuile' + (nbTuiles > 1 ? 's' : '') + ' (' + formatCm + '×' + formatCm + ' cm, ' + nbTessellesCote + '×' + nbTessellesCote + ' tesselles)';
+    var nbTessellesCote = Math.round((formatCm * 10) / TESSELLE_MM);
+    $('apercuTitre').textContent = 'Aperçu — ' + nbTuiles + '×' + nbTuiles + ' tuile' + (nbTuiles > 1 ? 's' : '') + ' (' + formatCm + '×' + formatCm + ' cm, ≈' + nbTessellesCote + '×' + nbTessellesCote + ' tesselles, joint ' + JOINT_MM + 'mm)';
     apercuCouverture.classList.add('ouverte');
   }
   function fermerApercu(){ apercuCouverture.classList.remove('ouverte'); }
