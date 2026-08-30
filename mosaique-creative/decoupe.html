@@ -1387,8 +1387,12 @@
     var centreX = (minLeft + maxRight) / 2 - cadreRect.left;
     var topLocal = minTop - cadreRect.top;
     var bottomLocal = maxBottom - cadreRect.top;
-    var y = topLocal - hBarre - 10;
-    if (y < 4) y = bottomLocal + 10;
+    /* Distance entre la barre et la piece (30/08, demande fondateur, meme
+       correctif que sur Editeur Creatif) : ecart plus genereux, valeur
+       identique des deux cotes. */
+    var ECART_BARRE = 18;
+    var y = topLocal - hBarre - ECART_BARRE;
+    if (y < 4) y = bottomLocal + ECART_BARRE;
     var x = Math.max(4, Math.min(centreX - wBarre / 2, cadreRect.width - wBarre - 4));
     barre.style.left = x + 'px';
     barre.style.top = y + 'px';

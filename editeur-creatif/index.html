@@ -174,7 +174,7 @@
     position:absolute; z-index:120; display:flex; align-items:stretch; gap:1px; flex-wrap:wrap; justify-content:center;
     background:var(--charbon); border-radius:13px; padding:5px; box-shadow:0 14px 32px -12px #00000066;
     opacity:0; pointer-events:none; transform:translateY(-6px); transition:opacity .15s ease, transform .15s ease;
-    max-width:min(94vw, 460px);
+    width:max-content; max-width:min(94vw, 460px);
   }
   .barre-objet.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
   .barre-objet button, .barre-objet .icone-outil{
@@ -1141,8 +1141,13 @@
     var centreX = (minLeft + maxRight) / 2 - cadreRect.left;
     var topLocal = minTop - cadreRect.top;
     var bottomLocal = maxBottom - cadreRect.top;
-    var y = topLocal - hBarre - 10;
-    if (y < 4) y = bottomLocal + 10;
+    /* Distance entre la barre et l'objet (30/08, demande fondateur) : la
+       barre semblait "collee" a l'objet -- l'ecart avec le bord de l'objet
+       (haut ou bas) est desormais plus genereux, meme valeur des deux cotes
+       pour rester coherent quel que soit le sens de repli. */
+    var ECART_BARRE = 18;
+    var y = topLocal - hBarre - ECART_BARRE;
+    if (y < 4) y = bottomLocal + ECART_BARRE;
     var x = Math.max(4, Math.min(centreX - wBarre / 2, cadreRect.width - wBarre - 4));
     barre.style.left = x + 'px';
     barre.style.top = y + 'px';
