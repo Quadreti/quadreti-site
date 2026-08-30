@@ -326,7 +326,9 @@ function televerserFichier(fichier, chemin){
 }
 
 function connexionPhrase(){
-  var p = $('champPhrase').value;
+  /* .trim() (30/08) : un espace ou un retour a la ligne colle avec la
+     phrase (copier-coller) la faisait refuser -- silencieusement. */
+  var p = $('champPhrase').value.trim();
   if (!p) { toast('Entrez la phrase secrète.', true); return; }
   rpc('verifier_phrase_panneau', { p_phrase: p }).then(function(res){
     if (!res.ok || res.d !== true) { toast('Phrase incorrecte.', true); return; }
