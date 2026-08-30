@@ -231,7 +231,13 @@
   .mc-section{ padding:6px 6px 8px; border-bottom:1px solid var(--bord); }
   .mc-section:last-child{ border-bottom:none; }
   .mc-titre{ display:flex; align-items:center; justify-content:space-between; font-size:11.5px; font-weight:700; color:var(--charbon); margin-bottom:7px; cursor:pointer; user-select:none; }
-  .mc-titre .pastille-actuelle{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--bord); flex-shrink:0; }
+  .mc-titre .pastille-actuelle{
+    width:16px; height:16px; border-radius:5px; border:1.5px solid var(--bord); flex-shrink:0; padding:0;
+    cursor:pointer; -webkit-appearance:none; appearance:none; background:var(--papier);
+  }
+  .mc-titre .pastille-actuelle::-webkit-color-swatch-wrapper{ padding:0; }
+  .mc-titre .pastille-actuelle::-webkit-color-swatch{ border:none; border-radius:3.5px; }
+  .mc-titre .pastille-actuelle::-moz-color-swatch{ border:none; border-radius:3.5px; }
   .mc-titre .rang-titre{ display:flex; align-items:center; gap:7px; }
   .mc-titre .chevron{ font-size:10px; color:var(--doux); transition:transform .15s; }
   .mc-titre.ouvert .chevron{ transform:rotate(180deg); }
@@ -246,6 +252,17 @@
   .btn-pipette-mc{ width:28px; height:28px; border-radius:7px; border:1.5px solid var(--bord); background:var(--papier); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--doux); }
   .btn-pipette-mc:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .btn-pipette-mc svg{ width:13px; height:13px; }
+  /* input[type=color] (30/08, "plus de choix") : roue/spectre natif du
+     navigateur en plus de la grille de swatches + hex + pipette deja la --
+     meme ajout deja fait sur Editeur Creatif. Reset d'apparence necessaire
+     (chaque moteur rend un input color tres differemment par defaut). */
+  .pastille-couleur-mc{
+    width:28px; height:28px; border-radius:7px; border:1.5px solid var(--bord); padding:2px; cursor:pointer;
+    flex-shrink:0; -webkit-appearance:none; appearance:none; background:var(--papier);
+  }
+  .pastille-couleur-mc::-webkit-color-swatch-wrapper{ padding:0; }
+  .pastille-couleur-mc::-webkit-color-swatch{ border:none; border-radius:5px; }
+  .pastille-couleur-mc::-moz-color-swatch{ border:none; border-radius:5px; }
   .btn-pipette-mc:disabled{ opacity:.35; cursor:not-allowed; }
   .palette-perso-mc{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
   .palette-perso-mc .swatch-mc{ width:20px; height:20px; flex:0 0 auto; }
@@ -632,6 +649,7 @@
             </div>
             <div class="grille-swatches-mc" id="coSwatches"></div>
             <div class="rang-hex-mc">
+              <input type="color" class="pastille-couleur-mc" id="coPastille" title="Sélecteur de couleur">
               <input type="text" class="champ-hex-mc" id="coHex" maxlength="7">
               <button class="btn-pipette-mc" id="coPipette" title="Pipette">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
@@ -680,6 +698,7 @@
               </div>
               <div class="grille-swatches-mc" id="baSwatches"></div>
               <div class="rang-hex-mc">
+                <input type="color" class="pastille-couleur-mc" id="baPastille" title="Sélecteur de couleur">
                 <input type="text" class="champ-hex-mc" id="baHex" maxlength="7">
                 <button class="btn-pipette-mc" id="baPipette" title="Pipette">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7L4 14v3h3l7-7"/><path d="M14.5 10.5l3-3a2.12 2.12 0 0 0-3-3l-3 3"/></svg>
@@ -865,7 +884,7 @@
 <div class="menu-contextuel" id="menuContextuel">
   <div class="mc-section">
     <div class="mc-titre" id="mcTitreRemplissage">
-      <span class="rang-titre"><span class="pastille-actuelle" id="mcPastilleRemplissage"></span>Remplissage</span>
+      <span class="rang-titre"><input type="color" class="pastille-actuelle" id="mcPastilleRemplissage" title="Sélecteur de couleur">Remplissage</span>
       <span class="chevron">▾</span>
     </div>
     <div class="grille-swatches-mc" id="mcSwatchesRemplissage"></div>
@@ -1608,8 +1627,12 @@
      (piece deja posee) -- ids propres (baXxx), ne touche ni les deux autres. */
   function peuplerCouleurBarre(piece){
     var grilleEl = $('baSwatches'), hexEl = $('baHex'), pipetteEl = $('baPipette'), persoEl = $('baPerso');
+    var pastilleEl = $('baPastille');
     if (!grilleEl || !piece) return;
     hexEl.value = piece.couleur;
+    pastilleEl.value = piece.couleur;
+    pastilleEl.oninput = function(){ appliquer(this.value); };
+    pastilleEl.onchange = function(){ enregistrerHistorique(); };
 
     function appliquer(c){
       piece.couleur = c;
@@ -2015,8 +2038,11 @@
     var hexEl = $('coHex');
     var pipetteEl = $('coPipette');
     var persoEl = $('coPerso');
+    var pastilleEl = $('coPastille');
 
     hexEl.value = couleurCourante;
+    pastilleEl.value = couleurCourante;
+    pastilleEl.oninput = function(){ appliquer(this.value); };
 
     function appliquer(c){ couleurCourante = c; peuplerCouleurCourante(); }
 
@@ -2060,7 +2086,15 @@
     var persoEl = $('mcPersoRemplissage');
     var pastilleEl = $('mcPastilleRemplissage');
 
-    pastilleEl.style.background = piece.couleur;
+    pastilleEl.value = piece.couleur;
+    // stopPropagation (30/08, conversion en <input type=color>) : le
+    // parent .mc-titre a son propre clic pour ouvrir/fermer le tiroir en
+    // dessous -- sans ca, cliquer la pastille pour ouvrir le selecteur
+    // natif du navigateur refermerait/rouvrirait aussi le tiroir en meme
+    // temps (l'evenement remonte par defaut).
+    pastilleEl.onclick = function(e){ e.stopPropagation(); };
+    pastilleEl.oninput = function(){ appliquer(this.value); };
+    pastilleEl.onchange = function(){ enregistrerHistorique(); };
     hexEl.value = piece.couleur;
 
     function appliquer(c){ piece.couleur = c; if (miroirActif) synchroniserMiroir(piece); rendre(); peuplerRemplissage(piece); }
