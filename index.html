@@ -137,10 +137,6 @@
      (charge APRES ce bloc sur cette page), sans !important pour laisser
      un futur reglage explicite possible. */
   body .qz-header{ background:transparent; border-bottom:none; }
-  /* le degrade fondu du bandeau (commun.css, 30/08) n'a pas de sens ici : le
-     bandeau est deja transparent (menu en surimpression sur l'animation) --
-     un degrade par-dessus la video ajouterait un voile colore non voulu. */
-  body .qz-header::after{ display:none; }
 
   /* ===== Hero (variante B verrouillée) ===== */
   .hero{ position:relative; min-height:606px; display:flex; align-items:center; }
@@ -165,14 +161,6 @@
      jour separement (85 -> 141, +56 aussi) pour rester coherent avec ce changement. */
   .bg-slides{ position:absolute; top:0; left:0; right:0; bottom:auto; height:580px; overflow:hidden; z-index:1; }
   @media (max-width:760px){ .bg-slides{ height:520px; } }
-  /* 30/08 : fondu de fin d'animation -- transparent en haut, couleur de la
-     page (General) tout en bas, exactement au bord reel de la video grace a
-     overflow:hidden sur .bg-slides parent. */
-  .hero-fondu{
-    position:absolute; left:0; right:0; bottom:0; height:70px; z-index:2;
-    background:linear-gradient(180deg, transparent 0%, #F5F5F5 100%);
-    pointer-events:none;
-  }
   .slide{ position:absolute; inset:0; opacity:0; transition:opacity .8s ease; }
   .slide.on{ opacity:1; }
   .mini{
@@ -686,15 +674,6 @@ document.addEventListener('DOMContentLoaded', function(){
       </video>
       <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="" data-image-zone="bandeau">
     </div>
-    <!-- 30/08 : fondu de fin d'animation (demande fondateur, coherence visuelle
-         avec le degrade du menu/pied de page) -- l'image en mouvement se dissout
-         en douceur dans le fond de la page au lieu de s'arreter net. Enfant de
-         .bg-slides : herite automatiquement du bon calage desktop/mobile (la
-         hauteur du fondu de la video est deja pinnee la, aucun nouveau calcul).
-         z-index:2 = meme niveau que .bg-veil, place APRES lui en DOM (peint
-         par-dessus), mais toujours SOUS .hero-copy/CTA (z-index:3-4) : le
-         fondu ne touche jamais la lisibilite du texte/bouton. -->
-    <div class="hero-fondu" aria-hidden="true"></div>
   </div>
   <div class="bg-veil" aria-hidden="true"></div>
 

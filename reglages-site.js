@@ -117,10 +117,6 @@
       '}' +
       '\na:hover .qz-picto{color:inherit}' +
       '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
-    /* Fondu de fin d'animation (30/08, accueil uniquement -- l'element
-       n'existe pas ailleurs, regle sans effet). Doit matcher le VRAI fond de
-       la page (Général), pas le repli CSS statique #F5F5F5. */
-    css += '\n.hero-fondu{background:linear-gradient(180deg,transparent 0%,' + fond + ' 100%)}';
     /* body PAS repeint sur les pages jeux (29/08, captures fondateur SET/
        Memo/Taquin) : ces 6 pages ont leur propre fond clair (--papier) et
        leur texte charbon, gouvernes par la Palette Jeux (decision actee du
@@ -163,13 +159,6 @@
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
       '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
 
-    /* Degrade fondu du bandeau du haut (30/08, essai demande par le
-       fondateur, meme traitement que le pied de page) : le depart du
-       degrade doit matcher le VRAI fond du bandeau (fondBandeau), pas le
-       repli CSS statique --qz-clair -- sinon la couture redevient visible
-       des que ce champ diverge. Sans effet sur l'accueil (regle dediee dans
-       index.html qui masque ce pseudo-element la-bas). */
-    css += '\n.qz-header::after{background:linear-gradient(180deg,' + fondBandeau + ' 0%,transparent 100%)}';
 
     /* Mentions legales : les cartouches kraft ont ete remplaces par des
        liens texte dans le pied "Trois colonnes" (29/08 soir, variante A
@@ -217,12 +206,7 @@
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
       /* touches "a la Claudus" (29/08) : accent de la baseline, tesselle des
-         titres de colonnes, soulignement des liens -- pilotes par Accent.
-         30/08 : liseret remplace par un degrade fondu (choix fondateur) --
-         la fin du gradient (::before) doit matcher le VRAI fond du pied
-         (fondBandeau), sinon la couture redevient visible des que fondBandeau
-         diverge de la valeur figee --qz-charbon utilisee en repli CSS. */
-      '\n.qz-pied3::before{background:linear-gradient(180deg,transparent 0%,' + fondBandeau + ' 100%)}' +
+         titres de colonnes, soulignement des liens -- pilotes par Accent. */
       '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
@@ -960,11 +944,10 @@
     var fond = suit && palette ? plusFonce(pm) : m.fond;
     var texte = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.texte;
     var bouton = suit && palette ? plusFonce(pm) : m.bouton;
-    /* 30/08, demande fondateur : en mode "suivre la palette", les traits du
-       burger prennent l'ACCENT (orange brule aujourd'hui) -- signature de
-       marque, avec garde de contraste contre le fond du bouton (repli sur le
-       calcul clair/sombre si l'accent ne se lit pas dessus). */
-    var traits = suit && palette ? couleurLisibleSur(plusFonce(pm), palette.accent || plusClair(pm)) : m.traits;
+    /* 03/09, demande fondateur : les traits du burger repassent en blanc
+       (role "clair" de la palette) au lieu de l'accent -- l'essai du 30/08
+       (accent orange comme signature de marque) est abandonne. */
+    var traits = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.traits;
     var sousBouton = suit && palette ? couleurLisibleSur(plusFonce(pm), plusClair(pm)) : m.sousBouton;
     if (bouton) css += '\n.qz-burger{background:' + bouton + '}';
     if (traits) css += '\n.qz-burger span{background:' + traits + '}';
