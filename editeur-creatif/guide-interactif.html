@@ -11,7 +11,7 @@
   document.documentElement.style.visibility = 'hidden';
   document.addEventListener('DOMContentLoaded', function(){
     var voile = document.createElement('div');
-    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#2B353E;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
     voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
       '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
       '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
@@ -97,14 +97,14 @@
   .toile-mock{
     position:relative; width:min(300px,100%); aspect-ratio:1/1; margin:0 auto;
     background:
-      repeating-conic-gradient(#0000 0 25%, #2b353e08 0 50%) 0 0/16px 16px;
+      repeating-conic-gradient(#0000 0 25%, #1e2b3508 0 50%) 0 0/16px 16px;
     border:1.5px solid var(--charbon); border-radius:8px; overflow:hidden;
   }
   .toile-mock::before{
     content:''; position:absolute; inset:0; pointer-events:none;
     background-image:
-      linear-gradient(to right, #2b353e55 0, #2b353e55 1px, transparent 1px),
-      linear-gradient(to bottom, #2b353e55 0, #2b353e55 1px, transparent 1px);
+      linear-gradient(to right, #1e2b3555 0, #1e2b3555 1px, transparent 1px),
+      linear-gradient(to bottom, #1e2b3555 0, #1e2b3555 1px, transparent 1px);
     background-size: 33.333% 100%, 100% 33.333%;
   }
   .toile-forme{
@@ -218,7 +218,7 @@
       <div id="z-couleur">
         <h2>Couleur</h2>
         <div class="grille-mini">
-          <span class="swatch-mini" style="background:#2B353E"></span>
+          <span class="swatch-mini" style="background:#1e2b35"></span>
           <span class="swatch-mini" style="background:#E2725B"></span>
           <span class="swatch-mini" style="background:#CBBD93"></span>
           <span class="swatch-mini" style="background:#2A9DF4"></span>

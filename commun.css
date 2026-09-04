@@ -29,7 +29,7 @@
 .qz-logorow{ display:flex; align-items:center; gap:8px; text-decoration:none; justify-self:start; }
 .qz-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-template-rows:repeat(4,7px); gap:1.4px; flex-shrink:0; }
 .qz-qlogo i{ border-radius:1.4px; background:transparent; }
-.qz-qlogo i.t{ background:var(--qz-charbon); }
+.qz-qlogo i.t{ background:#1e2b35; }
 .qz-qlogo i.a{ background:var(--qz-terracotta); }
 .qz-wordmark{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:16px; color:var(--qz-charbon); white-space:nowrap; }
 /* Logo du bandeau du HAUT +20% (28/08, demande fondateur) : chaque mesure
@@ -75,7 +75,7 @@
 }
 .qz-burger{
   justify-self:center; width:42px; height:42px; border-radius:22%;
-  background:var(--qz-charbon); border:none; cursor:pointer;
+  background:#1e2b35; border:none; cursor:pointer;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
   transition:background .15s;
 }
@@ -84,7 +84,7 @@
 .qz-burger.active span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
 .qz-burger.active span:nth-child(2){ opacity:0; }
 .qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
-.qz-navpanel{ width:100%; background:var(--qz-charbon); max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
+.qz-navpanel{ width:100%; background:#1e2b35; max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
 .qz-navpanel.open{ max-height:640px; }
 .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
 .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
@@ -122,7 +122,7 @@ footer.qz-footer{
    barre du bas. Les couleurs posees ici sont les valeurs de repli sans JS —
    reglages-site.js les recalcule toutes contre la palette. ===== */
 .qz-pied3{
-  width:100%; background:var(--qz-charbon); box-sizing:border-box;
+  width:100%; background:#1e2b35; box-sizing:border-box;
   padding:46px 36px 38px;
   display:grid; grid-template-columns:1.2fr 1fr 1.2fr; gap:36px; align-items:start;
   max-width:none;
@@ -176,7 +176,7 @@ footer.qz-footer{
 }
 .qz-reseaux .qz-ico{ width:20px; height:20px; display:block; fill:currentColor; }
 .qz-pied-barre{
-  width:100%; background:var(--qz-charbon); box-sizing:border-box;
+  width:100%; background:#1e2b35; box-sizing:border-box;
   border-top:1px solid #f2eedf1c; padding:14px 20px 18px; text-align:center;
 }
 .qz-copy{ font-size:11px; color:#7a828b; }

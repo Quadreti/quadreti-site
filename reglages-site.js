@@ -953,7 +953,7 @@
     if (traits) css += '\n.qz-burger span{background:' + traits + '}';
     if (typeof m.transparence === 'number' && m.transparence > 0) {
       var alphaFond = (100 - Math.max(0, Math.min(100, m.transparence))) / 100;
-      css += '\n.qz-navpanel{background:' + hexEnRgba(fond || '#2B353E', alphaFond) + '}';
+      css += '\n.qz-navpanel{background:' + hexEnRgba(fond || '#1e2b35', alphaFond) + '}';
     } else if (fond) css += '\n.qz-navpanel{background:' + fond + '}';
     if (typeof m.voile === 'number') {
       var v = Math.max(0, Math.min(100, m.voile)) / 100;
