@@ -54,32 +54,43 @@
 .qz-header .qz-wordmark{ font-size:21px; }
 .qz-doti{ position:relative; display:inline-block; }
 .qz-doti .qz-dot{ position:absolute; left:50%; top:0.02em; transform:translateX(-50%); width:0.16em; height:0.16em; border-radius:0.035em; background:var(--qz-terracotta); }
-.qz-wordmark b{ font-weight:600; opacity:0; animation:qzLettre .05s steps(1) forwards; }
-.qz-wordmark b:nth-child(1){ animation-delay:.40s; }
-.qz-wordmark b:nth-child(2){ animation-delay:.62s; }
-.qz-wordmark b:nth-child(3){ animation-delay:.84s; }
-.qz-wordmark b:nth-child(4){ animation-delay:1.06s; }
-.qz-wordmark b:nth-child(5){ animation-delay:1.28s; }
-.qz-wordmark b:nth-child(6){ animation-delay:1.50s; }
-.qz-wordmark b:nth-child(7){ animation-delay:1.72s; }
-.qz-wordmark b:nth-child(8){ animation-delay:1.94s; }
-/* 29/08 soir : le point du i avait SA PROPRE animation retardee (2.30s),
-   separee de sa lettre -- signale disparu par le fondateur a la fin de la
-   sequence. Animation dediee supprimee : le point nait AVEC son i (le fondu
-   du b parent a 1.94s revele les deux ensemble) -- une animation de moins,
-   plus aucun moyen pour le point d'avoir une vie independante. */
-.qz-qlogo{ opacity:0; animation:qzLettre .4s ease forwards; animation-delay:.15s; }
-@keyframes qzLettre{ to{ opacity:1; } }
+/* 07/09 : sequence refaite pour suivre exactement le "board" valide par le fondateur --
+   1) tesselles une par une (depart marque a la main : rangee 3/colonne droite, tour
+   horaire, queue orange en dernier) 2) baseline en dactylo 3) mot en fondu lent. Le mot
+   ne se lettre plus un par un (ancien qzLettre par <b>) : il apparait d'un seul fondu,
+   comme sur le board -- le point du i nait avec le reste, toujours pas de vie independante. */
+.qz-wordmark b{ font-weight:600; }
+.qz-wordmark{ opacity:0; animation:qzMotFondu 1.8s ease-in 2.45s forwards; }
+@keyframes qzMotFondu{ to{ opacity:1; } }
+.qz-qlogo i{ opacity:0; transform:scale(.4); animation:qzTuile .4s cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes qzTuile{ to{ opacity:1; transform:scale(1); } }
+/* Ordre du tour (positions 1-16 de la grille 4x4, gauche->droite puis haut->bas) :
+   depart rangee3/col-droite (11) -> remonte a droite (7, 3) -> rangee du haut droite->gauche
+   (2, 1) -> descend a gauche (5, 9) -> rangee du bas gauche->droite (13, 14) -> queue orange (16). */
+.qz-qlogo i:nth-child(11){ animation-delay:.15s; }
+.qz-qlogo i:nth-child(7){ animation-delay:.30s; }
+.qz-qlogo i:nth-child(3){ animation-delay:.45s; }
+.qz-qlogo i:nth-child(2){ animation-delay:.60s; }
+.qz-qlogo i:nth-child(1){ animation-delay:.75s; }
+.qz-qlogo i:nth-child(5){ animation-delay:.90s; }
+.qz-qlogo i:nth-child(9){ animation-delay:1.05s; }
+.qz-qlogo i:nth-child(13){ animation-delay:1.20s; }
+.qz-qlogo i:nth-child(14){ animation-delay:1.35s; }
+.qz-qlogo i:nth-child(15){ animation-delay:1.50s; }
+.qz-qlogo i:nth-child(16){ animation-delay:1.65s; }
 .qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
 .qz-cat{
   /* 29/08 soir : categorie agrandie au maximum raisonnable (8.5 -> 12px,
      demande fondateur) -- au-dela elle depasse nettement le mot-symbole. */
   font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; letter-spacing:.09em;
   color:var(--qz-terracotta); white-space:nowrap;
-  opacity:0; animation:qzLettre .45s ease forwards; animation-delay:2.55s;
+  display:inline-block; overflow:hidden; width:0;
+  animation:qzDactylo 2.2s steps(25,end) 2.25s forwards;
 }
+@keyframes qzDactylo{ to{ width:220px; } }
 @media (prefers-reduced-motion: reduce){
-  .qz-wordmark b, .qz-wordmark .qz-dot, .qz-qlogo, .qz-cat{ animation:none; opacity:1; }
+  .qz-wordmark, .qz-wordmark b, .qz-wordmark .qz-dot, .qz-qlogo, .qz-qlogo i{ animation:none; opacity:1; transform:none; }
+  .qz-cat{ animation:none; width:auto; }
 }
 .qz-burger{
   justify-self:center; width:42px; height:42px; border-radius:22%;
@@ -142,10 +153,11 @@ footer.qz-footer{
 .qz-pied3 .qz-col{ min-width:0; }
 .qz-basdepage{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
 .qz-basdepage .qz-qlogo{ grid-template-columns:repeat(4,8px); grid-template-rows:repeat(4,8px); gap:1.6px; opacity:1; animation:none; }
-.qz-basdepage .qz-qlogo i{ border-radius:1.6px; }
+.qz-basdepage .qz-qlogo i{ border-radius:1.6px; opacity:1; animation:none; transform:none; }
 .qz-basdepage .qz-qlogo i.t{ background:var(--qz-creme); }
-.qz-basdepage .qz-wordmark{ color:var(--qz-creme); font-size:19px; }
+.qz-basdepage .qz-wordmark{ color:var(--qz-creme); font-size:19px; opacity:1; animation:none; }
 .qz-basdepage .qz-wordmark b, .qz-basdepage .qz-wordmark .qz-dot{ opacity:1; animation:none; }
+.qz-basdepage .qz-cat{ opacity:1; width:auto; animation:none; }
 .qz-basdepage .qz-logorow{ gap:9px; }
 .qz-baseline{ font-family:'Quicksand',sans-serif; font-weight:500; font-size:13.5px; color:#c9c3b2; line-height:1.5; max-width:26ch; }
 .qz-coltitre{
