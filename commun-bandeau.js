@@ -19,7 +19,7 @@ document.write(
       '<div class="qz-qlogo" aria-hidden="true"><i class="t"></i><i class="t"></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i class="t"></i><i class="t"></i><i class="a"></i></div>' +
       '<span class="qz-wm-col">' +
         '<span class="qz-wordmark" aria-label="Quadreti"><b>Q</b><b>u</b><b>a</b><b>d</b><b>r</b><b>e</b><b>t</b><b class="qz-doti">ı<span class="qz-dot"></span></b></span>' +
-        '<span class="qz-cat">Support créatif modulaire</span>' +
+        '<span class="qz-cat">Support Créatif Modulaire</span>' +
       '</span>' +
       '<img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">' +
     '</a>' +
