@@ -39,7 +39,7 @@
 .qz-qlogo i{ border-radius:1.4px; background:transparent; }
 .qz-qlogo i.t{ background:#1e2b35; }
 .qz-qlogo i.a{ background:var(--qz-terracotta); }
-.qz-wordmark{ font-family:'Quadreti Naming','Quicksand',sans-serif; font-weight:400; font-size:16px; line-height:1; color:var(--qz-charbon); white-space:nowrap; }
+.qz-wordmark{ font-family:'Quadreti Naming','Quicksand',sans-serif; font-weight:400; font-size:16px; color:var(--qz-charbon); white-space:nowrap; }
 /* Logo du bandeau du HAUT +20% (28/08, demande fondateur) : chaque mesure
    augmentee de 20%, pas un transform:scale -- garde la taille reelle en
    layout (evite tout chevauchement avec le bouton burger si le bandeau est
@@ -78,18 +78,12 @@
 .qz-qlogo i:nth-child(14){ animation-delay:1.35s; }
 .qz-qlogo i:nth-child(15){ animation-delay:1.50s; }
 .qz-qlogo i:nth-child(16){ animation-delay:1.65s; }
-.qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:0; }
+.qz-wm-col{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
 .qz-cat{
   /* 29/08 soir : categorie agrandie au maximum raisonnable (8.5 -> 12px,
      demande fondateur) -- au-dela elle depasse nettement le mot-symbole. */
   font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; letter-spacing:.09em;
   color:var(--qz-terracotta); white-space:nowrap;
-  /* 08/09 : line-height:1 sur .qz-wordmark laissait un vide sous la barre du q (le
-     "normal" du navigateur reserve toute la hauteur ascendante+descendante de la
-     police, bien plus que ce que la barre utilise reellement) -- la barre ne
-     rejoignait jamais la baseline comme sur le board. Remonte la categorie d'un
-     poil pour que la barre du q vienne effleurer/recouper la ligne, comme prevu. */
-  margin-top:-0.14em;
   display:inline-block; overflow:hidden; width:0;
   animation:qzDactylo 2.2s steps(25,end) 2.25s forwards;
 }
