@@ -157,7 +157,7 @@
        fin) est toujours respecte tel quel. */
     var couleurLogo = c.logo || couleurLisibleSur(fondBandeau, texte);
     css += '\n.qz-header .qz-qlogo i.t{background:' + couleurLogo + '!important}' +
-      '\n.qz-header .qz-wordmark{color:' + couleurLogo + '!important}';
+      '\n.qz-header .qz-wordmark-img{color:' + couleurLogo + '!important}';
 
 
     /* Mentions legales : les cartouches kraft ont ete remplaces par des
@@ -197,7 +197,7 @@
        Sous-titre (repli kraft), tout reste calcule par contraste. */
     var texteSurFooter = couleurLisibleSur(fondBandeau, texte);
     css += '\n.qz-pied3,.qz-pied-barre{background:' + fondBandeau + '}' +
-      '\n.qz-basdepage .qz-wordmark,.qz-baseline{color:' + texteSurFooter + '}' +
+      '\n.qz-basdepage .qz-wordmark-img,.qz-baseline{color:' + texteSurFooter + '}' +
       '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
       '\n.qz-coltitre{color:' + couleurLisibleSur(fondBandeau, sousTitre || '#CBBD93') + '}' +
       '\n.qz-pied-infos a{color:' + texteSurFooter + '}' +
@@ -557,7 +557,7 @@
     chargerPoliceGoogle(titres); chargerPoliceGoogle(texte);
     injecterStyle('qz-reglages-polices',
       'body,p,li,a,input,button,textarea{font-family:\'' + texte + '\',sans-serif}' +
-      'h1,h2,h3,h4,.qz-wordmark,.qz-cat,.cta,.qz-cta{font-family:\'' + titres + '\',sans-serif}');
+      'h1,h2,h3,h4,.qz-cat,.cta,.qz-cta{font-family:\'' + titres + '\',sans-serif}');
   }
 
   /* Style dédié à UNE section de l'accueil (police/taille/couleur/fond) : CSS ciblé
