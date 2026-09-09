@@ -63,9 +63,31 @@ document.write(
    encore pendant l'execution de ce fichier (le parseur ne le lit qu'apres). */
 window.qzLogoV5Init = function(){
   var row = document.getElementById('qzLogoRow');
+  if (!row) return;
+  /* 10/09 : l'animation ne doit demarrer que quand on peut la VOIR -- pas derriere l'ecran de mot de passe
+     (garde-acces : voile plein ecran avec le formulaire #qdtFormAcces, retire a la validation), pas dans un
+     onglet en arriere-plan. Elle rejoue a chaque arrivee sur l'accueil, une seule fois par session ailleurs. */
+  var accueil = /^\/(index\.html)?$/.test(location.pathname);
   var deja = false;
-  try { deja = sessionStorage.getItem('qzLogoJoue') === '1'; sessionStorage.setItem('qzLogoJoue', '1'); } catch (e) {}
-  if (row) row.classList.add(deja ? 'qz-fini' : 'qz-anime');
+  try { deja = sessionStorage.getItem('qzLogoJoue') === '1'; } catch (e) {}
+  if (deja && !accueil) { row.classList.add('qz-fini'); return; }
+  var lancer = function(){
+    if (row.classList.contains('qz-anime')) return;
+    if (document.hidden) return;
+    if (document.getElementById('qdtFormAcces')) return;
+    row.classList.add('qz-anime');
+    try { sessionStorage.setItem('qzLogoJoue', '1'); } catch (e) {}
+  };
+  var garde = false;
+  try { garde = localStorage.getItem('quadretiAccesPreview') !== '1'; } catch (e) {}
+  if (!garde && !document.hidden) { lancer(); return; }
+  document.addEventListener('visibilitychange', lancer);
+  document.addEventListener('DOMContentLoaded', function(){
+    if (!garde) { lancer(); return; }
+    /* le voile n'existe qu'apres DOMContentLoaded : on attend son retrait */
+    if (!document.getElementById('qdtFormAcces')) { lancer(); return; }
+    if (window.MutationObserver) new MutationObserver(lancer).observe(document.body, { childList: true });
+  });
   /* la categorie tapee lettre par lettre : on decoupe le texte en spans ; reglages-site.js peut reecrire
      ce texte plus tard (baselines du panneau), on redecoupe alors. */
   function decouper(el){
