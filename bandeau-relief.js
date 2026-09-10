@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   var REGLAGES = {
-    cx: 3, cy: 2, ecart: 0, grilleFixe: true, mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
+    cx: 3, cy: 2, ecart: 0, grilleFixe: true, disposition: 'droite', /* 'droite' = textes + bouton a gauche, mur a droite ; 'colonne' = textes au-dessus/dessous */ mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     visuels: ['/img/bandeau-changez-oeil.jpg', '/img/bandeau-changez-aurore.jpg'], ancrage: 'centre',
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#f4f1ea', couleur2: '#f4f1ea' },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
@@ -78,8 +78,12 @@
   function lettres(el, txt) { el.innerHTML = Array.prototype.map.call(txt, function (ch, i) { return '<span class="qb-l" style="--i:' + i + '">' + (ch === ' ' ? '&nbsp;' : ch.replace('<', '&lt;')) + '</span>'; }).join(''); }
   /* squelette */
   var T = REGLAGES.textes;
-  root.className = 'qb qb-pos-' + T.position + ' qb-mode-t-' + T.mode + (T.dispo === 'ligne' ? ' qb-dispo-ligne' : '') + (REGLAGES.zoom.actif ? ' qb-zoome' : '') + (REGLAGES.grilleFixe ? ' qb-grille-fixe' : '');
-  root.innerHTML = '<div class="qb-textes qb-b1"><p class="qb-li qb-l1"></p><p class="qb-li qb-l2"></p><p class="qb-li qb-l3"></p></div><div class="qb-mur"></div><p class="qb-textes qb-li qb-l4 qb-b2"></p>';
+  var droite = REGLAGES.disposition === 'droite';
+  root.className = 'qb qb-pos-' + T.position + ' qb-mode-t-' + T.mode + (T.dispo === 'ligne' ? ' qb-dispo-ligne' : '') + (REGLAGES.zoom.actif ? ' qb-zoome' : '') + (REGLAGES.grilleFixe ? ' qb-grille-fixe' : '') + (droite ? ' qb-dispo-droite' : '');
+  var textes = '<div class="qb-textes qb-b1"><p class="qb-li qb-l1"></p><p class="qb-li qb-l2"></p><p class="qb-li qb-l3"></p></div>', b2 = '<p class="qb-textes qb-li qb-l4 qb-b2"></p>';
+  root.innerHTML = droite ? '<div class="qb-col">' + textes + b2 + '</div><div class="qb-mur" aria-hidden="true"></div>' : textes + '<div class="qb-mur"></div>' + b2;
+  /* 11/09, disposition 'droite' : le bouton Composer mon mur rejoint la colonne de gauche, sous les baselines (le bloc n'est plus aria-hidden, seul le mur l'est) */
+  if (droite) { root.removeAttribute('aria-hidden'); var cta = document.querySelector('.hero .hero-cta'); if (cta) root.querySelector('.qb-col').appendChild(cta); }
   var mur = root.querySelector('.qb-mur'); var style = document.createElement('style'); document.head.appendChild(style);
   lettres(root.querySelector('.qb-l1'), T.dispo === 'ligne' ? [T.l1, T.l2, T.l3].filter(Boolean).join(' ') : T.l1); lettres(root.querySelector('.qb-l2'), T.l2); lettres(root.querySelector('.qb-l3'), T.l3); lettres(root.querySelector('.qb-l4'), T.l4);
   /* variables */
@@ -88,7 +92,7 @@
   R.setProperty('--lum', REGLAGES.lum); R.setProperty('--ombre', REGLAGES.ombre); R.setProperty('--grain', REGLAGES.grain); R.setProperty('--relief', REGLAGES.relief + 'px'); R.setProperty('--txt-relief', REGLAGES.txtRelief);
   ['depart', 'dg', 'pause', 'A', 'H', 'Rt', 'E'].forEach(function (k) { R.setProperty('--' + k, REGLAGES[k] + 's'); }); R.setProperty('--lat', REGLAGES.lat + 'cqw');
   R.setProperty('--zx', REGLAGES.zoom.x + '%'); R.setProperty('--zy', REGLAGES.zoom.y + '%'); R.setProperty('--zoom', REGLAGES.zoom.facteur);
-  R.setProperty('--police1', "'" + T.police1 + "',sans-serif"); R.setProperty('--police2', "'" + T.police2 + "',sans-serif"); R.setProperty('--taille1', 'clamp(13px,' + T.taille1 + 'cqw,40px)'); R.setProperty('--taille2', 'clamp(13px,' + T.taille2 + 'cqw,52px)'); R.setProperty('--ecart-t', T.ecartT + 'cqw'); R.setProperty('--ln', T.ln + 's'); R.setProperty('--dn', T.dn + 's');
+  R.setProperty('--police1', "'" + T.police1 + "',sans-serif"); R.setProperty('--police2', "'" + T.police2 + "',sans-serif"); var f = droite ? .78 : 1; R.setProperty('--taille1', 'clamp(13px,' + (T.taille1 * f) + 'cqw,40px)'); R.setProperty('--taille2', 'clamp(13px,' + (T.taille2 * f) + 'cqw,52px)'); R.setProperty('--ecart-t', T.ecartT + 'cqw'); R.setProperty('--ln', T.ln + 's'); R.setProperty('--dn', T.dn + 's');
   /* le hero passe sous le menu (index.html) : on garde la baseline 1 sous le menu, pas dessous */
   function caler() { var menu = document.querySelector('.qz-header'); R.paddingTop = (menu ? menu.offsetHeight : 0) + Math.round(root.offsetWidth * .03) + 'px'; }
   caler(); var dernierMobile = estMobile(); window.addEventListener('resize', function () { caler(); if (estMobile() !== dernierMobile) { dernierMobile = estMobile(); root.classList.remove('qb-joue'); preparer(); void root.offsetWidth; if (lanceDeja) root.classList.add('qb-joue'); } });

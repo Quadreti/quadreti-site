@@ -65,3 +65,17 @@
 .qb.qb-grille-fixe .qb-mur{opacity:1;animation:none}
 /* repli navigateurs anciens : photo fixe */
 .qb.qb-repli{display:block;padding:0}.qb-repli-img{display:block;width:100%;height:auto}
+/* 11/09, demande fondateur : disposition 'droite' -- baseline 1, baseline 2 et bouton a gauche (chacun sur sa ligne), mur anime a droite */
+.qb.qb-dispo-droite{flex-direction:row;align-items:center;justify-content:center;gap:4cqw;padding:3cqw 4cqw calc(3cqw + 24px)}
+.qb.qb-dispo-droite .qb-col{display:flex;flex-direction:column;align-items:flex-start;gap:1.4cqw;flex:0 1 36%;min-width:0}
+.qb.qb-dispo-droite .qb-textes{width:auto;padding:0;text-align:left;justify-items:start;pointer-events:none}
+.qb.qb-dispo-droite .qb-textes .qb-li{white-space:normal}
+.qb.qb-dispo-droite .qb-mur{flex:0 0 auto;--u:min(calc((56cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(70vh / var(--cy)))}
+.qb.qb-dispo-droite .hero-cta{position:static;transform:none;margin-top:.6cqw;pointer-events:auto;z-index:4}
+.qb.qb-dispo-droite .hero-cta:hover{transform:translateY(-2px)}
+@media (max-width:900px){
+  .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
+  .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
+  .qb.qb-dispo-droite .qb-textes{text-align:center;justify-items:center}
+  .qb.qb-dispo-droite .qb-mur{--u:min(calc((100cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(70vh / var(--cy)))}
+}
