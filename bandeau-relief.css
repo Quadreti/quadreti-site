@@ -59,7 +59,8 @@
 .hero{min-height:0!important;display:block!important}
 .hero .bg-veil{display:none}
 /* 10/09, demande fondateur : pleine largeur (plus de plafond a 940 px) */
-.qb .qb-mur{--u:calc((100cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx))}
+/* 11/09, demande fondateur : le mur doit tenir a l ecran -> largeur pleine, mais jamais plus de 70 % de la hauteur de la fenetre */
+.qb .qb-mur{--u:min(calc((100cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)), calc(70vh / var(--cy)))}
 /* grille fixe (fondateur 10/09) : la grille est la des le chargement, sans apparition */
 .qb.qb-grille-fixe .qb-mur{opacity:1;animation:none}
 /* repli navigateurs anciens : photo fixe */
