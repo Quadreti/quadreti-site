@@ -630,6 +630,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <script src="/commun-bandeau.js"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
+<link rel="stylesheet" href="/bandeau-relief.css">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -647,51 +648,14 @@ document.addEventListener('DOMContentLoaded', function(){
        transparence), repli MP4 opaque juste apres pour Safari qui ne lit pas le WebM du
        tout (avec ou sans alpha) -- sans transparence dans ce cas precis, comportement
        attendu et documente par le fil Video/Animation. -->
-  <div class="bg-slides" aria-hidden="true">
-    <div class="slide on">
-      <video class="shot" autoplay muted playsinline>
-        <!-- 29/08 : retour aux versions OPAQUES (fond charbon integre a la video),
-             desktop ET mobile, demande fondateur -- la version transparente laissait
-             voir toute l'architecture de la grille sur le fond de page. Decision
-             finale en attente ("on avisera ensuite") : pour re-tester la
-             transparence, decommenter les 2 sources webm ci-dessous (elles doivent
-             rester AVANT leur mp4 respectif). Les fichiers webm restent dans video/.
-        <source media="(max-width:759px)" src="video/quadreti-bandeau-changez-carre-transparent.webm" type="video/webm">
-        <source src="video/quadreti-bandeau-changez-transparent.webm" type="video/webm">
-        -->
-        <!-- 29/08 soir : serie "fond strictement UNI" (suffixe -uni, nouveaux noms
-             pour court-circuiter les caches). Couleur de fond REELLEMENT AFFICHEE
-             par les 3 fichiers : #1e2b35 (l'encodage H.264 assombrit le #2B353E
-             demande -- mesure au pixel par le fil Video/Animation ET recontrole
-             ici a l'integration). Le champ "Fond bandeau & pied de page" du
-             panneau est regle sur ce meme #1e2b35 pour la fusion bandeau/animation
-             demandee par le fondateur. Anciens fichiers (fond degrade) conserves
-             sans suffixe pour retour arriere instantane. Paliers : <760 carre,
-             760-1024 tablette, au-dela desktop 4:1. -->
-        <source media="(max-width:759px)" src="video/quadreti-bandeau-changez-carre-uni.mp4" type="video/mp4">
-        <source media="(min-width:760px) and (max-width:1024px)" src="video/quadreti-bandeau-changez-tablette-uni.mp4" type="video/mp4">
-        <source src="video/quadreti-bandeau-changez-uni.mp4" type="video/mp4">
-      </video>
-      <img class="shot repli-video" src="img/bandeau-1-impression.jpg" alt="" data-image-zone="bandeau">
-    </div>
-  </div>
-  <div class="bg-veil" aria-hidden="true"></div>
-
-  <div class="hero-copy">
-    <p class="h-line l1">Composez.</p>
-    <p class="h-line l2">Imprimez.</p>
-    <p class="h-line l3">Clipsez.</p>
-  </div>
-
-  <p class="h-line l4">Changez à volonté.</p>
+  <!-- 10/09/2026 : la video "Changez" (3 fichiers, 18 a 22 Mo) est remplacee par le bandeau "carreaux 7x7 en relief"
+       en CSS pur (bandeau-relief.css + bandeau-relief.js, visuels img/bandeau-changez-*.jpg < 500 Ko). Meme scenario que la
+       video (grille vide -> oeil par les 4 angles, tesselle par tesselle -> zoom pupille -> depart -> aurore -> boucle), aux
+       cotes produit (carreau 189 mm, cases 26 mm), design du logo Q grille. Demande fondateur, fil Police proprietaire.
+       Les anciens textes .h-line et le bouton pause n'ont plus lieu d'etre : les baselines font partie du bloc. Les fichiers
+       video restent dans video/ pour retour arriere (git revert). -->
+  <div class="qb" id="qbBandeau" aria-hidden="true"></div>
   <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="hero_cta">Composer mon mur</a>
-
-  <div class="dots" id="dots"></div>
-
-  <button class="hero-pause" id="heroPauseBtn" type="button" aria-label="Mettre la vidéo en pause">
-    <svg class="ico-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
-    <svg class="ico-play" viewBox="0 0 24 24" style="display:none"><path d="M8 5.5v13l11-6.5z"></path></svg>
-  </button>
 
 </div>
 
@@ -1402,5 +1366,6 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+<script src="/bandeau-relief.js"></script>
 </body>
 </html>
