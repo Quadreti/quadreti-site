@@ -4,20 +4,26 @@
 (function () {
   'use strict';
   var REGLAGES = {
-    cx: 5, cy: 2, ecart: 0, grilleFixe: true, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
+    cx: 3, cy: 2, ecart: 0, grilleFixe: true, mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     visuels: ['/img/bandeau-changez-oeil.jpg', '/img/bandeau-changez-aurore.jpg'], ancrage: 'centre',
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#f4f1ea', couleur2: '#f4f1ea' },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
     depart: 0, dg: .2, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 2.3, lat: 75,
     zoom: { actif: false, x: 0, y: 0, facteur: 1, aller: 1.8, tenue: 1.3 },
-    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 4, police2: 'Jura', taille2: 4, ecartT: .9, position: 'haut-bas', mode: 'clip', ln: .3, dn: .1 }
+    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'depart', position: 'haut-bas', mode: 'clip', ln: .3, dn: .1 }
   };
   var CASES = 7;
   var root = document.getElementById('qbBandeau'); if (!root) return;
-  var R = root.style; var cx = REGLAGES.cx, cy = REGLAGES.cy, tiles = [], dureeVague = 0, dims = {};
+  /* navigateurs d'avant 2023 (unites de conteneur ou color-mix absents) : photo fixe du site a la place du mur */
+  var moderne = false; try { moderne = window.CSS && CSS.supports('width', '1cqw') && CSS.supports('color', 'color-mix(in srgb, red, blue)'); } catch (e) {}
+  if (!moderne) { root.className = 'qb qb-repli'; root.innerHTML = '<img class="qb-repli-img" src="/img/bandeau-1-impression.jpg" alt="">'; return; }
+  var estMobile = function () { return window.innerWidth <= REGLAGES.mobile.max; };
+  var nbCarreaux = function () { var m = estMobile(); return { cx: m ? REGLAGES.mobile.cx : REGLAGES.cx, cy: m ? REGLAGES.mobile.cy : REGLAGES.cy }; };
+  var R = root.style; var cx = nbCarreaux().cx, cy = nbCarreaux().cy, tiles = [], dureeVague = 0, dims = {};
   var mesurer = function (src) { return new Promise(function (ok) { if (dims[src]) return ok(); var im = new Image(); im.onload = function () { dims[src] = { w: im.naturalWidth, h: im.naturalHeight }; ok(); }; im.onerror = function () { dims[src] = { w: 1, h: 1 }; ok(); }; im.src = src; }); };
   var visuels = REGLAGES.visuels;
   function construire() {
+    cx = nbCarreaux().cx; cy = nbCarreaux().cy; R.setProperty('--cx', cx); R.setProperty('--cy', cy);
     var TC = cx * CASES, TR = cy * CASES; tiles = [];
     var U = 189, ec = REGLAGES.ecart / 100 * U * cx; var W = cx * U + (cx - 1) * ec, Hh = cy * U + (cy - 1) * ec;
     var html = '';
@@ -82,17 +88,22 @@
   R.setProperty('--lum', REGLAGES.lum); R.setProperty('--ombre', REGLAGES.ombre); R.setProperty('--grain', REGLAGES.grain); R.setProperty('--relief', REGLAGES.relief + 'px'); R.setProperty('--txt-relief', REGLAGES.txtRelief);
   ['depart', 'dg', 'pause', 'A', 'H', 'Rt', 'E'].forEach(function (k) { R.setProperty('--' + k, REGLAGES[k] + 's'); }); R.setProperty('--lat', REGLAGES.lat + 'cqw');
   R.setProperty('--zx', REGLAGES.zoom.x + '%'); R.setProperty('--zy', REGLAGES.zoom.y + '%'); R.setProperty('--zoom', REGLAGES.zoom.facteur);
-  R.setProperty('--police1', "'" + T.police1 + "',sans-serif"); R.setProperty('--police2', "'" + T.police2 + "',sans-serif"); R.setProperty('--taille1', 'min(' + T.taille1 + 'cqw,40px)'); R.setProperty('--taille2', 'min(' + T.taille2 + 'cqw,52px)'); R.setProperty('--ecart-t', T.ecartT + 'cqw'); R.setProperty('--ln', T.ln + 's'); R.setProperty('--dn', T.dn + 's');
+  R.setProperty('--police1', "'" + T.police1 + "',sans-serif"); R.setProperty('--police2', "'" + T.police2 + "',sans-serif"); R.setProperty('--taille1', 'clamp(13px,' + T.taille1 + 'cqw,40px)'); R.setProperty('--taille2', 'clamp(13px,' + T.taille2 + 'cqw,52px)'); R.setProperty('--ecart-t', T.ecartT + 'cqw'); R.setProperty('--ln', T.ln + 's'); R.setProperty('--dn', T.dn + 's');
   /* le hero passe sous le menu (index.html) : on garde la baseline 1 sous le menu, pas dessous */
   function caler() { var menu = document.querySelector('.qz-header'); R.paddingTop = (menu ? menu.offsetHeight : 0) + Math.round(root.offsetWidth * .03) + 'px'; }
-  caler(); window.addEventListener('resize', caler);
+  caler(); var dernierMobile = estMobile(); window.addEventListener('resize', function () { caler(); if (estMobile() !== dernierMobile) { dernierMobile = estMobile(); root.classList.remove('qb-joue'); preparer(); void root.offsetWidth; if (lanceDeja) root.classList.add('qb-joue'); } });
   var preparer = function () {
     construire();
     var p = REGLAGES.pause; var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's');
     dyn();
-    var complet = t0 + REGLAGES.A + dureeVague; var tl1 = complet + .3; R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', (complet + REGLAGES.H).toFixed(2) + 's');
+    var complet = t0 + REGLAGES.A + dureeVague; var z = REGLAGES.zoom; var zoomDur = z.actif ? 2 * z.aller + z.tenue + .6 : 0;
+    /* 10/09 : les baselines apparaissent quand les tesselles commencent a repartir (fin de la tenue du visuel 1), l'une apres l'autre */
+    var tl1 = T.quand === 'depart' ? complet + REGLAGES.H + zoomDur : complet + .3;
+    var lettresB1 = root.querySelector('.qb-l1').querySelectorAll('.qb-l').length; var durB1 = T.mode === 'clip' || T.mode === 'dactylo' ? (lettresB1 - 1) * T.ln + .45 : T.dn;
+    var tl4 = tl1 + durB1 + p;
+    R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', tl4.toFixed(2) + 's');
   };
-  var lancer = function () { root.classList.add('qb-joue'); };
+  var lanceDeja = false; var lancer = function () { lanceDeja = true; root.classList.add('qb-joue'); };
   Promise.all(visuels.map(mesurer)).then(function () {
     preparer(); /* le mur (vide) est construit tout de suite, meme onglet cache ou ecran de mot de passe */
     /* 10/09, demande fondateur : le bandeau demarre quand l'animation du logo (commun-bandeau.js / logo-v5.css) est finie, puis 1 s de pause.

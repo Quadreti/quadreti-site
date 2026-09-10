@@ -62,3 +62,5 @@
 .qb .qb-mur{--u:calc((100cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx))}
 /* grille fixe (fondateur 10/09) : la grille est la des le chargement, sans apparition */
 .qb.qb-grille-fixe .qb-mur{opacity:1;animation:none}
+/* repli navigateurs anciens : photo fixe */
+.qb.qb-repli{display:block;padding:0}.qb-repli-img{display:block;width:100%;height:auto}
