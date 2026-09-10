@@ -1,16 +1,16 @@
 /* QuadretI — bandeau d'accueil "carreaux 7x7 en relief" (10/09/2026). Construit le mur dans #qbBandeau, calcule la
-   découpe des visuels et les keyframes des cycles, puis lance la séquence (CSS pur). Réglages = ceux validés dans
+   découpe des visuels et les keyframes des cycles, puis lance la séquence (CSS pur). Réglages = ceux exportés par le fondateur le 10/09 (bloc « Code à reprendre ») depuis
    SITE\POLICE PROPRIETAIRE\bandeau-relief-outil.html (réglages par défaut). Pour changer un réglage : REGLAGES ci-dessous. */
 (function () {
   'use strict';
   var REGLAGES = {
-    cx: 3, cy: 2, ecart: 1, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
+    cx: 4, cy: 2, ecart: 0, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     visuels: ['/img/bandeau-changez-oeil.jpg', '/img/bandeau-changez-aurore.jpg'], ancrage: 'centre',
-    couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#f4f1ea', couleur2: '#d9822f' },
+    couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#f4f1ea', couleur2: '#f4f1ea' },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
     depart: 1.5, dg: .8, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 1.5, lat: 45,
-    zoom: { actif: true, x: 44.2, y: 49.7, facteur: 2.4, aller: 1.8, tenue: 1.3 },
-    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Poppins', taille1: 3.2, police2: 'Poppins', taille2: 4, ecartT: 1.2, position: 'haut-bas', mode: 'aucun', ln: .05, dn: .6 }
+    zoom: { actif: false, x: 16.5, y: 25.9, facteur: 1, aller: 1.8, tenue: 1.3 },
+    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 2, police2: 'Jura', taille2: 2, ecartT: .9, position: 'haut-bas', mode: 'clip', ln: .3, dn: .1 }
   };
   var CASES = 7;
   var root = document.getElementById('qbBandeau'); if (!root) return;
