@@ -4,13 +4,13 @@
 (function () {
   'use strict';
   var REGLAGES = {
-    cx: 4, cy: 2, ecart: 0, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
+    cx: 5, cy: 2, ecart: 0, grilleFixe: true, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     visuels: ['/img/bandeau-changez-oeil.jpg', '/img/bandeau-changez-aurore.jpg'], ancrage: 'centre',
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#f4f1ea', couleur2: '#f4f1ea' },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
-    depart: 1.5, dg: .8, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 1.5, lat: 45,
-    zoom: { actif: false, x: 16.5, y: 25.9, facteur: 1, aller: 1.8, tenue: 1.3 },
-    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 2, police2: 'Jura', taille2: 2, ecartT: .9, position: 'haut-bas', mode: 'clip', ln: .3, dn: .1 }
+    depart: 0, dg: .2, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 2.3, lat: 75,
+    zoom: { actif: false, x: 0, y: 0, facteur: 1, aller: 1.8, tenue: 1.3 },
+    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 4, police2: 'Jura', taille2: 4, ecartT: .9, position: 'haut-bas', mode: 'clip', ln: .3, dn: .1 }
   };
   var CASES = 7;
   var root = document.getElementById('qbBandeau'); if (!root) return;
@@ -72,7 +72,7 @@
   function lettres(el, txt) { el.innerHTML = Array.prototype.map.call(txt, function (ch, i) { return '<span class="qb-l" style="--i:' + i + '">' + (ch === ' ' ? '&nbsp;' : ch.replace('<', '&lt;')) + '</span>'; }).join(''); }
   /* squelette */
   var T = REGLAGES.textes;
-  root.className = 'qb qb-pos-' + T.position + ' qb-mode-t-' + T.mode + (T.dispo === 'ligne' ? ' qb-dispo-ligne' : '') + (REGLAGES.zoom.actif ? ' qb-zoome' : '');
+  root.className = 'qb qb-pos-' + T.position + ' qb-mode-t-' + T.mode + (T.dispo === 'ligne' ? ' qb-dispo-ligne' : '') + (REGLAGES.zoom.actif ? ' qb-zoome' : '') + (REGLAGES.grilleFixe ? ' qb-grille-fixe' : '');
   root.innerHTML = '<div class="qb-textes qb-b1"><p class="qb-li qb-l1"></p><p class="qb-li qb-l2"></p><p class="qb-li qb-l3"></p></div><div class="qb-mur"></div><p class="qb-textes qb-li qb-l4 qb-b2"></p>';
   var mur = root.querySelector('.qb-mur'); var style = document.createElement('style'); document.head.appendChild(style);
   lettres(root.querySelector('.qb-l1'), T.dispo === 'ligne' ? [T.l1, T.l2, T.l3].filter(Boolean).join(' ') : T.l1); lettres(root.querySelector('.qb-l2'), T.l2); lettres(root.querySelector('.qb-l3'), T.l3); lettres(root.querySelector('.qb-l4'), T.l4);

@@ -60,3 +60,5 @@
 .hero .bg-veil{display:none}
 /* largeur du mur plafonnée (sinon 3 carreaux pleine largeur font 1 300 px de haut sur un grand écran) */
 .qb .qb-mur{--u:calc((min(100cqw,940px) - (var(--cx) - 1) * var(--ecart)) / var(--cx))}
+/* grille fixe (fondateur 10/09) : la grille est la des le chargement, sans apparition */
+.qb.qb-grille-fixe .qb-mur{opacity:1;animation:none}
