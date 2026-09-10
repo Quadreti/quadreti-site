@@ -95,8 +95,24 @@
   var lancer = function () { root.classList.add('qb-joue'); };
   Promise.all(visuels.map(mesurer)).then(function () {
     preparer(); /* le mur (vide) est construit tout de suite, meme onglet cache ou ecran de mot de passe */
-    /* l'animation ne demarre que quand on peut la voir (ecran de mot de passe, onglet cache) */
-    var go = function () { if (document.hidden || document.getElementById('qdtFormAcces')) return; if (root.classList.contains('qb-joue')) return; lancer(); };
-    go(); if (!root.classList.contains('qb-joue')) { document.addEventListener('visibilitychange', go); if (window.MutationObserver) new MutationObserver(go).observe(document.body, { childList: true }); }
+    /* 10/09, demande fondateur : le bandeau demarre quand l'animation du logo (commun-bandeau.js / logo-v5.css) est finie, puis 1 s de pause.
+       Sans logo anime sur la page (deja joue dans la session, mouvement reduit...), depart 1 s apres le chargement. */
+    var PAUSE_APRES_LOGO = 1000, lance = false;
+    var partir = function () { if (lance) return; lance = true; setTimeout(lancer, PAUSE_APRES_LOGO); };
+    var row = document.getElementById('qzLogoRow');
+    if (!row) { partir(); return; }
+    var attendreFin = function () {
+      var lettres = row.querySelectorAll('.qz-naming .qz-l'); var dernier = lettres[lettres.length - 1];
+      if (!dernier || !window.getComputedStyle || getComputedStyle(dernier).animationName === 'none') { partir(); return; }
+      dernier.addEventListener('animationend', partir, { once: true });
+      setTimeout(partir, 20000); /* filet de securite */
+    };
+    if (row.classList.contains('qz-fini')) { partir(); return; }
+    if (row.classList.contains('qz-anime')) { attendreFin(); return; }
+    /* le logo n'a pas encore demarre (ecran de mot de passe, onglet cache) : on attend qu'il parte */
+    if (window.MutationObserver) {
+      var obs = new MutationObserver(function () { if (row.classList.contains('qz-fini')) { obs.disconnect(); partir(); } else if (row.classList.contains('qz-anime')) { obs.disconnect(); attendreFin(); } });
+      obs.observe(row, { attributes: true, attributeFilter: ['class'] });
+    } else setTimeout(partir, 15000);
   });
 })();

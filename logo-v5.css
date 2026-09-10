@@ -62,3 +62,5 @@
 @media (max-width:640px){.qz-header{padding-left:12px;padding-right:12px}}
 /* 10/09, demande fondateur : bandeau défilant retiré pour agrandir la zone du logo (le réglage "position" du panneau devient sans effet) */
 .ticker{display:none!important}
+/* 10/09, demande fondateur : logo reduit sur mobile uniquement */
+@media (max-width:640px){.qz-header .qz-plaque.qz-wordmark-img{--t:42px}.qz-header .qz-naming.qz-wordmark-img{font-size:25px}.qz-header .qz-cat{font-size:9px}.qz-header .qz-logorow{gap:10px}}
