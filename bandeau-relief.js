@@ -118,7 +118,6 @@
     menu.style.paddingRight = (droite && large && mur) ? Math.max(0, Math.round(document.documentElement.clientWidth - mur.getBoundingClientRect().right)) + 'px' : '';
     /* onglet (11/09) : hauteur de la barre et largeur de l onglet (jusqu a mi-chemin entre la colonne et le mur) ; l accroche vit dans l onglet, le titre commence dessous */
     R.setProperty('--entete', menu.offsetHeight + 'px');
-    if (droite && large && mur) R.setProperty('--onglet-w', Math.round(mur.getBoundingClientRect().left - root.getBoundingClientRect().left - root.offsetWidth * .015) + 'px');
     R.paddingTop = menu.offsetHeight + Math.round(root.offsetWidth * (droite ? (large ? .038 : .022) : .03)) + 'px';
   }
   caler(); if (window.ResizeObserver) new ResizeObserver(caler).observe(root); /* recale logo et menu des que le bloc change de taille (mur plafonne, polices chargees) */
