@@ -4,6 +4,8 @@
 (function () {
   'use strict';
   var REGLAGES = {
+    /* bandeau defilant sous la bande (11/09 fondateur, fond #1e2b35) : phrases a definir ensemble, celles de l ancien bandeau en attendant */
+    defile: { textes: ['Conception et fabrication françaises', 'Sans colle, sans détérioration', 'Une imprimante de salon suffit', 'Changez de décor quand vous voulez'], duree: 28 },
     variante: 'B', /* 'A' = dans la continuité du bandeau (navy), 'B' = sur le fond de page, 'C' = bande crème posée sur le navy */
     gestes: [
       { icone: 'composez', titre: 'Composez', texte: 'Sur téléphone ou ordinateur, composez votre visuel dans l\x27app Quadreti Designer.' },
@@ -18,6 +20,11 @@
   bande.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' + SYMBOLES + '</defs></svg><ul class="qb-gestes-liste">' +
     REGLAGES.gestes.map(function (g, i) { return (i ? '<li class="qb-geste-fleche" aria-hidden="true"><svg><use href="#qg-fleche"></use></svg></li>' : '') + '<li class="qb-geste qb-geste-' + g.icone + '"><svg class="qb-geste-icone" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#qg-' + g.icone + '"></use></svg><h3>' + g.titre + '</h3><p>' + g.texte + '</p></li>'; }).join('') + '</ul>';
   qb.insertAdjacentElement('afterend', bande);
+  if (REGLAGES.defile && REGLAGES.defile.textes.length) {
+    var defile = document.createElement('div'); defile.className = 'qb-defile'; defile.setAttribute('aria-hidden', 'true'); defile.style.setProperty('--qb-defile-duree', REGLAGES.defile.duree + 's');
+    var piste = REGLAGES.defile.textes.map(function (t) { return '<span>' + t + '</span>'; }).join(''); defile.innerHTML = '<div class="qb-defile-piste">' + piste + piste + '</div>'; /* deux fois : la piste defile d une moitie puis reboucle sans a-coup */
+    bande.insertAdjacentElement('afterend', defile);
+  }
   /* couleurs du bandeau (variables posees sur #qbBandeau par bandeau-relief.js) reprises sur la bande, des que le mur est construit */
   function couleurs() { ['--fond', '--couleur1', '--couleur2'].forEach(function (v) { var val = qb.style.getPropertyValue(v); if (val) bande.style.setProperty(v, val); }); }
   couleurs(); if (window.ResizeObserver) new ResizeObserver(couleurs).observe(qb);

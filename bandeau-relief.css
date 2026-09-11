@@ -144,6 +144,22 @@
   .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
   .qz-header.qz-menu-visible .qz-sublist a{text-transform:none;letter-spacing:0;font-size:13.5px;padding:9px 16px;text-align:left}
 }
+/* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil). La plaque du Q garde ses
+   tesselles claires sur fond navy. !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
+.qz-header.qz-menu-visible{background:#dedede!important}
+.qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#1e2b35!important}
+.qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#f4f1ea!important}
+.qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
+.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:#e2725b!important}
+.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:#1e2b35}
+.qz-header.qz-menu-visible .qz-burger{background:#1e2b35}
+/* bandeau defilant sous la bande des gestes (bandeau-gestes.js) : l ancien .ticker de la page est remplace */
+.qb-defile{background:#1e2b35;color:#f4f1ea;overflow:hidden;padding:9px 0;font-family:'Quicksand',sans-serif}
+.qb-defile-piste{display:flex;width:max-content;animation:qb-defiler var(--qb-defile-duree,28s) linear infinite}
+.qb-defile span{font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:0 34px;border-right:1px solid rgba(244,241,234,.22);white-space:nowrap}
+@keyframes qb-defiler{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.qb-defile-piste{animation:none}}
+.hero ~ .ticker,.ticker{display:none!important}
 /* ecrans de portable (14 pouces) : liens plus serres pour que le menu tienne sur une ligne */
 @media (min-width:901px) and (max-width:1440px){
   .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-size:11.5px;letter-spacing:.04em;padding:8px 8px}
