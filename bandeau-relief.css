@@ -148,11 +148,11 @@
   .qz-header.qz-menu-visible .qz-navpanel{position:static!important;flex:0 1 auto;margin:0 0 0 auto;max-height:none!important;overflow:visible!important;background:transparent!important;width:auto;z-index:auto;transition:none}
   .qz-header.qz-menu-visible .qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;padding:0;gap:2px}
   .qz-header.qz-menu-visible .qz-navpanel>ul>li{width:auto;max-width:none}
-  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;line-height:1.2;padding:9px 12px;width:auto;border-radius:4px}
+  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-family:'Jura',sans-serif;font-weight:700;font-size:13.5px;text-transform:uppercase;letter-spacing:.06em;line-height:1.2;padding:9px 12px;width:auto;border-radius:4px}
   .qz-header.qz-menu-visible .qz-hassub{position:relative}
   .qz-header.qz-menu-visible .qz-sublist{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;max-height:none;overflow:visible;display:none;padding:8px 0;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.35);z-index:70}
   .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
-  .qz-header.qz-menu-visible .qz-sublist a{text-transform:none;letter-spacing:0;font-size:13.5px;padding:9px 16px;text-align:left}
+  .qz-header.qz-menu-visible .qz-sublist a{font-family:'Jura',sans-serif;font-weight:700;text-transform:none;letter-spacing:.02em;font-size:14px;padding:9px 16px;text-align:left} /* 11/09 fondateur : menu et sous-menu en Jura */
 }
 /* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil).
    !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
