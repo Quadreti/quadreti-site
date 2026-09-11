@@ -78,6 +78,11 @@
 .qb.qb-dispo-droite .qb-li{white-space:normal}
 /* 11/09, reference Pixel Corner : accroche en capitales espacees (baseline 1), gros titre serre (baseline 2), paragraphe, deux boutons cote a cote */
 .qb.qb-dispo-droite .qb-b1 .qb-li{text-transform:uppercase;letter-spacing:.18em;line-height:1.3;filter:none}
+/* 11/09 fondateur : « style onglet » -- la barre gris clair (#dedede) descend a gauche sous le logo et accueille l accroche (baseline 1),
+   remontee et alignee sur le logo ; le navy commence en dessous. --entete et --onglet-w poses par bandeau-relief.js (caler) */
+.qb.qb-dispo-droite{--entete:80px;--onglet-w:46cqw}
+.qb.qb-dispo-droite::before{content:"";position:absolute;left:0;top:0;width:var(--onglet-w);height:calc(var(--entete) + 2.7cqw);background:#dedede;border-bottom-right-radius:18px;z-index:0;pointer-events:none}
+.qb.qb-dispo-droite .qb-b1{position:absolute;left:3cqw;top:calc(var(--entete) + .6cqw);z-index:3;margin:0}
 .qb.qb-dispo-droite .qb-b2{margin-top:.2cqw}
 .qb.qb-dispo-droite .qb-b2.qb-li{line-height:1.02;letter-spacing:-.02em;font-weight:700}
 .qb.qb-dispo-droite .qb-b2 .qb-mot{margin-right:.22em}
@@ -91,6 +96,8 @@
 @media (max-width:900px){
   .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
   .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
+  .qb.qb-dispo-droite::before{display:none}
+  .qb.qb-dispo-droite .qb-b1{position:static}
   .qb.qb-dispo-droite .qb-textes{text-align:center;justify-items:center}
   .qb.qb-dispo-droite .qb-para{text-align:center}
   .qb.qb-dispo-droite .qb-ctas{justify-content:center}
