@@ -71,8 +71,9 @@
 .qb.qb-repli{display:block;padding:0}.qb-repli-img{display:block;width:100%;height:auto}
 /* 11/09, demande fondateur : disposition 'droite' -- baseline 1, baseline 2 et bouton a gauche (chacun sur sa ligne), mur anime a droite */
 /* 11/09 : bandeau + bande des gestes doivent tenir sur un ecran de portable 14 pouces -> mur plafonne a 50 % de la hauteur de la fenetre, marges serrees */
-.qb.qb-dispo-droite{flex-direction:row;align-items:center;justify-content:center;gap:4cqw;padding:2.2cqw 4cqw 2.4cqw}
-.qb.qb-dispo-droite .qb-col{display:flex;flex-direction:column;align-items:flex-start;gap:1.1cqw;flex:0 1 38%;min-width:0}
+/* 11/09 fondateur (« A + marges a 3 % ») : marges laterales 3 %, la colonne de textes prend toute la largeur laissee par le mur */
+.qb.qb-dispo-droite{flex-direction:row;align-items:center;justify-content:space-between;gap:3cqw;padding:2.2cqw 3cqw 2.4cqw}
+.qb.qb-dispo-droite .qb-col{display:flex;flex-direction:column;align-items:flex-start;gap:1.1cqw;flex:1 1 auto;min-width:0}
 .qb.qb-dispo-droite .qb-textes{width:auto;padding:0;text-align:left;justify-items:start;pointer-events:none}
 .qb.qb-dispo-droite .qb-li{white-space:normal}
 /* 11/09, reference Pixel Corner : accroche en capitales espacees (baseline 1), gros titre serre (baseline 2), paragraphe, deux boutons cote a cote */
@@ -80,13 +81,13 @@
 .qb.qb-dispo-droite .qb-b2{margin-top:.2cqw}
 .qb.qb-dispo-droite .qb-b2.qb-li{line-height:1.02;letter-spacing:-.02em;font-weight:700}
 .qb.qb-dispo-droite .qb-b2 .qb-mot{margin-right:.22em}
-.qb.qb-dispo-droite .qb-para{margin:.6cqw 0 0;max-width:36ch;font-family:'Quicksand',sans-serif;font-weight:500;font-size:clamp(14px,1.3cqw,18px);line-height:1.6;color:color-mix(in srgb,var(--couleur2) 82%,transparent)}
+.qb.qb-dispo-droite .qb-para{margin:.6cqw 0 0;max-width:40ch;font-family:'Quicksand',sans-serif;font-weight:500;font-size:clamp(14px,1.3cqw,18px);line-height:1.6;color:color-mix(in srgb,var(--couleur2) 82%,transparent)}
 .qb.qb-dispo-droite .qb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.2cqw}
 .qb.qb-dispo-droite .qb-ctas .cta{position:static;transform:none;margin:0;pointer-events:auto;z-index:4;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(12px,1.05cqw,14.5px);padding:15px 26px;white-space:nowrap;border-radius:4px}
 .qb.qb-dispo-droite .qb-ctas .cta:hover{transform:translateY(-2px)}
 /* bouton 2 en contour ; !important : le panneau du site force la couleur des .cta en !important */
 .qb.qb-dispo-droite .qb-ctas .qb-cta2{background:transparent!important;color:var(--couleur2)!important;border:2px solid color-mix(in srgb,var(--couleur2) 85%,transparent);box-shadow:none;padding:13px 24px}
-.qb.qb-dispo-droite .qb-mur{flex:0 0 auto;--u:min(calc((54cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(46vh / var(--cy)))}
+.qb.qb-dispo-droite .qb-mur{flex:0 0 auto;--u:min(calc((60cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(46vh / var(--cy)))}
 @media (max-width:900px){
   .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
   .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
@@ -99,11 +100,14 @@
 /* ===== 11/09 : bande des quatre gestes sous le bandeau (bandeau-gestes.js). Compacte pour tenir avec le bandeau sur un 14 pouces.
    Variantes : A dans la continuite du bandeau (navy), B sur le fond de page, C bande creme posee sur le navy. Bord gauche = colonne de textes. */
 .qb-gestes{position:relative;z-index:3;font-family:'Quicksand',sans-serif}
-.qb-gestes-liste{list-style:none;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,36px);padding:clamp(12px,1.6vw,26px) 4vw clamp(18px,2.2vw,34px)}
-.qb-geste{display:grid;align-content:start;justify-items:center;text-align:center;gap:5px;min-width:0} /* 11/09 fondateur : chaque icone centree avec son texte */
-.qb-geste-icone{width:clamp(40px,4vw,60px);height:clamp(40px,4vw,60px);display:block;color:inherit}
-.qb-geste h3{margin:4px 0 0;font-family:'Jura',sans-serif;font-weight:700;font-size:clamp(15px,1.25vw,19px);letter-spacing:.02em;line-height:1.2}
-.qb-geste p{margin:0;font-size:clamp(12.5px,.95vw,14.5px);line-height:1.5;font-weight:500;max-width:30ch}
+/* 11/09 fondateur : bande plus petite, sur toute la largeur (marges 3 %), fleches entre les etapes */
+.qb-gestes-liste{list-style:none;margin:0;display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:start;gap:clamp(10px,1.4vw,26px);padding:clamp(10px,1.2vw,18px) 3vw clamp(14px,1.6vw,24px)}
+.qb-geste{display:grid;align-content:start;justify-items:center;text-align:center;gap:4px;min-width:0} /* chaque icone centree avec son texte */
+.qb-geste-icone{width:clamp(36px,3vw,44px);height:clamp(36px,3vw,44px);display:block;color:inherit}
+.qb-geste h3{margin:3px 0 0;font-family:'Jura',sans-serif;font-weight:700;font-size:clamp(14px,1.05vw,16px);letter-spacing:.02em;line-height:1.2}
+.qb-geste p{margin:0;font-size:clamp(11.5px,.85vw,12.5px);line-height:1.45;font-weight:500;max-width:28ch}
+.qb-geste-fleche{display:flex;align-items:center;justify-content:center;height:clamp(36px,3vw,44px);opacity:.55}
+.qb-geste-fleche svg{width:clamp(22px,2vw,30px);height:auto;display:block}
 .qb-gestes-A{background:var(--fond,#1e2b35);color:var(--couleur2,#f4f1ea)}
 .qb-gestes-A .qb-geste p{color:color-mix(in srgb,var(--couleur2,#f4f1ea) 70%,transparent)}
 .qb-gestes-A .qb-geste-icone{--ic-fond:var(--fond,#1e2b35)}
@@ -119,6 +123,7 @@
 @media (max-width:900px){
   .qb-gestes-liste{grid-template-columns:1fr 1fr;gap:22px 18px}
   .qb-geste{justify-items:center;text-align:center}
+  .qb-geste-fleche{display:none}
 }
 @media (max-width:420px){ .qb-gestes-liste{grid-template-columns:1fr} }
 
