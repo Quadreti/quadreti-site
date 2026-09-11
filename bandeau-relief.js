@@ -118,7 +118,8 @@
     menu.style.paddingRight = (droite && large && mur) ? Math.max(0, Math.round(document.documentElement.clientWidth - mur.getBoundingClientRect().right)) + 'px' : '';
     /* onglet (11/09) : hauteur de la barre et largeur de l onglet (jusqu a mi-chemin entre la colonne et le mur) ; l accroche vit dans l onglet, le titre commence dessous */
     R.setProperty('--entete', menu.offsetHeight + 'px');
-    R.paddingTop = menu.offsetHeight + Math.round(root.offsetWidth * (droite ? (large ? .038 : .022) : .03)) + 'px';
+    /* 11/09 fondateur : meme air au-dessus et en dessous du bloc (le bas du bloc a 2.4 % en CSS) -> haut = barre + 2.4 % */
+    R.paddingTop = menu.offsetHeight + Math.round(root.offsetWidth * (droite ? (large ? .024 : .022) : .03)) + 'px';
   }
   caler(); if (window.ResizeObserver) new ResizeObserver(caler).observe(root); /* recale logo et menu des que le bloc change de taille (mur plafonne, polices chargees) */
   var dernierMobile = estMobile(); window.addEventListener('resize', function () { caler(); if (estMobile() !== dernierMobile) { dernierMobile = estMobile(); root.classList.remove('qb-joue'); preparer(); void root.offsetWidth; if (lanceDeja) root.classList.add('qb-joue'); } });
