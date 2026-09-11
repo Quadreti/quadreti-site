@@ -62,5 +62,19 @@
 @media (max-width:640px){.qz-header{padding-left:12px;padding-right:12px}}
 /* 10/09, demande fondateur : bandeau défilant retiré pour agrandir la zone du logo (le réglage "position" du panneau devient sans effet) */
 .ticker{display:none!important}
+/* ===== 11/09, demande fondateur : la grille surcharge et n'apporte rien -> retiree. Ne restent que les tesselles du Q (couleur du
+   logo, navy sur l'accueil) et la tesselle orange, a plat ; le naming perd son relief (plus de degrade ni d'ombre), le point du i
+   reste orange. La sequence saute la phase des tesselles couleur grille : le Q se clipse directement apres l'attente. ===== */
+.qz-plaque{background:transparent;box-shadow:none;padding:0;isolation:auto}
+.qz-case{background:none;box-shadow:none}
+.qz-case::after{display:none}
+.qz-case.qz-g{visibility:hidden}
+.qz-tuile{background:var(--c);box-shadow:none}
+.qz-anime .qz-plaque{animation:none;opacity:1}
+.qz-anime .qz-case:not(.qz-g) .qz-tuile{animation-delay:calc(var(--qz-t0) + var(--i) * var(--qz-pas))}
+.qz-header{--qz-t1:calc(var(--qz-t0) + 10 * var(--qz-pas) + var(--qz-duree))}
+.qz-header .qz-naming.qz-wordmark-img{filter:none}
+.qz-naming .qz-l:not(.qz-point){background:none;-webkit-text-fill-color:currentColor}
+.qz-header .qz-cat{filter:none}
 /* 10/09, demande fondateur : logo reduit sur mobile uniquement */
 @media (max-width:640px){.qz-header .qz-plaque.qz-wordmark-img{--t:42px}.qz-header .qz-naming.qz-wordmark-img{font-size:25px}.qz-header .qz-cat{font-size:9px}.qz-header .qz-logorow{gap:10px}}

@@ -144,11 +144,11 @@
   .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
   .qz-header.qz-menu-visible .qz-sublist a{text-transform:none;letter-spacing:0;font-size:13.5px;padding:9px 16px;text-align:left}
 }
-/* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil). La plaque du Q garde ses
-   tesselles claires sur fond navy. !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
+/* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil).
+   !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
 .qz-header.qz-menu-visible{background:#dedede!important}
 .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#1e2b35!important}
-.qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#f4f1ea!important}
+.qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#1e2b35!important} /* 11/09 : plus de grille, tesselles du Q en navy + orange */
 .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
 .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:#e2725b!important}
 .qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:#1e2b35}
