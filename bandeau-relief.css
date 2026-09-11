@@ -30,6 +30,7 @@
 .qb-li{margin:0;line-height:1.15;letter-spacing:-.01em;white-space:nowrap;
   filter:drop-shadow(0 2px 8px rgba(0,0,0,calc(.5 * var(--txt-relief)))) drop-shadow(calc(1px * var(--txt-relief)) calc(1px * var(--txt-relief)) 0 rgba(0,0,0,calc(.45 * var(--txt-relief))))}
 .qb-li .qb-l{display:inline-block;position:relative;transform-origin:center}
+.qb-mot{display:inline-block;white-space:nowrap}
 .qb-dispo-ligne .qb-li.qb-l2,.qb-dispo-ligne .qb-li.qb-l3{display:none}
 /* ================== ANIMATION (CSS pur) ==================
    0. le mur apparait ; puis, pour chaque visuel k, la couche .qb-tu.k{k} joue "cycle-k" (dans #dyn) : arrivee depuis le coin le plus
@@ -51,8 +52,11 @@
 .qb-joue.qb-mode-t-arriere .qb-li{opacity:0;animation:qb-arriere var(--dn) cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--tl)}
 .qb-joue.qb-mode-t-aucun .qb-li{opacity:1}
 .qb-li.qb-l1{--tl:var(--tl1)}.qb-li.qb-l2{--tl:var(--tl2)}.qb-li.qb-l3{--tl:var(--tl3)}.qb-li.qb-l4{--tl:var(--tl4)}
-.qb-fini .qb-mur,.qb-fini .qb-li,.qb-fini .qb-l{opacity:1}
-@media (prefers-reduced-motion:reduce){.qb *{animation:none!important}.qb-mur,.qb-li,.qb-l,.qb-tu.qb-k0{opacity:1}}
+.qb-fini .qb-mur,.qb-fini .qb-li,.qb-fini .qb-l,.qb-fini .qb-para{opacity:1}
+/* le paragraphe suit le titre (fondu) */
+.qb-joue .qb-para{opacity:0;animation:qb-monter .7s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:calc(var(--tl4) + .4s)}
+.qb-joue.qb-mode-t-aucun .qb-para{opacity:1;animation:none}
+@media (prefers-reduced-motion:reduce){.qb *{animation:none!important}.qb-mur,.qb-li,.qb-l,.qb-para,.qb-tu.qb-k0{opacity:1}}
 
 /* le hero de index.html : la vidéo et ses textes sont remplacés par ce bloc, plein largeur */
 .qb{max-width:none;border-radius:0;padding-bottom:calc(3cqw + 84px)}
@@ -66,16 +70,81 @@
 /* repli navigateurs anciens : photo fixe */
 .qb.qb-repli{display:block;padding:0}.qb-repli-img{display:block;width:100%;height:auto}
 /* 11/09, demande fondateur : disposition 'droite' -- baseline 1, baseline 2 et bouton a gauche (chacun sur sa ligne), mur anime a droite */
-.qb.qb-dispo-droite{flex-direction:row;align-items:center;justify-content:center;gap:4cqw;padding:3cqw 4cqw calc(3cqw + 24px)}
-.qb.qb-dispo-droite .qb-col{display:flex;flex-direction:column;align-items:flex-start;gap:1.4cqw;flex:0 1 36%;min-width:0}
+/* 11/09 : bandeau + bande des gestes doivent tenir sur un ecran de portable 14 pouces -> mur plafonne a 50 % de la hauteur de la fenetre, marges serrees */
+.qb.qb-dispo-droite{flex-direction:row;align-items:center;justify-content:center;gap:4cqw;padding:2.2cqw 4cqw 2.4cqw}
+.qb.qb-dispo-droite .qb-col{display:flex;flex-direction:column;align-items:flex-start;gap:1.1cqw;flex:0 1 38%;min-width:0}
 .qb.qb-dispo-droite .qb-textes{width:auto;padding:0;text-align:left;justify-items:start;pointer-events:none}
-.qb.qb-dispo-droite .qb-textes .qb-li{white-space:normal}
-.qb.qb-dispo-droite .qb-mur{flex:0 0 auto;--u:min(calc((56cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(70vh / var(--cy)))}
-.qb.qb-dispo-droite .hero-cta{position:static;transform:none;margin-top:.6cqw;pointer-events:auto;z-index:4}
-.qb.qb-dispo-droite .hero-cta:hover{transform:translateY(-2px)}
+.qb.qb-dispo-droite .qb-li{white-space:normal}
+/* 11/09, reference Pixel Corner : accroche en capitales espacees (baseline 1), gros titre serre (baseline 2), paragraphe, deux boutons cote a cote */
+.qb.qb-dispo-droite .qb-b1 .qb-li{text-transform:uppercase;letter-spacing:.18em;line-height:1.3;filter:none}
+.qb.qb-dispo-droite .qb-b2{margin-top:.2cqw}
+.qb.qb-dispo-droite .qb-b2.qb-li{line-height:1.02;letter-spacing:-.02em;font-weight:700}
+.qb.qb-dispo-droite .qb-b2 .qb-mot{margin-right:.22em}
+.qb.qb-dispo-droite .qb-para{margin:.6cqw 0 0;max-width:36ch;font-family:'Quicksand',sans-serif;font-weight:500;font-size:clamp(14px,1.3cqw,18px);line-height:1.6;color:color-mix(in srgb,var(--couleur2) 82%,transparent)}
+.qb.qb-dispo-droite .qb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.2cqw}
+.qb.qb-dispo-droite .qb-ctas .cta{position:static;transform:none;margin:0;pointer-events:auto;z-index:4;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(12px,1.05cqw,14.5px);padding:15px 26px;white-space:nowrap;border-radius:4px}
+.qb.qb-dispo-droite .qb-ctas .cta:hover{transform:translateY(-2px)}
+/* bouton 2 en contour ; !important : le panneau du site force la couleur des .cta en !important */
+.qb.qb-dispo-droite .qb-ctas .qb-cta2{background:transparent!important;color:var(--couleur2)!important;border:2px solid color-mix(in srgb,var(--couleur2) 85%,transparent);box-shadow:none;padding:13px 24px}
+.qb.qb-dispo-droite .qb-mur{flex:0 0 auto;--u:min(calc((54cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(46vh / var(--cy)))}
 @media (max-width:900px){
   .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
   .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
   .qb.qb-dispo-droite .qb-textes{text-align:center;justify-items:center}
+  .qb.qb-dispo-droite .qb-para{text-align:center}
+  .qb.qb-dispo-droite .qb-ctas{justify-content:center}
   .qb.qb-dispo-droite .qb-mur{--u:min(calc((100cqw - (var(--cx) - 1) * var(--ecart)) / var(--cx)),calc(70vh / var(--cy)))}
+}
+
+/* ===== 11/09 : bande des quatre gestes sous le bandeau (bandeau-gestes.js). Compacte pour tenir avec le bandeau sur un 14 pouces.
+   Variantes : A dans la continuite du bandeau (navy), B sur le fond de page, C bande creme posee sur le navy. Bord gauche = colonne de textes. */
+.qb-gestes{position:relative;z-index:3;font-family:'Quicksand',sans-serif}
+.qb-gestes-liste{list-style:none;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,36px);padding:clamp(12px,1.6vw,26px) 4vw clamp(18px,2.2vw,34px)}
+.qb-geste{display:grid;align-content:start;justify-items:center;text-align:center;gap:5px;min-width:0} /* 11/09 fondateur : chaque icone centree avec son texte */
+.qb-geste-icone{width:clamp(40px,4vw,60px);height:clamp(40px,4vw,60px);display:block;color:inherit}
+.qb-geste h3{margin:4px 0 0;font-family:'Jura',sans-serif;font-weight:700;font-size:clamp(15px,1.25vw,19px);letter-spacing:.02em;line-height:1.2}
+.qb-geste p{margin:0;font-size:clamp(12.5px,.95vw,14.5px);line-height:1.5;font-weight:500;max-width:30ch}
+.qb-gestes-A{background:var(--fond,#1e2b35);color:var(--couleur2,#f4f1ea)}
+.qb-gestes-A .qb-geste p{color:color-mix(in srgb,var(--couleur2,#f4f1ea) 70%,transparent)}
+.qb-gestes-A .qb-geste-icone{--ic-fond:var(--fond,#1e2b35)}
+/* B (retenue le 11/09) : sur le fond de page, icones et textes navy, sauf Changez en terracotta */
+.qb-gestes-B{background:transparent;color:#1e2b35}
+.qb-gestes-B .qb-geste p{color:color-mix(in srgb,#1e2b35 78%,transparent)}
+.qb-gestes-B .qb-geste-icone{--ic-fond:transparent}
+.qb-gestes-B .qb-geste-changez h3{color:#e2725b}
+.qb-gestes-C{background:var(--fond,#1e2b35);padding:0 4vw clamp(20px,2.4vw,36px)}
+.qb-gestes-C .qb-gestes-liste{background:#f4f1ea;color:#1e2b35;padding-left:3vw;padding-right:3vw}
+.qb-gestes-C .qb-geste p{color:#5c646c}
+.qb-gestes-C .qb-geste-icone{--ic-fond:#f4f1ea}
+@media (max-width:900px){
+  .qb-gestes-liste{grid-template-columns:1fr 1fr;gap:22px 18px}
+  .qb-geste{justify-items:center;text-align:center}
+}
+@media (max-width:420px){ .qb-gestes-liste{grid-template-columns:1fr} }
+
+/* ===== 11/09, demande fondateur : menu en boutons visibles dans la barre du haut (accueil seulement pour l'instant).
+   bandeau-relief.js deplace le panneau #qzNavPanel dans .qz-header et pose la classe qz-menu-visible. Sur bureau : liens en ligne
+   a droite, burger cache, sous-menu "Comment ca marche" en liste deroulante. Sous 900 px : burger + panneau depliant, comme avant. */
+@media (min-width:901px){
+  /* !important : le panneau du site injecte ses propres regles de menu (position fixe, colonnes de grille, fond) ; ici le menu vit dans la barre */
+  .qz-header.qz-menu-visible{display:flex!important;justify-content:space-between;align-items:center;gap:24px}
+  .qz-header.qz-menu-visible .qz-logorow{flex:none;margin:0}
+  .qz-header.qz-menu-visible .qz-burger{display:none}
+  .qz-header.qz-menu-visible .qz-navpanel{position:static!important;flex:0 1 auto;margin:0 0 0 auto;max-height:none!important;overflow:visible!important;background:transparent!important;width:auto;z-index:auto;transition:none}
+  .qz-header.qz-menu-visible .qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;padding:0;gap:2px}
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li{width:auto;max-width:none}
+  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;line-height:1.2;padding:9px 12px;width:auto;border-radius:4px}
+  .qz-header.qz-menu-visible .qz-hassub{position:relative}
+  .qz-header.qz-menu-visible .qz-sublist{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;max-height:none;overflow:visible;display:none;padding:8px 0;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.35);z-index:70}
+  .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
+  .qz-header.qz-menu-visible .qz-sublist a{text-transform:none;letter-spacing:0;font-size:13.5px;padding:9px 16px;text-align:left}
+}
+/* ecrans de portable (14 pouces) : liens plus serres pour que le menu tienne sur une ligne */
+@media (min-width:901px) and (max-width:1440px){
+  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-size:11.5px;letter-spacing:.04em;padding:8px 8px}
+  .qz-header.qz-menu-visible{padding-top:10px;padding-bottom:10px}
+}
+@media (max-width:900px){
+  .qz-header.qz-menu-visible{row-gap:0}
+  .qz-header.qz-menu-visible .qz-navpanel{grid-column:1/-1;width:100%;margin:0}
 }

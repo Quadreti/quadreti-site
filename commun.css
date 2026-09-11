@@ -207,3 +207,8 @@ footer.qz-footer{
 .qz-fab:hover, .qz-fab:focus-visible{ background:var(--qz-terracotta); border-color:var(--qz-terracotta); }
 .qz-fab svg{ width:14px; height:14px; stroke:var(--qz-kraft); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
 .qz-fab:hover svg{ stroke:var(--qz-creme); }
+/* 11/09, demande fondateur : les boutons d'action du site passent en rectangle a leger arrondi (plus de pilule),
+   sur toutes les pages. Les badges, etiquettes, onglets et interrupteurs gardent leur forme. !important : la boutique
+   (Ecwid) force elle-meme ses boutons en pilule avec !important. */
+.cta, .c-submit, .btn-imprimer, .cta-boutique-btn, .tour-btn, .finale button, .pop-nav button, .nav-cta, .mm-cta, .btn,
+#my-store-139886004 .form-control__button, #my-store-139886004 .ec-cart__button button, #my-store-139886004 button.form-control__button{ border-radius:4px !important; }
