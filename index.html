@@ -1257,7 +1257,10 @@ document.addEventListener('DOMContentLoaded', function(){
   var animationId = null;
 
   function redimensionner(){
-    sommetDocument = entete.getBoundingClientRect().bottom + window.scrollY;
+    /* 12/09 fondateur : les tesselles flottantes commencent sous le bandeau defilant (bandeau-gestes.js), pas sous la barre du haut --
+       le bandeau navy, la bande des gestes et le bandeau defilant restent nets. Repli : le hero, puis la barre. */
+    var borneHaute = document.querySelector('.qb-defile') || document.getElementById('hero') || entete;
+    sommetDocument = borneHaute.getBoundingClientRect().bottom + window.scrollY;
     var basDocument = piedDePage.getBoundingClientRect().top + window.scrollY;
     largeur = champ.parentElement.clientWidth;
     hauteur = Math.max(0, basDocument - sommetDocument);

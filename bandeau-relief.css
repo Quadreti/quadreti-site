@@ -93,8 +93,24 @@
    toute la largeur : partie droite = hauteur de la barre (--entete, posee par bandeau-relief.js), partie gauche 29 % plus basse, raccord en pente douce. */
 .qb.qb-dispo-droite{--entete:80px}
 .qb.qb-dispo-droite{--decroche:33.5%} /* position du decroche : la pente finit a cette fraction de la largeur (fondateur : ~29-32 %) */
-.qb.qb-dispo-droite::before{content:"";position:absolute;left:0;top:0;width:100%;height:calc(var(--entete) * 1.291);z-index:0;pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-78.05 15.875 253 50.6' preserveAspectRatio='none'%3E%3Cpath fill='%23dedede' d='M 424.5888 55.07339 L 216.2348 55.07339 L 165.0783 55.11194 C 164.6799 55.11194 164.2867 55.12518 163.8986 55.15155 C 163.5435 55.17328 163.1734 55.20947 162.7883 55.26025 C 162.4246 55.30832 162.0679 55.36661 161.7182 55.43494 C 161.3262 55.51288 160.9567 55.59818 160.6098 55.69092 C 160.2142 55.79996 159.849 55.91241 159.5143 56.02817 C 159.1245 56.16562 158.7597 56.30917 158.42 56.4588 C 158.097 56.60037 157.7747 56.75711 157.453 56.92908 C 157.1001 57.11935 156.7729 57.31335 156.4713 57.51111 C 156.1998 57.68857 155.9423 57.87717 155.6988 58.0769 L 148.8487 63.54968 C 148.6052 63.74948 148.3477 63.93802 148.0763 64.11545 C 147.7746 64.3132 147.4473 64.50723 147.0946 64.69751 C 146.7729 64.86954 146.4505 65.02621 146.1275 65.16776 C 145.7878 65.31741 145.423 65.46103 145.0333 65.59842 C 144.6985 65.71426 144.3333 65.82663 143.9377 65.93564 C 143.5908 66.02847 143.2214 66.11374 142.8294 66.19162 C 142.4797 66.25998 142.123 66.31827 141.7592 66.3663 C 141.3741 66.41641 141.004 66.45267 140.6488 66.47501 L -78.04984 66.3663 L -78.04984 15.875 L 424.5888 15.875 L 424.5888 22.81961 C 424.5962 22.93204 424.5998 23.04376 424.5998 23.15482 L 424.5888 55.07339 Z'/%3E%3C/svg%3E") left top / var(--decroche) 100% no-repeat,linear-gradient(#dedede,#dedede) right top / calc(100% - var(--decroche) + 2px) calc(100% / 1.291) no-repeat}
+/* 12/09 : bords = vrais <svg> dans la page (bandeau-relief.js, bordElement), forme + ligne du bord libre ; la barre du menu est transparente sur l accueil, c est le bord haut qui peint le gris */
+.qb-bord{position:absolute;left:0;width:100%;display:block;pointer-events:none}
+.qb-bord.qb-bord-ligne{z-index:5;overflow:visible}
+/* 12/09 piste B : reflet qui voyage le long du lisere (tiret court sur un second trace, longueur normalisee a 1000, va d un bout a l autre puis pause) */
+.qb-bord-reflet{stroke-width:var(--lisere-ep,0);stroke-dashoffset:var(--reflet-tiret,60)}
+.qb-bord-reflet.qb-reflet-boucle{animation:qb-reflet-ligne var(--reflet-duree,7s) linear infinite}
+.qb-bord-defile-bas .qb-bord-reflet.qb-reflet-boucle{animation-direction:reverse}
+/* 12/09 piste A : la ligne se dessine au chargement, de droite a gauche a l ecran (le bord retourne est inverse) ; invisible avant (fill-mode both) */
+.qb-bord-trace{animation:qb-trace-ligne var(--trace-duree,1.4s) cubic-bezier(.65,0,.35,1) var(--t-lisere,3s) both}
+.qb-bord-defile-bas .qb-bord-trace{animation-name:qb-trace-ligne-inv}
+@keyframes qb-trace-ligne{from{stroke-dashoffset:-1000}to{stroke-dashoffset:0}}
+@keyframes qb-trace-ligne-inv{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.qb-bord-trace{animation:none;stroke-dashoffset:0}}
+@keyframes qb-reflet-ligne{0%{stroke-dashoffset:var(--reflet-tiret,60)}32%{stroke-dashoffset:-1000}100%{stroke-dashoffset:-1000}}
+@media (prefers-reduced-motion:reduce){.qb-bord-reflet{animation:none;visibility:hidden}} /* 12/09 : la ligne du bord libre est un calque a part, au premier plan, qui peut deborder (sinon rognee sur les parties plates) */
+.qb-bord-trait{stroke:var(--lisere-couleur,#d96c2f);stroke-width:var(--lisere-ep,0)}
+.qb-bord-haut{top:0;height:var(--onglet,98px);z-index:0}
+.qb.qb-dispo-droite .qb-col{position:relative;z-index:1}
 /* 11/09 fondateur, proposition D3 du mock-up : l accroche rejoint le bloc logo de la barre (bandeau-relief.js la deplace dans .qz-wm-col),
    sous la categorie, alignee sur le naming. Q de 88 px, trois lignes a hauteur egale (naming 36 px, categorie navy et accroche orange en
    Jura gras 19 px sur 26 px), la tesselle orange du Q sur la ligne de l accroche. */
@@ -104,7 +120,7 @@
 .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{font-size:27px;line-height:1}
 /* 12/09 fondateur : point du i cale sur la barre du t (centre 0,715 em au-dessus de la ligne de base, mesure sur la police) et centre sur le fut du i (0,07 em de large) */
 .qz-header.qz-menu-visible{--qz-point-x:.14em;--qz-point-y:.969em;--qz-point-t:.07em}
-.qz-header.qz-menu-visible .qz-cat{font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em!important;color:#e2725b;margin-top:0;text-transform:none} /* 12/09 : categorie en orange, 3e ligne, sur la tesselle orange */
+.qz-header.qz-menu-visible .qz-cat{font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em!important;color:var(--qz-terracotta,#d96c2f);margin-top:0;text-transform:none} /* 12/09 : categorie en orange, 3e ligne, sur la tesselle orange */
 .qz-header.qz-menu-visible .qb-b1{display:block;width:auto;padding:0;margin:0;position:static;pointer-events:none;font-family:'Jura',sans-serif;font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em;color:#1e2b35;text-transform:none;white-space:nowrap;filter:none} /* 12/09 : accroche en navy, 2e ligne */
 .qz-header.qz-menu-visible .qb-b1 .qb-li{margin:0;line-height:inherit;letter-spacing:inherit;text-transform:none;white-space:nowrap;filter:none}
 .qz-header.qz-menu-visible .qb-b1 .qb-l{display:inline-block;opacity:0;animation:qb-clipser-l .45s cubic-bezier(.3,1.55,.5,1) forwards;animation-delay:calc(var(--qz-ta,.3s) + var(--i) * var(--ln,.3s))} /* --qz-ta : depart de l accroche dans la sequence generale */
@@ -137,7 +153,7 @@
 @media (max-width:900px){
   .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
   .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
-  .qb.qb-dispo-droite::before{display:none}
+  .qb-bord-haut{display:none}
   .qb.qb-dispo-droite .qb-textes{text-align:center;justify-items:center}
   .qb.qb-dispo-droite .qb-para{text-align:center}
   .qb.qb-dispo-droite .qb-ctas{justify-content:center}
@@ -150,16 +166,13 @@
 /* 11/09 fondateur : decroche du bas -- le navy du bandeau descend sous le mur, a droite, de --decroche-bas (meme hauteur que le
    surplus de l onglet du haut : 29 % de la barre), pente vers ~43 % de la largeur (--decroche-bas-x). Meme dessin que l onglet
    (ONGLET.svg), recadre sur la bande de la pente et retourne horizontalement. La bande des gestes est decalee d autant. */
-.qb-gestes{--entete:80px;--decroche-bas:calc(var(--entete) * .291);padding-top:var(--decroche-bas)}
-.qb-gestes{container-type:inline-size;--pente-hero:54cqw;--pente-defile:13.4cqw} /* depart des pentes : hero-bas (compte depuis la droite, la forme est retournee), bandeau defilant (depuis la gauche) */
-.qb-gestes::before{content:"";position:absolute;left:0;top:-1px;width:100%;height:calc(var(--decroche-bas) + 1px);z-index:-1;pointer-events:none;transform:scaleX(-1);
-  background:linear-gradient(#1e2b35,#1e2b35) left top / calc(var(--pente-hero) + 1px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44.4' height='11.43' viewBox='130.6 55.07 44.4 11.43'%3E%3Cpath fill='%231e2b35' d='M 424.5888 55.07339 L 216.2348 55.07339 L 165.0783 55.11194 C 164.6799 55.11194 164.2867 55.12518 163.8986 55.15155 C 163.5435 55.17328 163.1734 55.20947 162.7883 55.26025 C 162.4246 55.30832 162.0679 55.36661 161.7182 55.43494 C 161.3262 55.51288 160.9567 55.59818 160.6098 55.69092 C 160.2142 55.79996 159.849 55.91241 159.5143 56.02817 C 159.1245 56.16562 158.7597 56.30917 158.42 56.4588 C 158.097 56.60037 157.7747 56.75711 157.453 56.92908 C 157.1001 57.11935 156.7729 57.31335 156.4713 57.51111 C 156.1998 57.68857 155.9423 57.87717 155.6988 58.0769 L 148.8487 63.54968 C 148.6052 63.74948 148.3477 63.93802 148.0763 64.11545 C 147.7746 64.3132 147.4473 64.50723 147.0946 64.69751 C 146.7729 64.86954 146.4505 65.02621 146.1275 65.16776 C 145.7878 65.31741 145.423 65.46103 145.0333 65.59842 C 144.6985 65.71426 144.3333 65.82663 143.9377 65.93564 C 143.5908 66.02847 143.2214 66.11374 142.8294 66.19162 C 142.4797 66.25998 142.123 66.31827 141.7592 66.3663 C 141.3741 66.41641 141.004 66.45267 140.6488 66.47501 L -78.04984 66.3663 L -78.04984 15.875 L 424.5888 15.875 L 424.5888 22.81961 C 424.5962 22.93204 424.5998 23.04376 424.5998 23.15482 L 424.5888 55.07339 Z'/%3E%3C/svg%3E") calc(var(--pente-hero) - 20px) top / auto 100% no-repeat}
+.qb-gestes{--entete:58px;--decroche-bas:var(--decroche-h,22px);padding-top:var(--decroche-bas)}
+.qb-bord-bas{top:-4px;height:calc(var(--decroche-bas) + 4px);z-index:-1}
 /* 12/09 fondateur : decroche du bandeau defilant -- son navy remonte a gauche dans la bande des gestes (--decroche-defile, meme hauteur que
    les autres decroches), pente descendante vers ~28 % de la largeur (--decroche-defile-x). Dessin ONGLET.svg, bande de la pente, non retourne. */
-.qb-gestes{--decroche-defile:calc(var(--entete) * .291);padding-bottom:var(--decroche-defile)}
-.qb-gestes::after{content:"";position:absolute;left:0;bottom:-1px;width:100%;height:calc(var(--decroche-defile) + 1px);z-index:-1;pointer-events:none;transform:scaleY(-1); /* retourne : le navy s accroche au bandeau defilant ; deborde de 1 px dessus (plus de liseret) */
-  background:linear-gradient(#1e2b35,#1e2b35) left top / calc(var(--pente-defile) + 1px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44.4' height='11.43' viewBox='130.6 55.07 44.4 11.43'%3E%3Cpath fill='%231e2b35' d='M 424.5888 55.07339 L 216.2348 55.07339 L 165.0783 55.11194 C 164.6799 55.11194 164.2867 55.12518 163.8986 55.15155 C 163.5435 55.17328 163.1734 55.20947 162.7883 55.26025 C 162.4246 55.30832 162.0679 55.36661 161.7182 55.43494 C 161.3262 55.51288 160.9567 55.59818 160.6098 55.69092 C 160.2142 55.79996 159.849 55.91241 159.5143 56.02817 C 159.1245 56.16562 158.7597 56.30917 158.42 56.4588 C 158.097 56.60037 157.7747 56.75711 157.453 56.92908 C 157.1001 57.11935 156.7729 57.31335 156.4713 57.51111 C 156.1998 57.68857 155.9423 57.87717 155.6988 58.0769 L 148.8487 63.54968 C 148.6052 63.74948 148.3477 63.93802 148.0763 64.11545 C 147.7746 64.3132 147.4473 64.50723 147.0946 64.69751 C 146.7729 64.86954 146.4505 65.02621 146.1275 65.16776 C 145.7878 65.31741 145.423 65.46103 145.0333 65.59842 C 144.6985 65.71426 144.3333 65.82663 143.9377 65.93564 C 143.5908 66.02847 143.2214 66.11374 142.8294 66.19162 C 142.4797 66.25998 142.123 66.31827 141.7592 66.3663 C 141.3741 66.41641 141.004 66.45267 140.6488 66.47501 L -78.04984 66.3663 L -78.04984 15.875 L 424.5888 15.875 L 424.5888 22.81961 C 424.5962 22.93204 424.5998 23.04376 424.5998 23.15482 L 424.5888 55.07339 Z'/%3E%3C/svg%3E") calc(var(--pente-defile) - 20px) top / auto 100% no-repeat}
-@media (max-width:900px){.qb-gestes{padding-top:0;padding-bottom:0}.qb-gestes::before,.qb-gestes::after{display:none}}
+.qb-gestes{--decroche-defile:var(--decroche-h,22px);padding-bottom:var(--decroche-defile)}
+.qb-bord-defile-haut{bottom:-4px;height:calc(var(--decroche-defile) + 4px);z-index:-1}
+@media (max-width:900px){.qb-gestes{padding-top:0;padding-bottom:0}.qb-bord-bas,.qb-bord-defile-haut,.qb-bord-defile-bas{display:none}}
 /* 11/09 fondateur : bande plus petite, sur toute la largeur (marges 3 %), fleches entre les etapes */
 .qb-gestes-liste{list-style:none;margin:0;display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:start;gap:clamp(10px,1.4vw,26px);padding:clamp(10px,1.2vw,18px) 3vw clamp(14px,1.6vw,24px)}
 .qb-geste{display:grid;align-content:start;justify-items:center;text-align:center;gap:4px;min-width:0} /* chaque icone centree avec son texte */
@@ -175,9 +188,9 @@
 .qb-gestes-B{background:transparent;color:#1e2b35}
 .qb-gestes-B .qb-geste p{color:color-mix(in srgb,#1e2b35 78%,transparent)}
 .qb-gestes-B .qb-geste-icone{--ic-fond:transparent}
-.qb-gestes-B .qb-geste-changez h3,.qb-gestes-B .qb-geste-changez p{color:#e2725b} /* 12/09 : tout le texte du geste Changez en orange */
+.qb-gestes-B .qb-geste-changez h3,.qb-gestes-B .qb-geste-changez p{color:var(--qz-terracotta,#d96c2f)} /* 12/09 : tout le texte du geste Changez en orange */
 /* 12/09 fondateur : icone Changez plus grasse (contour ajoute au trace plein, unites du dessin) */
-.qb-geste-changez .qb-geste-icone{stroke:#e2725b;stroke-width:16;stroke-linejoin:round;stroke-linecap:round} /* pose sur le <svg> : herite dans le symbole reference par <use> (le trace n a pas d attribut stroke) */
+.qb-geste-changez .qb-geste-icone{color:var(--qz-terracotta,#d96c2f);stroke:var(--qz-terracotta,#d96c2f);stroke-width:16;stroke-linejoin:round;stroke-linecap:round} /* pose sur le <svg> : herite dans le symbole reference par <use> (le trace n a pas d attribut stroke) */
 /* 12/09 fondateur : le geste Changez apparait en fondu au moment ou le mur commence a changer (classe qb-changement posee au lancement du mur) */
 .qb-gestes .qb-geste-changez,.qb-gestes .qb-gestes-liste > li:nth-last-child(2){opacity:0} /* 12/09 : la fleche qui precede Changez suit le meme fondu */
 .qb-gestes.qb-changement .qb-geste-changez,.qb-gestes.qb-changement .qb-gestes-liste > li:nth-last-child(2){animation:qb-fondu 1.4s ease-out forwards;animation-delay:var(--t-changement,0s)}
@@ -201,6 +214,8 @@
 .qz-header.qz-menu-visible.qb-seq .qb-b1{overflow:hidden}
 .qz-header.qz-menu-visible.qb-seq .qb-b1 .qb-l{animation:none;opacity:1}
 .qz-header.qz-menu-visible.qb-seq .qb-b1 .qb-li{transform:translateX(-105%);animation:qz-sortir .6s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--qz-ta,0s)}
+@keyframes qz-rideau{from{clip-path:inset(0 0 100% 0);opacity:.6}to{clip-path:inset(0 0 0 0);opacity:1}}
+@media (prefers-reduced-motion:reduce){.qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{animation:none}}
 @keyframes qz-sortir{from{transform:translateX(-105%);opacity:.5}to{transform:none;opacity:1}}
 .qz-header.qz-menu-visible.qb-seq .qz-cat .qz-l,.qz-header.qz-menu-visible.qb-seq .qz-naming .qz-l{animation:none;opacity:1}
 .qz-header.qz-menu-visible.qb-seq .qz-cat{opacity:0;animation:qb-monter .5s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--qz-tb,0s)}
@@ -230,6 +245,17 @@
 /* 12/09 fondateur : plus aucune animation hors le visuel du mur (sequence.actif = false) -- le bloc logo est fixe */
 .qz-header.qb-sans-anim .qz-logorow *,.qz-header.qb-sans-anim .qb-b1 .qb-l{animation:none!important;opacity:1!important}
 
+/* ===== 12/09 fondateur : bouton « remonter » en orange, fleche blanche ; effet reflet (comme les boutons du bandeau) au survol du bouton
+   « remonter » et de la bulle de contact flottante (accueil pour l instant). !important : commun.css et le panneau posent leurs couleurs. */
+.qz-fab{background:var(--qz-terracotta,#d96c2f)!important;border-color:var(--qz-terracotta,#d96c2f)!important;overflow:hidden}
+.qz-fab svg{stroke:#ffffff!important}
+.qz-fab:hover,.qz-fab:focus-visible{background:var(--qz-terracotta,#d96c2f)!important;border-color:var(--qz-terracotta,#d96c2f)!important}
+.qz-fab::after,.qz-bulle-contact::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-45%;width:38%;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%);transform:translateX(-120%) skewX(-18deg);opacity:0}
+.qz-bulle-contact{overflow:hidden}
+.qz-fab:hover::after,.qz-bulle-contact:hover::after{animation:qb-reflet .75s cubic-bezier(.4,0,.2,1) forwards}
+@media (prefers-reduced-motion:reduce){.qz-fab:hover::after,.qz-bulle-contact:hover::after{animation:none}}
+
 /* ===== 11/09, demande fondateur : menu en boutons visibles dans la barre du haut (accueil seulement pour l'instant).
    bandeau-relief.js deplace le panneau #qzNavPanel dans .qz-header et pose la classe qz-menu-visible. Sur bureau : liens en ligne
    a droite, burger cache, sous-menu "Comment ca marche" en liste deroulante. Sous 900 px : burger + panneau depliant, comme avant. */
@@ -245,24 +271,29 @@
   .qz-header.qz-menu-visible .qz-hassub{position:relative}
   .qz-header.qz-menu-visible .qz-sublist{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;max-height:none;overflow:visible;display:none;padding:8px 0;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.35);z-index:70}
   .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
+  /* 12/09 fondateur : ouverture en « rideau » -- la carte se deroule du haut vers le bas (choix D) */
+  .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{animation:qz-rideau .28s cubic-bezier(.2,.8,.3,1);transform-origin:top}
   .qz-header.qz-menu-visible .qz-sublist a{font-family:'Jura',sans-serif;font-weight:700;text-transform:none;letter-spacing:.02em;font-size:14px;padding:9px 16px;text-align:left} /* 11/09 fondateur : menu et sous-menu en Jura */
+  /* 12/09 fondateur : carte du sous-menu en orange, liens blancs, navy au survol */
+  .qz-header.qz-menu-visible .qz-sublist{background:var(--qz-terracotta,#d96c2f)!important;border:2px solid #dedede} /* 12/09 fondateur : cadre gris clair (blanc essaye puis remplace) */
+  .qz-header.qz-menu-visible .qz-sublist a{color:#fff!important}
+  .qz-header.qz-menu-visible .qz-sublist a:hover{color:#1e2b35!important}
 }
 /* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil).
    !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
-.qz-header.qz-menu-visible{background:#dedede!important}
+.qz-header.qz-menu-visible{background:transparent!important} /* 12/09 : le gris est peint par le bord haut du bandeau (.qb-bord-haut), jusque sous le menu */
 .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#1e2b35!important}
 .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#1e2b35!important} /* 11/09 : plus de grille, tesselles du Q en navy + orange */
 .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
-.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:#e2725b!important}
-.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:#1e2b35}
+.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:var(--qz-terracotta,#d96c2f)} /* 12/09 fondateur : fleche du sous-menu en orange */
 .qz-header.qz-menu-visible .qz-burger{background:#1e2b35}
 /* bandeau defilant sous la bande des gestes (bandeau-gestes.js) : l ancien .ticker de la page est remplace */
-.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:9px 0;font-family:'Quicksand',sans-serif;container-type:inline-size;--pente-defile-bas:13.4cqw}
+.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:9px 0;font-family:'Quicksand',sans-serif}
 .qb-defile-fenetre{overflow:hidden} /* 12/09 : le rognage passe sur une fenetre interieure pour laisser deborder le decroche du bas */
 /* 12/09 fondateur : decroche en miroir en bas a droite du bandeau defilant (navy qui descend sous le bandeau, pente vers 13,4 % depuis la droite) ; lisere orange essaye puis retire le 12/09 */
-.qb-defile::after{content:"";position:absolute;left:0;top:calc(100% - 1px);width:100%;height:calc(var(--entete,80px) * .291 + 1px);pointer-events:none;transform:scaleX(-1);
-  background:linear-gradient(#1e2b35,#1e2b35) left top / calc(var(--pente-defile-bas) + 1px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44.4' height='11.43' viewBox='130.6 55.07 44.4 11.43'%3E%3Cpath fill='%231e2b35' d='M 424.5888 55.07339 L 216.2348 55.07339 L 165.0783 55.11194 C 164.6799 55.11194 164.2867 55.12518 163.8986 55.15155 C 163.5435 55.17328 163.1734 55.20947 162.7883 55.26025 C 162.4246 55.30832 162.0679 55.36661 161.7182 55.43494 C 161.3262 55.51288 160.9567 55.59818 160.6098 55.69092 C 160.2142 55.79996 159.849 55.91241 159.5143 56.02817 C 159.1245 56.16562 158.7597 56.30917 158.42 56.4588 C 158.097 56.60037 157.7747 56.75711 157.453 56.92908 C 157.1001 57.11935 156.7729 57.31335 156.4713 57.51111 C 156.1998 57.68857 155.9423 57.87717 155.6988 58.0769 L 148.8487 63.54968 C 148.6052 63.74948 148.3477 63.93802 148.0763 64.11545 C 147.7746 64.3132 147.4473 64.50723 147.0946 64.69751 C 146.7729 64.86954 146.4505 65.02621 146.1275 65.16776 C 145.7878 65.31741 145.423 65.46103 145.0333 65.59842 C 144.6985 65.71426 144.3333 65.82663 143.9377 65.93564 C 143.5908 66.02847 143.2214 66.11374 142.8294 66.19162 C 142.4797 66.25998 142.123 66.31827 141.7592 66.3663 C 141.3741 66.41641 141.004 66.45267 140.6488 66.47501 L -78.04984 66.3663 L -78.04984 15.875 L 424.5888 15.875 L 424.5888 22.81961 C 424.5962 22.93204 424.5998 23.04376 424.5998 23.15482 L 424.5888 55.07339 Z'/%3E%3C/svg%3E") calc(var(--pente-defile-bas) - 20px) top / auto 100% no-repeat}
-@media (max-width:900px){.qb-defile::after{display:none}}
+.qb-bord-defile-bas{top:calc(100% - 4px);height:calc(var(--decroche-h,22px) + 4px);transform:scale(-1,-1)}
+
 .qb-defile-piste{display:flex;width:max-content;animation:qb-defiler var(--qb-defile-duree,28s) linear infinite}
 .qb-defile span{font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:0 34px;border-right:1px solid rgba(244,241,234,.22);white-space:nowrap}
 @keyframes qb-defiler{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -277,3 +308,4 @@
   .qz-header.qz-menu-visible{row-gap:0}
   .qz-header.qz-menu-visible .qz-navpanel{grid-column:1/-1;width:100%;margin:0}
 }
+@media (max-width:900px){.qz-header.qz-menu-visible{background:#dedede!important}} /* 12/09 : sans onglet dessine (mobile), la barre reprend son gris ; apres la regle transparente pour la surcharger */
