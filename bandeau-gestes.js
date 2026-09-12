@@ -19,13 +19,15 @@
   var bande = document.createElement('div'); bande.className = 'qb-gestes qb-gestes-' + REGLAGES.variante;
   bande.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' + SYMBOLES + '</defs></svg><ul class="qb-gestes-liste">' +
     REGLAGES.gestes.map(function (g, i) { return (i ? '<li class="qb-geste-fleche" aria-hidden="true"><svg><use href="#qg-fleche"></use></svg></li>' : '') + '<li class="qb-geste qb-geste-' + g.icone + '"><svg class="qb-geste-icone" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#qg-' + g.icone + '"></use></svg><h3>' + g.titre + '</h3><p>' + g.texte + '</p></li>'; }).join('') + '</ul>';
+  Array.prototype.forEach.call(bande.querySelectorAll('.qb-gestes-liste > li'), function (li, i) { li.style.setProperty('--i', i); });
   qb.insertAdjacentElement('afterend', bande);
   if (REGLAGES.defile && REGLAGES.defile.textes.length) {
     var defile = document.createElement('div'); defile.className = 'qb-defile'; defile.setAttribute('aria-hidden', 'true'); defile.style.setProperty('--qb-defile-duree', REGLAGES.defile.duree + 's');
-    var piste = REGLAGES.defile.textes.map(function (t) { return '<span>' + t + '</span>'; }).join(''); defile.innerHTML = '<div class="qb-defile-piste">' + piste + piste + '</div>'; /* deux fois : la piste defile d une moitie puis reboucle sans a-coup */
+    var piste = REGLAGES.defile.textes.map(function (t) { return '<span>' + t + '</span>'; }).join(''); defile.innerHTML = '<div class="qb-defile-fenetre"><div class="qb-defile-piste">' + piste + piste + '</div></div>'; /* deux fois : la piste defile d une moitie puis reboucle sans a-coup */
     bande.insertAdjacentElement('afterend', defile);
   }
   /* couleurs du bandeau (variables posees sur #qbBandeau par bandeau-relief.js) reprises sur la bande, des que le mur est construit */
-  function couleurs() { ['--fond', '--couleur1', '--couleur2'].forEach(function (v) { var val = qb.style.getPropertyValue(v); if (val) bande.style.setProperty(v, val); }); }
+  function couleurs() { ['--fond', '--couleur1', '--couleur2', '--entete'].forEach(function (v) { var val = qb.style.getPropertyValue(v); if (val) { bande.style.setProperty(v, val); var df = document.querySelector('.qb-defile'); if (df) df.style.setProperty(v, val); } }); }
   couleurs(); if (window.ResizeObserver) new ResizeObserver(couleurs).observe(qb);
+  window.dispatchEvent(new Event('resize')); /* la bande et le bandeau defilant existent : bandeau-relief.js recalcule la hauteur disponible pour le mur */
 })();

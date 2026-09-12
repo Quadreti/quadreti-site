@@ -2,6 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<!-- 12/09 : anti-flash de la sequence d accueil (bandeau-relief.js). Sur bureau, les textes animes (logo, menu, titre, boutons, icones)
+     sont invisibles des le premier rendu, jusqu au depart de la sequence -- sinon ils s affichaient fixes, disparaissaient, puis s animaient.
+     Retire par bandeau-relief.js (sequence ou pas), filet de securite 25 s. -->
+<script>(function(){try{if(window.matchMedia('(min-width:901px)').matches&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){document.documentElement.classList.add('qb-attente','qb-attente-icones');setTimeout(function(){document.documentElement.classList.remove('qb-attente','qb-attente-icones');},25000);}}catch(e){}})();</script>
+<style>html.qb-attente .qz-header .qz-naming,html.qb-attente .qz-header .qz-cat,html.qb-attente .qz-header .qb-b1,html.qb-attente .qz-navpanel>ul>li,html.qb-attente .qb-b2,html.qb-attente .qb-para,html.qb-attente .qb-ctas .cta,html.qb-attente-icones .qb-gestes-liste>li{opacity:0}</style>
 <!-- GARDE-ACCES-DEBUT -->
 <script>
 (function(){
@@ -655,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function(){
        Les anciens textes .h-line et le bouton pause n'ont plus lieu d'etre : les baselines font partie du bloc. Les fichiers
        video restent dans video/ pour retour arriere (git revert). -->
   <div class="qb" id="qbBandeau" aria-hidden="true"></div>
-  <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="hero_cta">Composer mon mur</a>
+  <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="hero_cta">Ouvrir le Studio</a><!-- 11/09 soir : « Composer mon mur » -> « Ouvrir le Studio » (fondateur), l outil s appelle le Studio -->
 
 </div>
 
