@@ -5,7 +5,7 @@
    - menu en boutons Jura sur la ligne du naming, sous-menu orange a cadre gris qui s ouvre en rideau ; sous 900 px : burger + panneau.
    Calage (hauteur, marges) : qzEnteteInit dans commun-bandeau.js. Jetons : --qz-lisere, --qz-lisere-ep (commun.css), --qz-onglet (JS).
    !important : le panneau du site (reglages-site.js) injecte ses propres couleurs et regles de menu, l en-tete commune doit passer devant. */
-.qz-header{--qz-onglet:98px}
+.qz-header{--qz-onglet:98px;--qz-terracotta-texte:#9c4514} /* orange en TEXTE sur la barre grise : version foncee lisible (audit 12/09, contraste 4,8) ; l orange de marque reste sur les fonds */
 /* onglet : dessin entier etire en largeur et en hauteur, sous le contenu de la barre (z-index -1 dans le contexte de la barre) */
 .qz-onglet{position:absolute;left:0;top:0;width:100%;height:var(--qz-onglet,98px);z-index:-1;display:block;overflow:visible;pointer-events:none}
 .qz-onglet-fond{fill:#dedede}
@@ -24,7 +24,7 @@
 .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{font-size:27px;line-height:1}
 /* 12/09 fondateur : point du i cale sur la barre du t (centre 0,715 em au-dessus de la ligne de base, mesure sur la police) et centre sur le fut du i (0,07 em de large) */
 .qz-header.qz-menu-visible{--qz-point-x:.14em;--qz-point-y:.969em;--qz-point-t:.07em}
-.qz-header.qz-menu-visible .qz-cat{font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em!important;color:var(--qz-terracotta,#d96c2f);margin-top:0;text-transform:none} /* 12/09 : categorie en orange, 3e ligne, sur la tesselle orange */
+.qz-header.qz-menu-visible .qz-cat{font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em!important;color:var(--qz-terracotta-texte,#9c4514);margin-top:0;text-transform:none} /* 12/09 : categorie en orange, 3e ligne, sur la tesselle orange */
 .qz-header.qz-menu-visible .qz-accroche{display:block;font-family:'Jura',sans-serif;font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em;color:#1e2b35;white-space:nowrap}
 @media (max-width:900px){.qz-header.qz-menu-visible .qz-accroche{display:none}}
 /* hors accueil, l animation du logo (logo-v5.css, une fois par session) : l accroche arrive apres la derniere lettre du naming */
@@ -69,6 +69,11 @@
   .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-size:11.5px;letter-spacing:.04em;padding:8px 8px}
   .qz-header.qz-menu-visible{padding-top:10px;padding-bottom:10px}
 }
+@media (min-width:901px) and (max-width:1100px){
+  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-size:10px;letter-spacing:0;padding:7px 4px}
+  .qz-header.qz-menu-visible{gap:10px}
+  .qz-header.qz-menu-visible .qz-navpanel>ul{gap:0}
+} /* 12/09 audit : sous 1100 px les huit rubriques restent sur une ligne sans passer sous le logo (place apres le bloc 1440 px, qu il surcharge) */
 @media (max-width:900px){
   .qz-header.qz-menu-visible{row-gap:0}
   .qz-header.qz-menu-visible .qz-navpanel{grid-column:1/-1;width:100%;margin:0}

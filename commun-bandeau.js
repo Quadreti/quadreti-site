@@ -49,13 +49,14 @@ document.write(
         '<ul class="qz-sublist">' +
           '<li><a href="/quadreti-guide-interactif.html">Guide de l\'app</a></li>' +
           '<li><a href="/quadreti-guide-codification.html">Guide de montage</a></li>' +
+          /* 13/09 fondateur : menu reduit de 8 a 6 rubriques -- FAQ et Livraison rejoignent le sous-menu (a synchroniser avec menu_liens en base) */
+          '<li><a href="/index.html#faq">FAQ</a></li>' +
+          '<li><a href="/index.html#livraison">Livraison &amp; paiement</a></li>' +
         '</ul>' +
       '</li>' +
       '<li><a href="/boutique/">Boutique</a></li>' +
-      '<li><a href="/blog/">Blog</a></li>' +
       '<li><a href="/outils.html">Nos outils</a></li>' +
-      '<li><a href="/index.html#livraison">Livraison &amp; paiement</a></li>' +
-      '<li><a href="/index.html#faq">FAQ</a></li>' +
+      '<li><a href="/blog/">Blog</a></li>' +
       '<li><a href="/contact.html">Contact</a></li>' +
     '</ul>' +
   '</nav>' +

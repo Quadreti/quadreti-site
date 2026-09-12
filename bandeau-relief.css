@@ -259,3 +259,21 @@
 @keyframes qb-defiler{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.qb-defile-piste{animation:none}}
 .hero ~ .ticker,.ticker{display:none!important}
+/* ===== 13/09 fondateur : diaporama a la place du mur en tesselles (bandeau-relief.js, construireDiapo). Cadre 3:2 = format des photos,
+   la photo carree s affiche entiere dedans ; fondu croise pilote par des keyframes generees (--anim par image, periode --P, depart --tc). ===== */
+.qb-mur.qb-mur-diapo{display:block;height:auto;padding:0;gap:0} /* plus de grille de carreaux : un seul cadre */
+.qb.qb-dispo-droite .qb-mur.qb-mur-diapo{width:min(60cqw, calc((var(--mur-max,38vh) - 21px) * 1.5));max-width:100%} /* 21 px = la rangee de points sous le cadre */
+/* 13/09 fondateur (essai) : cadre orange de l epaisseur du lisere des sections (3 px), a la place de la marge grise #dedede et lisere orange de meme epaisseur a l exterieur (--diapo-marge) */
+.qb-diapo{--diapo-marge:var(--qz-lisere-ep,3px);--diapo-lisere:0px;position:relative;box-sizing:content-box;width:calc(100% - 2 * var(--diapo-marge));aspect-ratio:3/2;border:var(--diapo-marge) solid var(--qz-lisere,var(--qz-terracotta,#d96c2f));border-radius:4px;overflow:hidden;background:#162129;box-shadow:0 14px 34px rgba(0,0,0,.35)} /* 13/09 : lisere orange essaye (6 puis 3 px) puis retire ; marge grise #dedede gardee (--diapo-lisere conserve en reglage, 0 = sans) */
+.qb-diapo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;display:block;transition:opacity var(--fondu,1s) ease}
+.qb-diapo-img.qb-visible{opacity:1}
+.qb-diapo-img.qb-carre{object-fit:contain}
+/* points du diaporama (13/09 fondateur) : un par photo, centres sous le cadre, l actuel en orange ; petites tesselles 9 px */
+.qb-diapo{outline:none}
+.qb-diapo:focus-visible{box-shadow:0 0 0 3px var(--qz-terracotta,#d96c2f),0 14px 34px rgba(0,0,0,.35)}
+.qb-diapo-points{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.qb-diapo-point{width:9px;height:9px;padding:0;border:0;border-radius:2px;background:#dedede;opacity:.5;cursor:pointer;transition:opacity .15s,background .15s}
+.qb-diapo-point:hover,.qb-diapo-point:focus-visible{opacity:1;outline:none}
+.qb-diapo-point.qb-actif{background:var(--qz-terracotta,#d96c2f);opacity:1}
+@media (max-width:900px){.qb.qb-dispo-droite .qb-mur.qb-mur-diapo{width:100%}}
+@media (prefers-reduced-motion:reduce){.qb-diapo-img{transition:none}}

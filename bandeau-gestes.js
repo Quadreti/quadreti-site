@@ -5,7 +5,7 @@
   'use strict';
   var REGLAGES = {
     /* bandeau defilant sous la bande (11/09 fondateur, fond #1e2b35) : phrases a definir ensemble, celles de l ancien bandeau en attendant */
-    defile: { textes: ['Conception et fabrication françaises', 'Sans colle, sans détérioration', 'Une imprimante de salon suffit', 'Changez de décor quand vous voulez'], duree: 28 },
+    defile: { textes: ['Conception et fabrication françaises', 'Livraison en point relais', 'Paiement sécurisé'], duree: 24 }, /* 13/09 fondateur : le bandeau defilant porte la reassurance (ce qui n est dit nulle part ailleurs), plus les gestes deja dits dans le bloc logo et la bande */
     variante: 'B', /* 'A' = dans la continuité du bandeau (navy), 'B' = sur le fond de page, 'C' = bande crème posée sur le navy */
     gestes: [
       { icone: 'composez', titre: 'Composez', texte: 'Sur téléphone ou ordinateur, composez votre visuel dans l\x27app Quadreti Designer.' },
