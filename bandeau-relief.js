@@ -48,7 +48,7 @@
     var couleur = (!L.couleur || L.couleur === 'accent') ? accent : L.couleur; var navy = (REGLAGES.couleurs && REGLAGES.couleurs.fond) || '#1e2b35';
     document.documentElement.style.setProperty('--lisere-couleur', couleur); document.documentElement.style.setProperty('--lisere-ep', (L.actif ? (L.epaisseur || 3) : 0));
     var poser = function (parent, nom, classe, fill) { if (!parent || parent.querySelector('.' + classe)) return; parent.insertBefore(bordElement(nom, classe, fill), parent.firstChild); parent.appendChild(bordElement(nom, classe + ' qb-bord-ligne', fill, true)); };
-    poser(root, 'haut', 'qb-bord-haut', '#dedede');
+    /* 12/09 : l onglet du haut (BORD 1) est dessine par l en-tete commune (commun-bandeau.js), plus par le bandeau */
     var bande = document.querySelector('.qb-gestes'), defile = document.querySelector('.qb-defile');
     poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', navy); poser(defile, 'defile', 'qb-bord-defile-bas', navy);
     var dec = (L.reflet && L.reflet.mode !== 'changement' && L.reflet.decalage) || 0; ['qb-bord-haut', 'qb-bord-bas', 'qb-bord-defile-haut', 'qb-bord-defile-bas'].forEach(function (k, i) { var r = document.querySelector('.qb-bord-ligne.' + k + ' .qb-bord-reflet'); if (r) r.style.animationDelay = (i * dec) + 's'; });
@@ -193,6 +193,7 @@
     if (!b1) return; var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
     if (droite && large && wmCol) { var catEl = wmCol.querySelector('.qz-cat'); if (b1.parentNode !== wmCol) { if (catEl) wmCol.insertBefore(b1, catEl); else wmCol.appendChild(b1); } } /* 12/09 : accroche en 2e ligne, categorie (orange) en 3e */
     else if (colTexte && b1.parentNode !== colTexte) colTexte.insertBefore(b1, colTexte.firstChild);
+    if (menu) menu.classList.toggle('qz-b1-dans-entete', !!(droite && large && wmCol)); /* 12/09 : l accroche statique de l en-tete commune s efface quand l accroche animee est dans le bloc */
   }
   function caler() {
     placerAccroche();

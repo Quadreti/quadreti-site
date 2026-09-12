@@ -1,3 +1,4 @@
+/* 12/09 : les regles de l en-tete (barre, onglet, bloc logo, menu visible, sous-menu) sont parties dans entete-commun.css, commun a toutes les pages. Ne restent ici que la sequence d accueil et l accroche animee. */
 @import url("https://fonts.googleapis.com/css2?family=Jura:wght@400;700&display=swap");
 /* QuadretI — bandeau d'accueil "carreaux 7x7 en relief", CSS pur (10/09/2026, demande fondateur : remplace la vidéo
    Changez, 18 à 22 Mo par version). Source des réglages : SITE\POLICE PROPRIETAIRE\bandeau-relief-outil.html (réglages par
@@ -93,7 +94,7 @@
    toute la largeur : partie droite = hauteur de la barre (--entete, posee par bandeau-relief.js), partie gauche 29 % plus basse, raccord en pente douce. */
 .qb.qb-dispo-droite{--entete:80px}
 .qb.qb-dispo-droite{--decroche:33.5%} /* position du decroche : la pente finit a cette fraction de la largeur (fondateur : ~29-32 %) */
-/* 12/09 : bords = vrais <svg> dans la page (bandeau-relief.js, bordElement), forme + ligne du bord libre ; la barre du menu est transparente sur l accueil, c est le bord haut qui peint le gris */
+/* 12/09 : bords = vrais <svg> dans la page (bandeau-relief.js, bordElement), forme + ligne du bord libre. L onglet du haut (BORD 1) est desormais dessine par l en-tete commune (commun-bandeau.js / entete-commun.css) */
 .qb-bord{position:absolute;left:0;width:100%;display:block;pointer-events:none}
 .qb-bord.qb-bord-ligne{z-index:5;overflow:visible}
 /* 12/09 piste B : reflet qui voyage le long du lisere (tiret court sur un second trace, longueur normalisee a 1000, va d un bout a l autre puis pause) */
@@ -109,18 +110,10 @@
 @keyframes qb-reflet-ligne{0%{stroke-dashoffset:var(--reflet-tiret,60)}32%{stroke-dashoffset:-1000}100%{stroke-dashoffset:-1000}}
 @media (prefers-reduced-motion:reduce){.qb-bord-reflet{animation:none;visibility:hidden}} /* 12/09 : la ligne du bord libre est un calque a part, au premier plan, qui peut deborder (sinon rognee sur les parties plates) */
 .qb-bord-trait{stroke:var(--lisere-couleur,#d96c2f);stroke-width:var(--lisere-ep,0)}
-.qb-bord-haut{top:0;height:var(--onglet,98px);z-index:0}
 .qb.qb-dispo-droite .qb-col{position:relative;z-index:1}
 /* 11/09 fondateur, proposition D3 du mock-up : l accroche rejoint le bloc logo de la barre (bandeau-relief.js la deplace dans .qz-wm-col),
    sous la categorie, alignee sur le naming. Q de 88 px, trois lignes a hauteur egale (naming 36 px, categorie navy et accroche orange en
    Jura gras 19 px sur 26 px), la tesselle orange du Q sur la ligne de l accroche. */
-.qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{--t:66px} /* 11/09 soir : bloc reduit d un quart (88 -> 66), trop gros face au titre du bandeau */
-.qz-header.qz-menu-visible .qz-logorow{gap:14px;align-items:flex-start}
-.qz-header.qz-menu-visible .qz-wm-col{gap:0;height:66px;justify-content:flex-start;margin-top:3px} /* 12/09 : bloc texte descendu de 3 px, centre de la categorie = centre de la tesselle orange */
-.qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{font-size:27px;line-height:1}
-/* 12/09 fondateur : point du i cale sur la barre du t (centre 0,715 em au-dessus de la ligne de base, mesure sur la police) et centre sur le fut du i (0,07 em de large) */
-.qz-header.qz-menu-visible{--qz-point-x:.14em;--qz-point-y:.969em;--qz-point-t:.07em}
-.qz-header.qz-menu-visible .qz-cat{font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em!important;color:var(--qz-terracotta,#d96c2f);margin-top:0;text-transform:none} /* 12/09 : categorie en orange, 3e ligne, sur la tesselle orange */
 .qz-header.qz-menu-visible .qb-b1{display:block;width:auto;padding:0;margin:0;position:static;pointer-events:none;font-family:'Jura',sans-serif;font-weight:700;font-size:14.5px;line-height:19.5px;letter-spacing:.02em;color:#1e2b35;text-transform:none;white-space:nowrap;filter:none} /* 12/09 : accroche en navy, 2e ligne */
 .qz-header.qz-menu-visible .qb-b1 .qb-li{margin:0;line-height:inherit;letter-spacing:inherit;text-transform:none;white-space:nowrap;filter:none}
 .qz-header.qz-menu-visible .qb-b1 .qb-l{display:inline-block;opacity:0;animation:qb-clipser-l .45s cubic-bezier(.3,1.55,.5,1) forwards;animation-delay:calc(var(--qz-ta,.3s) + var(--i) * var(--ln,.3s))} /* --qz-ta : depart de l accroche dans la sequence generale */
@@ -153,7 +146,6 @@
 @media (max-width:900px){
   .qb.qb-dispo-droite{flex-direction:column;gap:2.5cqw;padding:3cqw 4cqw 4cqw}
   .qb.qb-dispo-droite .qb-col{align-items:center;flex:none;width:100%}
-  .qb-bord-haut{display:none}
   .qb.qb-dispo-droite .qb-textes{text-align:center;justify-items:center}
   .qb.qb-dispo-droite .qb-para{text-align:center}
   .qb.qb-dispo-droite .qb-ctas{justify-content:center}
@@ -256,38 +248,6 @@
 .qz-fab:hover::after,.qz-bulle-contact:hover::after{animation:qb-reflet .75s cubic-bezier(.4,0,.2,1) forwards}
 @media (prefers-reduced-motion:reduce){.qz-fab:hover::after,.qz-bulle-contact:hover::after{animation:none}}
 
-/* ===== 11/09, demande fondateur : menu en boutons visibles dans la barre du haut (accueil seulement pour l'instant).
-   bandeau-relief.js deplace le panneau #qzNavPanel dans .qz-header et pose la classe qz-menu-visible. Sur bureau : liens en ligne
-   a droite, burger cache, sous-menu "Comment ca marche" en liste deroulante. Sous 900 px : burger + panneau depliant, comme avant. */
-@media (min-width:901px){
-  /* !important : le panneau du site injecte ses propres regles de menu (position fixe, colonnes de grille, fond) ; ici le menu vit dans la barre */
-  .qz-header.qz-menu-visible{display:flex!important;justify-content:space-between;align-items:center;gap:24px}
-  .qz-header.qz-menu-visible .qz-logorow{flex:none;margin:0}
-  .qz-header.qz-menu-visible .qz-burger{display:none}
-  .qz-header.qz-menu-visible .qz-navpanel{position:static!important;flex:0 1 auto;margin:0 0 0 auto;max-height:none!important;overflow:visible!important;background:transparent!important;width:auto;z-index:auto;transition:none}
-  .qz-header.qz-menu-visible .qz-navpanel>ul{flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;padding:0;gap:2px}
-  .qz-header.qz-menu-visible .qz-navpanel>ul>li{width:auto;max-width:none}
-  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-family:'Jura',sans-serif;font-weight:700;font-size:13.5px;text-transform:uppercase;letter-spacing:.06em;line-height:1.2;padding:9px 12px;width:auto;border-radius:4px}
-  .qz-header.qz-menu-visible .qz-hassub{position:relative}
-  .qz-header.qz-menu-visible .qz-sublist{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;max-height:none;overflow:visible;display:none;padding:8px 0;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.35);z-index:70}
-  .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0}
-  /* 12/09 fondateur : ouverture en « rideau » -- la carte se deroule du haut vers le bas (choix D) */
-  .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{animation:qz-rideau .28s cubic-bezier(.2,.8,.3,1);transform-origin:top}
-  .qz-header.qz-menu-visible .qz-sublist a{font-family:'Jura',sans-serif;font-weight:700;text-transform:none;letter-spacing:.02em;font-size:14px;padding:9px 16px;text-align:left} /* 11/09 fondateur : menu et sous-menu en Jura */
-  /* 12/09 fondateur : carte du sous-menu en orange, liens blancs, navy au survol */
-  .qz-header.qz-menu-visible .qz-sublist{background:var(--qz-terracotta,#d96c2f)!important;border:2px solid #dedede} /* 12/09 fondateur : cadre gris clair (blanc essaye puis remplace) */
-  .qz-header.qz-menu-visible .qz-sublist a{color:#fff!important}
-  .qz-header.qz-menu-visible .qz-sublist a:hover{color:#1e2b35!important}
-}
-/* 11/09 fondateur : barre du haut gris clair #dedede, naming et rubriques du menu en navy #1e2b35 (accueil).
-   !important : le panneau du site injecte ses propres couleurs de logo et de menu en !important. */
-.qz-header.qz-menu-visible{background:transparent!important} /* 12/09 : le gris est peint par le bord haut du bandeau (.qb-bord-haut), jusque sous le menu */
-.qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#1e2b35!important}
-.qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#1e2b35!important} /* 11/09 : plus de grille, tesselles du Q en navy + orange */
-.qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
-.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
-.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:var(--qz-terracotta,#d96c2f)} /* 12/09 fondateur : fleche du sous-menu en orange */
-.qz-header.qz-menu-visible .qz-burger{background:#1e2b35}
 /* bandeau defilant sous la bande des gestes (bandeau-gestes.js) : l ancien .ticker de la page est remplace */
 .qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:9px 0;font-family:'Quicksand',sans-serif}
 .qb-defile-fenetre{overflow:hidden} /* 12/09 : le rognage passe sur une fenetre interieure pour laisser deborder le decroche du bas */
@@ -299,13 +259,3 @@
 @keyframes qb-defiler{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.qb-defile-piste{animation:none}}
 .hero ~ .ticker,.ticker{display:none!important}
-/* ecrans de portable (14 pouces) : liens plus serres pour que le menu tienne sur une ligne */
-@media (min-width:901px) and (max-width:1440px){
-  .qz-header.qz-menu-visible .qz-navpanel a,.qz-header.qz-menu-visible .qz-subtoggle{font-size:11.5px;letter-spacing:.04em;padding:8px 8px}
-  .qz-header.qz-menu-visible{padding-top:10px;padding-bottom:10px}
-}
-@media (max-width:900px){
-  .qz-header.qz-menu-visible{row-gap:0}
-  .qz-header.qz-menu-visible .qz-navpanel{grid-column:1/-1;width:100%;margin:0}
-}
-@media (max-width:900px){.qz-header.qz-menu-visible{background:#dedede!important}} /* 12/09 : sans onglet dessine (mobile), la barre reprend son gris ; apres la regle transparente pour la surcharger */
