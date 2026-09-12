@@ -6,11 +6,11 @@
   var REGLAGES = {
     cx: 4, cy: 2, ecart: 0, grilleFixe: true, disposition: 'droite', /* 11/09 fondateur : 4x2 pour occuper la largeur a hauteur egale (le mur est plafonne en hauteur pour tenir sur un 14 pouces) */ /* 'droite' = textes + bouton a gauche, mur a droite ; 'colonne' = textes au-dessus/dessous */ mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     visuels: ['/img/bandeau-changez-oeil.jpg', '/img/bandeau-changez-aurore.jpg'], ancrage: 'centre',
-    couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#e2725b', couleur2: '#f4f1ea' },
+    couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: '#e2725b', couleur2: '#f4f1ea', titre: '#f4f1ea' /* 12/09 : « Changez a volonte. » en creme (essai orange abandonne) */ },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
     depart: 0, dg: .2, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 2.3, lat: 75,
     zoom: { actif: false, x: 0, y: 0, facteur: 1, aller: 1.8, tenue: 1.3 },
-    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'ouverture', position: 'haut-bas', mode: 'clip', ln: .3, dn: .1,
+    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'ouverture', position: 'haut-bas', mode: 'aucun', /* 12/09 : 'clip' pour retrouver le clipsage lettre par lettre */ ln: .3, dn: .1,
       /* 11/09, disposition 'droite' (reference Pixel Corner) : accroche en capitales (baseline 1), gros titre (baseline 2), paragraphe, deux boutons */
       accroche: 1.15, titre: 4.6, /* tailles en cqw (bornees en px dans le CSS) */
       para: 'Un seul support, mille créations possibles. Imprimez, clipsez, changez de décor quand vous voulez.',
@@ -18,7 +18,11 @@
     /* 11/09 soir, fondateur : sequence generale de la page (en secondes) -- logo > naming > categorie > accroche > menu > titre > paragraphe > boutons > mur > icones.
        pas = intervalle entre deux tesselles du Q ; naming / cat / accroche / titre = intervalle entre deux lettres ; menu / icones = intervalle entre deux elements ;
        pause = respiration entre deux etapes ; pauseFin = tenue supplementaire du DERNIER visuel du mur avant de reboucler. */
-    sequence: { depart: .4, pas: .15, naming: .1, cat: .04, accroche: .07, menu: .12, titre: .07, pause: .25, icones: .25, pauseFin: 60,
+    /* 12/09 fondateur : essai d une photo en arriere-plan du bandeau (IMAGE.png -> img/bandeau-fond-salon.jpg, 1920 px). Voile navy plus fort a gauche
+       (lisibilite des textes) que sur le mur. image: null = fond navy uni. */
+    fond: { image: null, voileGauche: .84, voileDroite: .5, position: 'center 38%' }, /* essai abandonne le 12/09 (fondateur : « reviens en arriere ») : navy uni */
+    /* 12/09 fondateur : toutes les animations retirees sauf le visuel du mur -> actif: false (logo, textes, menu, icones fixes ; remettre true pour la sequence) */
+    sequence: { actif: true, portee: 'logo', /* 'logo' = seules les animations du bloc logo (tesselles, categorie qui sort, naming, accroche) ; 'tout' = sequence complete */ depart: .4, pas: .15, naming: .1, cat: .04, accroche: .07, menu: .12, titre: .07, pause: .25, icones: .25, pauseFin: 60,
       vie: 8, vieDuree: 1.6, vieSouleve: 1.3 /* pendant la pause finale : une tesselle se declipse / reclipse toutes les `vie` s (duree du geste, facteur de soulevement) */ }
   };
   var CASES = 7;
@@ -132,6 +136,7 @@
   lettres(root.querySelector('.qb-l1'), T.dispo === 'ligne' ? [T.l1, T.l2, T.l3].filter(Boolean).join(' ') : T.l1); lettres(root.querySelector('.qb-l2'), T.l2); lettres(root.querySelector('.qb-l3'), T.l3); lettres(root.querySelector('.qb-l4'), T.l4);
   /* variables */
   var C = REGLAGES.couleurs; Object.keys(C).forEach(function (k) { R.setProperty('--' + k, C[k]); });
+  var FD = REGLAGES.fond; if (FD && FD.image) { root.classList.add('qb-fond-photo'); R.setProperty('--fond-image', 'url("' + FD.image + '")'); R.setProperty('--voile-g', FD.voileGauche); R.setProperty('--voile-d', FD.voileDroite); R.setProperty('--fond-pos', FD.position || 'center'); }
   R.setProperty('--cases', CASES); R.setProperty('--cx', cx); R.setProperty('--cy', cy); R.setProperty('--ecart', REGLAGES.ecart + 'cqw');
   R.setProperty('--lum', REGLAGES.lum); R.setProperty('--ombre', REGLAGES.ombre); R.setProperty('--grain', REGLAGES.grain); R.setProperty('--relief', REGLAGES.relief + 'px'); R.setProperty('--txt-relief', REGLAGES.txtRelief);
   ['depart', 'dg', 'pause', 'A', 'H', 'Rt', 'E'].forEach(function (k) { R.setProperty('--' + k, REGLAGES[k] + 's'); }); R.setProperty('--lat', REGLAGES.lat + 'cqw');
@@ -141,6 +146,7 @@
   /* 11/09 : le menu (liens visibles, voir bandeau-relief.css) passe DANS la barre du haut, et le bord gauche du logo s'aligne sur celui de la colonne de textes */
   var menu = document.querySelector('.qz-header'); var nav = document.getElementById('qzNavPanel');
   if (menu && nav && nav.parentNode !== menu) { menu.appendChild(nav); menu.classList.add('qz-menu-visible'); }
+  if (menu && REGLAGES.sequence && REGLAGES.sequence.actif === false) menu.classList.add('qb-sans-anim');
   /* index des liens du menu (delais en cascade) ; le panneau du site (reglages-site.js, menu_liens) reconstruit la liste apres coup -> on re-indexe a chaque changement */
   function indexerMenu() { if (nav) Array.prototype.forEach.call(nav.querySelectorAll(':scope > ul > li'), function (li, i) { li.style.setProperty('--i-menu', String(i)); }); }
   indexerMenu(); if (nav && window.MutationObserver) new MutationObserver(indexerMenu).observe(nav, { childList: true, subtree: true });
@@ -149,7 +155,7 @@
   if (b1) b1.style.setProperty('--ln', T.ln + 's');
   function placerAccroche() {
     if (!b1) return; var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
-    if (droite && large && wmCol) { if (b1.parentNode !== wmCol) wmCol.appendChild(b1); }
+    if (droite && large && wmCol) { var catEl = wmCol.querySelector('.qz-cat'); if (b1.parentNode !== wmCol) { if (catEl) wmCol.insertBefore(b1, catEl); else wmCol.appendChild(b1); } } /* 12/09 : accroche en 2e ligne, categorie (orange) en 3e */
     else if (colTexte && b1.parentNode !== colTexte) colTexte.insertBefore(b1, colTexte.firstChild);
   }
   function caler() {
@@ -200,33 +206,42 @@
     /* 10/09 : les baselines apparaissent quand les tesselles commencent a repartir (fin de la tenue du visuel 1), l'une apres l'autre */
     /* 11/09 : 'ouverture' = les textes se clipsent des l'ouverture de la page (demande fondateur), 'depart' = quand les tesselles repartent, 'pose' = une fois le visuel 1 pose */
     var tl1 = T.quand === 'ouverture' ? REGLAGES.depart + .3 : T.quand === 'depart' ? complet + REGLAGES.H + zoomDur : complet + .3;
+    /* 12/09 fondateur : « Changez a volonte. » et le geste Changez apparaissent en fondu quand le mur commence a changer (depart du visuel 1) */
+    tChangement = complet + REGLAGES.H + zoomDur; R.setProperty('--t-changement', tChangement.toFixed(2) + 's');
     var lettresB1 = document.querySelector('.qb-l1').querySelectorAll('.qb-l').length; /* l accroche peut vivre dans la barre du haut */ var durB1 = T.mode === 'clip' || T.mode === 'dactylo' ? (lettresB1 - 1) * T.ln + .45 : T.dn;
     var tl4 = tl1 + durB1 + p;
     R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', tl4.toFixed(2) + 's');
   };
-  var completPose = 0, vivantes = [];
+  var completPose = 0, vivantes = [], tChangement = 0;
   var lanceDeja = false; var lancer = function () {
     lanceDeja = true; root.classList.add('qb-joue');
     /* icones pedagogiques : une par une, des que le premier visuel du mur est entierement pose */
-    var bande = document.querySelector('.qb-gestes'); if (bande && droite) { bande.style.setProperty('--t-icones', completPose.toFixed(2) + 's'); bande.style.setProperty('--icones-pas', ((REGLAGES.sequence && REGLAGES.sequence.icones) || .25) + 's'); bande.classList.add('qb-gestes-joue'); }
+    var bande = document.querySelector('.qb-gestes'); if (bande) { bande.style.setProperty('--t-changement', tChangement.toFixed(2) + 's'); bande.classList.add('qb-changement'); }
+    if (bande && droite && !(SEQ && (SEQ.actif === false || SEQ.portee === 'logo'))) { bande.style.setProperty('--t-icones', completPose.toFixed(2) + 's'); bande.style.setProperty('--icones-pas', ((REGLAGES.sequence && REGLAGES.sequence.icones) || .25) + 's'); bande.classList.add('qb-gestes-joue'); }
     document.documentElement.classList.remove('qb-attente-icones'); /* anti-flash (index.html) : les icones sortent de l attente au moment ou leur animation est posee */
   };
   /* 11/09 soir : sequence generale, calee sur le depart de l animation du logo (classe qz-anime posee par commun-bandeau.js).
      Toutes les etapes sont des delais CSS a partir de ce moment ; le mur part par minuteur a la fin des boutons. */
   var SEQ = REGLAGES.sequence, sequenceLancee = false;
   function demarrerSequence() {
-    if (sequenceLancee || !SEQ || !droite || !menu) return false; sequenceLancee = true;
+    if (sequenceLancee || !SEQ || SEQ.actif === false || !droite || !menu) return false; sequenceLancee = true;
     var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches; if (!large) return false;
     var s = SEQ, M = menu.style;
     var nAcc = document.querySelectorAll('.qb-l1 .qb-l').length || 27, nTitre = document.querySelectorAll('.qb-b2 .qb-l').length || 18, nMenu = nav ? nav.querySelectorAll(':scope > ul > li').length : 8;
     /* 12/09 fondateur : tesselles du Q, puis l accroche qui SORT de la tesselle (glisse depuis le Q), puis la categorie, puis le naming (apparitions simples) */
-    var t0 = s.depart + s.pause, t1 = t0 + 10 * s.pas + .55, ta = t1 + s.pause, tb = ta + .6 + s.pause, tn = tb + .5 + s.pause;
-    var tm = tn + .5 + s.pause, tt = tm + (nMenu - 1) * s.menu + .4 + s.pause, tp = tt + (nTitre - 1) * s.titre + .45 + .2, tb1 = tp + .5, tb2 = tb1 + .25, tw = tb2 + .5 + .4;
+    /* 12/09 : tesselles > categorie qui sort de la tesselle (ta) > naming (tn) > accroche (tb) */
+    var t0 = s.depart + s.pause, t1 = t0 + 10 * s.pas + .55, ta = t1 + s.pause, tn = ta + .6 + s.pause, tb = tn + .5 + s.pause;
+    var tm = tb + .5 + s.pause, /* (12/09 : tb = accroche, derniere ligne) */ tt = tm + (nMenu - 1) * s.menu + .4 + s.pause, tp = tt + (nTitre - 1) * s.titre + .45 + .2, tb1 = tp + .5, tb2 = tb1 + .25, tw = tb2 + .5 + .4;
     var sec = function (v) { return v.toFixed(2) + 's'; };
     M.setProperty('--qz-depart', sec(s.depart)); M.setProperty('--qz-dg', '0s'); M.setProperty('--qz-pause', sec(s.pause)); M.setProperty('--qz-pas', sec(s.pas)); M.setProperty('--qz-ln', sec(s.naming)); M.setProperty('--qz-lc', sec(s.cat));
     M.setProperty('--qz-t0', sec(t0)); M.setProperty('--qz-t1', sec(t1)); M.setProperty('--qz-tn', sec(tn)); M.setProperty('--qz-tb', sec(tb)); M.setProperty('--qz-ta', sec(ta)); M.setProperty('--qz-tm', sec(tm)); M.setProperty('--qz-menu-pas', sec(s.menu));
     if (b1) b1.style.setProperty('--ln', sec(s.accroche));
     R.setProperty('--ln', sec(s.titre)); R.setProperty('--tt', sec(tt)); R.setProperty('--tp', sec(tp)); R.setProperty('--tb1', sec(tb1)); R.setProperty('--tb2', sec(tb2));
+    if (s.portee === 'logo') {
+      /* seul le bloc logo s anime ; le reste est visible tout de suite, le mur part 1 s apres la derniere ligne du logo */
+      menu.classList.add('qb-seq-logo'); document.documentElement.classList.remove('qb-attente', 'qb-attente-icones');
+      setTimeout(lancer, Math.round((tb + .5 + 1) * 1000)); return true;
+    }
     menu.classList.add('qb-seq'); root.classList.add('qb-seq');
     document.documentElement.classList.remove('qb-attente'); /* anti-flash (index.html) : les animations qb-seq partent de l opacite 0, pas de saut */
     setTimeout(lancer, Math.round(tw * 1000));
