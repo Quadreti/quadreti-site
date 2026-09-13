@@ -1116,6 +1116,11 @@
   var CLE_POPUP_VUE = 'quadretiPopupVue';
 
   function appliquerPopup(p, palette, suit) {
+    /* 13/09, demande du fondateur : l encart promo ne s ouvre PLUS par-dessus une application. Il visait un visiteur qui decouvre
+       le site ; quelqu un qui entre dans un outil est deja venu pour travailler, et l encart lui tombe dessus au chargement. Les
+       pages d app se declarent par window.qzApp (elles s en servent deja pour leur logo dans la barre) : ce seul test les couvre
+       toutes, celles d aujourd hui et celles a venir. Le site public, lui, garde l encart tel quel. */
+    if (window.qzApp) return;
     if (!p || !p.actif) return;
     if (!p.titre && !p.texte) return; /* rien à montrer */
     var apercu = /[?&]apercu_popup=1\b/.test(location.search);
