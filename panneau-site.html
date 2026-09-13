@@ -714,6 +714,28 @@ var ZONES_FINES = [
    champs a part entiere a cote de Fond/Texte/Accent/Survol, toujours
    visibles et explicites. Voir CHAMPS_MAITRES plus bas. */
 
+/* ===== La palette officielle de la marque, 13/09. Source unique : SITE\DESIGN SYSTEME\CHARTE-QUADRETI.md, dont les valeurs ont ete
+   mesurees sur le site en ligne et les contrastes calcules. Ne modifier ici qu en modifiant la charte, et l inverse. ===== */
+var QUADRETI_COLOR = {
+  nom: 'Quadreti color',
+  couleurs: {
+    theme: 'actuel',
+    fond: '#dedede',              /* le gris du site */
+    fondBandeau: '#1e2b35',       /* le navy : bandeau, menu, pied de page */
+    texte: '#1e2b35',
+    titres: '#1e2b35',
+    accent: '#d96c2f',            /* l orange de marque : fonds et traits */
+    bouton: '#d96c2f',
+    survol: '#b8571f',
+    sousTitre: '#9c4514',         /* l orange EN TEXTE sur fond clair : l orange de marque n y passe pas */
+    enumerations: '#d96c2f',
+    arrierePlanTexte: '#ffffff',
+    logo: '#1e2b35',
+    mentionsKraft: '#dedede'
+  },
+  polices: { titres: 'Quicksand', texte: 'Quicksand' }
+};
+
 function rendreSectionPalette(){
   var c = Object.assign({ theme:'actuel', fond:'#F5F5F5', texte:'#2b353e', accent:'#e2725b', survol:'#cf6450' }, reglages.couleurs || {});
   var sec = Object.assign({ bandeau:true, accueil:true, widgets:true }, c.sections || {});
@@ -769,6 +791,18 @@ function rendreSectionPalette(){
     '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Palette maîtresse</b></p>' +
     '<h1 class="titre-section">Palette maîtresse</h1>' +
     '<p class="aide-section">S\'applique à tout le site.</p>' +
+
+    /* 13/09 : la palette officielle, en un clic. Elle remplit le formulaire ; c est le fondateur qui enregistre. */
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Palette officielle</h2></div>' +
+      '<p style="font-size:12.5px;color:var(--doux);margin:0 0 12px">Les couleurs de la charte de marque, mesurées sur le site en ligne. Le bouton remplit le formulaire ci-dessous — à enregistrer ensuite pour l\'appliquer.</p>' +
+      '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">' +
+        '<button id="btnCharte" style="font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:4px;padding:10px 18px;background:#d96c2f;color:#10181f">Charger « Quadreti color »</button>' +
+        '<span style="display:inline-flex;gap:5px">' +
+          ['#1e2b35','#dedede','#d96c2f','#ffffff','#9c4514'].map(function(h){ return '<span title="' + h + '" style="width:26px;height:26px;border-radius:4px;border:1px solid #00000022;background:' + h + '"></span>'; }).join('') +
+        '</span>' +
+      '</div>' +
+    '</div>' +
 
     '<div class="carte">' +
       '<div class="carte-entete"><h2>Palettes mémorisées</h2></div>' +
@@ -882,6 +916,20 @@ function rendreSectionPalette(){
       previsualiser();
     };
   });
+  /* 13/09 : remplit le formulaire avec la palette officielle. Meme mecanique que le chargement d un emplacement memorise :
+     on remplit et on previsualise, on n enregistre pas -- l enregistrement passe par la phrase de passe du fondateur. */
+  $('btnCharte').onclick = function(){
+    var q = QUADRETI_COLOR.couleurs;
+    [['cFond','fond'],['cTexte','texte'],['cAccent','accent'],['cSurvol','survol'],['cTitre','titres'],
+     ['cSousTitre','sousTitre'],['cBouton','bouton'],['cArrierePlanTexte','arrierePlanTexte'],['cFondBandeau','fondBandeau']].forEach(function(x){
+      var champ = $(x[0]); if (!champ) return;
+      champ.value = q[x[1]];
+      var etiq = $(x[0] + 'Hex'); if (etiq) etiq.textContent = q[x[1]];
+    });
+    var radio = document.querySelector('input[name=cTheme][value="' + q.theme + '"]'); if (radio) radio.checked = true;
+    toast('Palette « Quadreti color » chargée dans le formulaire — Enregistrer pour l\'appliquer.');
+    previsualiser();
+  };
   $('btnMemoriser').onclick = function(){
     var nom = $('memNom').value.trim();
     if (!nom) { toast('Donnez un nom à cette composition.', true); return; }
@@ -961,7 +1009,9 @@ function rendreSectionPaletteJeux(){
   chargerHistorique('couleurs_jeux', 'histo-couleurs-jeux', rendreSectionPaletteJeux);
 }
 
-var POLICES_DISPONIBLES = ['Quicksand','Karla','Nunito','Poppins','Jost','Comfortaa'];
+/* 13/09 : Jura ajoutee -- c est la police d interface de la marque (menus, etiquettes, noms d apps, baselines) et elle manquait de la
+   liste. Karla reste proposee mais ne fait plus partie du reglage officiel : elle ne servait plus qu a quinze liens du menu mobile. */
+var POLICES_DISPONIBLES = ['Quicksand','Jura','Karla','Nunito','Poppins','Jost','Comfortaa'];
 
 function rendreSectionPolices(){
   var p = Object.assign({ titres:'Quicksand', texte:'Karla' }, reglages.polices || {});
@@ -970,7 +1020,12 @@ function rendreSectionPolices(){
   $('editeur').innerHTML =
     '<p class="fil">Identité visuelle <span style="opacity:.5">/</span> <b>Polices</b></p>' +
     '<h1 class="titre-section">Polices</h1>' +
-    '<p class="aide-section">Quicksand et Karla sont les polices d\'origine du site.</p>' +
+    '<p class="aide-section">Quicksand porte le texte courant, Jura porte l\'interface — menus, étiquettes, noms d\'apps. Karla est un reste de l\'ancienne charte.</p>' +
+    '<div class="carte">' +
+      '<div class="carte-entete"><h2>Réglage officiel</h2></div>' +
+      '<p style="font-size:12.5px;color:var(--doux);margin:0 0 12px">Celui de la charte de marque. Le bouton remplit les deux champs — à enregistrer ensuite.</p>' +
+      '<button id="btnPolicesCharte" style="font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:4px;padding:10px 18px;background:#d96c2f;color:#10181f">Charger « Quadreti color »</button>' +
+    '</div>' +
     '<div class="carte">' +
       '<div class="grille-champs">' +
         '<div class="champ"><label>Titres</label><select id="pTitres">' + options(p.titres) + '</select></div>' +
@@ -983,6 +1038,12 @@ function rendreSectionPolices(){
   function previsualiser(){ envoyerApercu('polices', draft()); }
   $('pTitres').onchange = previsualiser;
   $('pTexte').onchange = previsualiser;
+  $('btnPolicesCharte').onclick = function(){
+    $('pTitres').value = QUADRETI_COLOR.polices.titres;
+    $('pTexte').value = QUADRETI_COLOR.polices.texte;
+    toast('Polices « Quadreti color » chargées — Enregistrer pour les appliquer.');
+    previsualiser();
+  };
   $('pEnregistrer').onclick = function(){
     var btn = this; btn.disabled = true; btn.textContent = 'Enregistrement…';
     enregistrer('polices', draft()).then(function(){ btn.disabled = false; btn.textContent = 'Enregistrer'; chargerHistorique('polices', 'histo-polices', rendreSectionPolices); });
