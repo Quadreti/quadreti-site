@@ -1,0 +1,68 @@
+/* QuadretI — en-tete des APPS (13/09/2026, demande fondateur : « apporte les modif des menu pour Number Pixel Quadreti, Canevas Quadreti,
+   Mosaique Quadreti, Photo Quadreti — leurs logo respectif, aucune baseline ni categorie pour les outils »).
+   Chargee par commun-bandeau.js UNIQUEMENT quand la page a declare window.qzApp avant lui. Se pose PAR-DESSUS entete-commun.css :
+   memes regles, surchargees par la classe .qz-app ajoutee sur le header.
+   Trois differences avec la barre du site, et trois seulement :
+     1. la barre est navy et la lettre grise -- l inverse du site (arbitrage fondateur du 13/09 sur la planche des logos) ;
+     2. le logo n est plus le Q de la marque mais l initiale de l app, en tesselles, une orange integree a la lettre ;
+     3. plus d accroche ni de categorie : pour un outil, le nom suffit.
+   Le menu, lui, ne change pas : ce sont les memes rubriques de site, aux memes adresses.
+   !important partout : reglages-site.js injecte ses propres couleurs de logo et de menu en !important, et son <style> arrive apres
+   celui-ci dans le document. La classe .qz-app fait la difference de specificite.
+   Planche de reference : « L alphabet Quadreti » (artifact). Alphabet dans commun-bandeau.js, objet QZ_ALPHABET. */
+
+/* ---- la plaque prend la largeur de sa lettre ----
+   Le Q tient dans un carre de 4 colonnes. Le M en demande 5, le R ta variante n en prend que 3. La hauteur ne bouge jamais : quatre
+   rangees, c est la regle de l alphabet. Le joint est fige en fraction de --t (et non en %) pour que la tesselle reste carree quel que
+   soit le nombre de colonnes -- un gap en % se resout sur la largeur, il se serait deforme des que la plaque cesse d etre carree. */
+.qz-plaque-lettre{gap:calc(var(--t) * .0386);grid-template-columns:repeat(var(--cols,4),1fr)}
+.qz-header .qz-plaque-lettre.qz-wordmark-img,
+.qz-header.qz-menu-visible .qz-plaque-lettre.qz-wordmark-img{
+  width:calc(var(--cols,4) * .22105 * var(--t) + (var(--cols,4) - 1) * .0386 * var(--t));
+  height:var(--t)}
+
+/* ---- barre navy, lettre grise ---- */
+.qz-header.qz-app .qz-onglet-fond{fill:#1e2b35}
+@media (max-width:900px){.qz-header.qz-app.qz-menu-visible{background:#1e2b35!important}}
+.qz-header.qz-app.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#dedede!important}
+
+/* ---- le nom de l app : une seule ligne, en Jura ----
+   Pas la police proprietaire du naming : elle ne contient que les lettres du mot « quadreti », decoupees par le fondateur sur xTool.
+   « Number Pixel » n y existe pas. */
+.qz-header.qz-app .qz-accroche,
+.qz-header.qz-app .qz-cat{display:none!important}
+/* Le nom se cale en HAUT du bloc, sur la ligne du menu -- pas au centre de la lettre.
+   Corrige le 13/09 : centre sur les 66 px de la lettre, le nom tombait a 38-60 px alors que le menu vit a 12-42 px, soit 22 px plus haut.
+   Les deux ne se lisaient plus sur la meme ligne. En haut de bloc, le centre du nom tombe sur celui du menu, comme le naming du site. */
+.qz-header.qz-app.qz-menu-visible .qz-wm-col{justify-content:space-between;margin-top:0}
+/* 13/09, demande fondateur : le nom est aligne sur la BASE SUPERIEURE du logo -- le haut des lettres sur le haut de la premiere
+   rangee de tesselles, pas le haut de sa boite de texte. Entre les deux il y a le demi-interligne plus le blanc que la police laisse
+   au-dessus des ascendantes : mesure sur Jura a 0,2155 em (identique pour les six noms, l ascendante du d de « Quadreti » fait le
+   meme haut partout). Valeur en em, donc juste a toutes les tailles. Ne PAS appliquer au Designer ni au QR pour l instant (fondateur). */
+.qz-app-nom{font-family:'Jura',sans-serif;font-weight:700;font-size:26px;line-height:1.05;letter-spacing:.01em;color:#dedede;white-space:nowrap;display:block;margin-top:-.2155em}
+@media (min-width:901px) and (max-width:1440px){.qz-app-nom{font-size:21px}}
+@media (min-width:901px) and (max-width:1100px){.qz-app-nom{font-size:17px}}
+@media (max-width:640px){.qz-app-nom{font-size:19px}}
+/* ---- la baseline : trois verbes, orange de marque, calee sur le BAS du logo (13/09, arbitrage du fondateur) ----
+   Meme mecanique que la categorie du site, dont le centre tombe sur celui de la tesselle orange. Ici la ligne occupe exactement la
+   hauteur d une rangee de tesselles -- 0,22105 x 66 px = 14,6 px -- et le bloc texte ecarte ses deux lignes aux extremites du logo
+   (space-between). Resultat : la baseline se pose pile sur la derniere rangee, celle qui porte la tesselle orange. L interligne reste
+   a 14,6 px a tous les paliers, seule la taille de police bouge : c est ce qui garde le calage juste.
+   Note de contraste, signalee au fondateur et tranchee par lui : l orange de marque sur le navy donne 4,07, sous le minimum de 4,5 pour
+   du texte de cette taille. Un orange eclairci (#e8874c) monterait a 5,62 si la question revient. */
+.qz-app-baseline{display:block;font-family:'Jura',sans-serif;font-weight:700;font-size:14.5px;line-height:14.6px;letter-spacing:.02em;color:var(--qz-terracotta,#d96c2f);white-space:nowrap}
+@media (min-width:901px) and (max-width:1440px){.qz-app-baseline{font-size:12.5px}}
+@media (min-width:901px) and (max-width:1100px){.qz-app-baseline{font-size:11px}}
+/* sous 640 px la lettre tombe a 42 px et le burger arrive : la baseline ne tiendrait plus sur une ligne */
+@media (max-width:640px){.qz-app-baseline{display:none}}
+
+/* ---- menu et burger relus sur fond navy ---- */
+.qz-header.qz-app.qz-menu-visible .qz-navpanel>ul>li>a,
+.qz-header.qz-app.qz-menu-visible .qz-subtoggle{color:#dedede!important}
+.qz-header.qz-app.qz-menu-visible .qz-navpanel>ul>li>a:hover,
+.qz-header.qz-app.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+.qz-header.qz-app .qz-burger{background:#dedede}
+.qz-header.qz-app .qz-burger:hover,.qz-header.qz-app .qz-burger:focus-visible{background:#ffffff}
+.qz-header.qz-app .qz-burger span{background:#1e2b35}
+/* le panneau deroulant est navy lui aussi : un filet le detache de la barre au lieu de fondre dedans */
+@media (max-width:900px){.qz-header.qz-app.qz-menu-visible .qz-navpanel{border-top:1px solid rgba(222,222,222,.2)}}

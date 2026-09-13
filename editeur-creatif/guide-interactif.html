@@ -13,7 +13,7 @@
     var voile = document.createElement('div');
     voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
     voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
-      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:var(--accent);color:var(--encre-sur-accent);font-weight:700;cursor:pointer;">Entrer</button></form>' +
       '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
     document.body.appendChild(voile);
     document.documentElement.style.visibility = 'visible';
@@ -38,29 +38,39 @@
 <meta name="description" content="Le guide interactif de l'Éditeur Créatif : survolez chaque zone pour comprendre, ou suivez la visite guidée pas à pas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* 13/09 : la page suit l identite du site -- navy, gris du site, orange de marque, police Jura. Avant cette date elle vivait encore
+     dans le monde kraft, sous un en-tete et un pied deja passes au navy. Les jetons portent desormais leur ROLE et non une couleur :
+     c est ce qui permet de rechanger la palette un jour sans relire la page. */
   :root{
-    --terracotta:#E2725B;
-    --charbon:#2b353e;
-    --fond:#FBF8F1;
-    --blanc:#FFFFFF;
-    --border:#2b353e1c;
-    --kraft:#CBBD93;
+    --accent:#d96c2f;           /* orange de marque : ce qu on peut toucher, ce qui est choisi */
+    --accent-fonce:#c15f28;     /* le meme, au survol */
+    --accent-doux:#f7e2d5;
+    --second:#1e2b35;           /* navy : le second reperage */
+    --second-doux:#e6e9ec;
+    --gris:#dedede;             /* le gris du site */
+    --gris-doux:#f2f2f2;
+    --encre:#1e2b35;            /* le texte */
+    --encre-douce:#5a6672;      /* les mentions secondaires */
+    --encre-sur-accent:#10181f; /* le texte pose SUR l orange : le blanc n y donne que 3,42 de contraste, l encre 8,9 */
+    --fond:#dedede;             /* le fond de page */
+    --blanc:#ffffff;
+    --bord:#1e2b3526;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
-  body{ font-family:'Karla',sans-serif; background:var(--fond); color:var(--charbon); font-size:15px; line-height:1.55; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ font-family:'Jura',sans-serif; background:var(--fond); color:var(--encre); font-size:15px; line-height:1.55; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
   button{ font-family:inherit; cursor:pointer; }
 
   header.hero{ text-align:center; padding:30px 16px 18px; }
   header.hero h1{ font-size:clamp(21px,4.5vw,30px); font-weight:700; margin:8px 0 6px; }
-  header.hero p{ color:#5c646c; max-width:520px; margin:0 auto; font-size:15px; }
-  header.hero p b{ color:var(--charbon); }
+  header.hero p{ color:var(--encre-douce); max-width:520px; margin:0 auto; font-size:15px; }
+  header.hero p b{ color:var(--encre); }
 
   .ctrl{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; padding:14px 16px 8px; }
   .tour-btn{
-    background:var(--terracotta); color:#fff; border:none; font-weight:700; font-size:15px;
+    background:var(--accent); color:var(--encre-sur-accent); border:none; font-weight:700; font-size:15px;
     border-radius:99px; padding:10px 22px; box-shadow:0 4px 14px rgba(226,114,91,.35); transition:transform .15s;
   }
   .tour-btn:hover{ transform:translateY(-2px); }
@@ -69,23 +79,23 @@
 
   /* ===== Maquette de l'éditeur ===== */
   .mock{
-    background:var(--blanc); border:1px solid var(--border); border-radius:16px; padding:14px;
+    background:var(--blanc); border:1px solid var(--bord); border-radius:16px; padding:14px;
     display:grid; gap:12px; grid-template-columns:190px 1fr 210px;
     grid-template-areas:"outils canevas props";
   }
   @media (max-width:800px){ .mock{ grid-template-columns:1fr; grid-template-areas:"outils" "canevas" "props"; } }
-  .panel{ background:var(--fond); border:1px solid var(--border); border-radius:12px; padding:12px; position:relative; }
-  .panel h2{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#8a9099; margin-bottom:8px; }
+  .panel{ background:var(--fond); border:1px solid var(--bord); border-radius:12px; padding:12px; position:relative; }
+  .panel h2{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--encre-douce); margin-bottom:8px; }
   .p-outils{ grid-area:outils; display:flex; flex-direction:column; gap:12px; }
   .p-canevas{ grid-area:canevas; }
   .p-props{ grid-area:props; display:flex; flex-direction:column; gap:12px; }
 
   .mockbtn{
-    display:block; width:100%; background:var(--blanc); border:1px solid var(--border); border-radius:8px;
-    font-weight:700; font-size:11.5px; color:var(--charbon); padding:7px 8px; margin:4px 0;
-    text-align:center; pointer-events:none; font-family:'Quicksand',sans-serif;
+    display:block; width:100%; background:var(--blanc); border:1px solid var(--bord); border-radius:8px;
+    font-weight:700; font-size:11.5px; color:var(--encre); padding:7px 8px; margin:4px 0;
+    text-align:center; pointer-events:none; font-family:'Jura',sans-serif;
   }
-  .mockbtn.actif{ background:var(--charbon); color:#fff; border-color:var(--charbon); }
+  .mockbtn.actif{ background:var(--encre); color:#fff; border-color:var(--encre); }
   .mockbtn.danger{ color:#b04a36; }
   .rang2{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
   .rang2 .mockbtn{ margin:0; }
@@ -98,7 +108,7 @@
     position:relative; width:min(300px,100%); aspect-ratio:1/1; margin:0 auto;
     background:
       repeating-conic-gradient(#0000 0 25%, #1e2b3508 0 50%) 0 0/16px 16px;
-    border:1.5px solid var(--charbon); border-radius:8px; overflow:hidden;
+    border:1.5px solid var(--encre); border-radius:8px; overflow:hidden;
   }
   .toile-mock::before{
     content:''; position:absolute; inset:0; pointer-events:none;
@@ -109,25 +119,25 @@
   }
   .toile-forme{
     position:absolute; left:14%; top:16%; width:34%; height:34%;
-    border-radius:50%; background:var(--terracotta); opacity:.9;
+    border-radius:50%; background:var(--accent); opacity:.9;
   }
   .toile-texte{
-    position:absolute; right:10%; bottom:14%; font-family:'Quicksand',sans-serif;
-    font-weight:800; font-size:15px; color:var(--charbon); transform:rotate(-4deg);
+    position:absolute; right:10%; bottom:14%; font-family:'Jura',sans-serif;
+    font-weight:800; font-size:15px; color:var(--encre); transform:rotate(-4deg);
   }
   .toile-photo{
     position:absolute; left:38%; top:46%; width:38%; height:30%; border-radius:8px;
-    background:linear-gradient(135deg,#CBBD93,#E2725B); border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.15);
+    background:linear-gradient(135deg,var(--gris),var(--accent)); border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.15);
   }
 
   /* ===== Hotspots ===== */
   .hot{
     position:absolute; z-index:5; width:28px; height:28px; border-radius:50%;
-    background:var(--terracotta); color:#fff; border:2.5px solid #fff; font-weight:700; font-size:12.5px;
+    background:var(--accent); color:var(--encre-sur-accent); border:2.5px solid #fff; font-weight:700; font-size:12.5px;
     display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(226,114,91,.45);
   }
   .hot::before{
-    content:''; position:absolute; inset:-7px; border-radius:50%; border:2px solid var(--terracotta); opacity:.55;
+    content:''; position:absolute; inset:-7px; border-radius:50%; border:2px solid var(--accent); opacity:.55;
     animation:pulse 1.8s ease-out infinite;
   }
   @keyframes pulse{ 0%{ transform:scale(.7); opacity:.7; } 100%{ transform:scale(1.25); opacity:0; } }
@@ -135,49 +145,52 @@
   .hot.seen{ background:#aab2ab; box-shadow:none; }
   .hot.seen::before{ display:none; }
   .hot.active{ transform:scale(1.18); }
-  .hot:focus-visible{ outline:3px solid var(--charbon); outline-offset:2px; }
-  .lit{ box-shadow:0 0 0 3px var(--terracotta), 0 0 0 8px rgba(226,114,91,.18) !important; border-radius:12px; }
+  .hot:focus-visible{ outline:3px solid var(--encre); outline-offset:2px; }
+  .lit{ box-shadow:0 0 0 3px var(--accent), 0 0 0 8px rgba(226,114,91,.18) !important; border-radius:12px; }
 
   /* ===== Popup ===== */
   .pop{
     position:fixed; z-index:60; left:50%; bottom:14px; transform:translateX(-50%);
-    width:min(480px, calc(100vw - 24px)); background:var(--blanc); border:1px solid var(--border);
+    width:min(480px, calc(100vw - 24px)); background:var(--blanc); border:1px solid var(--bord);
     border-radius:16px; box-shadow:0 14px 40px rgba(43,53,62,.22); padding:18px 20px 14px; display:none;
   }
   .pop.on{ display:block; animation:rise .22s ease; }
   @keyframes rise{ from{ transform:translate(-50%, 14px); opacity:0; } to{ transform:translate(-50%,0); opacity:1; } }
   @media (prefers-reduced-motion: reduce){ .pop.on{ animation:none; } }
-  .pop .pop-step{ font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--terracotta); margin-bottom:4px; }
+  .pop .pop-step{ font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
   .pop h3{ font-size:17.5px; font-weight:700; margin-bottom:6px; }
   .pop p{ font-size:14px; color:#3d4650; }
   .pop p + p{ margin-top:6px; }
   .pop .ui{
     display:inline-block; font-weight:700; font-size:.92em; background:#efe9d8; color:#7a6a35;
-    border:1px solid #d8cca4; border-radius:5px; padding:0 7px 1px; white-space:nowrap; font-family:'Quicksand',sans-serif;
+    border:1px solid #d8cca4; border-radius:5px; padding:0 7px 1px; white-space:nowrap; font-family:'Jura',sans-serif;
   }
   .pop-nav{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:10px; }
-  .pop-nav .dots{ font-size:12.5px; font-weight:700; color:#8a9099; }
-  .pop-nav button{ border:1px solid var(--border); background:var(--blanc); font-weight:700; font-size:13.5px; border-radius:99px; padding:7px 16px; color:var(--charbon); }
-  .pop-nav button.next{ background:var(--charbon); color:#fff; border-color:var(--charbon); }
-  .pop-close{ position:absolute; top:10px; right:12px; border:none; background:transparent; font-size:17px; color:#8a9099; padding:4px; }
+  .pop-nav .dots{ font-size:12.5px; font-weight:700; color:var(--encre-douce); }
+  .pop-nav button{ border:1px solid var(--bord); background:var(--blanc); font-weight:700; font-size:13.5px; border-radius:99px; padding:7px 16px; color:var(--encre); }
+  .pop-nav button.next{ background:var(--encre); color:#fff; border-color:var(--encre); }
+  .pop-close{ position:absolute; top:10px; right:12px; border:none; background:transparent; font-size:17px; color:var(--encre-douce); padding:4px; }
 
   /* ===== Finale ===== */
   .finale{ position:fixed; inset:0; z-index:80; background:rgba(251,248,241,.96); display:none; align-items:center; justify-content:center; text-align:center; padding:20px; }
   .finale.on{ display:flex; }
-  .finale .clic{ font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:#8a9099; margin-bottom:12px; }
-  .finale p.phrase{ font-size:clamp(22px,5vw,34px); font-weight:700; font-family:'Quicksand',sans-serif; }
-  .finale p.phrase span{ color:var(--terracotta); }
-  .finale button{ margin-top:26px; background:var(--terracotta); color:#fff; border:none; font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px; }
+  .finale .clic{ font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--encre-douce); margin-bottom:12px; }
+  .finale p.phrase{ font-size:clamp(22px,5vw,34px); font-weight:700; font-family:'Jura',sans-serif; }
+  .finale p.phrase span{ color:var(--accent); }
+  .finale button{ margin-top:26px; background:var(--accent); color:var(--encre-sur-accent); border:none; font-weight:700; font-size:15px; border-radius:99px; padding:11px 26px; }
 
   footer.guide-foot{ text-align:center; padding:34px 16px 40px; }
-  footer.guide-foot .sig{ font-weight:700; font-size:15px; color:var(--charbon); margin:0; font-family:'Quicksand',sans-serif; }
-  footer.guide-foot .sig span{ color:var(--terracotta); }
+  footer.guide-foot .sig{ font-weight:700; font-size:15px; color:var(--encre); margin:0; font-family:'Jura',sans-serif; }
+  footer.guide-foot .sig span{ color:var(--accent); }
 </style>
 <link rel="stylesheet" href="/commun.css">
 <script src="../reglages-site.js" defer></script>
 </head>
 <body id="qz-top">
 
+<!-- 13/09, demande fondateur : cette app porte son propre logo dans la barre (initiale en tesselles, orange integree), sans accroche
+     ni categorie, sur barre navy -- l inverse du site. A declarer AVANT commun-bandeau.js, qui ecrit au fil de la lecture. -->
+<script>window.qzApp = { lettre: 'C', nom: 'Canevas Quadreti', baseline: 'Posez. Composez. Exportez.' };</script>
 <script src="/commun-bandeau.js"></script>
 
 <header class="hero">
@@ -219,9 +232,9 @@
         <h2>Couleur</h2>
         <div class="grille-mini">
           <span class="swatch-mini" style="background:#1e2b35"></span>
-          <span class="swatch-mini" style="background:#E2725B"></span>
-          <span class="swatch-mini" style="background:#CBBD93"></span>
-          <span class="swatch-mini" style="background:#2A9DF4"></span>
+          <span class="swatch-mini" style="background:var(--accent)"></span>
+          <span class="swatch-mini" style="background:var(--gris)"></span>
+          <span class="swatch-mini" style="background:var(--second)"></span>
           <span class="swatch-mini" style="background:#2DC653"></span>
           <span class="swatch-mini" style="background:#FFD60A"></span>
         </div>

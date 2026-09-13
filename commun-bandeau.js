@@ -17,17 +17,51 @@
    demande fondateur. Styles et police dans /logo-v5.css (charge ici pour ne pas toucher aux 32 pages). */
 document.write('<link rel="stylesheet" href="/logo-v5.css">');
 document.write('<link rel="stylesheet" href="/entete-commun.css">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
+
+/* 13/09, demande fondateur : chaque app porte SON logo dans la barre -- l initiale de son nom en tesselles, une orange integree a la
+   lettre, barre navy et lettre grise (l inverse du site), sans accroche ni categorie. Une page d app le declare AVANT ce script :
+     <script>window.qzApp = { lettre: 'N', nom: 'Number Pixel Quadreti', baseline: 'Chargez. Repérez. Coloriez.' };</script>
+     <script src="/commun-bandeau.js"></script>
+   Declaration apres coup = sans effet : ce script ecrit au fil de la lecture de la page (document.write), il lit qzApp a cet instant.
+   Alphabet : 4 rangees toujours (la hauteur du Q), largeur naturelle de la lettre, '#' tesselle, '.' vide, 'o' tesselle orange.
+   Source et arbitrages : planche « L alphabet Quadreti », et JOURNAL.md (entree du 13/09). */
+var QZ_ALPHABET = {
+  C: ['###.', '#...', '#...', '##o.'], /* Canevas Quadreti -- l orange au bout de la barre basse, la ou le C s ouvre */
+  D: ['###.', '#..#', '#..#', 'o##.'], /* Designer Quadreti -- l orange au coin bas gauche */
+  M: ['#...#', '##.##', '#.#.#', '#...o'], /* Mosaique Quadreti -- seule lettre a cinq colonnes, son V l exige */
+  N: ['#..#', '##.#', '#.##', 'o..#'], /* Number Pixel Quadreti -- l orange au pied de la jambe gauche */
+  P: ['###.', '#.#.', '###.', 'o...'], /* Photo Quadreti -- l orange au pied de la hampe, ce qui fait un P et pas un D */
+  Q: ['###.', '#.#.', '#.#.', '###o'], /* la marque -- la queue, sous l anneau */
+  R: ['##o', '#..', '#..', '#..']  /* QR Quadreti, variante du fondateur (13/09) -- hampe et chapeau, l orange au bout du chapeau */
+};
+var qzApp = (window.qzApp && QZ_ALPHABET[window.qzApp.lettre]) ? window.qzApp : null;
+if (qzApp) document.write('<link rel="stylesheet" href="/entete-app.css">');
+function qzPlaqueLettre(lettre){
+  var g = QZ_ALPHABET[lettre], n = g[0].length, h = '', i = 0, y, x, c;
+  /* on rogne les colonnes de droite entierement vides : le C et le P sont dessines dans une boite de quatre colonnes dont la
+     derniere ne sert pas, et ce vide se verrait comme un blanc entre la lettre et le nom. */
+  while (n > 1 && g.every(function(r){ return r.charAt(n - 1) === '.'; })) n--;
+  for (y = 0; y < 4; y++) for (x = 0; x < n; x++){
+    c = g[y].charAt(x);
+    h += '<span class="qz-case ' + (c === 'o' ? 'qz-o' : (c === '#' ? 'qz-b' : 'qz-g')) + '" style="--i:' + (i++) + '"><span class="qz-tuile"></span></span>';
+  }
+  return '<span class="qz-wordmark-img qz-logo5 qz-plaque qz-plaque-lettre" style="--cols:' + n + '" aria-hidden="true">' + h + '</span>';
+}
 document.write(
-  '<header class="qz-header">' +
+  '<header class="qz-header' + (qzApp ? ' qz-app' : '') + '">' +
     /* 12/09 : onglet de l en-tete = BORD 1 du fondateur (!BAZAR A MORAD\\ONGLET, + 10 mm de gris au-dessus), forme + ligne du bord libre en lisere */
     '<svg class="qz-onglet" viewBox="18.00000188403 149.4999095560001 479.99981791596997 34.99999600000001" preserveAspectRatio="none" aria-hidden="true"><path class="qz-onglet-fond" d="M18 159.5 L498 159.5 L498 170.19 L182.68 170.19 Q181.96 170.19 181.26 170.25 Q180.63 170.3 179.92 170.42 Q179.27 170.53 178.64 170.69 Q177.92 170.88 177.29 171.1 Q176.55 171.36 175.94 171.63 Q175.21 171.97 174.57 172.33 Q173.96 172.68 173.35 173.1 Q172.67 173.58 172.09 174.08 Q171.52 174.56 170.99 175.12 L164.38 181.97 Q164.16 182.21 163.94 182.39 Q163.64 182.64 163.28 182.9 Q162.97 183.11 162.64 183.3 Q162.28 183.5 161.86 183.7 Q161.52 183.85 161.07 184.01 Q160.72 184.13 160.28 184.25 Q159.91 184.34 159.51 184.41 Q159.15 184.47 158.82 184.5 L18 184.5 L18 159.5 L18 159.5 Z M18 149.5 H498 V159.7 H18 Z"/><path class="qz-onglet-trait" vector-effect="non-scaling-stroke" d="M18 184.5 L158.82 184.5 Q159.15 184.47 159.51 184.41 Q159.91 184.34 160.28 184.25 Q160.72 184.13 161.07 184.01 Q161.52 183.85 161.86 183.7 Q162.28 183.5 162.64 183.3 Q162.97 183.11 163.28 182.9 Q163.64 182.64 163.94 182.39 Q164.16 182.21 164.38 181.97 L170.99 175.12 Q171.52 174.56 172.09 174.08 Q172.67 173.58 173.35 173.1 Q173.96 172.68 174.57 172.33 Q175.21 171.97 175.94 171.63 Q176.55 171.36 177.29 171.1 Q177.92 170.88 178.64 170.69 Q179.27 170.53 179.92 170.42 Q180.63 170.3 181.26 170.25 Q181.96 170.19 182.68 170.19 L498 170.19"/></svg>' +
-    '<a class="qz-logorow" href="/index.html" aria-label="Quadreti — accueil" id="qzLogoRow">' +
+    '<a class="qz-logorow" href="/index.html" aria-label="' + (qzApp ? qzApp.nom + ' — retour à quadreti.fr' : 'Quadreti — accueil') + '" id="qzLogoRow">' +
+    (qzApp ? qzPlaqueLettre(qzApp.lettre) + '<span class="qz-wm-col"><span class="qz-app-nom">' + qzApp.nom + '</span>'
+      /* 13/09 : la baseline de l app, trois verbes comme l accroche de la marque. Facultative : une app qui n en declare pas n en affiche pas. */
+      + (qzApp.baseline ? '<span class="qz-app-baseline">' + qzApp.baseline + '</span>' : '') + '</span>' : '') +
+    (qzApp ? '' :
       '<span class="qz-wordmark-img qz-logo5 qz-plaque" aria-hidden="true"><span class="qz-case qz-b" style="--i:4"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:3"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:2"><span class="qz-tuile"></span></span><span class="qz-case qz-g" style="--i:0"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:5"><span class="qz-tuile"></span></span><span class="qz-case qz-g" style="--i:1"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:1"><span class="qz-tuile"></span></span><span class="qz-case qz-g" style="--i:2"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:6"><span class="qz-tuile"></span></span><span class="qz-case qz-g" style="--i:3"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:0"><span class="qz-tuile"></span></span><span class="qz-case qz-g" style="--i:4"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:7"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:8"><span class="qz-tuile"></span></span><span class="qz-case qz-b" style="--i:9"><span class="qz-tuile"></span></span><span class="qz-case qz-o" style="--i:10"><span class="qz-tuile"></span></span></span>' +
       '<span class="qz-wm-col">' +
         '<span class="qz-wordmark-img qz-naming" aria-label="quadreti"><span class="qz-l" style="--i:0">q</span><span class="qz-l" style="--i:1">u</span><span class="qz-l" style="--i:2">a</span><span class="qz-l" style="--i:3">d</span><span class="qz-l" style="--i:4">r</span><span class="qz-l" style="--i:5">e</span><span class="qz-l" style="--i:6">t</span><span class="qz-l dernier" style="--i:7">ı<span class="qz-l qz-point" style="--i:8" aria-hidden="true"></span></span></span>' +
         '<span class="qz-accroche">Composez. Imprimez. Clipsez.</span>' + /* 12/09 : accroche du bloc logo (2e ligne) ; sur l accueil, bandeau-relief.js la remplace par l accroche animee */
         '<span class="qz-cat">Support Créatif Modulaire</span>' +
-      '</span>' +
+      '</span>') +
       '<img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">' +
     '</a>' +
     '<button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">' +
@@ -69,6 +103,8 @@ document.write(
 window.qzLogoV5Init = function(){
   var row = document.getElementById('qzLogoRow');
   if (!row) return;
+  /* 13/09 : sur une app, le logo est pose, pas joue -- la sequence animee raconte la marque, elle n a rien a dire sur l outil */
+  if (window.qzApp){ row.classList.add('qz-fini'); return; }
   /* 10/09 : ce bloc est place AVANT la logique de demarrage, qui peut sortir de la fonction (return) des que
      l acces est deverrouille -- sinon la baseline n etait jamais decoupee en lettres sur les pages deverrouillees. */
   /* la categorie tapee lettre par lettre : on decoupe le texte en spans ; reglages-site.js peut reecrire
@@ -128,7 +164,7 @@ window.qzEnteteInit = function(){
   var MARGE = 16, BLOC = 66, BARRE = 58;
   function caler(){
     var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
-    var logoRow = menu.querySelector('.qz-logorow'), naming = menu.querySelector('.qz-naming');
+    var logoRow = menu.querySelector('.qz-logorow'), naming = menu.querySelector('.qz-naming, .qz-app-nom');
     menu.style.setProperty('--qz-onglet', (BLOC + 2 * MARGE) + 'px');
     if (large) {
       menu.style.height = BARRE + 'px'; menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px'; menu.style.paddingLeft = MARGE + 'px';
