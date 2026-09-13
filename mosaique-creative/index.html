@@ -64,7 +64,7 @@
   .qz-header.qz-menu-visible .qz-navpanel>ul{ flex-wrap:nowrap; }
   .bascule{ position:absolute; top:58px; right:3%; height:40px; align-items:center; }
   /* 13/09, demande du fondateur : les deux boutons flottants disparaissent SUR CETTE PAGE. La bulle de contact et le bouton de remontee
-     viennent du pied commun ; le reste du site les garde. Le contact reste atteignable par le pied et par le lien sous l atelier, et la
+     viennent du pied commun ; le reste du site les garde. Le contact reste atteignable par le pied commun, et la
      remontee n a pas d objet ici : la page tient sur un ecran. */
   .qz-fab, .qz-bulle-contact{ display:none !important; }
   /* Sous 901 px la barre se replie et l onglet disparait : la bascule reprend sa place dans le flux, centree. */
@@ -74,9 +74,14 @@
   }
 </style>
 <style>
-  :root{ --charbon:#2B353E; --terracotta:#E2725B; --bleu:#2A9DF4; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --doux:#5c646c; }
+  /* 13/09 : cette coquille portait encore l identite KRAFT abandonnee (terracotta, charbon, papier) et cinq jetons dont plus aucun
+     ne servait depuis le retrait de la rangee de liens du bas. Reduite a ce qu elle utilise vraiment, aux couleurs de la charte. */
+  :root{
+    --encre:#1E2B35;   /* le bleu de la marque */
+    --fond:#DEDEDE;    /* le gris du site */
+  }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--papier); color:var(--charbon); font-family:'Jura',sans-serif; }
+  body{ margin:0; background:var(--fond); color:var(--encre); font-family:'Jura',sans-serif; }
 
 
   /* Bascule de mode -- deux fichiers deja construits/verifies independamment
@@ -124,50 +129,12 @@
      blanc visible tout autour, incoherent avec ce nouveau fond sombre.
      Retire, l'iframe colle desormais pleine largeur/hauteur. */
   .zone-cadre{ height:75vh; min-height:460px; }
-  iframe{ width:100%; height:100%; border:none; background:var(--charbon); display:block; }
+  iframe{ width:100%; height:100%; border:none; background:var(--encre); display:block; }
 
-  /* Socle minimum (CLAUDE.md) : FAQ + bouton de direction + contact. Integre
-     au depot du site le 27/08 (dossier mosaique-creative/) -- les liens
-     direction/contact pointent donc en relatif vers les pages du site
-     (../index.html, ../contact.html), meme logique qu'Editeur Creatif. Pas
-     encore ajoute au MENU de navigation du site (28 pages) -- decision
-     d'emplacement/categorisation qui reste a coordonner avec Site & Boutique,
-     pas tranchee unilateralement ce soir. La FAQ reste auto-portee ici
-     (propre a cet outil, pas de section FAQ Mosaique Creative sur le site
-     pour l'instant). */
-  footer.pied{ flex-shrink:0; padding:14px 20px 20px; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; }
-  footer.pied a, footer.pied button{
-    font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; color:var(--doux);
-    text-decoration:none; background:none; border:none; cursor:pointer; padding:0;
-  }
-  footer.pied a:hover, footer.pied button:hover{ color:var(--terracotta); }
-
-  .faq-couverture{
-    position:fixed; inset:0; z-index:100; background:rgba(43,53,62,.45);
-    display:none; align-items:center; justify-content:center; padding:20px;
-  }
-  .faq-couverture.ouverte{ display:flex; }
-  .faq-panneau{
-    background:var(--surface); border-radius:16px; max-width:560px; width:100%; max-height:80vh; overflow:auto;
-    padding:22px 24px; box-shadow:0 20px 60px rgba(43,53,62,.3);
-  }
-  .faq-panneau h2{ font-family:'Jura',sans-serif; font-size:19px; margin:0 0 14px; }
-  .faq-item{ border-top:1px solid var(--bord); padding:12px 0; }
-  .faq-item:first-of-type{ border-top:none; }
-  .faq-question{
-    font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer;
-    display:flex; justify-content:space-between; align-items:center; gap:10px; user-select:none;
-  }
-  .faq-question .chevron{ transition:transform .15s; color:var(--doux); flex-shrink:0; }
-  .faq-item.ouvert .faq-question .chevron{ transform:rotate(180deg); }
-  .faq-reponse{ max-height:0; overflow:hidden; transition:max-height .2s ease; }
-  .faq-item.ouvert .faq-reponse{ max-height:200px; }
-  .faq-reponse p{ font-size:13px; color:var(--doux); line-height:1.55; margin:10px 0 0; }
-  .faq-fermer{
-    display:block; margin:16px auto 0; font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px;
-    padding:9px 20px; border-radius:99px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer;
-  }
-  .faq-fermer:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  /* 13/09, demande du fondateur : la rangee de liens du bas (« Questions frequentes / Decouvrir les autres outils / Contact ») est
+     RETIREE. Le pied commun porte deja Nos outils, Contact et FAQ, trois lignes plus bas — c etait un doublon. Le seul lien sans
+     equivalent etait la FAQ de l app : ses cinq questions vivent desormais dans le guide interactif, qui est deja la page d aide et
+     l un des trois modes. Styles, fenetre et script correspondants retires avec elle, rien laisse en code mort. */
 </style>
 </head>
 <body>
@@ -197,21 +164,9 @@
   <iframe id="cadre" title="Mosaïque Créative"></iframe>
 </div>
 
-<footer class="pied">
-  <button id="btnOuvrirFaq">Questions fréquentes</button>
-  <a href="../index.html">Découvrir les autres outils QuadretI</a>
-  <a href="../contact.html">Contact</a>
-</footer>
 
 <script src="/commun-pied.js"></script>
 
-<div class="faq-couverture" id="faqCouverture">
-  <div class="faq-panneau">
-    <h2>Questions fréquentes</h2>
-    <div id="faqListe"></div>
-    <button class="faq-fermer" id="btnFermerFaq">Fermer</button>
-  </div>
-</div>
 
 <script src="../reglages-site.js" defer></script>
 
@@ -253,31 +208,9 @@
   boutons.scenes.addEventListener('click', function(){ basculer('scenes'); });
   boutons.guide.addEventListener('click', function(){ basculer('guide'); });
 
-  /* ================= FAQ (socle minimum CLAUDE.md) ================= */
-  var FAQ = [
-    { q:"Quelle est la différence entre les deux modes ?", r:"Le mode découpe : vous posez des pièces (carré, rond, triangle...) qui se redécoupent entre elles au fil de la composition, comme un vrai mosaïste. La bibliothèque de scènes : vous partez d'un motif déjà découpé en tesselles (chevrons, nid d'abeille, une photo importée...) et vous coloriez chaque pièce." },
-    { q:"Le fichier téléchargé est-il prêt à imprimer ?", r:"Oui — le téléchargement est calculé à la vraie résolution d'impression (300 DPI) du format physique choisi, jamais juste la résolution de l'écran." },
-    { q:"Puis-je reprendre ma composition plus tard ?", r:"Oui, avec le bouton Enregistrer de chaque mode — la composition reste sur cet appareil (navigateur), à recharger avec Charger." },
-    { q:"À quoi sert le mode miroir ?", r:"Il reproduit automatiquement de l'autre côté du canevas tout ce que vous posez, déplacez ou coloriez — beaucoup de vraies mosaïques sont symétriques, plus besoin de tout refaire deux fois." },
-    { q:"Puis-je transformer une de mes photos en mosaïque ?", r:"Oui, dans la bibliothèque de scènes : « Générer depuis une photo » convertit automatiquement une image importée en tesselles colorées d'après ses vraies couleurs, à ajuster ensuite comme n'importe quelle scène." }
-  ];
-  var faqCouverture = document.getElementById('faqCouverture');
-  var faqListe = document.getElementById('faqListe');
-  FAQ.forEach(function(item){
-    var div = document.createElement('div');
-    div.className = 'faq-item';
-    div.innerHTML = '<div class="faq-question"><span>' + item.q + '</span><span class="chevron">▾</span></div>' +
-      '<div class="faq-reponse"><p>' + item.r + '</p></div>';
-    div.querySelector('.faq-question').addEventListener('click', function(){ div.classList.toggle('ouvert'); });
-    faqListe.appendChild(div);
-  });
-  document.getElementById('btnOuvrirFaq').addEventListener('click', function(){ faqCouverture.classList.add('ouverte'); });
-  document.getElementById('btnFermerFaq').addEventListener('click', function(){ faqCouverture.classList.remove('ouverte'); });
-  faqCouverture.addEventListener('click', function(e){ if (e.target === faqCouverture) faqCouverture.classList.remove('ouverte'); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') faqCouverture.classList.remove('ouverte'); });
 
   /* Expose pour verification/tests. */
-  window.__shell = { basculer: basculer, get modeActuel(){ return cadre.src; }, FAQ: FAQ };
+  window.__shell = { basculer: basculer, get modeActuel(){ return cadre.src; } };
 })();
 </script>
 
