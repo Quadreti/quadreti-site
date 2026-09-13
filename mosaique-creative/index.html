@@ -49,14 +49,28 @@
      faire de la place a la bascule -- voir aussi le petit script juste
      apres l'inclusion de commun-bandeau.js, qui insere le HTML de la
      bascule au bon endroit dans le bandeau une fois qu'il est ecrit. */
-  .qz-header{
-    grid-template-columns:auto 1fr auto; grid-template-areas:"logo bascule burger";
-  }
-  .qz-logorow{ grid-area:logo; }
-  .qz-burger{ grid-area:burger; }
-  @media (max-width:640px){
-    .qz-header{ grid-template-columns:1fr auto; grid-template-areas:"logo burger" "bascule bascule"; row-gap:12px; }
-    .bascule{ flex-wrap:wrap; }
+  /* 13/09 : les regles de grille ecrites ici (grid-template-areas "logo bascule burger") NE S APPLIQUAIENT PAS — la barre commune
+     est en FLEX, pas en grille. Elles ne faisaient rien depuis le debut, et le menu du site n avait donc aucune place reservee : il
+     prenait ce qui restait, puis tombait sur deux lignes, CONTACT seul en dessous. Retirees. */
+
+  /* 13/09, demande du fondateur : la bascule de l app descend dans la BANDE DE L ONGLET, sous la barre. Le menu du site retrouve sa
+     ligne entiere. La barre fait 58 px et l onglet descend a 98 : la bande fait 40 px, exactement une rangee de boutons — la barre
+     remplit donc pile la hauteur de l onglet. */
+  /* 13/09, demande du fondateur : la bascule de l app descend dans la BANDE DE L ONGLET, sous la barre, et le menu du site retrouve
+     sa ligne entiere. Elle est posee en ABSOLU, pas passee a la ligne : la hauteur de la barre est figee a 58 px en ligne par
+     commun-bandeau.js, et la marge de 40 px vient d une feuille chargee apres celle-ci — on ne peut gagner ni contre l une ni contre
+     l autre. La barre etant en position relative (l onglet y est deja pose en absolu), 58 px du haut tombe pile dans la bande, qui va
+     de 58 a 98 et fait donc 40 px : la hauteur exacte d une rangee de boutons. */
+  .qz-header.qz-menu-visible .qz-navpanel>ul{ flex-wrap:nowrap; }
+  .bascule{ position:absolute; top:58px; right:3%; height:40px; align-items:center; }
+  /* 13/09, demande du fondateur : les deux boutons flottants disparaissent SUR CETTE PAGE. La bulle de contact et le bouton de remontee
+     viennent du pied commun ; le reste du site les garde. Le contact reste atteignable par le pied et par le lien sous l atelier, et la
+     remontee n a pas d objet ici : la page tient sur un ecran. */
+  .qz-fab, .qz-bulle-contact{ display:none !important; }
+  /* Sous 901 px la barre se replie et l onglet disparait : la bascule reprend sa place dans le flux, centree. */
+  @media (max-width:900px){
+    .bascule{ position:static; height:auto; justify-content:center; flex-wrap:wrap; margin:10px 0 0; }
+    .qz-header.qz-menu-visible .qz-navpanel>ul{ flex-wrap:wrap; }
   }
 </style>
 <style>
@@ -74,14 +88,35 @@
      rien retoucher a ce qui est deja verifie. Limite assumee : changer de
      mode recharge le cadre, la composition en cours dans l'autre mode n'est
      pas conservee -- pas de partage d'etat entre les deux pour l'instant. */
-  .bascule{ display:flex; justify-content:center; gap:6px; justify-self:center; grid-area:bascule; }
+  /* 13/09 : la barre est en FLEX, pas en grille — grid-area et justify-self ne servaient a rien ici, retires. */
+  .bascule{ display:flex; gap:8px; }
+
+  /* 13/09, demande du fondateur : des RECTANGLES, avec le relief et l eclat du CTA de l accueil.
+     Ils etaient en pastilles #E2725B — l orange de la charte abandonnee — avec du blanc dessus. */
   .bascule button{
+    position:relative; overflow:hidden;
     font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer;
-    border:none; background:var(--terracotta); color:#fff;
-    border-radius:99px; padding:7px 16px; transition:background .15s, opacity .15s;
+    border:none; background:#d96c2f; color:#dedede;   /* texte en gris, pas en blanc : regle du 13/09 pour les boutons orange */
+    border-radius:8px; padding:8px 18px; line-height:1.15;
+    box-shadow:inset 1px 1px 0 rgba(255,255,255,.38), inset -1px -1px 0 rgba(0,0,0,.28), 0 5px 12px rgba(0,0,0,.4);
+    transition:box-shadow .18s ease, transform .18s ease, background .15s ease;
   }
-  .bascule button:hover{ background:#c85f49; }
-  .bascule button.actif{ background:var(--charbon); color:#fff; }
+  /* l eclat qui balaie le bouton au survol, repris du CTA (bandeau-relief.css) */
+  .bascule button::after{
+    content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
+    background:linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%);
+    transform:translateX(-120%) skewX(-18deg); opacity:0;
+  }
+  .bascule button:hover::after, .bascule button:focus-visible::after{ animation:bascule-reflet .75s cubic-bezier(.4,0,.2,1) forwards; }
+  .bascule button:hover, .bascule button:focus-visible{
+    transform:translateY(-1px);
+    box-shadow:inset 1px 1px 0 rgba(255,255,255,.5), inset -1px -1px 0 rgba(0,0,0,.28), 0 7px 16px rgba(0,0,0,.45);
+  }
+  .bascule button:active{ transform:none; box-shadow:inset 2px 2px 4px rgba(0,0,0,.35); }
+  /* le bouton actif dit ou l on est : il prend le bleu de la marque, il ne doit pas se confondre avec les deux autres */
+  .bascule button.actif{ background:#1e2b35; color:#dedede; }
+  @keyframes bascule-reflet{ 0%{ transform:translateX(-120%) skewX(-18deg); opacity:0 } 15%{ opacity:1 } 100%{ transform:translateX(420%) skewX(-18deg); opacity:0 } }
+  @media (prefers-reduced-motion:reduce){ .bascule button:hover::after, .bascule button:focus-visible::after{ animation:none } }
 
   /* Iframe pleine largeur, sans liseré (28/08) : le mode decoupe a bascule
      sur un fond charbon plein ecran -- l'ancien encadrement de l'iframe
@@ -151,9 +186,9 @@
      bascule en dernier enfant suffit, elle atterrit bien au centre. */
   document.querySelector('.qz-header').insertAdjacentHTML('beforeend',
     '<div class="bascule" role="tablist" aria-label="Choisir le mode">' +
-      '<button class="actif" id="btnModeDecoupe" role="tab" aria-selected="true">Mode découpe</button>' +
-      '<button id="btnModeScenes" role="tab" aria-selected="false">Bibliothèque de scènes</button>' +
-      '<button id="btnModeGuide" role="tab" aria-selected="false">Guide interactif</button>' +
+      '<button class="actif" id="btnModeDecoupe" role="tab" aria-selected="true" title="Mode découpe" aria-label="Mode découpe">Découpe</button>' +
+      '<button id="btnModeScenes" role="tab" aria-selected="false" title="Bibliothèque de scènes" aria-label="Bibliothèque de scènes">Scènes</button>' +
+      '<button id="btnModeGuide" role="tab" aria-selected="false" title="Guide interactif" aria-label="Guide interactif">Guide</button>' +
     '</div>'
   );
 </script>
