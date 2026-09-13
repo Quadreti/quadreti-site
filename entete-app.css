@@ -66,3 +66,26 @@
 .qz-header.qz-app .qz-burger span{background:#1e2b35}
 /* le panneau deroulant est navy lui aussi : un filet le detache de la barre au lieu de fondre dedans */
 @media (max-width:900px){.qz-header.qz-app.qz-menu-visible .qz-navpanel{border-top:1px solid rgba(222,222,222,.2)}}
+
+/* ---- 13/09, demande du fondateur : « animer tous les logo de tous les app comme celle de l accueil » ----
+   La plaque et ses tesselles n avaient besoin de RIEN : qzPlaqueLettre() pose les memes .qz-case / .qz-tuile avec leur index que le Q
+   de la marque, donc les regles .qz-anime de logo-v5.css les animaient deja -- c est commun-bandeau.js qui les court-circuitait.
+   Ne restent que le nom et la baseline, qui remplacent ici le naming et la categorie du site : memes keyframes (qz5clipl), memes
+   constantes de rythme, pour que ce soit litteralement la meme animation et pas une imitation.
+   L ordre de lecture d une app n est pas celui du site : le NOM d abord, la baseline ensuite -- alors que sur l accueil la categorie
+   precede le naming. Le depart de la baseline est calcule sur la longueur reelle du nom (--qz-nnom, pose par commun-bandeau.js) :
+   elle part quand la derniere lettre du nom vient de se poser, jamais avant ni longtemps apres. */
+/* Le depart du nom se calcule sur le NOMBRE REEL de cases de la lettre (--qz-ncase, pose par commun-bandeau.js), pas sur la
+   constante de l accueil : le Q de la marque tient dans 16 cases, le M de Mosaique en demande 20 et la paire QR 24. Cale sur la
+   constante, le nom demarrait plus d une seconde avant que la derniere tesselle soit posee. */
+.qz-header.qz-app{--qz-nnom:20;--qz-ncase:16;
+  --qz-ta:calc(var(--qz-t0) + (var(--qz-ncase) - 1) * var(--qz-pas) + var(--qz-duree) + var(--qz-pause));
+  --qz-tab:calc(var(--qz-ta) + (var(--qz-nnom) - 1) * var(--qz-ln) + .45s)}
+.qz-header.qz-app .qz-app-nom .qz-l,
+.qz-header.qz-app .qz-app-baseline .qz-l{display:inline-block;position:relative;transform-origin:center}
+.qz-anime .qz-app-nom .qz-l{opacity:0;animation:qz5clipl .45s cubic-bezier(.3,1.55,.5,1) forwards;animation-delay:calc(var(--qz-ta) + var(--i) * var(--qz-ln))}
+.qz-anime .qz-app-baseline .qz-l{opacity:0;animation:qz5clipl .45s cubic-bezier(.3,1.55,.5,1) forwards;animation-delay:calc(var(--qz-tab) + var(--i) * var(--qz-lc))}
+/* etat final : une app ouverte pour la deuxieme fois dans la session ne rejoue pas, elle affiche */
+.qz-fini .qz-app-nom .qz-l,.qz-fini .qz-app-baseline .qz-l{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .qz-app-nom .qz-l,.qz-app-baseline .qz-l{animation:none!important;opacity:1}}

@@ -103,8 +103,10 @@ document.write(
 window.qzLogoV5Init = function(){
   var row = document.getElementById('qzLogoRow');
   if (!row) return;
-  /* 13/09 : sur une app, le logo est pose, pas joue -- la sequence animee raconte la marque, elle n a rien a dire sur l outil */
-  if (window.qzApp){ row.classList.add('qz-fini'); return; }
+  /* 13/09, arbitrage du fondateur : le logo d une app joue la MEME sequence que celui de l accueil. (La note precedente disait
+     l inverse -- « sur une app, le logo est pose, pas joue » -- c etait mon choix, pas le sien.) Rien de specifique a ajouter pour la
+     plaque : qzPlaqueLettre() pose deja les memes .qz-case / .qz-tuile avec leur index, donc les regles .qz-anime de logo-v5.css
+     s appliquent telles quelles. Seuls le nom et la baseline demandent d etre decoupes en lettres, plus bas. */
   /* 10/09 : ce bloc est place AVANT la logique de demarrage, qui peut sortir de la fonction (return) des que
      l acces est deverrouille -- sinon la baseline n etait jamais decoupee en lettres sur les pages deverrouillees. */
   /* la categorie tapee lettre par lettre : on decoupe le texte en spans ; reglages-site.js peut reecrire
@@ -116,6 +118,9 @@ window.qzLogoV5Init = function(){
     el.innerHTML = html;
   }
   var cat = document.querySelector('.qz-header .qz-cat');
+  /* Sur une app, le nom et la baseline remplacent le naming et la categorie : memes spans, meme mecanique de clipsage. */
+  var appNom = document.querySelector('.qz-header.qz-app .qz-app-nom');
+  var appBase = document.querySelector('.qz-header.qz-app .qz-app-baseline');
   /* 10/09 : la baseline commence et finit aux memes bords que le naming -- letter-spacing calcule une fois les polices chargees */
   function aligner(){
     var n = document.querySelector('.qz-header .qz-naming'); if (!n || !cat) return;
@@ -126,6 +131,13 @@ window.qzLogoV5Init = function(){
     if (W > 0 && w0 > 0) cat.style.letterSpacing = ((W - w0) / (lettres.length - 1)).toFixed(2) + 'px';
   }
   decouper(cat); aligner();
+  decouper(appNom); decouper(appBase);
+  /* La cascade des retards se cale sur la longueur reelle du nom : la baseline part quand la derniere lettre du nom est posee. */
+  if (appNom) { try {
+    var hd = document.querySelector('.qz-header');
+    hd.style.setProperty('--qz-nnom', appNom.querySelectorAll('.qz-l').length);
+    hd.style.setProperty('--qz-ncase', row.querySelectorAll('.qz-plaque-lettre .qz-case').length);
+  } catch (e) {} }
   if (cat && window.MutationObserver){ new MutationObserver(function(){ decouper(cat); aligner(); }).observe(cat, { childList: true }); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(aligner);
   window.addEventListener('load', aligner);
@@ -133,15 +145,17 @@ window.qzLogoV5Init = function(){
      (garde-acces : voile plein ecran avec le formulaire #qdtFormAcces, retire a la validation), pas dans un
      onglet en arriere-plan. Elle rejoue a chaque arrivee sur l'accueil, une seule fois par session ailleurs. */
   var accueil = /^\/(index\.html)?$/.test(location.pathname);
+  /* Une cle par app : sinon un client qui passe par l accueil (animation jouee) puis ouvre une app n y verrait jamais la sienne. */
+  var cle = window.qzApp ? 'qzLogoJoue:' + window.qzApp.lettre : 'qzLogoJoue';
   var deja = false;
-  try { deja = sessionStorage.getItem('qzLogoJoue') === '1'; } catch (e) {}
+  try { deja = sessionStorage.getItem(cle) === '1'; } catch (e) {}
   if (deja && !accueil) { row.classList.add('qz-fini'); return; }
   var lancer = function(){
     if (row.classList.contains('qz-anime')) return;
     if (document.hidden) return;
     if (document.getElementById('qdtFormAcces')) return;
     row.classList.add('qz-anime');
-    try { sessionStorage.setItem('qzLogoJoue', '1'); } catch (e) {}
+    try { sessionStorage.setItem(cle, '1'); } catch (e) {}
   };
   var garde = false;
   try { garde = localStorage.getItem('quadretiAccesPreview') !== '1'; } catch (e) {}

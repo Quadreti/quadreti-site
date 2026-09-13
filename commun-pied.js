@@ -15,7 +15,7 @@
    du fondateur (!BAZAR A MORAD\ONGLET, meme dessin que le bandeau defilant, ligne du bord libre en lisere orange). Copyright centre dans
    une barre grise. Les couleurs de la zone navy restent pilotees par le panneau (classes .qz-pied3 / .qz-pied-infos / .qz-coltitre /
    .qz-basdepage / .qz-reseaux conservees), la barre grise et le lisere par les jetons --qz-pied-* de commun.css. */
-document.write(
+var QZ_PIED_HTML = (
   '<footer class="qz-footer qz-pied-v3">' +
     '<div class="qz-pied-bord qz-pied-bord-haut"><svg class="qz-pied-svg" viewBox="9.000000774792966 220.7203897267749 479.9999948669969 6.7" preserveAspectRatio="none" aria-hidden="true"><path class="qz-pied-fond" d="M489 222.28 L489 220.72 L487.02 220.72 L102.14 220.72 L102.03 220.73 Q101.71 220.74 101.35 220.76 Q100.91 220.79 100.52 220.83 Q100.01 220.89 99.65 220.94 Q99.13 221.01 98.76 221.08 Q98.26 221.17 97.86 221.26 Q97.49 221.35 97.14 221.44 Q96.69 221.57 96.32 221.69 Q96.05 221.79 95.73 221.92 L89.22 224.63 Q88.74 224.84 88.26 225 Q87.73 225.18 87.11 225.35 Q86.58 225.5 86.03 225.63 Q85.45 225.76 84.76 225.89 Q84.21 225.99 83.52 226.09 Q82.96 226.16 82.28 226.23 Q81.71 226.29 81.1 226.33 Q80.45 226.38 79.88 226.4 Q79.21 226.42 78.54 226.42 L9 226.42 L9 234.72 L489 234.72 L489 222.28 L489 222.28 Z"/><path class="qz-pied-trait" vector-effect="non-scaling-stroke" d="M9 226.42 L78.54 226.42 Q79.21 226.42 79.88 226.4 Q80.45 226.38 81.1 226.33 Q81.71 226.29 82.28 226.23 Q82.96 226.16 83.52 226.09 Q84.21 225.99 84.76 225.89 Q85.45 225.76 86.03 225.63 Q86.58 225.5 87.11 225.35 Q87.73 225.18 88.26 225 Q88.74 224.84 89.22 224.63 L95.73 221.92 Q96.05 221.79 96.32 221.69 Q96.69 221.57 97.14 221.44 Q97.49 221.35 97.86 221.26 Q98.26 221.17 98.76 221.08 Q99.13 221.01 99.65 220.94 Q100.01 220.89 100.52 220.83 Q100.91 220.79 101.35 220.76 Q101.71 220.74 102.03 220.73 L102.14 220.72 L487.02 220.72 L489 220.72"/></svg></div>' +
     '<div class="qz-pied3">' +
@@ -75,6 +75,12 @@ document.write(
     '<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>' +
   '</a>'
 );
+/* 13/09 : prefixe facultatif des liens internes, pour que les apps servies ailleurs puissent inclure CE fichier plutot que d en
+   recopier une variante. Sans data-base, la chaine est ecrite telle quelle. */
+(function () {
+  var sc = document.currentScript, base = (sc && sc.getAttribute('data-base')) || '';
+  document.write(base ? QZ_PIED_HTML.split('href="/').join('href="' + (base.charAt(base.length - 1) === '/' ? base.slice(0, -1) : base) + '/') : QZ_PIED_HTML);
+})();
 /* 12/09 : les decroches du pied prennent la couleur reelle de la zone navy (posee par le panneau), lue une fois la page chargee */
 (function () {
   function fond() { var z = document.querySelector('.qz-pied3'), f = document.querySelector('footer.qz-footer'); if (!z || !f) return; var c = getComputedStyle(z).backgroundColor; if (c && c !== 'rgba(0, 0, 0, 0)') f.style.setProperty('--qz-pied-fond', c); }

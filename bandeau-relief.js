@@ -6,10 +6,32 @@
   var REGLAGES = {
     cx: 4, cy: 2, ecart: 0, grilleFixe: true, disposition: 'droite', /* 11/09 fondateur : 4x2 pour occuper la largeur a hauteur egale (le mur est plafonne en hauteur pour tenir sur un 14 pouces) */ /* 'droite' = textes + bouton a gauche, mur a droite ; 'colonne' = textes au-dessus/dessous */ mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     /* 12/09 soir, fondateur : sequence logique de 13 photos (photo site 1, n° 1 a 13, recadrees en 2:1 = 1200x600) : etuis, feuilles, imprimante, mains (etui, tesselle), grille vide, coeur, clipsage, coeur en biais, salon. */
-    visuels: ['/img/bandeau-seq-00.jpg', /* 13/09 : photo 0 en ouverture (fondateur) */ '/img/bandeau-seq-01.jpg', '/img/bandeau-seq-02.jpg', '/img/bandeau-seq-03.jpg', '/img/bandeau-seq-04.jpg', '/img/bandeau-seq-05.jpg', '/img/bandeau-seq-06.jpg', '/img/bandeau-seq-07.jpg', '/img/bandeau-seq-08.jpg', '/img/bandeau-seq-09.jpg', '/img/bandeau-seq-10.jpg', '/img/bandeau-seq-11.jpg', '/img/bandeau-seq-12.jpg', '/img/bandeau-seq-13.jpg'], ancrage: 'centre',
+    visuels: [
+      /* 1 a 5 — la moitie NUMERIQUE (13/09, cinq nouvelles photos du fondateur) : on arrive sur le site, on ouvre le Studio, on compose,
+         le motif est fini, on regarde le mur complet. */
+      '/img/bandeau-app-01-accueil.jpg', '/img/bandeau-app-02-grille.jpg', '/img/bandeau-app-03-composition.jpg',
+      '/img/bandeau-app-04-motif.jpg', '/img/bandeau-app-05-apercu.jpg',
+      /* 6 a 17 — la moitie PHYSIQUE, sequence du 12/09 : etuis, feuilles, imprimante, mains (etui, tesselle), grille vide, coeur, clipsage. */
+      '/img/bandeau-seq-01.jpg', '/img/bandeau-seq-02.jpg', '/img/bandeau-seq-03.jpg', '/img/bandeau-seq-04.jpg',
+      '/img/bandeau-seq-05.jpg', '/img/bandeau-seq-06.jpg', '/img/bandeau-seq-07.jpg', '/img/bandeau-seq-08.jpg',
+      '/img/bandeau-seq-09.jpg', '/img/bandeau-seq-10.jpg', '/img/bandeau-seq-11.jpg', '/img/bandeau-seq-12.jpg',
+      /* 18 — le plan imprime pose a cote du panneau fini : le pont entre l impression et le resultat. Elle ouvrait le diaporama
+         jusqu au 13/09, le fondateur l a demandee en avant-derniere. */
+      '/img/bandeau-seq-00.jpg',
+      /* 19 — le salon. Derniere, et elle tient 60 s avant de reboucler (voir diaporama.tenueFin). */
+      '/img/bandeau-seq-13.jpg'
+    ], ancrage: 'centre',
     /* 13/09 fondateur : le mur devient un diaporama en fondu des visuels ci-dessus (une photo a la fois, format d origine). duree = tenue de chaque photo (s),
        fondu = duree du fondu (s), tenueFin = tenue supplementaire de la derniere photo avant de reboucler. actif: false = mur en tesselles comme avant. */
-    diaporama: { actif: true, duree: 2, fondu: .8, tenueFin: 58 }, /* 13/09 fondateur : 2 s par photo (divise par 2), fondu .8 s ; la derniere photo (le salon) reste 60 s en tout (2 + 58) avant de reboucler */
+    diaporama: { actif: true, duree: 2, fondu: .8, tenueFin: 58,
+      /* 13/09 fondateur : duree PAR PHOTO, pour les seules photos qui en ont besoin. Les cinq du parcours numerique sont quasi
+         identiques -- meme piece, meme personne, meme bureau ; seul l ecran change, et il est petit dans le cadre. L oeil doit le
+         trouver, lire une interface miniature, comprendre l etape : ca ne se fait pas en 2 s. Les photos produit, tres contrastees
+         entre elles, se lisent d un coup d oeil et gardent la duree generale ci-dessus. */
+      dureeParPhoto: {
+        '/img/bandeau-app-01-accueil.jpg': 4, '/img/bandeau-app-02-grille.jpg': 4, '/img/bandeau-app-03-composition.jpg': 4,
+        '/img/bandeau-app-04-motif.jpg': 4, '/img/bandeau-app-05-apercu.jpg': 4
+      } }, /* 13/09 fondateur : 2 s par photo (divise par 2), fondu .8 s ; la derniere photo (le salon) reste 60 s en tout (2 + 58) avant de reboucler */
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: 'var(--qz-terracotta,#d96c2f)', couleur2: '#dedede', titre: '#dedede' /* 12/09 fondateur : textes du bandeau navy en gris clair #dedede (comme la barre) */ },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
     depart: 0, dg: .2, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 2.3, lat: 75,
@@ -247,6 +269,11 @@
   function construireDiapo() {
     var D = REGLAGES.diaporama, T = REGLAGES.textes, p = REGLAGES.pause; cx = nbCarreaux().cx; cy = nbCarreaux().cy; R.setProperty('--cx', cx); R.setProperty('--cy', cy);
     var N = visuels.length, dur = D.duree || 4, fondu = Math.min(D.fondu || 1, dur / 2), fin = D.tenueFin || 0;
+    /* Une duree par photo : celle de dureeParPhoto si elle y figure, la duree generale sinon. Le fondu, lui, reste le meme partout
+       (il se joue PENDANT la tenue, il ne s y ajoute pas) ; il est borne a la moitie de la plus courte pour ne jamais la manger. */
+    var durees = visuels.map(function (v) { return (D.dureeParPhoto && D.dureeParPhoto[v]) || dur; });
+    var total = durees.reduce(function (a, b) { return a + b; }, 0);
+    fondu = Math.min(fondu, Math.min.apply(null, durees) / 2);
     var html = '<div class="qb-diapo" tabindex="0" role="region" aria-roledescription="diaporama" aria-label="Photos du kit Quadreti">' + visuels.map(function (v, k) { var dd = dims[v] || { w: 3, h: 2 }; var carre = Math.abs(dd.w / dd.h - 1) < .08;
       return '<img class="qb-diapo-img' + (carre ? ' qb-carre' : '') + (k === 0 ? ' qb-visible' : '') + '" src="' + v + '" alt="" style="--fondu:' + fondu + 's"' + (k > 1 ? ' loading="lazy"' : '') + '>'; }).join('') + '</div>' +
       '<div class="qb-diapo-points" role="tablist" aria-label="Choisir une photo">' + visuels.map(function (v, k) { return '<button type="button" role="tab" class="qb-diapo-point' + (k === 0 ? ' qb-actif' : '') + '" aria-label="Photo ' + (k + 1) + ' sur ' + N + '" aria-selected="' + (k === 0) + '"></button>'; }).join('') + '</div>';
@@ -255,14 +282,14 @@
     var idx = 0, minuteur = null, survol = false, demarre = false, reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     function montrer(n) { var prec = imgs[idx]; idx = (n + N) % N; var cur = imgs[idx]; Array.prototype.forEach.call(points, function (pt, k) { pt.classList.toggle('qb-actif', k === idx); pt.setAttribute('aria-selected', String(k === idx)); }); if (prec === cur) return; cur.style.zIndex = 2; cur.classList.add('qb-visible'); prec.style.zIndex = 1;
       setTimeout(function () { if (prec !== imgs[idx]) { prec.classList.remove('qb-visible'); prec.style.zIndex = 0; } }, fondu * 1000 + 60); }
-    function planifier() { clearTimeout(minuteur); if (survol || reduit || !demarre) return; minuteur = setTimeout(function () { montrer(idx + 1); planifier(); }, (idx === N - 1 ? dur + fin : dur) * 1000); }
+    function planifier() { clearTimeout(minuteur); if (survol || reduit || !demarre) return; minuteur = setTimeout(function () { montrer(idx + 1); planifier(); }, (durees[idx] + (idx === N - 1 ? fin : 0)) * 1000); }
     Array.prototype.forEach.call(points, function (pt, k) { pt.addEventListener('click', function () { montrer(k); planifier(); }); });
     cadre.addEventListener('mouseenter', function () { survol = true; clearTimeout(minuteur); });
     cadre.addEventListener('mouseleave', function () { survol = false; planifier(); });
     cadre.addEventListener('keydown', function (e) { if (e.target !== cadre) return; if (e.key === 'ArrowLeft') { montrer(idx - 1); planifier(); e.preventDefault(); } else if (e.key === 'ArrowRight') { montrer(idx + 1); planifier(); e.preventDefault(); } });
     diapo = { demarrer: function (delai) { if (demarre) return; setTimeout(function () { demarre = true; planifier(); }, Math.max(0, delai) * 1000); } };
-    var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's'); R.setProperty('--P', (N * dur + fin).toFixed(2) + 's');
-    completPose = t0 + fondu; tChangement = t0 + dur; R.setProperty('--t-changement', tChangement.toFixed(2) + 's');
+    var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's'); R.setProperty('--P', (total + fin).toFixed(2) + 's'); /* somme reelle des tenues, et non N x duree generale */
+    completPose = t0 + fondu; tChangement = t0 + durees[0]; /* le titre apparait au premier changement de photo : donc apres la tenue de la PREMIERE */ R.setProperty('--t-changement', tChangement.toFixed(2) + 's');
     var tl1 = T.quand === 'ouverture' ? REGLAGES.depart + .3 : tChangement; var l1 = document.querySelector('.qb-l1'); var lettresB1 = l1 ? l1.querySelectorAll('.qb-l').length : 0;
     var durB1 = T.mode === 'clip' || T.mode === 'dactylo' ? (lettresB1 - 1) * T.ln + .45 : T.dn; var tl4 = tl1 + durB1 + p;
     R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', tl4.toFixed(2) + 's');
