@@ -38,12 +38,12 @@
 <meta name="description" content="Loin, une image. Près, des tesselles. Révélez une mosaïque cachée à votre rythme — tesselles, pixelisé, flouté, zoom arrière ou contours. Gratuit, par Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; --tesselle:#2B353E; --tesselle-alt:#333f4a; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:48px 24px 6px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 12px; font-weight:600; }
@@ -51,14 +51,14 @@
   p.accroche{ font-size:15.5px; color:var(--doux); max-width:52ch; margin:0 auto; line-height:1.6; }
 
   .onglets-mode{ display:flex; gap:8px; justify-content:center; margin:24px 0 0; }
-  .onglet-mode{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:10px 22px; cursor:pointer; }
+  .onglet-mode{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:10px 22px; cursor:pointer; }
   .onglet-mode.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
 
   .jeu-cadre{ max-width:900px; margin:20px auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 260px; gap:32px; align-items:start; justify-content:center; }
   @media (max-width:760px){ .jeu-cadre{ grid-template-columns:1fr; justify-items:center; } }
 
   .rang-fichier{ display:flex; flex-direction:column; gap:8px; }
-  .rang-fichier input[type=file]{ font-family:'Karla',sans-serif; font-size:11.5px; color:var(--doux); }
+  .rang-fichier input[type=file]{ font-family:'Jura',sans-serif; font-size:11.5px; color:var(--doux); }
   .miniature-photo{ width:100%; aspect-ratio:1; border-radius:9px; border:1px solid var(--bord); background:var(--papier) center/cover no-repeat; display:none; }
   .miniature-photo.actif{ display:block; }
   .placeholder-photo{ display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--doux); text-align:center; padding:30px 20px; }
@@ -87,7 +87,7 @@
   input.curseur::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--terracotta); cursor:pointer; border:3px solid var(--surface); box-shadow:0 1px 4px #00000033; }
   input.curseur::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--terracotta); cursor:pointer; border:3px solid var(--surface); box-shadow:0 1px 4px #00000033; }
   .repere-curseur{ display:flex; justify-content:space-between; font-size:10px; color:var(--doux); margin-bottom:6px; }
-  .valeur-curseur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); text-align:center; }
+  .valeur-curseur{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); text-align:center; }
 
   .jauge-tesselles{ display:flex; gap:2px; margin-top:2px; }
   .jauge-tesselles span{ flex:1; height:15px; border-radius:2.5px; background:var(--bord); transition:background .2s ease; }
@@ -106,26 +106,26 @@
   .panneau-jeu{ display:flex; flex-direction:column; gap:16px; }
   .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
   .carte-stat .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
-  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:22px; }
+  .carte-stat .valeur{ font-family:'Jura',sans-serif; font-weight:700; font-size:22px; }
   .carte-taille{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
   .carte-taille .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
   .choix-taille{ display:flex; flex-wrap:wrap; gap:6px; }
-  .btn-taille, .btn-style{ flex:1 1 28%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; padding:8px 0; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-taille, .btn-style{ flex:1 1 28%; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px; padding:8px 0; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
   .btn-taille.actif, .btn-style.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:13px 22px; cursor:pointer; text-align:center; width:100%; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:13px 22px; cursor:pointer; text-align:center; width:100%; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ background:#1c232a; }
   .note{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
-  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Jura',sans-serif; font-size:13px; line-height:1.5; }
   .victoire.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
   @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
   @media (prefers-reduced-motion: reduce){ .victoire.actif{ animation:none; } }
 
   .defi-social{ display:none; text-align:center; margin-top:10px; }
   .defi-social.actif{ display:block; }
-  .defi-texte{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); margin:0 0 8px; }
+  .defi-texte{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; color:var(--terracotta); margin:0 0 8px; }
   .partage-rangee{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
-  .btn-partage{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:7px 12px; border-radius:99px; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; text-decoration:none; }
+  .btn-partage{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:7px 12px; border-radius:99px; border:1.5px solid var(--bord); background:var(--surface); color:var(--doux); cursor:pointer; text-decoration:none; }
   .btn-partage:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 
   .pont{ max-width:1000px; margin:0 auto 70px; padding:0 24px; }

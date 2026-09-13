@@ -1,5 +1,5 @@
 /* 12/09 : les regles de l en-tete (barre, onglet, bloc logo, menu visible, sous-menu) sont parties dans entete-commun.css, commun a toutes les pages. Ne restent ici que la sequence d accueil et l accroche animee. */
-@import url("https://fonts.googleapis.com/css2?family=Jura:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap");
 /* QuadretI — bandeau d'accueil "carreaux 7x7 en relief", CSS pur (10/09/2026, demande fondateur : remplace la vidéo
    Changez, 18 à 22 Mo par version). Source des réglages : SITE\POLICE PROPRIETAIRE\bandeau-relief-outil.html (réglages par
    défaut, mur 3 x 2 carreaux). Séquence : attente, mur en relief, tesselles de l'oeil arrivent une à une depuis les 4
@@ -128,7 +128,7 @@
 .qb.qb-dispo-droite.qb-fini .qb-b2{opacity:1} /* 11/09 soir : titre sur une ligne (taille ajustee par caler) */
 .qb.qb-dispo-droite .qb-b2 .qb-mot{margin-right:.22em}
 .qb.qb-dispo-droite .qb-para .qb-phrase{display:block;white-space:nowrap}
-.qb.qb-dispo-droite .qb-para{margin:.6cqw 0 0;max-width:none;font-family:'Quicksand',sans-serif;font-weight:500;font-size:clamp(14px,1.3cqw,18px);line-height:1.6;color:color-mix(in srgb,var(--couleur2) 82%,transparent)}
+.qb.qb-dispo-droite .qb-para{margin:.6cqw 0 0;max-width:none;font-family:'Jura',sans-serif;font-weight:500;font-size:clamp(14px,1.3cqw,18px);line-height:1.6;color:color-mix(in srgb,var(--couleur2) 82%,transparent)}
 .qb.qb-dispo-droite .qb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.2cqw}
 .qb.qb-dispo-droite .qb-ctas .cta{position:static;transform:none;margin:0;pointer-events:auto;z-index:4;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(11px,.9cqw,13px);padding:11px 20px;white-space:nowrap;border-radius:4px} /* 11/09 soir : boutons reduits (fondateur) */
 /* 11/09 soir (fondateur) : relief de tesselle sur les deux boutons (arete claire en haut a gauche, ombre en bas a droite, ombre portee)
@@ -154,7 +154,7 @@
 
 /* ===== 11/09 : bande des quatre gestes sous le bandeau (bandeau-gestes.js). Compacte pour tenir avec le bandeau sur un 14 pouces.
    Variantes : A dans la continuite du bandeau (navy), B sur le fond de page, C bande creme posee sur le navy. Bord gauche = colonne de textes. */
-.qb-gestes{position:relative;z-index:3;font-family:'Quicksand',sans-serif}
+.qb-gestes{position:relative;z-index:3;font-family:'Jura',sans-serif}
 /* 11/09 fondateur : decroche du bas -- le navy du bandeau descend sous le mur, a droite, de --decroche-bas (meme hauteur que le
    surplus de l onglet du haut : 29 % de la barre), pente vers ~43 % de la largeur (--decroche-bas-x). Meme dessin que l onglet
    (ONGLET.svg), recadre sur la bande de la pente et retourne horizontalement. La bande des gestes est decalee d autant. */
@@ -249,7 +249,7 @@
 @media (prefers-reduced-motion:reduce){.qz-fab:hover::after,.qz-bulle-contact:hover::after{animation:none}}
 
 /* bandeau defilant sous la bande des gestes (bandeau-gestes.js) : l ancien .ticker de la page est remplace */
-.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:9px 0;font-family:'Quicksand',sans-serif}
+.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:9px 0;font-family:'Jura',sans-serif}
 .qb-defile-fenetre{overflow:hidden} /* 12/09 : le rognage passe sur une fenetre interieure pour laisser deborder le decroche du bas */
 /* 12/09 fondateur : decroche en miroir en bas a droite du bandeau defilant (navy qui descend sous le bandeau, pente vers 13,4 % depuis la droite) ; lisere orange essaye puis retire le 12/09 */
 .qb-bord-defile-bas{top:calc(100% - 4px);height:calc(var(--decroche-h,22px) + 4px);transform:scale(-1,-1)}

@@ -540,7 +540,9 @@
      polices d'origine déjà chargées dans le <head> de chaque page). Partagé entre
      appliquerPolices (site entier) et appliquerStylesSections (une section). */
   function chargerPoliceGoogle(famille) {
-    if (!famille || famille === 'Quicksand' || famille === 'Karla') return;
+    /* 13/09 : le site charge Jura dans chaque page, plus Quicksand ni Karla. Sans ce changement, choisir Quicksand dans le
+       panneau aurait affiche une police jamais chargee. */
+    if (!famille || famille === 'Jura') return;
     var href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(famille) + ':wght@400;500;600;700&display=swap';
     if (!document.querySelector('link[href="' + href + '"]')) {
       var l = document.createElement('link');
@@ -1036,8 +1038,8 @@
     var couleur = suit && palette ? couleurLisibleSur(palette.fond, plusClair(palette)) : hb.couleur;
     if (hb.taille) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-size:' + hb.taille + 'px}';
     if (couleur) css += '\n.h-line.l1,.h-line.l2,.h-line.l3{color:' + couleur + '}';
-    if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Quicksand\',sans-serif}';
-    else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Karla\',sans-serif}';
+    if (hb.police === 'titres') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Jura\',sans-serif}';
+    else if (hb.police === 'texte') css += '\n.h-line.l1,.h-line.l2,.h-line.l3{font-family:\'Jura\',sans-serif}';
     if (hb.zone) {
       var z = zoneVersCss(hb.zone, hb.decalage);
       css += '\n.hero-copy{left:' + z.left + ';right:' + z.right + ';top:' + z.top + ';bottom:' + z.bottom +
@@ -1061,8 +1063,8 @@
     var couleur = suit && palette ? couleurLisibleSur(palette.fond, plusClair(palette)) : hc.couleur;
     if (hc.taille) css += '\n.h-line.l4{font-size:' + hc.taille + 'px}';
     if (couleur) css += '\n.h-line.l4{color:' + couleur + '}';
-    if (hc.police === 'titres') css += '\n.h-line.l4{font-family:\'Quicksand\',sans-serif}';
-    else if (hc.police === 'texte') css += '\n.h-line.l4{font-family:\'Karla\',sans-serif}';
+    if (hc.police === 'titres') css += '\n.h-line.l4{font-family:\'Jura\',sans-serif}';
+    else if (hc.police === 'texte') css += '\n.h-line.l4{font-family:\'Jura\',sans-serif}';
     if (hc.zone) {
       var z = zoneVersCss(hc.zone, hc.decalage);
       css += '\n.h-line.l4{left:' + z.left + ';right:' + z.right + ';top:' + z.top + ';bottom:' + z.bottom +
@@ -1128,12 +1130,12 @@
     injecterStyle('qz-popup-style', [
       '.qz-popup-fond{position:fixed;inset:0;background:#000000a6;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .25s ease;pointer-events:none}',
       '.qz-popup-fond.qz-on{opacity:1;pointer-events:auto}',
-      '.qz-popup-carte{position:relative;max-width:420px;width:100%;background:' + fond + ';color:' + texte + ';border-radius:16px;padding:28px 26px 26px;box-shadow:0 20px 50px #00000055;transform:translateY(12px);transition:transform .25s ease;font-family:\'Karla\',sans-serif}',
+      '.qz-popup-carte{position:relative;max-width:420px;width:100%;background:' + fond + ';color:' + texte + ';border-radius:16px;padding:28px 26px 26px;box-shadow:0 20px 50px #00000055;transform:translateY(12px);transition:transform .25s ease;font-family:\'Jura\',sans-serif}',
       '.qz-popup-fond.qz-on .qz-popup-carte{transform:translateY(0)}',
       '.qz-popup-fermer{position:absolute;top:6px;right:6px;width:44px;height:44px;border-radius:50%;border:none;background:#00000014;color:' + texte + ';font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}',
       '.qz-popup-fermer:hover{background:#00000028}',
       '.qz-popup-img{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px}',
-      '.qz-popup-titre{font-family:\'Quicksand\',sans-serif;font-weight:700;font-size:19px;margin:0 0 8px}',
+      '.qz-popup-titre{font-family:\'Jura\',sans-serif;font-weight:700;font-size:19px;margin:0 0 8px}',
       '.qz-popup-texte{font-size:13.5px;line-height:1.5;margin:0 0 16px;opacity:.92}',
       '.qz-popup-form{display:flex;gap:8px;flex-wrap:wrap}',
       '.qz-popup-form input[type=email]{flex:1;min-width:160px;padding:10px 12px;border-radius:9px;border:1px solid #00000022;font:inherit;font-size:13.5px}',

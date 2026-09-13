@@ -38,12 +38,12 @@
 <meta name="description" content="Un vrai taquin aux couleurs Quadreti : mode Nombres pour l'entraînement cérébral, mode Photo pour reconstituer votre propre image en glissant les pièces. Gratuit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:48px 24px 6px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 12px; font-weight:600; }
@@ -51,7 +51,7 @@
   p.accroche{ font-size:15.5px; color:var(--doux); max-width:52ch; margin:0 auto; line-height:1.6; }
 
   .onglets-mode{ display:flex; gap:8px; justify-content:center; margin:24px 0 36px; }
-  .onglet-mode{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:10px 22px; cursor:pointer; }
+  .onglet-mode{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:10px 22px; cursor:pointer; }
   .onglet-mode.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
 
   .jeu-cadre{ max-width:900px; margin:0 auto 60px; padding:0 24px; display:grid; grid-template-columns:auto 260px; gap:32px; align-items:start; justify-content:center; }
@@ -62,7 +62,7 @@
   .case-vide{ position:absolute; border-radius:9px; background:var(--papier); border:1.5px dashed var(--bord); box-sizing:border-box; }
   .tuile{
     position:absolute; border-radius:9px; display:flex; align-items:center; justify-content:center;
-    font-family:'Quicksand',sans-serif; font-weight:800; cursor:pointer; user-select:none;
+    font-family:'Jura',sans-serif; font-weight:800; cursor:pointer; user-select:none;
     background:var(--terracotta); color:#fff; box-sizing:border-box; overflow:hidden;
     background-repeat:no-repeat;
     transition:top .16s ease, left .16s ease, transform .1s ease;
@@ -76,18 +76,18 @@
   .panneau-jeu{ display:flex; flex-direction:column; gap:16px; }
   .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
   .carte-stat .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
-  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:22px; }
+  .carte-stat .valeur{ font-family:'Jura',sans-serif; font-weight:700; font-size:22px; }
   .carte-taille{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:16px 18px; }
   .carte-taille .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
   .choix-taille{ display:flex; gap:6px; }
-  .btn-taille{ flex:1; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; padding:8px 0; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-taille{ flex:1; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; padding:8px 0; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
   .btn-taille.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:13px 22px; cursor:pointer; text-align:center; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:13px 22px; cursor:pointer; text-align:center; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ background:#1c232a; }
   .btn:disabled{ opacity:.45; cursor:not-allowed; }
   .note-solvable{ font-size:11px; color:var(--doux); line-height:1.5; text-align:center; }
-  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13.5px; }
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Jura',sans-serif; font-size:13.5px; }
   .victoire.actif{ display:block; animation:victoirePop .35s cubic-bezier(.2,1.4,.5,1); }
   @keyframes victoirePop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
   @media (prefers-reduced-motion: reduce){ .tuile.secoue, .victoire.actif{ animation:none; } }

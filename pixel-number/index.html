@@ -38,12 +38,12 @@
 <meta name="description" content="Chargez une photo, réglez la grille et le nombre de couleurs : Pixel Number App calcule un plan numéroté façon peinture par numéros, à imprimer ou colorier — gratuit, par Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
-  body{ margin:0; background:var(--papier); font-family:'Karla',sans-serif; color:var(--texte); }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--papier); font-family:'Jura',sans-serif; color:var(--texte); }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .badge-bientot{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--doux); background:#00000008; border-radius:99px; padding:3px 8px; }
 
@@ -51,7 +51,7 @@
   .hero-pn .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta); margin:0 0 10px; font-weight:600; }
   .hero-pn h1{ font-size:clamp(28px,4vw,42px); line-height:1.1; margin:0 0 14px; }
   .hero-pn p{ font-size:15.5px; color:var(--doux); max-width:56ch; margin:0 auto 22px; line-height:1.6; }
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:12px 24px; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:99px; padding:12px 24px; cursor:pointer; text-decoration:none; display:inline-block; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ background:#1c232a; }
   .btn.discret{ background:transparent; color:var(--charbon); border:1.5px solid var(--charbon); }
@@ -60,7 +60,7 @@
 
   .bibliotheque{ max-width:1180px; margin:0 auto; padding:8px 28px 30px; }
   .onglets-tranche{ display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; justify-content:center; }
-  .onglet-tranche{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:9px 18px; cursor:pointer; }
+  .onglet-tranche{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:13px; background:var(--surface); border:1.5px solid var(--bord); color:var(--doux); border-radius:99px; padding:9px 18px; cursor:pointer; }
   .onglet-tranche.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
   .grille-bibliotheque{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; }
   .carte-exemple{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:0; text-align:center; cursor:pointer; transition:border-color .15s, transform .15s; overflow:hidden; }
@@ -85,9 +85,9 @@
   input[type=file]{ font-size:12.5px; width:100%; }
   .case-opt{ display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:9px; cursor:pointer; }
   .case-opt input{ accent-color:var(--terracotta); width:15px; height:15px; }
-  .btn-suggestion{ display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:10px; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:var(--papier); border:1px dashed var(--terracotta); color:var(--terracotta); border-radius:8px; padding:9px 10px; cursor:pointer; }
+  .btn-suggestion{ display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:10px; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px; background:var(--papier); border:1px dashed var(--terracotta); color:var(--terracotta); border-radius:8px; padding:9px 10px; cursor:pointer; }
   .note-suggestion{ font-size:11px; color:var(--terracotta); font-weight:600; margin:8px 0 0; min-height:14px; }
-  .btn-cloud{ display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:8px; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:var(--papier); border:1px solid var(--bord); color:var(--doux); border-radius:8px; padding:9px 10px; cursor:not-allowed; }
+  .btn-cloud{ display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:8px; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px; background:var(--papier); border:1px solid var(--bord); color:var(--doux); border-radius:8px; padding:9px 10px; cursor:not-allowed; }
 
   .zone-resultat{ display:flex; flex-direction:column; gap:16px; }
   .barre-resultat{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
@@ -136,16 +136,16 @@
     .imp-logo i{ border-radius:0.8px; background:transparent; }
     .imp-logo i.t{ background:#1A1611; }
     .imp-logo i.a{ background:#E2725B; }
-    .imp-marque{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; color:#1A1611; }
+    .imp-marque{ font-family:'Jura',sans-serif; font-weight:700; font-size:13px; color:#1A1611; }
     .imp-baseline{ font-size:9.5px; color:#6b6355; flex:1; text-align:right; }
-    .imp-titre{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; margin:0 0 10px; color:#1A1611; }
+    .imp-titre{ font-family:'Jura',sans-serif; font-weight:700; font-size:15px; margin:0 0 10px; color:#1A1611; }
     .imp-grille{ display:grid; margin:0 auto; }
-    .imp-grille .c{ display:flex; align-items:center; justify-content:center; font-family:'Karla',sans-serif; font-weight:700; box-sizing:border-box; }
+    .imp-grille .c{ display:flex; align-items:center; justify-content:center; font-family:'Jura',sans-serif; font-weight:700; box-sizing:border-box; }
     .imp-pied{ display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid #1A161122; padding-top:9px; margin-top:12px; }
     .imp-url{ font-family:ui-monospace,monospace; font-size:9.5px; color:#6b6355; }
     .imp-qr{ width:20mm; height:20mm; border:1.3px dashed #6b6355; border-radius:2mm; display:flex; align-items:center; justify-content:center; font-size:7px; color:#6b6355; text-align:center; }
     .imp-legende{ page-break-before:always; padding-top:4mm; }
-    .imp-legende h2{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; margin:0 0 12px; color:#1A1611; }
+    .imp-legende h2{ font-family:'Jura',sans-serif; font-weight:700; font-size:15px; margin:0 0 12px; color:#1A1611; }
     .imp-grille-legende{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px 14px; }
     .imp-item-legende{ display:flex; align-items:center; gap:8px; font-size:11px; color:#1A1611; }
     .imp-item-legende .num{ width:20px; height:20px; border-radius:4px; border:1px solid #1A1611; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:10px; flex-shrink:0; }

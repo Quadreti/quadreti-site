@@ -48,8 +48,8 @@
    hauteur d une rangee de tesselles -- 0,22105 x 66 px = 14,6 px -- et le bloc texte ecarte ses deux lignes aux extremites du logo
    (space-between). Resultat : la baseline se pose pile sur la derniere rangee, celle qui porte la tesselle orange. L interligne reste
    a 14,6 px a tous les paliers, seule la taille de police bouge : c est ce qui garde le calage juste.
-   Note de contraste, signalee au fondateur et tranchee par lui : l orange de marque sur le navy donne 4,07, sous le minimum de 4,5 pour
-   du texte de cette taille. Un orange eclairci (#e8874c) monterait a 5,62 si la question revient. */
+   Note de contraste, signalee au fondateur et tranchee par lui : l orange de marque sur le navy donne 4,23 (mesure, formule WCAG),
+   sous le minimum de 4,5 pour du texte de cette taille. Un orange eclairci (#e8874c) monterait a 5,51 si la question revient. */
 .qz-app-baseline{display:block;font-family:'Jura',sans-serif;font-weight:700;font-size:14.5px;line-height:14.6px;letter-spacing:.02em;color:var(--qz-terracotta,#d96c2f);white-space:nowrap}
 @media (min-width:901px) and (max-width:1440px){.qz-app-baseline{font-size:12.5px}}
 @media (min-width:901px) and (max-width:1100px){.qz-app-baseline{font-size:11px}}

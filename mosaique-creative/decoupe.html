@@ -36,7 +36,7 @@
 <title>Mosaïque Créative — Mode découpe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12;
     /* Palette rail/page (30/08, mockup valide par le fondateur) : remplace le
@@ -51,8 +51,8 @@
     --gris:#dedede; --marine:#1e2b35; --brule:#d96c2f; --blanc:#ffffff; --rail-doux:#ffffffb3; --rail-survol:#ffffff1a; --rail-filet:#ffffff1f;
   }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   /* Titre retire de la page (28/08, demande du fondateur) : sera porte par
      le bandeau superieur du site lors de l'integration, pas duplique ici --
@@ -172,7 +172,7 @@
   .valeur-zoom-rail{ font-variant-numeric:tabular-nums; font-size:10.5px; font-weight:700; color:var(--rail-doux); text-align:center; padding:2px 0; }
   .aide-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
   .aide-liste li{ font-size:12.5px; color:var(--texte); line-height:1.5; }
-  .aide-liste b{ font-family:'Quicksand',sans-serif; }
+  .aide-liste b{ font-family:'Jura',sans-serif; }
 
   /* Loupe de zoom : ne suit le curseur QUE pendant l'ajustement d'une
      poignee (redimensionnement ou courbure de bord) -- c'est le seul moment
@@ -216,7 +216,7 @@
   .champ-case input{ accent-color:var(--terracotta); width:15px; height:15px; cursor:pointer; }
   .grille-formats{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
   .btn-format{
-    font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:8px 2px;
+    font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:8px 2px;
     border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer;
   }
   .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
@@ -241,14 +241,14 @@
   .fleche-format:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .fleche-format:disabled{ opacity:.35; cursor:default; border-color:var(--bord); color:var(--doux); }
 
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
   .btn:hover{ border-color:var(--terracotta); color:var(--terracotta); }
   .btn:disabled{ opacity:.4; cursor:default; border-color:var(--bord); color:var(--doux); }
 
   /* ===== Menu clic droit ===== */
   .menu-contextuel{
     position:fixed; z-index:200; background:var(--surface); border:1px solid var(--bord); border-radius:12px;
-    box-shadow:0 14px 40px rgba(43,53,62,.25); padding:8px; display:none; width:230px; font-family:'Quicksand',sans-serif;
+    box-shadow:0 14px 40px rgba(43,53,62,.25); padding:8px; display:none; width:230px; font-family:'Jura',sans-serif;
     color:var(--charbon);
   }
   .menu-contextuel.ouvert{ display:block; }
@@ -299,7 +299,7 @@
   .grille-champs{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; margin-bottom:10px; }
   .grille-champ label{ display:block; font-size:10px; font-weight:700; color:var(--doux); margin-bottom:4px; }
   .grille-champ input{
-    width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px;
+    width:100%; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:13px;
     padding:7px 8px; border-radius:7px; border:1.5px solid var(--bord); background:var(--papier); color:var(--texte);
   }
   .grille-champ input:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
@@ -307,7 +307,7 @@
   .grille-actions .btn{ flex:1; }
   .ajouter-perso-mc{ width:20px; height:20px; border-radius:6px; border:1.5px dashed var(--bord); background:var(--papier); color:var(--doux); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
   .ajouter-perso-mc:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .mc-action{ display:block; width:100%; text-align:left; background:none; border:none; padding:7px 4px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); cursor:pointer; border-radius:6px; }
+  .mc-action{ display:block; width:100%; text-align:left; background:none; border:none; padding:7px 4px; font-family:'Jura',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); cursor:pointer; border-radius:6px; }
   .mc-action:hover{ background:var(--papier); }
   .mc-action.danger{ color:#b04a36; }
   .mc-action:disabled{ opacity:.4; cursor:not-allowed; }
@@ -340,7 +340,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     position:sticky; top:-18px; background:var(--surface); padding:18px 0 10px; margin:-18px 0 4px;
   }
-  .mcd-entete h3{ font-family:'Quicksand',sans-serif; font-size:15px; margin:0; }
+  .mcd-entete h3{ font-family:'Jura',sans-serif; font-size:15px; margin:0; }
   .mcd-fermer{
     width:28px; height:28px; border-radius:50%; border:none; background:var(--papier); color:var(--doux);
     cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -368,14 +368,14 @@
   .mcd-case svg{ width:11px; height:11px; color:var(--creme); opacity:0; }
   .mcd-case.mcd-coche svg{ opacity:1; }
 
-  .mcd-libelle{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
+  .mcd-libelle{ font-family:'Jura',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
   .mcd-ligne.mcd-desactivee .mcd-libelle{ color:var(--doux); }
 
   .mcd-cadenas{ width:14px; height:14px; color:#b04a36; flex-shrink:0; }
   .mcd-cadenas svg{ width:100%; height:100%; }
 
   .mcd-reinit{
-    font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
+    font-family:'Jura',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
     background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
   }
   .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
@@ -415,7 +415,7 @@
   .icone-outil{
     width:34px; height:34px; border-radius:10px; border:none; background:var(--terracotta);
     color:var(--creme); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
-    box-shadow:0 6px 18px -12px #2b353e4d; font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px;
+    box-shadow:0 6px 18px -12px #2b353e4d; font-family:'Jura',sans-serif; font-weight:700; font-size:15px;
     text-decoration:none;
   }
   .icone-outil:hover{ background:#c85f49; }
@@ -454,7 +454,7 @@
   }
   .rail-lateral .icone-outil[data-cible] svg, .rail-lateral #btnApercu svg, .rail-lateral #btnBoutique svg{ width:18px; height:18px; flex-shrink:0; }
   .rail-lateral .icone-outil[data-cible] .etiquette, .rail-lateral #btnApercu .etiquette, .rail-lateral #btnBoutique .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
+    font-family:'Jura',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
   }
   .rail-lateral .icone-outil[data-cible]:hover, .rail-lateral #btnApercu:hover, .rail-lateral #btnBoutique:hover{ background:var(--rail-survol); }
   .rail-lateral .icone-outil[data-cible]:hover .etiquette, .rail-lateral #btnApercu:hover .etiquette, .rail-lateral #btnBoutique:hover .etiquette{ color:var(--blanc); }
@@ -502,7 +502,7 @@
   }
   .groupe-outils-mode .icone-outil svg{ width:17px; height:17px; flex-shrink:0; }
   .groupe-outils-mode .icone-outil .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
+    font-family:'Jura',sans-serif; font-size:9.5px; font-weight:700; line-height:1.1; text-align:center; color:var(--rail-doux);
   }
   .groupe-outils-mode .icone-outil:hover{ background:var(--rail-survol); }
   .groupe-outils-mode .icone-outil:hover .etiquette{ color:var(--blanc); }
@@ -535,7 +535,7 @@
   .barre-objet button, .barre-objet .icone-outil{
     width:auto; height:auto; flex-direction:column; gap:4px; padding:7px 10px 6px; border-radius:9px;
     background:transparent; color:var(--creme); border:none; cursor:pointer; box-shadow:none;
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; white-space:nowrap; flex-shrink:0;
+    font-family:'Jura',sans-serif; font-size:9.5px; font-weight:700; white-space:nowrap; flex-shrink:0;
   }
   .barre-objet button svg, .barre-objet .icone-outil svg{ width:16px; height:16px; }
   .barre-objet button:hover, .barre-objet .icone-outil:hover{ background:#ffffff1c; }

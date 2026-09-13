@@ -74,7 +74,7 @@
 .qz-cat{
   /* 29/08 soir : categorie agrandie au maximum raisonnable (8.5 -> 12px,
      demande fondateur) -- au-dela elle depasse nettement le mot-symbole. */
-  font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; letter-spacing:.09em;
+  font-family:'Jura',sans-serif; font-weight:600; font-size:12px; letter-spacing:.09em;
   color:var(--qz-terracotta); white-space:nowrap;
   display:inline-block; overflow:hidden; width:0;
   animation:qzDactylo 2.2s steps(25,end) 2.25s forwards;
@@ -99,11 +99,11 @@
 .qz-navpanel.open{ max-height:640px; }
 .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
 .qz-navpanel > ul > li{ width:100%; max-width:280px; text-align:center; }
-.qz-navpanel a{ font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
+.qz-navpanel a{ font-family:'Jura',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2; text-decoration:none; padding:9px 0; display:block; }
 .qz-navpanel a:hover{ color:var(--qz-terracotta); }
 .qz-subtoggle{
   width:100%; background:none; border:none; cursor:pointer;
-  font-family:'Karla',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2;
+  font-family:'Jura',sans-serif; font-weight:600; font-size:14px; color:#c9c3b2;
   padding:9px 0; display:flex; align-items:center; justify-content:center; gap:6px;
   line-height:1.65;
 }
@@ -166,7 +166,7 @@ footer.qz-footer .qz-coltitre{ color:var(--qz-pied-titre); }
 .qz-coltitre::before{ display:none; }
 .qz-pied-infos ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .qz-pied-infos a{
-  color:var(--qz-creme); opacity:.88; text-decoration:none; font-size:14.5px; font-family:'Quicksand',sans-serif; font-weight:500;
+  color:var(--qz-creme); opacity:.88; text-decoration:none; font-size:14.5px; font-family:'Jura',sans-serif; font-weight:500;
   position:relative; display:inline-block;
 }
 /* soulignement anime CSS pur : un trait accent qui glisse au survol */
@@ -197,7 +197,7 @@ footer.qz-footer .qz-coltitre{ color:var(--qz-pied-titre); }
   padding:14px 96px 16px; text-align:center;
 }
 footer.qz-footer .qz-pied-barre{ background:var(--qz-pied-barre); }
-footer.qz-footer .qz-pied-barre .qz-copy{ color:var(--qz-pied-barre-texte); font-family:'Quicksand',sans-serif; font-size:12px; font-weight:600; }
+footer.qz-footer .qz-pied-barre .qz-copy{ color:var(--qz-pied-barre-texte); font-family:'Jura',sans-serif; font-size:12px; font-weight:600; }
 @media (max-width:900px){
   .qz-pied3{ grid-template-columns:1fr 1fr; gap:28px; padding:34px 24px 30px; }
   .qz-basdepage{ grid-column:1 / -1; }

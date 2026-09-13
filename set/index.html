@@ -38,12 +38,12 @@
 <meta name="description" content="SET revisité aux couleurs Quadreti : repérez trois tesselles où nombre, couleur, forme et remplissage sont tous pareils ou tous différents. Gratuit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; --vert-ok:#2DC653; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:48px 24px 6px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 12px; font-weight:600; }
@@ -70,18 +70,18 @@
   .carte .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:10px; }
   .carte-stat{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:14px 16px; }
   .carte-stat .label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:4px; }
-  .carte-stat .valeur{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:20px; }
+  .carte-stat .valeur{ font-family:'Jura',sans-serif; font-weight:700; font-size:20px; }
 
   .legende{ display:flex; flex-direction:column; gap:8px; font-size:11.5px; color:var(--doux); }
   .legende b{ color:var(--texte); }
 
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:13.5px; border:none; border-radius:99px; padding:12px 20px; cursor:pointer; text-align:center; width:100%; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; border:none; border-radius:99px; padding:12px 20px; cursor:pointer; text-align:center; width:100%; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ filter:brightness(1.1); }
   .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
   .btn.secondaire:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 
-  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; }
+  .victoire{ display:none; text-align:center; padding:14px; border-radius:12px; background:var(--teinte-actif); border:1px dashed var(--terracotta); color:var(--terracotta); font-weight:700; font-family:'Jura',sans-serif; font-size:13px; line-height:1.5; }
   .victoire.actif{ display:block; animation:pop .35s cubic-bezier(.2,1.4,.5,1); }
   @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
   @media (prefers-reduced-motion: reduce){ .victoire.actif{ animation:none; } }

@@ -38,7 +38,7 @@
 <title>Panneau de contrôle — Quadreti</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93;
@@ -46,8 +46,8 @@
     --teinte-actif:#e2725b12; --live-dot:#4CAF6D;
   }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--fond); color:var(--texte); font-family:'Karla',sans-serif; font-size:14px; }
-  h1,h2,h3,.qz{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--fond); color:var(--texte); font-family:'Jura',sans-serif; font-size:14px; }
+  h1,h2,h3,.qz{ font-family:'Jura',sans-serif; }
   .cache{ display:none !important; }
 
   /* ---------- connexion ---------- */
@@ -56,7 +56,7 @@
   .carte-connexion h1{ font-size:17px; margin:0 0 4px; }
   .carte-connexion p{ font-size:12px; color:var(--doux); margin:0 0 18px; }
   .carte-connexion input{ width:100%; font:inherit; padding:10px 12px; border:1px solid var(--bord); border-radius:8px; margin-bottom:10px; }
-  .carte-connexion button{ width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:11px; cursor:pointer; }
+  .carte-connexion button{ width:100%; font:inherit; font-family:'Jura',sans-serif; font-weight:700; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:11px; cursor:pointer; }
 
   /* ---------- barre haute ---------- */
   .barre-haut{ display:flex; align-items:center; gap:14px; padding:12px 20px; border-bottom:1px solid var(--bord); background:var(--surface); }
@@ -77,7 +77,7 @@
   @media (max-width:1100px){ .disposition{ grid-template-columns:200px 1fr 300px; } }
 
   nav.sommaire{ border-right:1px solid var(--bord); overflow-y:auto; padding:14px 10px 30px; }
-  .groupe-nom{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--doux); margin:16px 8px 6px; }
+  .groupe-nom{ font-family:'Jura',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--doux); margin:16px 8px 6px; }
   .groupe-nom:first-child{ margin-top:4px; }
   .item-nav{ display:flex; align-items:center; gap:9px; width:100%; text-align:left; border:none; background:none; color:var(--texte); font:inherit; font-size:13px; padding:8px 9px; border-radius:8px; cursor:pointer; }
   .item-nav:hover:not(:disabled){ background:var(--fond); }
@@ -130,11 +130,11 @@
   .rang-image{ display:flex; align-items:center; gap:12px; }
   .miniature{ width:64px; height:64px; border-radius:9px; border:1px solid var(--bord); background:var(--fond) center/cover no-repeat; flex-shrink:0; }
   .rang-image .infos{ font-size:11.5px; color:var(--doux); flex:1; }
-  .rang-image label.btn-fichier{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:var(--fond); border:1px solid var(--bord); border-radius:8px; padding:7px 12px; cursor:pointer; display:inline-block; }
+  .rang-image label.btn-fichier{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px; background:var(--fond); border:1px solid var(--bord); border-radius:8px; padding:7px 12px; cursor:pointer; display:inline-block; }
   .rang-image input[type=file]{ display:none; }
 
   .pied-carte{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:16px; }
-  .btn-enregistrer{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:10px 18px; cursor:pointer; }
+  .btn-enregistrer{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:9px; padding:10px 18px; cursor:pointer; }
   .btn-enregistrer:disabled{ opacity:.5; cursor:default; }
   .historique{ font-size:11.5px; color:var(--doux); display:flex; align-items:center; gap:8px; }
   .historique button.lien{ font:inherit; font-size:11.5px; border:none; background:none; color:var(--terracotta); cursor:pointer; text-decoration:underline; padding:0; }
@@ -158,7 +158,7 @@
   .memoriser-rang select, .memoriser-rang input{ font:inherit; font-size:12.5px; padding:8px 10px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--texte); }
   .memoriser-rang select{ width:120px; flex-shrink:0; }
   .memoriser-rang input{ flex:1; min-width:0; }
-  .memoriser-rang button{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:8px; padding:8px 16px; cursor:pointer; flex-shrink:0; }
+  .memoriser-rang button{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; background:var(--charbon); color:var(--creme); border:none; border-radius:8px; padding:8px 16px; cursor:pointer; flex-shrink:0; }
 
   .zone-fine{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 0; border-top:1px solid var(--bord); }
   .zone-fine:first-of-type{ border-top:none; padding-top:2px; }
@@ -178,7 +178,7 @@
   .bloc-sous{ margin:2px 0 14px 18px; padding-left:14px; border-left:2px solid var(--bord); }
   .rang-sous{ display:grid; grid-template-columns:1fr 1fr auto auto auto auto; gap:10px; align-items:end; margin-bottom:8px; }
   .select-deplacer{ font:inherit; font-size:12px; padding:8px 6px; border:1px solid var(--bord); border-radius:8px; background:var(--fond); color:var(--doux); height:34px; max-width:150px; }
-  .btn-texte-ajout{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
+  .btn-texte-ajout{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px; background:none; border:1px dashed var(--bord); color:var(--doux); border-radius:8px; padding:8px 14px; cursor:pointer; }
 
   .grille-zones{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:280px; }
   .case-zone{ display:flex; align-items:center; justify-content:center; gap:5px; margin:0; border:2px solid var(--bord); border-radius:9px; padding:9px 4px; cursor:pointer; font-size:11.5px; color:var(--texte); text-align:center; white-space:nowrap; }
@@ -733,7 +733,11 @@ var QUADRETI_COLOR = {
     logo: '#1e2b35',
     mentionsKraft: '#dedede'
   },
-  polices: { titres: 'Quicksand', texte: 'Quicksand' }
+  /* 13/09, arbitrage du fondateur : « on reste sur Jura ». Tout l ecosysteme lit dans la meme police, le site comme les apps.
+     Quicksand et Karla sortent du reglage officiel. Piege a connaitre si on touche a reglages-site.js : appliquerPolices() ne fait RIEN
+     quand le reglage vaut exactement ses DEFAUTS (Quicksand/Karla) -- ne jamais passer DEFAUTS a Jura sans changer aussi le CSS en dur,
+     sinon plus personne n injecte la police et le site retombe sur le Quicksand ecrit dans les feuilles. */
+  polices: { titres: 'Jura', texte: 'Jura' }
 };
 
 function rendreSectionPalette(){

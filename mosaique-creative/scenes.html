@@ -36,12 +36,12 @@
 <title>Mosaïque Créative — Bibliothèque de scènes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --teinte-actif:#e2725b12; }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--papier); color:var(--texte); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta); margin:0 0 10px; font-weight:600; }
@@ -63,7 +63,7 @@
   }
   .carte-scene:hover, .carte-scene.actif{ border-color:var(--terracotta); }
   .carte-scene canvas{ width:100%; height:90px; display:block; }
-  .carte-scene .nom-scene{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:11.5px; padding:6px 8px; color:var(--charbon); }
+  .carte-scene .nom-scene{ font-family:'Jura',sans-serif; font-weight:700; font-size:11.5px; padding:6px 8px; color:var(--charbon); }
 
   .zone-travail{ display:flex; justify-content:center; }
   .canevas-cadre{ background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:16px; box-shadow:0 20px 50px -30px #2b353e55; width:100%; max-width:720px; }
@@ -73,16 +73,16 @@
   .note-bas{ font-size:11px; color:var(--doux); text-align:center; margin-top:10px; line-height:1.5; }
   .champ-case{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--doux); cursor:pointer; }
   .champ-case input{ accent-color:var(--terracotta); width:15px; height:15px; cursor:pointer; }
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
   .btn:hover{ border-color:var(--terracotta); color:var(--terracotta); }
-  .btn-format{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-format{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
   .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
 
   /* ===== Menu clic droit : palette en tiroir ===== */
   .menu-contextuel{
     position:fixed; z-index:200; background:var(--surface); border:1px solid var(--bord); border-radius:12px;
     box-shadow:0 14px 40px rgba(43,53,62,.25); padding:8px; display:none; width:250px;
-    font-family:'Quicksand',sans-serif;
+    font-family:'Jura',sans-serif;
   }
   .menu-contextuel.ouvert{ display:block; }
   .mc-section{ padding:6px 6px 8px; border-bottom:1px solid var(--bord); }
@@ -121,7 +121,7 @@
 
   .lien-palette{
     display:block; background:none; border:none; padding:0; margin:2px 0 8px; cursor:pointer;
-    font-family:'Karla',sans-serif; font-size:10.5px; color:var(--doux); text-decoration:underline;
+    font-family:'Jura',sans-serif; font-size:10.5px; color:var(--doux); text-decoration:underline;
   }
   .lien-palette:hover{ color:var(--terracotta); }
   .mc-sep{ height:1px; background:var(--bord); margin:4px 0; }

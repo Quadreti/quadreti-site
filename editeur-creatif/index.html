@@ -38,7 +38,10 @@
 <meta name="description" content="Composez votre visuel : photo, texte, stickers, formes, détourage. Gratuit, par Quadreti.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Karla:wght@400;600;700&family=Playfair+Display:wght@700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<!-- 13/09 : le site est passe tout en Jura, mais CETTE page garde Quicksand et Karla chargees -- elles ne servent pas a
+     l interface, elles sont proposees au CLIENT dans le selecteur de police de ses propres textes (voir la liste plus bas). Les retirer
+     aurait casse deux choix du selecteur en silence. -->
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --doux-sombre:#b9c0c7; --teinte-actif:#e2725b12;
@@ -59,8 +62,8 @@
      30/08 : le fond de PAGE bascule a son tour en gris clair (--gris), meme
      principe que Mosaique le meme soir -- suite directe de l'harmonisation
      ci-dessus, pas une rupture avec elle. */
-  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Karla',sans-serif; }
-  h1,h2,h3{ font-family:'Quicksand',sans-serif; }
+  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Jura',sans-serif; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; }
 
 
   /* ================= Rails d'icones (28/08, meme base que Mosaique) =================
@@ -102,7 +105,7 @@
   }
   .rail-gauche .icone-outil svg{ width:19px; height:19px; }
   .rail-gauche .icone-outil .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:10px; font-weight:700; line-height:1.15; text-align:center; color:var(--doux-sombre);
+    font-family:'Jura',sans-serif; font-size:10px; font-weight:700; line-height:1.15; text-align:center; color:var(--doux-sombre);
   }
   .rail-gauche .icone-outil:hover{ background:var(--rail-survol); opacity:1; }
   .rail-gauche .icone-outil:hover .etiquette{ color:var(--blanc); }
@@ -136,7 +139,7 @@
   @media (max-width:760px){ .rail-gauche .popover-outil{ left:84px; } }
   .popover-outil.popover-bas{ top:auto; bottom:0; }
   .popover-outil.ouvert{ display:block; }
-  .popover-outil h3{ font-family:'Quicksand',sans-serif; font-size:12px; font-weight:700; margin:0 0 10px; text-transform:uppercase; letter-spacing:.03em; color:var(--doux); }
+  .popover-outil h3{ font-family:'Jura',sans-serif; font-size:12px; font-weight:700; margin:0 0 10px; text-transform:uppercase; letter-spacing:.03em; color:var(--doux); }
 
   /* Rail droit (30/08, portee depuis Mosaique) : jusqu'ici sans habillage
      propre (icones directement sur le fond de page sombre) -- reçoit
@@ -155,7 +158,7 @@
   }
   .icone-mini:hover{ background:var(--rail-survol); color:var(--brule); }
   .icone-mini svg{ width:15px; height:15px; }
-  .valeur-zoom{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; color:var(--doux-sombre); }
+  .valeur-zoom{ font-family:'Jura',sans-serif; font-weight:700; font-size:10px; color:var(--doux-sombre); }
 
   /* Aide / Boutique (30/08, portee depuis Mosaique -- meme demande fondateur,
      "meme esprit que le reste") : rejoignent le rail droit, meme traitement
@@ -170,7 +173,7 @@
   }
   .rail-droite .icone-outil svg{ width:18px; height:18px; }
   .rail-droite .icone-outil .etiquette{
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; line-height:1.15; text-align:center; color:var(--doux-sombre);
+    font-family:'Jura',sans-serif; font-size:9.5px; font-weight:700; line-height:1.15; text-align:center; color:var(--doux-sombre);
   }
   .rail-droite .icone-outil:hover{ background:var(--rail-survol); }
   .rail-droite .icone-outil:hover .etiquette{ color:var(--blanc); }
@@ -197,7 +200,7 @@
   .barre-objet button, .barre-objet .icone-outil{
     width:auto; height:auto; flex-direction:column; gap:4px; padding:7px 10px 6px; border-radius:9px;
     background:transparent; color:var(--creme); border:none; cursor:pointer;
-    font-family:'Quicksand',sans-serif; font-size:9.5px; font-weight:700; white-space:nowrap; flex-shrink:0;
+    font-family:'Jura',sans-serif; font-size:9.5px; font-weight:700; white-space:nowrap; flex-shrink:0;
   }
   .barre-objet button svg, .barre-objet .icone-outil svg{ width:16px; height:16px; }
   .barre-objet button:hover, .barre-objet .icone-outil:hover{ background:#ffffff1c; opacity:1; }
@@ -209,7 +212,7 @@
   .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
   .carte .label{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin-bottom:8px; }
 
-  .btn{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; display:flex; align-items:center; justify-content:center; gap:6px; }
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ background:#1c232a; }
   .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
@@ -221,7 +224,7 @@
   input[type=file]{ display:none; }
 
   .grille-formats{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-  .btn-format{ font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
+  .btn-format{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
   .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
 
   .grille-stickers{ display:none; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:8px; }
@@ -275,7 +278,7 @@
   .repere-photo-forme:hover{ background:#fff; }
   .repere-photo-forme svg{ width:60%; height:60%; pointer-events:none; }
   .calque-sticker svg{ width:100%; height:100%; pointer-events:none; }
-  .calque-texte{ display:flex; align-items:center; justify-content:center; text-align:center; padding:2px; white-space:pre-wrap; word-break:break-word; font-family:'Quicksand',sans-serif; }
+  .calque-texte{ display:flex; align-items:center; justify-content:center; text-align:center; padding:2px; white-space:pre-wrap; word-break:break-word; font-family:'Jura',sans-serif; }
 
   .poignee-redim{ position:absolute; right:-7px; bottom:-7px; width:14px; height:14px; border-radius:50%; background:var(--terracotta); border:2px solid #fff; cursor:nwse-resize; }
   .badge-verrou{ position:absolute; left:-7px; top:-7px; width:16px; height:16px; border-radius:50%; background:var(--charbon); color:var(--creme); display:flex; align-items:center; justify-content:center; font-size:9px; }
@@ -313,7 +316,7 @@
 
   .menu-contextuel{ position:fixed; z-index:220; background:var(--surface); border:1px solid var(--bord); border-radius:10px; box-shadow:0 14px 34px -12px #2b353e66; padding:5px; display:none; min-width:170px; }
   .menu-contextuel.ouvert{ display:block; }
-  .menu-contextuel button{ display:flex; align-items:center; gap:8px; width:100%; text-align:left; font:inherit; font-family:'Karla',sans-serif; font-size:12.5px; font-weight:600; color:var(--texte); background:none; border:none; border-radius:7px; padding:8px 10px; cursor:pointer; }
+  .menu-contextuel button{ display:flex; align-items:center; gap:8px; width:100%; text-align:left; font:inherit; font-family:'Jura',sans-serif; font-size:12.5px; font-weight:600; color:var(--texte); background:none; border:none; border-radius:7px; padding:8px 10px; cursor:pointer; }
   .menu-contextuel button:hover{ background:var(--teinte-actif); color:var(--terracotta); }
   .menu-contextuel button:disabled{ opacity:.4; cursor:default; background:none; color:var(--texte); }
   .menu-contextuel hr{ border:none; border-top:1px solid var(--bord); margin:4px 2px; }
@@ -341,7 +344,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     position:sticky; top:-18px; background:var(--surface); padding:18px 0 10px; margin:-18px 0 4px;
   }
-  .mcd-entete h3{ font-family:'Quicksand',sans-serif; font-size:15px; margin:0; }
+  .mcd-entete h3{ font-family:'Jura',sans-serif; font-size:15px; margin:0; }
   .mcd-fermer{
     width:28px; height:28px; border-radius:50%; border:none; background:var(--papier); color:var(--doux);
     cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -369,20 +372,20 @@
   .mcd-case svg{ width:11px; height:11px; color:var(--creme); opacity:0; }
   .mcd-case.mcd-coche svg{ opacity:1; }
 
-  .mcd-libelle{ font-family:'Quicksand',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
+  .mcd-libelle{ font-family:'Jura',sans-serif; font-weight:600; font-size:12.5px; color:var(--charbon); flex:1; }
   .mcd-ligne.mcd-desactivee .mcd-libelle{ color:var(--doux); }
 
   .mcd-cadenas{ width:14px; height:14px; color:#b04a36; flex-shrink:0; }
   .mcd-cadenas svg{ width:100%; height:100%; }
 
   .mcd-reinit{
-    font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
+    font-family:'Jura',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
     background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
   }
   .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
 
   .grille-effets{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
-  .btn-effet{ font:inherit; font-family:'Karla',sans-serif; font-weight:700; font-size:9.5px; padding:6px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; text-align:center; }
+  .btn-effet{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:9.5px; padding:6px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; text-align:center; }
   .btn-effet.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
 
   .grille-formes{ display:none; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:8px; }
@@ -430,7 +433,7 @@
   .grille-champs{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; margin-bottom:10px; }
   .grille-champ label{ display:block; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--doux); margin-bottom:4px; }
   .grille-champ input{
-    width:100%; font:inherit; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px;
+    width:100%; font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:12px;
     padding:6px 8px; border-radius:7px; border:1px solid var(--bord); background:var(--papier); color:var(--texte);
   }
   .grille-champ input:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
