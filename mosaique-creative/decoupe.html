@@ -68,7 +68,10 @@
      des icones dans les rails, plus aucune carte permanente -- .atelier n'a
      plus qu'un seul enfant (.zone-travail), simple centrage. Espace lateral
      ainsi libere, en reserve pour agrandir le canevas (prochaine etape). */
-  .atelier{ max-width:1180px; margin:22px auto 16px; padding:0 20px; }
+  /* 13/09, demande du fondateur : les volets lateraux vont aux BORDS. Le plafond de 1180 px les tenait au centre — sur un ecran large,
+     380 px de gris de chaque cote. La rangee etait deja en space-between : il suffit de liberer le cadre. Le canevas, lui, garde sa
+     taille (borne a 900 px par .zone-zoom), il ne s etire pas. */
+  .atelier{ max-width:none; margin:22px 0 16px; padding:0 16px; }
 
   .grille-formes{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
   .btn-forme{
