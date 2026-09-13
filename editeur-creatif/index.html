@@ -87,6 +87,17 @@
   .rail{ display:flex; flex-direction:column; align-items:center; padding:14px 0; gap:10px; }
   .rail-gauche{ justify-content:space-between; }
   .rail-droite{ justify-content:flex-end; }
+  /* 13/09, demande du fondateur : les rails vont JUSQU AU lisere, sans laisser de gris entre eux et lui.
+     A droite ils remontent au bord de la page (l onglet est plus court de ce cote) ; a gauche ils descendent derriere la bande du
+     decroche du pied, qui n a pas de fond a elle. Voir le meme correctif sur Photo Quadreti le meme jour. */
+  :root{ --debord-onglet:98px; --bande-decroche:22px; }
+  .rail-droite{ margin-top:calc(-1 * var(--debord-onglet)); padding-top:calc(14px + var(--debord-onglet)); }
+  .rail-gauche{ margin-bottom:calc(-1 * var(--bande-decroche)); padding-bottom:calc(14px + var(--bande-decroche)); }
+  @media (max-width:900px){
+    :root{ --debord-onglet:0px; --bande-decroche:0px }
+    .rail-droite{ margin-top:0; padding-top:14px; }
+    .rail-gauche{ margin-bottom:0; padding-bottom:14px; }
+  }
   .rail .groupe-haut{ display:flex; flex-direction:column; gap:10px; }
   .rail .groupe-bas{ display:flex; flex-direction:column; gap:10px; align-items:center; }
 
