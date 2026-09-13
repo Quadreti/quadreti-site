@@ -15,8 +15,15 @@
    Journal : JOURNAL.md, entree du 28/08 "Bandeau commun". */
 /* 09/09 : logo V5 anime, puis 10/09 : logo "Q grille" en relief (grille 4x4, tesselles clipsees, naming + baseline en relief),
    demande fondateur. Styles et police dans /logo-v5.css (charge ici pour ne pas toucher aux 32 pages). */
-document.write('<link rel="stylesheet" href="/logo-v5.css">');
-document.write('<link rel="stylesheet" href="/entete-commun.css">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
+/* 13/09 : base facultative (data-base) pour les apps servies hors du site. Vide = comportement d origine. */
+var QZ_BASE = (function () {
+  var sc = document.currentScript, b = (sc && sc.getAttribute('data-base')) || '';
+  return b.charAt(b.length - 1) === '/' ? b.slice(0, -1) : b;
+})();
+/* Les feuilles de style vivent A COTE du script (le site les sert a la racine, une app hors site en garde une copie voisine). */
+var QZ_CSS = QZ_BASE ? './' : '/';
+document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css">');
+document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
 /* 13/09, demande fondateur : chaque app porte SON logo dans la barre -- l initiale de son nom en tesselles, une orange integree a la
    lettre, barre navy et lettre grise (l inverse du site), sans accroche ni categorie. Une page d app le declare AVANT ce script :
@@ -32,22 +39,47 @@ var QZ_ALPHABET = {
   N: ['#..#', '##.#', '#.##', 'o..#'], /* Number Pixel Quadreti -- l orange au pied de la jambe gauche */
   P: ['###.', '#.#.', '###.', 'o...'], /* Photo Quadreti -- l orange au pied de la hampe, ce qui fait un P et pas un D */
   Q: ['###.', '#.#.', '#.#.', '###o'], /* la marque -- la queue, sous l anneau */
-  R: ['##o', '#..', '#..', '#..']  /* QR Quadreti, variante du fondateur (13/09) -- hampe et chapeau, l orange au bout du chapeau */
+  R: ['#o', '#.', '#.', '#.']  /* QR Quadreti — variante du fondateur, alignee le 13/09 sur le dessin valide dans l app QR : une tesselle de moins a la hampe superieure, l orange au bout du chapeau */
+};
+/* --- Trace de chaque lettre : l ordre dans lequel une main la dessine (13/09, demande du fondateur). --------------------------
+   Coordonnees "x,y", origine en haut a gauche. La derniere case de chaque liste est la tesselle ORANGE : elle signe la fin du geste.
+   C : on part en haut a droite, on file a gauche, on descend, on repart a droite -- le C s ouvre la ou l orange se pose.
+   D : la panse d abord, la hampe ensuite, qui descend jusqu a l orange du pied.
+   M : jambe gauche vers le bas, le V remonte et redescend, jambe droite jusqu a l orange.
+   N : jambe droite vers le bas, la diagonale remonte, jambe gauche jusqu a l orange du pied.
+   P : la panse se ferme, la hampe la complete, puis descend a l orange -- le trace dessine par le fondateur.
+   Q : l anneau fait le tour et finit au coin bas droit, d ou part la queue orange.
+   R : la hampe monte, le chapeau part a droite et se termine sur l orange (variante du fondateur, deux colonnes).
+   --------------------------------------------------------------------------------------------------------------------------- */
+var QZ_TRACE = {
+  C: ['2,0','1,0','0,0','0,1','0,2','0,3','1,3','2,3'],
+  D: ['0,0','1,0','2,0','3,1','3,2','2,3','1,3','0,1','0,2','0,3'],
+  M: ['0,0','0,1','0,2','0,3','1,1','2,2','3,1','4,0','4,1','4,2','4,3'],
+  N: ['3,0','3,1','3,2','3,3','2,2','1,1','0,0','0,1','0,2','0,3'],
+  P: ['0,0','1,0','2,0','2,1','2,2','1,2','0,2','0,1','0,3'],
+  Q: ['2,2','2,1','2,0','1,0','0,0','0,1','0,2','0,3','1,3','2,3','3,3'],
+  R: ['0,3','0,2','0,1','0,0','1,0']
 };
 var qzApp = (window.qzApp && QZ_ALPHABET[window.qzApp.lettre]) ? window.qzApp : null;
-if (qzApp) document.write('<link rel="stylesheet" href="/entete-app.css">');
+if (qzApp) document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-app.css">');
 function qzPlaqueLettre(lettre){
-  var g = QZ_ALPHABET[lettre], n = g[0].length, h = '', i = 0, y, x, c;
+  var g = QZ_ALPHABET[lettre], n = g[0].length, h = '', y, x, c;
   /* on rogne les colonnes de droite entierement vides : le C et le P sont dessines dans une boite de quatre colonnes dont la
      derniere ne sert pas, et ce vide se verrait comme un blanc entre la lettre et le nom. */
   while (n > 1 && g.every(function(r){ return r.charAt(n - 1) === '.'; })) n--;
+  /* 13/09 : l index d animation suit le TRACE de la lettre, pas la grille. L ordre du DOM, lui, reste celui de la grille --
+     c est lui qui place les cases. Une case absente du trace (il ne devrait pas y en avoir) passe en fin de geste. */
+  var trace = QZ_TRACE[lettre] || [], rang = {};
+  for (var k = 0; k < trace.length; k++) rang[trace[k]] = k;
   for (y = 0; y < 4; y++) for (x = 0; x < n; x++){
     c = g[y].charAt(x);
-    h += '<span class="qz-case ' + (c === 'o' ? 'qz-o' : (c === '#' ? 'qz-b' : 'qz-g')) + '" style="--i:' + (i++) + '"><span class="qz-tuile"></span></span>';
+    var i = rang[x + ',' + y];
+    if (i === undefined) i = trace.length;
+    h += '<span class="qz-case ' + (c === 'o' ? 'qz-o' : (c === '#' ? 'qz-b' : 'qz-g')) + '" style="--i:' + i + '"><span class="qz-tuile"></span></span>';
   }
   return '<span class="qz-wordmark-img qz-logo5 qz-plaque qz-plaque-lettre" style="--cols:' + n + '" aria-hidden="true">' + h + '</span>';
 }
-document.write(
+var QZ_BANDEAU_HTML = (
   '<header class="qz-header' + (qzApp ? ' qz-app' : '') + '">' +
     /* 12/09 : onglet de l en-tete = BORD 1 du fondateur (!BAZAR A MORAD\\ONGLET, + 10 mm de gris au-dessus), forme + ligne du bord libre en lisere */
     '<svg class="qz-onglet" viewBox="18.00000188403 149.4999095560001 479.99981791596997 34.99999600000001" preserveAspectRatio="none" aria-hidden="true"><path class="qz-onglet-fond" d="M18 159.5 L498 159.5 L498 170.19 L182.68 170.19 Q181.96 170.19 181.26 170.25 Q180.63 170.3 179.92 170.42 Q179.27 170.53 178.64 170.69 Q177.92 170.88 177.29 171.1 Q176.55 171.36 175.94 171.63 Q175.21 171.97 174.57 172.33 Q173.96 172.68 173.35 173.1 Q172.67 173.58 172.09 174.08 Q171.52 174.56 170.99 175.12 L164.38 181.97 Q164.16 182.21 163.94 182.39 Q163.64 182.64 163.28 182.9 Q162.97 183.11 162.64 183.3 Q162.28 183.5 161.86 183.7 Q161.52 183.85 161.07 184.01 Q160.72 184.13 160.28 184.25 Q159.91 184.34 159.51 184.41 Q159.15 184.47 158.82 184.5 L18 184.5 L18 159.5 L18 159.5 Z M18 149.5 H498 V159.7 H18 Z"/><path class="qz-onglet-trait" vector-effect="non-scaling-stroke" d="M18 184.5 L158.82 184.5 Q159.15 184.47 159.51 184.41 Q159.91 184.34 160.28 184.25 Q160.72 184.13 161.07 184.01 Q161.52 183.85 161.86 183.7 Q162.28 183.5 162.64 183.3 Q162.97 183.11 163.28 182.9 Q163.64 182.64 163.94 182.39 Q164.16 182.21 164.38 181.97 L170.99 175.12 Q171.52 174.56 172.09 174.08 Q172.67 173.58 173.35 173.1 Q173.96 172.68 174.57 172.33 Q175.21 171.97 175.94 171.63 Q176.55 171.36 177.29 171.1 Q177.92 170.88 178.64 170.69 Q179.27 170.53 179.92 170.42 Q180.63 170.3 181.26 170.25 Q181.96 170.19 182.68 170.19 L498 170.19"/></svg>' +
@@ -96,6 +128,8 @@ document.write(
   '</nav>' +
   '<div class="qz-nav-voile" id="qzNavVoile"></div>'
 );
+/* 13/09 : seuls les liens internes sont prefixes ; les ancres (#) et les liens externes ne sont pas touches. */
+document.write(QZ_BASE ? QZ_BANDEAU_HTML.split('href="/').join('href="' + QZ_BASE + '/') : QZ_BANDEAU_HTML);
 
 /* Logo V5 anime (09/09) : une seule fois par session, ensuite etat final direct.
    Appele par un <script> ecrit APRES le bandeau : le HTML pousse par document.write n'existe pas
@@ -136,7 +170,7 @@ window.qzLogoV5Init = function(){
   if (appNom) { try {
     var hd = document.querySelector('.qz-header');
     hd.style.setProperty('--qz-nnom', appNom.querySelectorAll('.qz-l').length);
-    hd.style.setProperty('--qz-ncase', row.querySelectorAll('.qz-plaque-lettre .qz-case').length);
+    hd.style.setProperty('--qz-ncase', row.querySelectorAll('.qz-plaque-lettre .qz-case:not(.qz-g)').length); /* 13/09 : les cases vides ne comptent plus, le geste est continu */
   } catch (e) {} }
   if (cat && window.MutationObserver){ new MutationObserver(function(){ decouper(cat); aligner(); }).observe(cat, { childList: true }); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(aligner);
@@ -144,7 +178,10 @@ window.qzLogoV5Init = function(){
   /* 10/09 : l'animation ne doit demarrer que quand on peut la VOIR -- pas derriere l'ecran de mot de passe
      (garde-acces : voile plein ecran avec le formulaire #qdtFormAcces, retire a la validation), pas dans un
      onglet en arriere-plan. Elle rejoue a chaque arrivee sur l'accueil, une seule fois par session ailleurs. */
-  var accueil = /^\/(index\.html)?$/.test(location.pathname);
+  /* 13/09 : une APP n est jamais l accueil. Le test ne regardait que le chemin — une app servie a la racine (localhost:8750/, ou
+     un dossier dont l index est l app) se faisait passer pour la page d accueil et rejouait son logo a chaque chargement, au lieu
+     d une fois par session. La declaration qzApp tranche sans ambiguite. */
+  var accueil = !window.qzApp && /^\/(index\.html)?$/.test(location.pathname);
   /* Une cle par app : sinon un client qui passe par l accueil (animation jouee) puis ouvre une app n y verrait jamais la sienne. */
   var cle = window.qzApp ? 'qzLogoJoue:' + window.qzApp.lettre : 'qzLogoJoue';
   var deja = false;
