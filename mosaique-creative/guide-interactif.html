@@ -115,6 +115,22 @@
   .scene-tabs button.on{ background:var(--encre); color:#fff; }
 
   .stage{ max-width:980px; margin:10px auto 0; padding:0 14px 130px; position:relative; }
+
+  /* 13/09 : la FAQ de l app, recuperee du bas de page de l outil (rangee de liens retiree sur demande du fondateur). Elle prend
+     les jetons de la page — encre navy, orange de marque sur les chevrons — donc rien de nouveau a entretenir cote couleurs. */
+  .faq{ max-width:760px; margin:0 auto; padding:0 14px 110px; }
+  .faq h2{ font-size:19px; color:var(--encre); margin:0 0 14px; }
+  .faq details{ border-top:1px solid rgba(30,43,53,.14); }
+  .faq details:first-of-type{ border-top:none; }
+  .faq summary{
+    list-style:none; cursor:pointer; padding:13px 0; font-weight:700; font-size:14px; color:var(--encre);
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary:hover{ color:#9c4514; }   /* l orange de marque est fait pour les fonds ; sur du texte, c est sa version foncee */
+  .faq summary::after{ content:"▾"; color:var(--accent); transition:transform .15s; }   /* le chevron, pose en clair : une sequence d echappement CSS s etait mal ecrite ici */
+  .faq details[open] summary::after{ transform:rotate(180deg); }
+  .faq p{ font-size:13.5px; color:var(--encre-douce); line-height:1.6; margin:0 0 14px; }
   .scene{ display:none; position:relative; }
   .scene.on{ display:block; }
 
@@ -385,6 +401,33 @@
   </div>
 
 </div>
+
+<!-- ================= QUESTIONS FRÉQUENTES =================
+     13/09 : reprises du bas de page de l app, dont la rangee de liens a ete retiree sur demande du fondateur. Le guide etant
+     deja la page d aide de l outil, c est ici qu elles vivent desormais. -->
+<section class="faq" aria-labelledby="faqTitre">
+  <h2 id="faqTitre">Questions fréquentes</h2>
+  <details>
+    <summary>Quelle est la différence entre les deux modes ?</summary>
+    <p>Le mode découpe : vous posez des pièces (carré, rond, triangle...) qui se redécoupent entre elles au fil de la composition, comme un vrai mosaïste. La bibliothèque de scènes : vous partez d'un motif déjà découpé en tesselles (chevrons, nid d'abeille, une photo importée...) et vous coloriez chaque pièce.</p>
+  </details>
+  <details>
+    <summary>Le fichier téléchargé est-il prêt à imprimer ?</summary>
+    <p>Oui — le téléchargement est calculé à la vraie résolution d'impression (300 DPI) du format physique choisi, jamais juste la résolution de l'écran.</p>
+  </details>
+  <details>
+    <summary>Puis-je reprendre ma composition plus tard ?</summary>
+    <p>Oui, avec le bouton Enregistrer de chaque mode — la composition reste sur cet appareil (navigateur), à recharger avec Charger.</p>
+  </details>
+  <details>
+    <summary>À quoi sert le mode miroir ?</summary>
+    <p>Il reproduit automatiquement de l'autre côté du canevas tout ce que vous posez, déplacez ou coloriez — beaucoup de vraies mosaïques sont symétriques, plus besoin de tout refaire deux fois.</p>
+  </details>
+  <details>
+    <summary>Puis-je transformer une de mes photos en mosaïque ?</summary>
+    <p>Oui, dans la bibliothèque de scènes : « Générer depuis une photo » convertit automatiquement une image importée en tesselles colorées d'après ses vraies couleurs, à ajuster ensuite comme n'importe quelle scène.</p>
+  </details>
+</section>
 
 <!-- ================= POPUP ================= -->
 <div class="pop" id="pop" role="dialog" aria-modal="false" aria-labelledby="popTitle">
