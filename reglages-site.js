@@ -1187,6 +1187,9 @@
     var fond = suit && palette ? palette.fond : (p.fond || '#F2EEDF');
     var texte = suit && palette ? palette.texte : (p.texte_couleur || '#2b353e');
     var bouton = suit && palette ? palette.accent : (p.bouton || '#e2725b');
+    /* 14/09 : l etiquette du bouton etait figee en blanc — 3,42 sur l orange de marque. Meme calcul que les boutons du site. */
+    var texteBouton = couleurLisibleSur(bouton, texte);
+    var survolBouton = (suit && palette && palette.survol) ? palette.survol : bouton;
 
     injecterStyle('qz-popup-style', [
       '.qz-popup-fond{position:fixed;inset:0;background:#000000a6;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .25s ease;pointer-events:none}',
@@ -1200,8 +1203,9 @@
       '.qz-popup-texte{font-size:13.5px;line-height:1.5;margin:0 0 16px;opacity:.92}',
       '.qz-popup-form{display:flex;gap:8px;flex-wrap:wrap}',
       '.qz-popup-form input[type=email]{flex:1;min-width:160px;padding:10px 12px;border-radius:9px;border:1px solid #00000022;font:inherit;font-size:13.5px}',
-      '.qz-popup-form button{background:' + bouton + ';color:#fff;border:none;border-radius:9px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}',
-      '.qz-popup-form button:hover{filter:brightness(.92)}',
+      '.qz-popup-form button{background:' + bouton + ';color:' + texteBouton + ';border:none;border-radius:9px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}',
+      /* 14/09 : le survol s allume au lieu de s assombrir, comme partout ailleurs sur le site. */
+      '.qz-popup-form button:hover,.qz-popup-form button:focus-visible{background:' + survolBouton + ';color:' + couleurLisibleSur(survolBouton, texte) + '}',
       '.qz-popup-merci{font-size:13.5px;font-weight:600;display:none}',
       '.qz-popup-fond.qz-envoye .qz-popup-form{display:none}',
       '.qz-popup-fond.qz-envoye .qz-popup-merci{display:block}'
