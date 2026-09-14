@@ -3,8 +3,8 @@
    remplace la presentation ancienne » sur l accueil : deux pages s en servent, il ne peut pas exister en deux exemplaires.
    A inclure la ou le prisme doit apparaitre :  <script src="/prisme-outils.js"></script>  — jamais en defer ni async, il ecrit
    au fil de la lecture, comme commun-bandeau.js.
-   LES CINQ OUTILS SONT DECLARES ICI, UNE FOIS. Le jour ou QR ou Photo passent en ligne : ajouter leur lien dans la liste
-   ci-dessous, et le « bientot » disparait tout seul, sur les deux pages a la fois. */
+   LES CINQ OUTILS SONT DECLARES ICI, UNE FOIS — et depuis le 14/09 les cinq sont en ligne, aucun n est en attente.
+   Pour un sixieme outil : ajouter son objet ici, les deux pages le prennent ensemble. */
 var QZ_PRISME_OUTILS = [
   { lettre:"Q",  nom:"Quadreti Designer", teinte:"#1e2b35", statut:"ligne",
     visuel:"/img/bandeau-app-03-composition.jpg", alt:"Une composition en cours dans Quadreti Designer",
@@ -16,9 +16,9 @@ var QZ_PRISME_OUTILS = [
   { lettre:"M",  nom:"Mosaïque Créative", teinte:"#d96c2f", statut:"ligne",
     texte:"La vraie mosaïque décorative : des pièces qui se découpent entre elles, des scènes à colorier, des motifs géométriques.",
     lien:"/mosaique-creative/", cta:"Explorer" },
-  { lettre:"QR", nom:"QR Quadreti", teinte:"#3c4a55", statut:"bientot",
+  { lettre:"QR", nom:"QR Quadreti", teinte:"#3c4a55", statut:"ligne",
     texte:"Des QR codes qui sont de vraies créations : styles, couleurs, logo — et bientôt des œuvres générées autour de votre propre silhouette.",
-    attente:"En cours de mise en ligne" },
+    lien:"https://qr.quadreti.fr", cta:"Créer mon QR", externe:true },
   /* 14/09 : Photo Quadreti est deployee en dossier du site (quadreti.fr/photo-quadreti/), sur decision du fondateur — pas de
      sous-domaine. Elle passe donc de « bientot » a « en ligne », sur le prisme du Studio ET sur le bandeau de l accueil a la fois. */
   { lettre:"P",  nom:"Photo Quadreti", teinte:"#5a4a3f", statut:"ligne",

@@ -122,8 +122,21 @@ var QZ_BANDEAU_HTML = (
       '</li>' +
       '<li><a href="/boutique/">Boutique</a></li>' +
       /* 13/09, fondateur : la rubrique s appelle « Studio », plus « Nos outils ». L adresse ne change pas — renommer le fichier
-         casserait les liens deja publies ; c est le libelle qui change, pas la porte. */
-      '<li><a href="/outils.html">Studio</a></li>' +
+         casserait les liens deja publies ; c est le libelle qui change, pas la porte.
+         14/09, fondateur (« et les disposer dans le menu ? ») : les cinq apps sont nommees dans un volet, au lieu d un lien
+         unique vers la page Studio. « Tous les outils » garde l acces a cette page — un item a sous-menu devient un bouton et
+         perd son href, la page serait sinon sortie du menu. Les cinq sont en ligne depuis le 14/09 (QR en dernier). */
+      '<li class="qz-hassub">' +
+        '<button class="qz-subtoggle" aria-expanded="false">Studio <span class="qz-chev">▾</span></button>' +
+          '<ul class="qz-sublist">' +
+            '<li><a href="/outils.html">Tous les outils</a></li>' +
+            '<li><a href="https://designer.quadreti.fr">Quadreti Designer</a></li>' +
+            '<li><a href="/editeur-creatif/">Éditeur Créatif</a></li>' +
+            '<li><a href="/mosaique-creative/">Mosaïque Créative</a></li>' +
+            '<li><a href="https://qr.quadreti.fr">QR Quadreti</a></li>' +
+            '<li><a href="/photo-quadreti/">Photo Quadreti</a></li>' +
+          '</ul>' +
+      '</li>' +
       /* 13/09, demande du fondateur : les jeux et les coloriages quittent la page des outils (« elle n a pas sa place ici ») et
          deviennent une rubrique a part. Ce ne sont pas des outils — ils ne doivent donc pas vivre sous « Studio ».
          Un sous-menu plutot qu un lien : il n existe pas de page qui les reunisse, ils sont chacun a leur adresse. Et un libelle
