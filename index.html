@@ -50,8 +50,7 @@
   :root{
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
-    --olive:#556B2F;
-    --olive-soft:#E9EDDD;
+    /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
     --kraft:#CBBD93;
     --kraft-soft:#F1ECDD;
     --charbon:#2b353e;
@@ -233,12 +232,7 @@
     color:var(--terracotta);
     text-shadow:0 2px 12px rgba(255,255,255,.9), 0 0 3px rgba(255,255,255,.95);
   }
-  .badge{
-    display:inline-flex; align-items:center; gap:7px; align-self:flex-start; margin-top:18px;
-    font-size:12px; font-weight:700; color:var(--olive); background:var(--olive-soft);
-    border:1px solid #cfd8b8; border-radius:99px; padding:6px 14px 6px 10px;
-  }
-  .badge .dot{ width:15px; height:15px; border-radius:50%; background:var(--olive); color:#fff; font-size:9.5px; display:flex; align-items:center; justify-content:center; }
+  /* 14/09 : .badge retire — plus aucun element de la page ne portait cette classe. */
   /* 30/08 : CTA remonte de 25% de sa hauteur (~12px), bottom 26 -> 38px. */
   .hero-cta{ position:absolute; bottom:38px; left:50%; transform:translateX(-50%); z-index:4; }
   /* 29/08 soir : "il a trop mange de souris rotie" (fondateur) -- hauteur
@@ -353,7 +347,7 @@
   /* 14/09, fondateur : « enumeration en orange ». Le numero passe a l orange de marque, texte en gris — la regle posee pour tout
      texte sur un fond orange. Coins egalises, comme les boutons du site. */
   .geste-texte .num, .step .num{
-    width:42px; height:42px; border-radius:8px; background:#d96c2f; color:#dedede;
+    width:42px; height:42px; border-radius:8px; background:#d96c2f; color:#10181f;   /* 14/09 : etait #dedede, soit 2,54 sur l orange — sous le seuil, et pire que du blanc. L encre donne 5,23. */
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; margin-bottom:14px;
   }
   .step h3{ font-size:18.5px; font-weight:700; margin-bottom:8px; }
@@ -530,12 +524,7 @@
     border-radius:3px 3px 3px 6px; background:var(--terracotta);
   }
   .change li b{ color:var(--charbon); }
-  .swap-visu{
-    max-width:320px; margin:0 auto; background:var(--fond); border-radius:16px; padding:26px;
-    display:flex; align-items:center; justify-content:center; gap:16px;
-  }
-  .swap-visu .tile{ width:74px; height:74px; border-radius:8px; }
-  .swap-visu .fleche{ font-size:26px; font-weight:800; color:var(--olive); }
+  /* 14/09 : .swap-visu retire — plus aucun element de la page ne portait cette classe. */
 
   /* ===== Gamme ===== */
   .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:36px; }
@@ -557,11 +546,13 @@
   .offer .pu{ font-size:12px; color:#8a9099; font-weight:600; }
   .gamme-notes{ margin-top:26px; text-align:center; font-size:14px; color:#6a727b; max-width:640px; margin-left:auto; margin-right:auto; }
   .gamme-notes b{ color:var(--charbon); }
+  /* 14/09 : l encart etait vert kaki sur vert pale. Il devient une carte, comme les autres de la page, et c est sa
+     pastille orange qui porte l accent. */
   .premium{
-    max-width:640px; margin:30px auto 0; background:var(--olive-soft); border:1px solid #cfd8b8;
+    max-width:640px; margin:30px auto 0; background:var(--blanc); border:1px solid var(--border);
     border-radius:14px; padding:20px 24px; display:flex; gap:16px; align-items:flex-start;
   }
-  .premium .ic{ flex:0 0 40px; width:40px; height:40px; border-radius:8px 8px 8px 16px; background:var(--olive); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .premium .ic{ flex:0 0 40px; width:40px; height:40px; border-radius:8px 8px 8px 16px; background:#d96c2f; color:#10181f;   /* encre sur orange : 5,23 */ display:flex; align-items:center; justify-content:center; font-size:18px; }
   .premium h3{ font-size:16px; font-weight:700; margin-bottom:4px; }
   .premium p{ font-size:14px; color:#4a5158; }
 
@@ -583,9 +574,10 @@
     padding:26px 24px 22px; display:flex; flex-direction:column; gap:14px;
   }
   .trust-head{ display:flex; align-items:center; gap:13px; }
+  /* 14/09 : meme famille que la pastille des gestes et celle de l encart — fond orange, trait en encre (5,23). */
   .trust-ic{
     flex:0 0 42px; width:42px; height:42px; border-radius:8px 8px 8px 16px;
-    background:var(--olive-soft); color:var(--olive);
+    background:#d96c2f; color:#10181f;
     display:flex; align-items:center; justify-content:center;
   }
   .trust-ic svg{ width:24px; height:24px; }

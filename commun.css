@@ -163,6 +163,10 @@ footer.qz-footer .qz-basdepage .qz-plaque{ --t:66px; --qz-prof:1px; }
 .qz-basdepage .qz-wm-col{ display:flex; flex-direction:column; justify-content:flex-start; gap:0; height:66px; margin-top:3px; --qz-point-x:.14em; --qz-point-y:.969em; --qz-point-t:.07em; }
 .qz-basdepage .qz-naming.qz-wordmark-img{ height:auto; font-family:"Quadreti Naming",sans-serif; font-size:27px; line-height:1; white-space:nowrap; display:inline-block; position:relative; padding:0; }
 .qz-basdepage .qz-pied-accroche{ font-family:'Jura',sans-serif; font-weight:700; font-size:14.5px; line-height:19.5px; letter-spacing:.02em; white-space:nowrap; }
+/* 14/09 : sous 375 px, cette accroche en white-space:nowrap mesurait 229 px a partir de x=104 et sortait de 13 px — c est ELLE
+   qui rendait toutes les pages du site scrollables en travers, pas l en-tete comme je l avais d abord cru. Elle a le droit de
+   passer a la ligne sur un ecran de cette taille. Borne a 374 px : a 375 (largeur de reference) elle tient, rien ne bouge. */
+@media (max-width:374px){ .qz-basdepage .qz-pied-accroche{ white-space:normal; } }
 footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:var(--qz-pied-titre); } /* 13/09 : naming, tesselles du Q et accroche au BLEU — le pied est passe au gris */
 .qz-basdepage .qz-cat{ display:inline-block; width:auto; opacity:1; animation:none; overflow:visible; font-family:'Jura',sans-serif!important; font-weight:700; font-size:14.5px; line-height:19.5px; letter-spacing:.02em!important; text-transform:none; color:var(--qz-pied-orange-texte); margin:0; white-space:nowrap; } /* 13/09 : sur gris, l orange de marque ne donne que 2,9 de contraste — c est sa version foncee qui s ecrit */
 /* titres de colonnes : capitales Jura, sans tesselle */

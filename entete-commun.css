@@ -79,3 +79,15 @@
   .qz-header.qz-menu-visible .qz-navpanel{grid-column:1/-1;width:100%;margin:0}
 }
 @media (max-width:900px){.qz-header.qz-menu-visible{background:#dedede!important}} /* 12/09 : sans onglet dessine (mobile), la barre reprend son gris ; apres la regle transparente pour la surcharger */
+
+/* ---- 14/09 : ecrans tres etroits (sous 375 px) ----
+   Mesure a 320 px : la grille demandait 323,75 px pour 296 disponibles, le burger sortait du cadre et toutes les pages du
+   site partaient en scroll horizontal. La premiere colonne est `1fr`, donc `minmax(auto,1fr)` : son minimum est la largeur du
+   contenu du bloc logo, qui ne se comprime pas. On lui donne le droit de descendre, et on efface la ligne la plus longue.
+   Borne a 374 px : a 375 (la largeur de reference, et le plus etroit des telephones courants) il n y avait aucun debordement,
+   rien ne doit donc bouger la-haut. */
+@media (max-width:374px){
+  .qz-header{grid-template-columns:minmax(0,1fr) auto}
+  .qz-header .qz-logorow,.qz-header .qz-wm-col{min-width:0}
+  .qz-header .qz-cat{display:none}
+}

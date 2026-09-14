@@ -117,3 +117,12 @@
   .qz-header.qz-app .qz-espace-mot{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .qz-header.qz-app .qz-espace{padding:7px 9px;min-width:34px;justify-content:center}
 }
+
+/* ---- 14/09 : ecrans tres etroits (sous 375 px) ----
+   Meme correctif que entete-commun.css, mais la barre d app a TROIS colonnes depuis le bouton « Mon Espace » (bloc logo,
+   bouton, burger) et sa regle, plus specifique et lue plus tard, gagnerait sur celle du site. Elle est donc reprise ici.
+   Pas de ligne de categorie a effacer : une app n en affiche jamais. */
+@media (max-width:374px){
+  .qz-header.qz-app{grid-template-columns:minmax(0,1fr) auto auto}
+  .qz-header.qz-app .qz-logorow,.qz-header.qz-app .qz-wm-col{min-width:0}
+}
