@@ -60,8 +60,22 @@
 .qz-header.qz-menu-visible{background:transparent!important} /* 12/09 : le gris est peint par le bord haut du bandeau (.qb-bord-haut), jusque sous le menu */
 .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#1e2b35!important}
 .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#1e2b35!important} /* 11/09 : plus de grille, tesselles du Q en navy + orange */
-.qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
-.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+/* 14/09 : BORNEES AU BUREAU. Ce navy a ete choisi pour la barre grise ; sans borne il s appliquait aussi au tiroir mobile,
+   qui est navy — texte navy sur fond navy, contraste 1,00, menu invisible sur tout telephone. Constate en production. */
+@media (min-width:901px){
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+}
+/* Le tiroir mobile, lui, suit la grammaire des apps : fond navy, texte gris. Et il redevient OPAQUE — la transparence du
+   panneau d admin n existe que sur cette largeur (sur bureau le menu vit dans la barre et son fond est deja force a
+   transparent), et 50 % de navy sur un fond clair donne un gris moyen ou aucune couleur de texte ne passe : navy 3,79,
+   gris clair 2,84. La couleur du tiroir reste reglable ; son opacite, non. */
+@media (max-width:900px){
+  .qz-header.qz-menu-visible .qz-navpanel{background:#1e2b35!important}
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#dedede!important}   /* 10,75 sur le navy */
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
+  .qz-header.qz-menu-visible .qz-subtoggle:hover,.qz-header.qz-menu-visible .qz-subtoggle:focus-visible{color:#e89a63!important}   /* l orange eclairci : 6,36 sur le navy */
+}
 .qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:var(--qz-terracotta,#d96c2f)} /* 12/09 fondateur : fleche du sous-menu en orange */
 .qz-header.qz-menu-visible .qz-burger{background:#1e2b35}
 /* ecrans de portable (14 pouces) : liens plus serres pour que le menu tienne sur une ligne */
