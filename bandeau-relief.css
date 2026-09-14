@@ -180,9 +180,11 @@
 .qb-gestes-B{background:transparent;color:#1e2b35}
 .qb-gestes-B .qb-geste p{color:color-mix(in srgb,#1e2b35 78%,transparent)}
 .qb-gestes-B .qb-geste-icone{--ic-fond:transparent}
-.qb-gestes-B .qb-geste-changez h3,.qb-gestes-B .qb-geste-changez p{color:var(--qz-terracotta,#d96c2f)} /* 12/09 : tout le texte du geste Changez en orange */
+/* 14/09 : --qz-terracotta-texte et non --qz-terracotta. L orange de marque pose en texte sur ce fond clair vaut 2,54 ;
+   le jeton texte porte la meme teinte, foncee juste assez pour se lire (4,67, calcule). Repli sur le #9c4514 de la charte. */
+.qb-gestes-B .qb-geste-changez h3,.qb-gestes-B .qb-geste-changez p{color:var(--qz-terracotta-texte,#9c4514)} /* 12/09 : tout le texte du geste Changez en orange */
 /* 12/09 fondateur : icone Changez plus grasse (contour ajoute au trace plein, unites du dessin) */
-.qb-geste-changez .qb-geste-icone{color:var(--qz-terracotta,#d96c2f);stroke:var(--qz-terracotta,#d96c2f);stroke-width:16;stroke-linejoin:round;stroke-linecap:round} /* pose sur le <svg> : herite dans le symbole reference par <use> (le trace n a pas d attribut stroke) */
+.qb-geste-changez .qb-geste-icone{color:var(--qz-terracotta-texte,#9c4514);stroke:var(--qz-terracotta-texte,#9c4514);   /* 14/09 : un trait aussi doit atteindre 3:1 — l orange de marque n y arrivait pas sur ce fond (2,54) */stroke-width:16;stroke-linejoin:round;stroke-linecap:round} /* pose sur le <svg> : herite dans le symbole reference par <use> (le trace n a pas d attribut stroke) */
 /* 12/09 fondateur : le geste Changez apparait en fondu au moment ou le mur commence a changer (classe qb-changement posee au lancement du mur) */
 .qb-gestes .qb-geste-changez,.qb-gestes .qb-gestes-liste > li:nth-last-child(2){opacity:0} /* 12/09 : la fleche qui precede Changez suit le meme fondu */
 .qb-gestes.qb-changement .qb-geste-changez,.qb-gestes.qb-changement .qb-gestes-liste > li:nth-last-child(2){animation:qb-fondu 1.4s ease-out forwards;animation-delay:var(--t-changement,0s)}

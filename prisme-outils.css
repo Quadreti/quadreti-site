@@ -85,7 +85,7 @@
   .face-lien{
     position:relative; overflow:hidden; margin-top:auto; align-self:flex-start; text-decoration:none;
     font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; line-height:1.15;
-    background:#d96c2f; color:#dedede; border-radius:8px; padding:9px 18px;
+    background:#d96c2f; color:#10181f; border-radius:8px; padding:9px 18px;   /* 14/09 : etait #dedede, 2,54. L encre donne 5,23. */
     box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000026;
     transition:box-shadow .18s ease, transform .18s ease;
   }
@@ -102,7 +102,10 @@
   /* La barre de pilotage : deux fleches, et un point par outil qui le NOMME (un point anonyme ne dit pas ou l on va). */
   .prisme-barre{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:26px; flex-wrap:wrap; }
   /* 13/09, demande du fondateur : fleches et pastilles prennent le CTA du site — orange, relief, et l eclat qui balaie au survol.
-     Le texte est en gris #dedede, pas en blanc : regle posee pour tout texte sur un bouton orange. */
+     14/09 — CE COMMENTAIRE DISAIT LE CONTRAIRE DE LA CHARTE, et je l avais ecrit moi-meme : « le texte est en gris #dedede,
+     pas en blanc, regle posee pour tout texte sur un bouton orange ». Faux. La charte dit : sur l orange, l ENCRE #10181f,
+     jamais du blanc — et le gris est pire que le blanc (2,54 contre 3,42, pour un seuil de 4,5). Corrige partout ici.
+     La lecon n est pas le chiffre : c est qu une phrase affirmee dans un commentaire se recopie sans etre reverifiee. */
   /* Le relief et le mouvement sont communs aux fleches et aux pastilles ; le fond et l encre, eux, different (voir plus bas). */
   .prisme-fleche, .prisme-puces button{
     position:relative; overflow:hidden; cursor:pointer; border:none;
@@ -111,7 +114,7 @@
     transition:box-shadow .18s ease, transform .18s ease, background .15s ease;
   }
   /* Les fleches gardent l orange plein : ce sont des COMMANDES, pas des etiquettes. */
-  .prisme-fleche{ background:#d96c2f; color:#dedede; }
+  .prisme-fleche{ background:#d96c2f; color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
   .prisme-fleche::after, .prisme-puces button::after{
     content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
     background:linear-gradient(105deg, #ffffff00 0%, #ffffff8c 50%, #ffffff00 100%);
@@ -141,7 +144,7 @@
   .prisme-puces button::after{ background:linear-gradient(105deg, #d96c2f00 0%, #d96c2f8c 50%, #d96c2f00 100%); }
   /* L outil choisi prend l orange plein, texte gris : sur une rangee de pastilles grises, c est lui qui dit ou l on est.
      Il ne se souleve pas au survol — il est deja en place. */
-  .prisme-puces button[aria-current="true"]{ background:#d96c2f; color:#dedede; }
+  .prisme-puces button[aria-current="true"]{ background:#d96c2f; color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
   .prisme-puces button[aria-current="true"]:hover, .prisme-puces button[aria-current="true"]:focus-visible{
     transform:none; box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000033;
   }

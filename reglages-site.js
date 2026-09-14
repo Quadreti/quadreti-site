@@ -52,9 +52,48 @@
      chaque chargement independamment du reste) est retire : Général doit
      vraiment tout gouverner, plus de valeurs figees qui ignorent le reste de
      la palette choisie. */
+  /* 14/09 : le VRAI rapport de contraste WCAG (luminance relative, gamma corrige). `luminance` ci-dessus reste une moyenne
+     0-255, utile pour dire « ce fond est clair ou sombre » — elle ne dit rien d un contraste, et c est ce qu on lui faisait
+     dire. Blanc sur l orange de marque : ecart de luminance 121 (« ca passe »), rapport reel 3,42 (ca ne passe pas). */
+  function canalSRGB(v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+  function luminanceRelative(hex) {
+    var h = hex.replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return 0.2126 * canalSRGB(n >> 16 & 255) + 0.7152 * canalSRGB(n >> 8 & 255) + 0.0722 * canalSRGB(n & 255);
+  }
+  function contraste(a, b) {
+    var L1 = luminanceRelative(a), L2 = luminanceRelative(b);
+    return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  }
+  var ENCRE = '#10181f';   /* l encre de la charte -- ce qu on pose sur l orange, jamais du blanc */
+
+  /* La couleur demandee si elle passe vraiment ; sinon celle des deux extremes qui porte le mieux sur ce fond. */
   function couleurLisibleSur(fondHex, texteSouhaite) {
-    if (Math.abs(luminance(fondHex) - luminance(texteSouhaite)) > 80) return texteSouhaite;
-    return luminance(fondHex) > 128 ? '#2b353e' : '#ffffff';
+    if (contraste(fondHex, texteSouhaite) >= 4.5) return texteSouhaite;
+    return contraste(fondHex, ENCRE) >= contraste(fondHex, '#ffffff') ? ENCRE : '#ffffff';
+  }
+
+  /* Garder la TEINTE quand elle ne passe pas, au lieu de l abandonner : on la fonce jusqu a ce qu elle passe.
+     C est ce qu il faut pour un accent en TEXTE — l orange de marque sur un fond clair ne passe pas (2,54 sur le gris de
+     page), mais un orange plus fonce, lui, passe et reste de l orange. Cible 6 : pour #d96c2f sur blanc cela donne #974b21
+     (6,28), a un cheveu du #9c4514 que la charte a calcule a la main (6,41). Si la teinte ne s en sort pas, on retombe sur
+     couleurLisibleSur plutot que de rendre quelque chose d illisible. */
+  function teinteLisibleSur(fondHex, teinte, cible) {
+    var h = teinte.replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255, i, hex;
+    var vise = cible || 4.5;   /* le seuil WCAG des textes : on fonce juste ce qu il faut, pas jusqu au brun */
+    /* De quel cote pousser : si le fond est plus clair que la teinte on la fonce, sinon on l eclaircit. Foncer un orange
+       sur du navy ne fait que l enfoncer dans le fond — la cible n est jamais atteinte et l accent finit en blanc. */
+    var foncer = luminanceRelative(fondHex) > luminanceRelative(teinte);
+    for (i = 0; i < 24; i++) {
+      hex = '#' + [r, g, b].map(function (v) { var x = Math.round(v).toString(16); return x.length < 2 ? '0' + x : x; }).join('');
+      if (contraste(fondHex, hex) >= vise) return hex;
+      if (foncer) { r *= 0.93; g *= 0.93; b *= 0.93; }
+      else { r += (255 - r) * 0.10; g += (255 - g) * 0.10; b += (255 - b) * 0.10; }
+    }
+    return couleurLisibleSur(fondHex, teinte);
   }
 
   /* Gris "doux" (texte secondaire : sous-titres, copyright, notes) adapte au
@@ -114,9 +153,16 @@
       /* --qz-clair = fond du bandeau du haut : suit "Fond bandeau & pied de
          page" (repli Général) depuis le 29/08. */
       '--qz-clair:' + fondBandeau + ';--qz-terracotta:' + accent + ';' +
+      /* 14/09 : l accent EN TEXTE. L orange de marque est fait pour les fonds et les traits — pose en texte sur le gris de
+         page il vaut 2,54. Ce jeton porte la meme teinte, foncee juste assez pour se lire (4,5). Toute feuille qui veut
+         ecrire un mot a l accent doit prendre celui-ci, jamais --qz-terracotta. */
+      '--qz-terracotta-texte:' + teinteLisibleSur(fond, accent) + ';' +
       '}' +
       '\na:hover .qz-picto{color:inherit}' +
-      '\n.cta:hover,.qz-cta:hover{background:' + survol + '!important}';
+      /* 14/09 : trois manques d un coup. Le survol ne recalculait pas la couleur de l etiquette (elle restait celle du repos,
+         qui pouvait ne plus passer sur le fond de survol) ; `.c-submit` — le bouton « Envoyer le message » — n avait aucun
+         survol ; et `:focus-visible` nulle part, donc au clavier aucun de ces boutons ne changeait d aspect. */
+      '\n.cta:hover,.cta:focus-visible,.c-submit:hover,.c-submit:focus-visible,.qz-cta:hover,.qz-cta:focus-visible{background:' + survol + '!important;color:' + couleurLisibleSur(survol, texte) + '!important}';
     /* body PAS repeint sur les pages jeux (29/08, captures fondateur SET/
        Memo/Taquin) : ces 6 pages ont leur propre fond clair (--papier) et
        leur texte charbon, gouvernes par la Palette Jeux (decision actee du
@@ -206,13 +252,15 @@
       '\n.qz-basdepage .qz-qlogo i.t{background:' + texteSurFooter + '}' +
       '\n.qz-coltitre{color:' + couleurLisibleSur(fondBandeau, sousTitre || '#CBBD93') + '}' +
       '\n.qz-pied-infos a{color:' + texteSurFooter + '}' +
-      '\n.qz-pied-infos a:hover,.qz-pied-infos a:focus-visible{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
+      /* 14/09 : teinteLisibleSur et non couleurLisibleSur — sur le pied gris, l orange ne passe pas tel quel et la seconde
+         rendait de l encre : le survol orange devenait un survol noir, soit plus de surbrillance du tout. */
+      '\n.qz-pied-infos a:hover,.qz-pied-infos a:focus-visible{color:' + teinteLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-reseaux .qz-sub,.qz-copy{color:' + grisLisibleSur(fondBandeau) + '}' +
       '\n.qz-reseaux .qz-grid a{background:' + accent + '!important;color:' + couleurLisibleSur(accent, texte) + '!important}' +
       '\n.qz-reseaux .qz-grid a:hover,.qz-reseaux .qz-grid a:focus-visible{background:' + survol + '!important}' +
       /* touches "a la Claudus" (29/08) : accent de la baseline, tesselle des
          titres de colonnes, soulignement des liens -- pilotes par Accent. */
-      '\n.qz-baseline-accent{color:' + couleurLisibleSur(fondBandeau, accent) + '}' +
+      '\n.qz-baseline-accent{color:' + teinteLisibleSur(fondBandeau, accent) + '}' +
       '\n.qz-coltitre::before,.qz-pied-infos a::after{background:' + accent + '}';
 
     /* Bandeau defilant (.ticker, accueil + boutique) : suit "Fond bandeau &
@@ -246,6 +294,9 @@
        propre reglage fin "enumerations" (repli sur Bouton = zero changement
        tant que non personnalise), seuls les vrais boutons restent ici. */
     css += '\n.cta,.c-submit{background:' + bouton + '!important;color:' + couleurLisibleSur(bouton, texte) + '!important}';
+    /* 14/09 : les boutons a filet (blanc, texte fonce) n avaient qu un deplacement de 2 px au survol — rien qui s allume.
+       Ils prennent le filet et l etiquette en orange, fonce juste ce qu il faut pour se lire sur leur fond blanc. */
+    css += '\n.cta.light:hover,.cta.light:focus-visible,.btn-studio:hover,.btn-studio:focus-visible{border-color:' + bouton + '!important;color:' + teinteLisibleSur('#ffffff', bouton) + '!important}';
     var enumerations = c.enumerations || bouton;
     css += '\n.step .num,.offer .flag,.chip{background:' + enumerations + '!important;color:' + couleurLisibleSur(enumerations, texte) + '!important}';
     if (titre) css += '\nh2,h3{color:' + titre + '}';
@@ -381,7 +432,7 @@
        sur Général, repli calcule sinon. */
     css += '\n.scal .lbl{color:' + couleurLisibleSur(fond, '#8a9099') + '}';
     css += '\n.finale .clic{color:' + couleurLisibleSur(fond, '#8a939c') + '}';
-    css += '\n.finale .phrase span{color:' + couleurLisibleSur(fond, accent) + '!important}';
+    css += '\n.finale .phrase span{color:' + teinteLisibleSur(fond, accent) + '!important}';
 
     /* Contact : texte gris des cartes raisons (fige #5a636b, faible sur
        carte sombre) + lien contact@quadreti.fr (charbon fige, invisible
