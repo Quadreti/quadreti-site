@@ -135,7 +135,12 @@
        ne le voie. Detection par son contenu (.code404), pas par l'URL :
        GitHub Pages sert cette page sous n'importe quelle adresse inexistante. */
     var estPage404 = !!document.querySelector('.code404');
-    if (!estPageJeu() && !estPage404) css += '\nbody{background:' + fond + ';color:' + texte + '}';
+    /* 14/09 : Mon Espace Client exempte lui aussi. La page a son identite propre — cartes blanches sur le gris de la marque,
+       texte navy — et chacune de ses couleurs passe deja par un jeton nomme par son role. La regle generique
+       body{fond sombre + texte clair} la retournerait entierement. Detection par une CLASSE et non par l URL, meme raison
+       que la 404 juste au-dessus. */
+    var estEspaceClient = !!document.querySelector('body.espace-client');
+    if (!estPageJeu() && !estPage404 && !estEspaceClient) css += '\nbody{background:' + fond + ';color:' + texte + '}';
 
     /* Logo du bandeau du haut (tesselles + "Quadretı") : jamais couvert par
        appliquerMenuNav (qui ne pose que le burger/le panneau) -- restait

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Espace Client — Quadreti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Feuille commune du site AVANT le style de la page : a specificite egale, c est la page qui garde le dernier mot. -->
+<link rel="stylesheet" href="/commun.css">
+<style>
+/* ============================================================================
+   MON ESPACE CLIENT — maquette (14/09)
+   Brief : SITE\APPLICATION\ESPACE-CLIENT\BRIEF-ESPACE-CLIENT-FIGMA.txt
+   Charte : SITE\DESIGN SYSTEME\CHARTE-QUADRETI.md — elle fait foi, rien n est invente ici.
+
+   POURQUOI EN HTML ET PAS DANS FIGMA : le brief demandait Figma ; le plan Figma du fondateur
+   plafonne les appels et le blocage est tombe apres cinq ecritures, soit un quart du travail.
+   Le fondateur a tranche : on bascule. Les jetons Figma poses entre-temps restent valables, ils
+   portent les memes noms de role que ci-dessous.
+
+   DONNEES FICTIVES, comme demande : une cliente, ses creations, ses QR, son forfait. Rien de reel.
+   ============================================================================ */
+
+:root{
+  /* --- Les cinq valeurs de la charte. On ne les ecrit jamais ailleurs qu ici. --- */
+  --navy:#1E2B35;
+  --gris:#DEDEDE;
+  --orange:#D96C2F;
+  --blanc:#FFFFFF;
+  --encre:#10181F;
+  --orange-texte:#9C4514;   /* un mot orange sur fond clair : l orange de marque n y passe pas */
+  --gris-doux:#5A6672;
+
+  /* --- Les jetons de ROLE. Eux seuls sont utilises plus bas. Regle de la charte : nommer par le
+         role, pas par la teinte — « un jeton --olive qui contient du navy est la couche de plus
+         dont personne ne ressort ». --- */
+  --fond-page:var(--gris);
+  --fond-surface:var(--blanc);
+  --fond-barre:var(--navy);
+  --fond-accent:var(--orange);
+  --texte-principal:var(--navy);
+  --texte-secondaire:var(--gris-doux);          /* 5,87 sur une carte blanche */
+  /* Le gris doux ne passe PAS sur le gris de page : 4,36, mesure. La charte le dit. Pour ce cas precis il faut
+     descendre a #4F5A65 — 5,44 sur le gris — plutot que d assombrir le gris doux partout, ce qui abimerait
+     inutilement les textes poses sur blanc. */
+  --texte-secondaire-sur-gris:#4F5A65;
+  --texte-sur-accent:var(--encre);
+  --texte-sur-barre:var(--gris);
+  --texte-accent:var(--orange-texte);
+  --filet:#1e2b3520;
+  --filet-fort:#1e2b3538;
+
+  --rayon:10px;
+  --rayon-petit:8px;
+}
+
+*{ box-sizing:border-box; }
+body{
+  margin:0; background:var(--fond-page); color:var(--texte-principal);
+  font-family:'Jura',system-ui,sans-serif; font-size:15px; line-height:1.55;
+}
+h1,h2,h3{ margin:0; font-weight:700; }
+a{ color:inherit; }
+button{ font:inherit; cursor:pointer; }
+
+/* ===== La barre. L inversion site/app de la charte : fond navy, lettre et liens en gris.
+        58 px, sa mesure exacte. ===== */
+.barre{
+  height:58px; background:var(--fond-barre); color:var(--texte-sur-barre);
+  display:flex; align-items:center; gap:14px; padding:0 clamp(16px,3vw,50px);
+}
+/* Le E de « Espace », dans la grammaire de l alphabet : quatre rangees, largeur naturelle de la
+   lettre, UNE SEULE tesselle orange, au bout du trace. */
+.plaque{ display:grid; grid-template-rows:repeat(4,7px); gap:2px; flex-shrink:0; }
+.plaque .rangee{ display:grid; grid-template-columns:repeat(3,7px); gap:2px; }
+.plaque i{ display:block; border-radius:1.5px; background:var(--texte-sur-barre); }
+.plaque i.vide{ background:none; }
+.plaque i.orange{ background:var(--fond-accent); }
+.barre .nom{ font-weight:700; font-size:15px; letter-spacing:.01em; }
+.barre .droite{ margin-left:auto; font-size:12.5px; font-weight:500; opacity:.85; display:flex; gap:18px; align-items:center; }
+/* 24 px de haut au minimum : c est la taille de cible que demande WCAG 2.5.8. Un lien de 16 px se rate au doigt. */
+.barre .droite a{ text-decoration:none; display:inline-flex; align-items:center; min-height:24px; }
+.barre .droite a:hover{ color:var(--fond-accent); }
+
+/* ===== Le contenu ===== */
+.page{ max-width:1340px; margin:0 auto; padding:34px clamp(16px,3vw,50px) 60px; }
+
+.accueil{ margin-bottom:26px; }
+.accueil .ligne{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.accueil h1{ font-size:clamp(22px,3vw,27px); }
+.accueil p{ margin:8px 0 0; color:var(--texte-secondaire-sur-gris); font-size:15px; max-width:70ch; }   /* pose sur le gris de page, pas sur une carte */
+/* Le badge de forfait : orange plein, encre dessus. Jamais de blanc sur l orange — 3,42, ne passe pas. */
+.badge{
+  background:var(--fond-accent); color:var(--texte-sur-accent);
+  font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  padding:6px 13px; border-radius:var(--rayon-petit);
+}
+
+.grille{ display:grid; grid-template-columns:2fr 1fr; gap:22px; align-items:start; }
+.colonne{ display:flex; flex-direction:column; gap:22px; min-width:0; }
+
+.carte{
+  background:var(--fond-surface); border:1px solid var(--filet);
+  border-radius:var(--rayon); padding:22px 24px 24px;
+}
+.carte h2{ font-size:17px; }
+.carte .desc{ margin:5px 0 16px; font-size:13px; color:var(--texte-secondaire); max-width:62ch; }
+
+/* ===== Mes créations =====
+   Chaque carte a la MEME forme quel que soit l outil d origine. C est la condition posee par le
+   brief : le jour ou le back-end branche les vraies donnees, rien n est a redessiner. */
+.biblio{ display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; }
+.crea{
+  border:1px solid var(--filet); border-radius:var(--rayon-petit); overflow:hidden;
+  background:var(--fond-surface); display:flex; flex-direction:column;
+  transition:border-color .15s ease, transform .15s ease;
+}
+.crea:hover{ border-color:var(--fond-accent); transform:translateY(-2px); }
+/* L apercu : ici un aplat teinte par outil. La vraie vignette viendra du stockage, la forme ne bouge pas. */
+.crea .apercu{
+  aspect-ratio:16/10; display:grid; place-items:center;
+  font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+}
+.crea .apercu.qr{ background:var(--fond-barre); color:var(--texte-sur-barre); }
+.crea .apercu.mosaique{ background:var(--fond-accent); color:var(--texte-sur-accent); }
+.crea .apercu.photo{ background:#2f4150; color:var(--texte-sur-barre); }
+.crea .apercu.import{ background:var(--fond-page); color:var(--texte-secondaire-sur-gris); }   /* renommee : « depot » designait aussi le bouton, ma mesure portait sur le mauvais element */
+.crea .legende{ padding:11px 12px 13px; }
+.crea .legende b{ display:block; font-size:13.5px; font-weight:600; }
+.crea .legende span{ display:block; margin-top:3px; font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--texte-secondaire); }
+.crea .zip{
+  margin:0 12px 12px; padding:7px; border:none; border-radius:6px;
+  background:var(--fond-page); color:var(--texte-accent);
+  font-size:11px; font-weight:700;
+}
+.crea .zip:hover{ background:var(--fond-accent); color:var(--texte-sur-accent); }
+
+/* Le depot d un fichier venu d ailleurs. C est ce qui rend l ecosysteme « jamais ferme » :
+   un visuel fabrique dans un autre outil entre ici et redevient utilisable partout. */
+.bouton-depot{
+  width:100%; margin-top:16px; padding:15px; border-radius:var(--rayon-petit);
+  border:1.5px dashed var(--fond-accent); background:none; color:var(--texte-accent);
+  font-size:13px; font-weight:700;
+}
+.bouton-depot:hover{ background:#d96c2f14; }
+
+/* ===== Mes QR dynamiques ===== */
+table{ width:100%; border-collapse:collapse; }
+th{
+  text-align:left; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--texte-secondaire); padding:0 10px 8px; border-bottom:1px solid var(--filet);
+}
+td{ padding:12px 10px; border-bottom:1px solid var(--filet); font-size:13.5px; vertical-align:middle; }
+tr:last-child td{ border-bottom:none; }
+td code{
+  font-family:ui-monospace,monospace; font-size:12.5px;
+  background:var(--fond-page); padding:3px 8px; border-radius:6px;
+}
+.scans{ color:var(--texte-secondaire); font-size:13px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.mini{
+  border:1.5px solid var(--fond-accent); background:none; color:var(--texte-accent);
+  border-radius:6px; padding:6px 12px; font-size:12px; font-weight:700; white-space:nowrap;
+}
+.mini:hover{ background:var(--fond-accent); color:var(--texte-sur-accent); }
+.note{ margin:14px 0 0; font-size:12.5px; color:var(--texte-secondaire); border-left:3px solid var(--fond-accent); padding-left:14px; }
+
+/* ===== Mon forfait ===== */
+.jauge{ height:9px; border-radius:6px; background:var(--fond-page); overflow:hidden; margin:12px 0 8px; }
+.jauge i{ display:block; height:100%; width:40%; background:var(--fond-accent); border-radius:6px; }
+.compteur{ font-size:13px; color:var(--texte-secondaire); font-variant-numeric:tabular-nums; }
+.cta{
+  display:block; width:100%; margin-top:16px; padding:11px;
+  border:none; border-radius:var(--rayon-petit);
+  background:var(--fond-accent); color:var(--texte-sur-accent);
+  font-size:13.5px; font-weight:700; text-align:center; text-decoration:none;
+}
+.cta:hover{ filter:brightness(.94); }
+.recharge{ margin-top:18px; padding-top:16px; border-top:1px solid var(--filet); }
+.recharge b{ display:block; font-size:13px; margin-bottom:10px; }
+.recharge .rang{ display:flex; flex-direction:column; gap:8px; }
+.recharge button{
+  padding:10px; border:1.5px solid var(--filet-fort); border-radius:var(--rayon-petit);
+  background:var(--fond-surface); color:var(--texte-principal); font-size:12.5px; font-weight:700;
+}
+.recharge button:hover{ border-color:var(--fond-accent); color:var(--texte-accent); }
+.recharge .apres{ display:block; margin-top:10px; font-size:11.5px; color:var(--texte-secondaire); line-height:1.5; }
+
+/* ===== Qui est connecte =====
+   Un bandeau fin sous l en-tete commune, pas une deuxieme barre. */
+.identite{
+  max-width:1180px; margin:0 auto; padding:10px 22px 0;
+  display:flex; justify-content:flex-end; align-items:center; gap:14px;
+  font-size:12.5px; color:var(--texte-secondaire-sur-gris);
+}
+.identite a{ color:var(--texte-principal); font-weight:600; text-decoration:none; border-bottom:1px solid var(--filet); min-height:24px; display:inline-flex; align-items:center; }
+.identite a:hover{ color:var(--texte-accent); border-bottom-color:var(--fond-accent); }
+@media (max-width:560px){ .identite{ justify-content:flex-start; padding-left:16px; flex-wrap:wrap; gap:8px; } }
+
+/* ===== Mes outils ===== */
+.outils{ display:flex; flex-direction:column; gap:9px; }
+.outil{
+  display:flex; align-items:center; gap:12px; text-decoration:none;
+  border:1px solid var(--filet); border-radius:var(--rayon-petit); padding:11px 13px;
+}
+.outil:hover{ border-color:var(--fond-accent); }
+/* La pastille porte la lettre de l app DESSINEE en tesselles, comme la barre de l app elle-meme : fond navy, tesselles grises,
+   une seule orange a la fin du trace. Largeur fixe a 42 px pour les cinq — la paire QR fait 34 px a elle seule, et des boites
+   de largeurs differentes desaligneraient les noms d une ligne a l autre. */
+.outil .lettre{
+  width:42px; height:34px; flex-shrink:0; border-radius:6px;
+  background:var(--fond-barre);
+  display:flex; align-items:center; justify-content:center; gap:3px;
+}
+/* --t : le cote d une tesselle. Quatre rangees toujours : 4 x 4,5 + 3 joints = 21 px de haut, quelle que soit la lettre. */
+.outil .plaque-lettre{ --t:4.5px; display:grid; grid-template-columns:repeat(var(--c),var(--t)); grid-template-rows:repeat(4,var(--t)); gap:1px; }
+.outil .plaque-lettre i{ border-radius:1px; }
+.outil .plaque-lettre i.b{ background:var(--texte-sur-barre); }    /* 10,75 sur le navy */
+.outil .plaque-lettre i.o{ background:var(--fond-accent); }        /* 4,22 sur le navy — au-dessus du 3:1 des objets graphiques */
+.outil .plaque-lettre i.g{ visibility:hidden; }
+.outil b{ display:block; font-size:13.5px; font-weight:600; }
+.outil span{ display:block; font-size:11.5px; color:var(--texte-secondaire); }
+
+/* ===== Mon compte ===== */
+.compte{ display:flex; flex-direction:column; }
+.compte a{
+  padding:11px 0; font-size:13.5px; font-weight:600; text-decoration:none;
+  border-bottom:1px solid var(--filet); display:flex; justify-content:space-between; align-items:center; gap:10px;
+}
+.compte a:last-child{ border-bottom:none; }
+.compte a:hover{ color:var(--texte-accent); }
+.compte a::after{ content:'›'; color:var(--texte-secondaire); font-size:17px; }
+
+/* ===== Le pied. Socle minimum de CLAUDE.md : la FAQ et le contact, toujours joignables. ===== */
+.pied{
+  margin-top:34px; padding-top:20px; border-top:1px solid var(--filet);
+  text-align:center; font-size:13px; color:var(--texte-secondaire-sur-gris);   /* sur le gris de page */
+}
+.pied a{ color:var(--texte-accent); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; min-height:24px; padding:0 2px; }
+.pied a:hover{ text-decoration:underline; }
+
+.mention{
+  max-width:1340px; margin:0 auto; padding:0 clamp(16px,3vw,50px) 40px;
+  font-size:11.5px; color:var(--texte-secondaire-sur-gris); line-height:1.6;   /* sur le gris de page */
+}
+
+/* ===== Téléphone. Une grille a deux colonnes n a aucun sens sur 375 px : tout passe en pile,
+        et la colonne laterale remonte sous la principale. ===== */
+@media (max-width:900px){
+  .grille{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .barre .droite span{ display:none; }   /* l adresse complete ne tient pas ; « Se deconnecter » reste */
+  /* 140 px manquait de 0,4 px pour tenir deux colonnes : 2×140+14 = 294, et il y avait 293,6 de place. Une vignette
+     prenait alors tout l ecran et les six creations faisaient un defilement interminable. 126 laisse de la marge, et la
+     carte est resserree pour rendre quelques pixels de plus. */
+  .carte{ padding:20px 16px 20px; }
+  .biblio{ grid-template-columns:repeat(auto-fill,minmax(126px,1fr)); gap:10px; }
+  .crea .legende{ padding:9px 9px 11px; }
+  .crea .legende b{ font-size:12.5px; }
+  /* Le tableau des QR ne se lit pas a 375 px : chaque ligne devient un bloc, avec l intitule devant. */
+  table, thead, tbody, tr, td{ display:block; width:100%; }
+  thead{ display:none; }
+  tr{ border:1px solid var(--filet); border-radius:var(--rayon-petit); padding:12px; margin-bottom:10px; }
+  td{ border:none; padding:4px 0; }
+  td::before{ content:attr(data-intitule); display:block; font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--texte-secondaire); margin-bottom:2px; }
+  td:last-child::before{ display:none; }
+  .mini{ width:100%; margin-top:8px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .crea{ transition:none; }
+  .crea:hover{ transform:none; }
+}
+</style>
+</head>
+<body class="espace-client">
+
+<!-- L en-tete commune du site. Jamais en defer : elle ecrit au fil de la lecture. -->
+<script src="/commun-bandeau.js"></script>
+
+<!-- ===== Qui est connecte ===== 
+     La maquette portait ici une barre faite main avec une plaque « E ». Elle doublait le logo du site une fois la page
+     servie par quadreti.fr : il ne reste que ce qui n existe nulle part ailleurs — le courriel et la sortie. -->
+<div class="identite">
+  <span class="qui">marie.dupont@exemple.fr</span>
+  <a href="#">Se déconnecter</a>
+</div>
+<div class="page">
+
+  <!-- ===== L accueil. Le prenom seul : on s adresse a quelqu un, on ne lit pas sa fiche. ===== -->
+  <div class="accueil">
+    <div class="ligne">
+      <h1>Bonjour Marie</h1>
+      <span class="badge">Forfait Créatif</span>
+    </div>
+    <p>Toutes vos créations, vos QR et vos outils au même endroit — quel que soit l'outil qui les a fabriqués.</p>
+  </div>
+
+  <div class="grille">
+
+    <!-- ================= COLONNE PRINCIPALE : ce qu on vient consulter ================= -->
+    <div class="colonne">
+
+      <section class="carte">
+        <h2>Mes créations</h2>
+        <p class="desc">Tout ce que vous avez fabriqué, rangé au même endroit. Une création garde la même forme, qu'elle vienne d'un QR, d'une mosaïque ou d'une photo.</p>
+
+        <div class="biblio">
+          <article class="crea">
+            <div class="apercu qr">QR</div>
+            <div class="legende"><b>Anniversaire de Léa</b><span>QR Quadreti</span></div>
+          </article>
+
+          <article class="crea">
+            <div class="apercu qr">QR</div>
+            <div class="legende"><b>Carte du restaurant</b><span>QR Quadreti</span></div>
+          </article>
+
+          <article class="crea">
+            <div class="apercu mosaique">Mosaïque</div>
+            <div class="legende"><b>Mur du salon · 60 × 60</b><span>Quadreti Designer</span></div>
+            <button class="zip" type="button">Mes planches (ZIP)</button>
+          </article>
+
+          <article class="crea">
+            <div class="apercu photo">Photo</div>
+            <div class="legende"><b>Portrait de papa</b><span>Photo Quadreti</span></div>
+          </article>
+
+          <article class="crea">
+            <div class="apercu photo">Photo</div>
+            <div class="legende"><b>Vacances 2025</b><span>Photo Quadreti</span></div>
+          </article>
+
+          <article class="crea">
+            <div class="apercu import">Import</div>
+            <div class="legende"><b>visuel-canva.png</b><span>Déposé par vous</span></div>
+          </article>
+        </div>
+
+        <button class="bouton-depot" type="button">Déposer un fichier — créé n'importe où, réutilisable dans tous vos outils</button>
+      </section>
+
+      <section class="carte">
+        <h2>Mes QR dynamiques</h2>
+        <p class="desc">Le lien court ne change jamais ; sa destination, si. Le QR imprimé sur votre carreau reste valable pour toujours.</p>
+
+        <table>
+          <thead>
+            <tr><th>Lien court</th><th>Destination actuelle</th><th>Scans</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-intitule="Lien court"><code>qr.quadreti.fr/ZeVa9p</code></td>
+              <td data-intitule="Destination actuelle">Album photo · famille 2026</td>
+              <td data-intitule="Scans" class="scans">128</td>
+              <td><button class="mini" type="button">Changer la destination</button></td>
+            </tr>
+            <tr>
+              <td data-intitule="Lien court"><code>qr.quadreti.fr/Kd83mQ</code></td>
+              <td data-intitule="Destination actuelle">Menu du restaurant</td>
+              <td data-intitule="Scans" class="scans">1 042</td>
+              <td><button class="mini" type="button">Changer la destination</button></td>
+            </tr>
+            <tr>
+              <td data-intitule="Lien court"><code>qr.quadreti.fr/8pQr2X</code></td>
+              <td data-intitule="Destination actuelle">Faire-part de mariage</td>
+              <td data-intitule="Scans" class="scans">67</td>
+              <td><button class="mini" type="button">Changer la destination</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="note">Un carreau offert il y a deux ans peut pointer aujourd'hui vers votre nouvel album — sans rien réimprimer.</p>
+      </section>
+
+    </div>
+
+    <!-- ================= COLONNE LATÉRALE : ce qu on vient vérifier ================= -->
+    <div class="colonne">
+
+      <section class="carte">
+        <h2>Mon forfait</h2>
+        <p class="desc">Forfait Créatif — générations du mois</p>
+        <div class="jauge" role="img" aria-label="4 générations utilisées sur 10"><i></i></div>
+        <div class="compteur">4 générations utilisées sur 10</div>
+        <a class="cta" href="#">Voir les forfaits</a>
+
+        <div class="recharge">
+          <b>Besoin d'un coup de plus ?</b>
+          <div class="rang">
+            <button type="button">+10 générations · 2,90 €</button>
+            <button type="button">+30 générations · 6,90 €</button>
+          </div>
+          <span class="apres">Achat sur la boutique. Débloqué automatiquement sur votre compte, sans code à saisir.</span>
+        </div>
+      </section>
+
+      <section class="carte">
+        <h2>Mes outils</h2>
+        <p class="desc">Le Studio, depuis votre espace.</p>
+        <div class="outils">
+          <a class="outil" href="https://designer.quadreti.fr"><span class="lettre" data-lettre="Q" aria-hidden="true"></span><span><b>Quadreti Designer</b><span>Composer et imprimer votre mosaïque</span></span></a>
+          <a class="outil" href="https://quadreti.fr/editeur-creatif/"><span class="lettre" data-lettre="C" aria-hidden="true"></span><span><b>Éditeur Créatif</b><span>Composer librement, photos et textes</span></span></a>
+          <a class="outil" href="https://quadreti.fr/mosaique-creative/"><span class="lettre" data-lettre="M" aria-hidden="true"></span><span><b>Mosaïque Créative</b><span>La vraie mosaïque décorative</span></span></a>
+          <a class="outil" href="https://quadreti.fr/photo-quadreti/"><span class="lettre" data-lettre="P" aria-hidden="true"></span><span><b>Photo Quadreti</b><span>Détourer, redresser, régler</span></span></a>
+          <a class="outil" href="https://qr.quadreti.fr"><span class="lettre" data-lettre="QR" aria-hidden="true"></span><span><b>QR Quadreti</b><span>Créer un QR simple ou dynamique</span></span></a>
+        </div>
+      </section>
+
+      <section class="carte">
+        <h2>Mon compte</h2>
+        <div class="compte">
+          <a href="#">Email et mot de passe</a>
+          <a href="#">Mes commandes boutique</a>
+          <a href="#">Mes consentements &amp; données</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <p class="pied">Une question ? <a href="#">Consulter la FAQ</a> · <a href="#">Nous contacter</a></p>
+</div>
+
+<p class="mention">
+  <b>Aperçu — Mon Espace Client (14/09). Les données affichées sont fictives</b> : la page est en place, le branchement au Socle Commun ne l'est pas encore. C'est la face visible du Socle Commun :
+  « Mes créations » montre le stockage unifié, « Mes QR dynamiques » le service de liens courts déjà en production,
+  « Mon forfait » les paliers, « Mes outils » le bouton de direction du socle minimum, « Mes consentements » la trace RGPD.
+  Toutes les couleurs passent par un jeton nommé par son rôle — aucune valeur en dur hors du bloc <code>:root</code>.
+</p>
+
+<script>
+/* L alphabet Quadreti — quatre rangees, largeur naturelle de la lettre, « # » tesselle, « . » vide, « o » la tesselle orange.
+   Source : QZ_ALPHABET dans commun-bandeau.js. La page le reprend a la volee des qu elle est servie par le site ; la copie
+   ci-dessous n existe que pour la regarder hors ligne, et doit disparaitre le jour du branchement. */
+var QZ_ALPHABET = window.QZ_ALPHABET || {
+  C:['###.','#...','#...','##o.'],
+  M:['#...#','##.##','#.#.#','#...o'],
+  P:['###.','#.#.','###.','o...'],
+  Q:['###.','#.#.','#.#.','###o'],
+  R:['#o','#.','#.','#.']
+};
+function qzPlaque(lettre){
+  var g = QZ_ALPHABET[lettre], n = g[0].length, h = '';
+  /* On rogne les colonnes de droite entierement vides : le C et le P sont dessines dans une boite de quatre colonnes dont la
+     derniere ne sert pas, et ce vide se verrait comme un blanc entre la lettre et le bord. Meme regle que commun-bandeau.js. */
+  while (n > 1 && g.every(function(r){ return r.charAt(n - 1) === '.'; })) n--;
+  for (var y = 0; y < 4; y++) for (var x = 0; x < n; x++){
+    var c = g[y].charAt(x);
+    h += '<i class="' + (c === 'o' ? 'o' : (c === '#' ? 'b' : 'g')) + '"></i>';
+  }
+  return '<span class="plaque-lettre" style="--c:' + n + '">' + h + '</span>';
+}
+/* « QR » est la seule paire de l alphabet : deux plaques cote a cote, comme dans la barre de l app en ligne. */
+Array.prototype.forEach.call(document.querySelectorAll('.lettre[data-lettre]'), function (el){
+  el.innerHTML = el.getAttribute('data-lettre').split('').map(qzPlaque).join('');
+});
+</script>
+
+<!-- Pied commun du site (gris, copyright integre) et reglages : menu et copyright viennent de la base. -->
+<script src="/commun-pied.js"></script>
+<script src="/reglages-site.js" defer></script>
+
+</body>
+</html>

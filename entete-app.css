@@ -89,3 +89,31 @@
 .qz-fini .qz-app-nom .qz-l,.qz-fini .qz-app-baseline .qz-l{opacity:1}
 @media (prefers-reduced-motion:reduce){
   .qz-app-nom .qz-l,.qz-app-baseline .qz-l{animation:none!important;opacity:1}}
+
+/* ---- 14/09 : « Mon Espace », le chemin inverse ----
+   Les apps pointaient vers le Studio ; aucune ne ramenait le client a ses propres fichiers. Ce bouton ne vit que dans une app :
+   cette feuille n est chargee que quand la page a declare window.qzApp.
+   Couleurs nommees par leur ROLE, comme l exige CLAUDE.md — et ce sont celles de la barre d app : texte gris sur navy (10,75),
+   trait orange au survol (4,22 sur le navy, au-dessus du 3:1 des objets graphiques). */
+.qz-header.qz-app{--qz-espace-texte:#dedede;--qz-espace-trait:#d96c2f}
+.qz-header.qz-app .qz-espace{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 12px;min-height:34px;box-sizing:border-box;
+  border:1px solid color-mix(in srgb,var(--qz-espace-texte) 45%,transparent);border-radius:999px;
+  color:var(--qz-espace-texte)!important;text-decoration:none;white-space:nowrap;
+  font-family:'Jura',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase}
+.qz-header.qz-app .qz-espace:hover,.qz-header.qz-app .qz-espace:focus-visible{border-color:var(--qz-espace-trait)}
+/* Le mini pele-mele : quatre tesselles, une orange. L unite du produit, pas un pictogramme emprunte. */
+.qz-header.qz-app .qz-espace-plaque{display:grid;grid-template-columns:repeat(2,5px);grid-template-rows:repeat(2,5px);gap:1.5px;flex-shrink:0}
+.qz-header.qz-app .qz-espace-plaque i{background:var(--qz-espace-texte);border-radius:1px}
+.qz-header.qz-app .qz-espace-plaque i.qz-espace-o{background:var(--qz-espace-trait)}
+/* Sur bureau la barre passe en flex : ordre 1 pour se poser APRES le menu, a droite. */
+@media (min-width:901px){.qz-header.qz-app.qz-menu-visible .qz-espace{order:1}}
+/* Sous 901 px la barre est une grille a deux colonnes (bloc logo | burger) : un troisieme enfant passerait a la ligne
+   et pousserait le burger. Une colonne de plus, pour lui seul. */
+@media (max-width:900px){.qz-header.qz-app{grid-template-columns:1fr auto auto}}
+/* Tres petit ecran : le mot s efface, la plaque reste. Le nom accessible est porte par aria-label, il ne disparait pas. */
+@media (max-width:560px){
+  .qz-header.qz-app .qz-espace-mot{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .qz-header.qz-app .qz-espace{padding:7px 9px;min-width:34px;justify-content:center}
+}
