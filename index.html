@@ -40,7 +40,8 @@
 <!-- GARDE-ACCES-FIN -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quadreti — Composez, imprimez, clipsez, changez à volonté.</title>
-<meta name="description" content="Support créatif modulaire : composez dans l'app, imprimez chez vous sur feuille prédécoupée, clipsez au mur sans colle — et changez à volonté.">
+<!-- 14/09 : la description suit la definition du fondateur — un multi-cadre, pas « un support creatif modulaire » qui ne dit rien a personne. -->
+<meta name="description" content="Un multi-cadre qui se clipse au mur : chaque tesselle est un mini cadre. Photos, compositions, logo, mosaïque — composez chez vous, imprimez, clipsez, changez à volonté.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' rx='46' fill='%23F5F5F5'/%3E%3Cg transform='translate%2836.50,36.50%29'%3E%3Crect x='0.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='177.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%23E2725B'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,7 +84,10 @@
   ::-webkit-scrollbar-thumb{ background:var(--charbon); border-radius:99px; border:2.5px solid var(--fond); }
   html{ scrollbar-color:var(--charbon) var(--fond); }
 
-  .wrap{ max-width:1060px; margin:0 auto; padding:0 22px; }
+  /* 14/09, fondateur : « occupe la largeur de la page ». 1060 px laissait 300 px de vide de chaque cote sur un grand ecran.
+     1340 et pas davantage : au-dela, une ligne de texte passe 90 caracteres et devient penible a suivre — c est la lecture qui
+     fixe la limite, pas la taille de l ecran. Les paragraphes centres gardent d ailleurs leur propre plafond, plus bas. */
+  .wrap{ max-width:1340px; margin:0 auto; padding:0 26px; }
 
   /* Apparition au scroll */
   .rv{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
@@ -304,6 +308,41 @@
   .tessera i{ display:block; aspect-ratio:1; border-radius:4px; }
 
   /* ===== Comment ça marche ===== */
+/* ===== Les trois gestes, en bandes (14/09, demande du fondateur) =====
+     « Une disposition moins centree pour version PC : du texte a gauche, des photos a droite, varier les tailles, dispose droite
+     droite gauche. » Chaque bande est une rangee de deux colonnes ; `geste-gauche` inverse simplement l ordre d affichage, le HTML
+     garde toujours le texte en premier — c est lui qu on doit lire ou entendre d abord.
+     Les trois photos n ont pas la meme largeur : l imprimante est large (geste banal, il passe vite), l etui petit (un detail de
+     main), le clipsage le plus grand (le geste qui definit le produit). */
+  .geste{ display:grid; align-items:center; gap:clamp(22px,4vw,56px); margin-top:34px; }   /* 34 et non 44 : les bandes etant plus basses, l ecart d origine les faisait flotter */
+  .geste-droite{ grid-template-columns:1fr 1.15fr; }
+  .geste-gauche{ grid-template-columns:1.15fr 1fr; }   /* le miroir exact de geste-droite : meme place a la photo des deux cotes */
+  .geste-gauche .geste-texte{ order:2; }
+  .geste-gauche .geste-photo{ order:1; }
+  .geste-texte{ text-align:left; }
+  .geste-texte h3{ font-size:19px; font-weight:700; margin:10px 0 8px; }
+  .geste-texte p{ font-size:14.5px; color:#5a636b; line-height:1.6; margin:0; }
+  .geste-photo{ margin:0; }
+  .geste-photo img{ width:100%; border-radius:6px; display:block; }
+  /* 14/09, le fondateur revient sur les tailles variees : « quand photo dans meme section, dimension photo identique ». Les trois
+     gestes ont donc exactement le meme cadre — c est l alternance gauche/droite qui porte le rythme, plus la taille. */
+  /* 14/09, fondateur : « les photos sont trop grandes », meme remarque que pour le kit. Plafonnees a 380 px et centrees dans
+     leur colonne : la bande cesse d etre haute comme une affiche pour trois lignes de texte. La colonne, elle, ne change pas —
+     c est elle qui tient l alternance gauche/droite. */
+  .geste-photo{ display:flex; justify-content:center; }
+  .geste-photo img{ width:100%; max-width:380px; }
+  /* Sur telephone, une bande a deux colonnes n a aucun sens : tout repasse en colonne, photo au-dessus du texte. */
+  @media (max-width:820px){
+    .geste, .geste-droite, .geste-gauche{ grid-template-columns:1fr; gap:18px; margin-top:34px; }
+    /* Les deux selecteurs doivent avoir la MEME specificite, sinon .geste-gauche .geste-photo (deux classes) l emporte sur
+       .geste-photo (une seule) et la troisieme bande garde sa photo sous le texte, alors que les deux autres l ont au-dessus. */
+    .geste-gauche .geste-texte{ order:2; }
+    .geste-gauche .geste-photo{ order:1; }
+    .geste-droite .geste-photo{ order:1; }
+    .geste-droite .geste-texte{ order:2; }
+    .geste-petite img{ max-width:100%; }
+  }
+
   .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:38px; }
   @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
   .step{
@@ -311,18 +350,62 @@
     padding:26px 24px 22px; position:relative;
   }
   .alt .step{ background:#fff; }
-  .step .num{
-    width:42px; height:42px; border-radius:8px 8px 8px 16px; background:var(--charbon); color:#fff;
+  /* 14/09, fondateur : « enumeration en orange ». Le numero passe a l orange de marque, texte en gris — la regle posee pour tout
+     texte sur un fond orange. Coins egalises, comme les boutons du site. */
+  .geste-texte .num, .step .num{
+    width:42px; height:42px; border-radius:8px; background:#d96c2f; color:#dedede;
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; margin-bottom:14px;
   }
   .step h3{ font-size:18.5px; font-weight:700; margin-bottom:8px; }
   .step p{ font-size:14.5px; color:#4a5158; }
-  .step .hint{
-    margin-top:12px; font-size:13px; color:var(--olive); background:var(--olive-soft);
-    border-radius:8px; padding:8px 12px; font-weight:600;
+  /* 14/09, fondateur : « les encarts verts n ont plus lieu d etre ». Ils etaient peints avec --olive et --olive-soft, deux jetons
+     de l identite KRAFT abandonnee — d ou leur air de piece rapportee. Ils reprennent la meme forme que les arguments de « Pour
+     qui » : un filet orange a gauche, pas de cadre. Une seule facon de poser une precision sur toute la page. */
+  .geste-texte .hint, .step .hint{
+    margin-top:14px; font-size:13px; color:#5a636b; font-weight:600;
+    border-left:3px solid #d96c2f; padding:2px 0 2px 14px; background:none;
   }
   .how-foot{ margin-top:26px; font-size:14px; color:#6a727b; text-align:center; }
   .how-foot a{ color:var(--charbon); font-weight:700; }
+
+  /* 14/09 : le prisme est pose sur fond CLAIR ici, alors qu il a ete dessine sur le bleu du Studio. Seules les couleurs qui
+     dependent du fond sont redefinies — le composant les expose en jetons, sa geometrie ne bouge pas. */
+  #app{ --prisme-encre:#1e2b35; --prisme-ombre:#1e2b3540; --bandeau-fond:#dedede; }   /* le fondu des bords prend la couleur reelle du fond de la section, sinon il se voit */
+
+  /* ===== Le resultat + Pour qui (14/09, sections reprises de la maquette de presentation) ===== */
+  .deux-col{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:start; text-align:left; }
+  @media (max-width:860px){ .deux-col{ grid-template-columns:1fr; gap:30px; } }
+  .deux-col h2{ text-align:left; }
+
+  /* Le comparateur : deux photos du MEME cadrage superposees, la seconde rognee a la position du curseur. Le curseur est un
+     <input type="range"> rendu invisible mais bien present — il est deja pilotable au clavier et annonce aux lecteurs d ecran,
+     ce qu un glisser maison ne serait pas. */
+  .comparateur{ position:relative; width:100%; aspect-ratio:3/2; overflow:hidden; border-radius:6px; --pos:50%; }
+  .comparateur img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
+  .comparateur .apres{ clip-path:inset(0 calc(100% - var(--pos)) 0 0); }
+  .comparateur .cote{
+    position:absolute; top:12px; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; letter-spacing:.08em;
+    text-transform:uppercase; padding:5px 10px; border-radius:4px; pointer-events:none;
+  }
+  .comparateur .cote.a{ left:12px; background:#1e2b35; color:#dedede; }
+  .comparateur .cote.b{ right:12px; background:#d96c2f; color:#dedede; }
+  .comparateur .ligne{ position:absolute; top:0; bottom:0; left:var(--pos); width:3px; background:#d96c2f; transform:translateX(-1.5px); pointer-events:none; }
+  .comparateur .poignee{
+    position:absolute; top:50%; left:var(--pos); width:36px; height:36px; border-radius:5px; background:#d96c2f;
+    transform:translate(-50%,-50%) rotate(45deg); box-shadow:0 4px 14px #00000040; pointer-events:none;
+  }
+  .comparateur input{ position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; -webkit-appearance:none; appearance:none; }
+  .comparateur input:focus-visible{ outline:3px solid #d96c2f; outline-offset:3px; opacity:1; }
+  .comparateur-note{ font-size:13px; color:#6a727b; margin:10px 0 0; text-align:left; }
+
+  .mur-situation{ margin:0; }
+  .mur-situation img{ width:100%; border-radius:6px; display:block; }
+  .mur-situation figcaption{ font-size:13px; color:#6a727b; margin-top:10px; font-weight:600; }
+
+  /* Les trois arguments de « Et demain ? », resserres — dans la maquette ils occupent la colonne droite de « Pour qui ». */
+  .arg{ border-left:3px solid #d96c2f; padding:2px 0 2px 16px; margin-top:16px; }
+  .arg b{ display:block; font-size:15px; margin-bottom:4px; }
+  .arg p{ margin:0; font-size:13.5px; color:#5a636b; line-height:1.55; }
 
   /* ===== App / modes ===== */
   .app-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-top:34px; }
@@ -338,7 +421,77 @@
   .app-reassure{ text-align:center; margin-top:18px; font-size:14.5px; color:#6a727b; }
   .app-reassure b{ color:var(--charbon); }
 
+  /* ===== Le Studio : les quatre autres outils (14/09) =====
+     Volontairement COMPACT : une ligne par outil, pas de carte. La page est deja longue, et ces outils ne vendent pas le kit —
+     ils disent que l ecosysteme ne s arrete pas au Designer. Le detail est sur la page du Studio. */
+  .studio-bande{ margin-top:40px; padding-top:30px; border-top:1px solid var(--border); }
+  .studio-intro{ text-align:center; font-size:14.5px; color:#6a727b; margin-bottom:22px; }
+  .studio-intro b{ color:var(--charbon); }
+  /* DEUX colonnes, pas un remplissage automatique : a quatre outils, auto-fit en posait trois en haut et laissait le quatrieme
+     seul en bas. Deux colonnes se remplissent exactement. */
+  .studio-liste{ display:grid; grid-template-columns:1fr 1fr; gap:10px 34px; text-align:left; }
+  @media (max-width:620px){ .studio-liste{ grid-template-columns:1fr; } }
+  .studio-outil{ display:flex; gap:11px; align-items:flex-start; padding:9px 0; }
+  .studio-outil .pastille{
+    flex-shrink:0; width:30px; height:30px; border-radius:7px; background:var(--charbon); color:#dedede;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Jura',sans-serif; font-weight:700; font-size:13px; letter-spacing:.02em;
+  }
+  .studio-outil.attente .pastille{ background:#8a9099; }
+  .studio-outil .nom{ font-size:14.5px; font-weight:700; }
+  .studio-outil .nom a{ color:inherit; text-decoration:none; border-bottom:1.5px solid transparent; }
+  .studio-outil .nom a:hover{ color:#9c4514; border-bottom-color:#9c4514; }
+  .studio-outil .quoi{ font-size:13px; color:#5a636b; line-height:1.5; margin-top:2px; }
+  .studio-outil .bientot{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6a727b; }
+  .studio-cta{ text-align:center; margin-top:26px; }
+  /* Ce bouton ne porte PAS la classe .cta, expres : la feuille injectee par le panneau pose `.cta{background:...!important}`,
+     et un !important ne se contourne par aucune specificite — la classe .cta.light du site, faite pour les boutons secondaires,
+     est donc sans effet partout. Ici le bouton s habille lui-meme et reste secondaire, comme voulu. */
+  .btn-studio{
+    display:inline-block; text-decoration:none; font-weight:700; font-size:15.5px; border-radius:4px; padding:13px 30px;
+    background:#fff; color:var(--charbon); border:1.5px solid var(--charbon); transition:transform .15s ease, background .15s ease;
+  }
+  .btn-studio:hover{ transform:translateY(-2px); background:#f6f6f6; }
+  @media (prefers-reduced-motion:reduce){ .btn-studio:hover{ transform:none; } }
+
   /* ===== Styles / versatilité ===== */
+  /* ===== Le kit, en trois elements (14/09) — repris de la maquette de presentation validee =====
+     Le visuel est CENTRE au-dessus de son texte, et le texte prend la largeur du visuel : sans ca, une colonne large sous une
+     petite image donne un bloc qui flotte. `contain` pour les photos detourees (rien ne doit etre rogne), `cover` pour celles qui
+     ont deja leur fond. */
+  /* 14/09, fondateur : « texte a gauche, photos l une en dessous de l autre a droite ». Le kit n est plus un triptyque centre :
+     la section devient deux colonnes, tout le texte a gauche, les trois elements empiles a droite. Chaque element garde sa photo
+     et sa legende, mais en RANGEE — photo puis texte cote a cote, ce qui les rend plus compacts et laisse la colonne respirer. */
+  /* align-items:center et non start : les deux colonnes n auront jamais exactement la meme hauteur — le texte se reflow avec la
+     largeur, pas les photos. Centrees, la difference se lit comme une respiration en haut et en bas ; calees en haut, elle se
+     lisait comme un trou sous le texte. */
+  .quoi-deux{ display:grid; grid-template-columns:1fr .78fr; gap:clamp(26px,4vw,54px); align-items:center; text-align:left; }
+  .quoi-deux .eyebrow, .quoi-deux h2, .quoi-deux .lead{ text-align:left; margin-left:0; margin-right:0; }
+  .quoi-deux h2{ max-width:none; }
+  .kit{ display:flex; flex-direction:column; gap:22px; margin-top:6px; }
+  /* 14/09 : c etait une grille a DEUX colonnes pour TROIS enfants — la photo prenait la colonne de gauche, le titre celle de
+     droite, et le texte repartait a la ligne tout seul. Les titres se retrouvaient a l ecart, sans rapport visible avec leur
+     photo (signale par le fondateur). Les trois sont desormais empiles et centres dans la colonne. */
+  .kit > div{ text-align:center; max-width:none; margin:0; }
+  @media (max-width:900px){
+    .quoi-deux{ grid-template-columns:1fr; }
+    .kit{ margin-top:24px; }
+  }
+  /* 14/09 : la vignette n est plus en tete de colonne mais a cote de son texte — largeur fixe, plus de marge sous elle. */
+  /* 14/09 : 260 px et non plus toute la largeur de la colonne. A 413 px la colonne de droite faisait deux fois la hauteur de celle
+     de gauche, et une vignette de kit n a pas besoin d etre grande — elle montre une piece, elle ne la met pas en scene. */
+  .kit .visuel{
+    width:100%; max-width:230px; flex:none; aspect-ratio:3/2; border-radius:4px; overflow:hidden; margin:0 auto 10px;
+    background:#e4e4e2; display:flex; align-items:center; justify-content:center;
+  }
+  .kit .visuel img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .kit .visuel.detoure{ background:transparent; }
+  .kit .visuel.detoure img{ object-fit:contain; }
+  .kit h3{ font-size:16px; font-weight:700; margin:0 0 5px; }
+  /* Le repli de 620 px a ete retire : photo, titre et texte sont empiles a toutes les largeurs, il n y avait plus rien a replier. */
+  .kit p{ font-size:13.5px; color:#5a636b; line-height:1.55; margin:0 auto; max-width:330px; }   /* le texte ne s etale pas plus large que sa photo n en a besoin */
+  @media (max-width:760px){ .kit{ grid-template-columns:1fr; gap:30px; } }
+
   .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:28px 0 8px; }
   .chip{
     font-size:14px; font-weight:700; background:#fff; border:1.5px solid var(--border); color:var(--charbon);
@@ -350,7 +503,15 @@
   .color-note b{ color:var(--charbon); }
 
   /* ===== Scalabilité ===== */
-  .scal{ display:flex; align-items:flex-end; justify-content:center; gap:clamp(16px,4vw,44px); margin:38px 0 10px; }
+/* 14/09 : la rangee porte desormais des PHOTOS, plus des grilles de petits carres. Les trois sont recadrees au carre, donc de
+     meme hauteur ; la fleche se centre sur l image, pas sur le bloc entier — sinon elle descend au niveau des libelles. */
+  .scal{ display:flex; align-items:flex-start; justify-content:center; gap:clamp(10px,2.4vw,26px); margin-top:38px; flex-wrap:wrap; }
+  .scal-etape{ margin:0; max-width:300px; flex:1 1 200px; }   /* plus large qu au format carre : une photo paysage a besoin de sa longueur */
+  /* 14/09, fondateur : « garde un format paysage pour que le ×9 s exprime ». Le carre coupait la photo du ×9 — la grille
+     remplissait le cadre et on perdait le mur autour, donc l echelle. En 3:2, le ×1 parait petit dans son cadre et le ×9 le
+     remplit : c est la progression elle-meme qui se voit. */
+  .scal-etape img{ width:100%; aspect-ratio:3/2; object-fit:cover; border-radius:6px; display:block; }
+  .scal .arrow{ align-self:center; margin-top:-26px; }   /* -26 : la moitie de la hauteur du libelle, pour retomber au centre de l image */
   .scal .sg{ display:grid; gap:3px; background:var(--charbon); padding:5px; border-radius:8px; }
   .scal .sg i{ display:block; width:16px; height:16px; border-radius:2.5px; background:var(--fond); }
   .scal .sg i.t{ background:var(--terracotta); }
@@ -595,6 +756,24 @@
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 </style>
 <link rel="stylesheet" href="/commun.css">
+<link rel="stylesheet" href="/prisme-outils.css">
+<script>
+/* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
+   variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
+/* Ce <script> est dans l EN-TETE : la page n existe pas encore quand il est lu. Sans cette attente, getElementById ne trouve rien
+   et le curseur reste inerte — verifie ici meme. */
+(function(){
+  function poser(){
+  var c = document.getElementById('comparateur');
+  if (!c) return;
+  var curseur = c.querySelector('input');
+  function suivre(){ c.style.setProperty('--pos', curseur.value + '%'); }
+  curseur.addEventListener('input', suivre);
+  suivre();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
+})();
+</script>
 <script src="reglages-site.js" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
@@ -660,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function(){
        Les anciens textes .h-line et le bouton pause n'ont plus lieu d'etre : les baselines font partie du bloc. Les fichiers
        video restent dans video/ pour retour arriere (git revert). -->
   <div class="qb" id="qbBandeau" aria-hidden="true"></div>
-  <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="hero_cta">Ouvrir le Studio</a><!-- 11/09 soir : « Composer mon mur » -> « Ouvrir le Studio » (fondateur), l outil s appelle le Studio -->
+  <a class="cta hero-cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="hero_cta">Ouvrir Quadreti Designer</a><!-- 14/09 : « Ouvrir le Studio » -> « Ouvrir Quadreti Designer ». Le bouton ouvrait le Designer tout en s appelant Studio ; depuis que le Studio est une PAGE (les cinq outils) avec son entree au menu, le mot ne peut plus designer les deux. Le Studio est le lieu, le Designer est l outil. -->
 
 </div>
 
@@ -671,60 +850,142 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>
 
-<!-- ============ 1. STORYTELLING ============ -->
-<section class="blk" id="histoire">
-  <div class="wrap story">
-    <div class="txt rv">
-      <div class="eyebrow">L'origine</div>
-      <h2>La mosaïque pixel, revisitée.</h2>
-      <p>Il y a deux mille ans, les mosaïstes romains posaient leurs <b>tesselles</b> une à une, scellées pour durer toute une vie. Une œuvre magnifique — et définitive.</p>
-      <p>Quadreti reprend la tesselle là où ils l'ont laissée : le même petit carré, la même patience heureuse du geste, le même plaisir de voir l'image naître pièce par pièce.</p>
-      <p class="reinvente">Ce que nous avons réinventé, c'est la façon de la poser : elle ne se colle pas, elle se clipse.</p>
+<!-- ============ 1. STYLES ============
+     14/09 : C est quoi — l objet d abord. Le fondateur : « on se demande ce que fait l Origine la ». C est cette section qui repond. -->
+<section class="blk" id="styles">
+  <div class="wrap">
+    <div class="quoi-deux">
+      <div>
+    <div class="eyebrow rv">C'est quoi</div>
+    <!-- 14/09, mots du fondateur : « chaque tesselle est un mini cadre ». C est l image qui porte tout le reste — le pele-mele,
+         l extension, et le fait qu un logo ou une photo unique y aient leur place autant qu une mosaique. -->
+    <h2 class="rv">Chaque tesselle est un mini cadre.</h2>   <!-- 14/09 : titre repris de la maquette de presentation. L ancien (« Tout ce que le marche vend separement ») etait une comparaison, pas une reponse — or c est la premiere section, elle doit dire ce que c est. La comparaison reste juste en dessous, dans le chapo. -->
+    <p class="lead rv">Un multi-cadre qui se clipse au mur : un pêle-mêle qui commence petit et peut devenir très grand. Photos, compositions artistiques, logo, mosaïque à double lecture — <b>tout s'y affiche, et tout se change.</b></p>
+    <!-- 14/09 : « chaque tesselle est un mini cadre » etait affirme, puis abandonne aussitot. Ce paragraphe le rend concret — la
+         taille, le nombre, et ce que ca permet. Sans lui, l image la plus forte de la page reste une formule. -->
+    <p class="lead rv" style="margin-top:26px">Une tesselle fait 2,6 cm de côté et tient un visuel imprimé. Quarante-neuf par carreau : <b>quarante-neuf cadres</b> que vous remplissez comme vous voulez. Une photo par case, une seule grande image répartie sur toutes, ou un mélange des deux. Et chacun se déclipse séparément, sans toucher aux autres.</p>
+
+    <!-- 14/09, demande du fondateur : completer par les faits concrets — dimension du carreau, couleur, fixation, matiere. Ce sont
+         les questions qu on se pose devant une photo de produit, et la page n y repondait nulle part. Ca equilibre aussi les deux
+         colonnes : le texte etait deux fois plus court que la pile de photos. -->
+    <p class="lead rv" style="margin-top:20px">Un carreau mesure <b>20 × 20 cm</b> et porte 49 cases. La grille est <b>noire</b> — elle disparaît derrière les visuels, sur un mur clair comme sur un mur foncé. Elle se fixe par quatre punaises, une à chaque coin, recouvertes ensuite par les tesselles d'angle.</p>
+
+    <p class="lead rv" style="margin-top:20px">Les tesselles sont en <b>bois</b>, les étuis en plastique transparent. C'est la partie qui ne change jamais : vous l'achetez une fois, et seuls les visuels imprimés se renouvellent.</p>
+
+    <!-- 14/09 : le kit, en trois elements. Texte et decoupage repris de la maquette de presentation validee — la section
+         s appelle « C est quoi », elle doit MONTRER l objet avant de le comparer a quoi que ce soit. -->
+    <p class="lead rv" style="margin-bottom:0">Une grille qui se fixe au mur avec des punaises, des tesselles en bois, des étuis transparents, et une feuille prédécoupée à imprimer chez vous. <b>C'est tout le kit.</b></p>
+
+      </div>
+      <div>
+    <div class="kit">
+      <div class="rv">
+        <div class="visuel"><img src="img/kit-grille.jpg" alt="Grille murale Quadreti vide, 49 cases" loading="lazy"></div>
+        <h3>La grille</h3>
+        <p>49 cases, fixée au mur par quatre punaises. Sans perçage, sans trace. Les tesselles s'y clipsent une à une.</p>
+      </div>
+      <div class="rv">
+        <div class="visuel"><img src="img/kit-tesselle-etui.jpg" alt="Trois tesselles — blanche, rouge, noire — et un étui transparent" loading="lazy"></div>
+        <h3>La tesselle et son étui</h3>
+        <p>Une tesselle en bois, un étui transparent qui tient le visuel bien à plat. Le même étui sert à tous vos visuels futurs.</p>
+      </div>
+      <div class="rv">
+        <div class="visuel"><img src="img/kit-feuille.jpg" alt="Feuilles prédécoupées Quadreti, dans leur pochette et en éventail" loading="lazy"></div>
+        <h3>La feuille prédécoupée</h3>
+        <p>Aux dimensions exactes des tesselles, à imprimer avec n'importe quelle imprimante jet d'encre. Au dos de chaque pièce, son code de position.</p>
+      </div>
     </div>
-    <div class="rv">
-      <div class="tessera" id="tessera" aria-hidden="true"></div>
+      </div>
     </div>
+
+    <!-- 14/09 : les rendus (pixel art, pointillisme, gravure...) sont partis dans la section Quadreti Designer. Le fondateur :
+         « c est un descriptif de l app ». Ils ne sortent pas du support, ils sortent de l outil — le support les affiche. -->
   </div>
+
 </section>
 
-<!-- ============ 2. COMMENT ÇA MARCHE ============ -->
-<section class="blk alt" id="comment">
-  <div class="wrap center">
+<!-- 14/09 : la section « Et demain ? » n existe plus ici — la maquette de presentation n en fait pas une section a part, elle
+     l installe dans la colonne droite de « Pour qui », resserree en trois arguments. Une section de moins sur une page que le
+     fondateur trouve deja longue, et rien du fond n est perdu. -->
+
+<!-- ============ 3. COMMENT ============
+     14/09 : Comment on s en sert — les trois gestes, une fois qu on sait de quoi il s agit. -->
+<section class="blk" id="comment">
+  <div class="wrap">
     <div class="eyebrow rv">Comment ça marche</div>
     <h2 class="rv">Trois gestes. Pas de colle, pas d'outils, pas d'attente.</h2>
-    <p class="lead rv">Votre kit contient la grille, les tesselles, les étuis et la feuille prédécoupée aux dimensions exactes. Le reste, c'est vous.</p>
+    <!-- 14/09 : ce chapo redisait le contenu du kit, montre en photo dans la section juste au-dessus. Il dit maintenant ce que les
+         trois gestes PRODUISENT — c est la question que pose la section precedente. -->
+    <p class="lead rv">De l'écran au mur en trois gestes, sans colle et sans temps de séchage. Ce qui prend le plus de temps, c'est de choisir le visuel.</p>
 
-    <div class="steps">
-      <div class="step rv">
+    <!-- 14/09, demande du fondateur : trois BANDES au lieu de trois cartes centrees — texte d un cote, photo de l autre,
+         disposees droite, droite, GAUCHE. La rupture au troisieme est voulue : une alternance stricte se lit comme un motif et
+         l oeil cesse de la voir ; la cassure fait regarder le clipsage, le geste qui definit le produit. -->
+    <div class="geste geste-gauche rv">
+      <div class="geste-texte">
         <div class="num">1</div>
         <h3>Imprimez</h3>
-        <p>Composez votre création dans l'app, puis imprimez-la chez vous sur la feuille prédécoupée fournie. Détachez : aucune découpe à faire. Toute imprimante jet d'encre convient.</p>
+        <p>Composez votre création dans Quadreti Designer, puis imprimez-la chez vous sur la feuille prédécoupée fournie. Détachez : aucune découpe à faire. Toute imprimante jet d'encre convient.</p>
         <div class="hint">Au dos de chaque visuel : son code de position (B2 · D5). Votre plan de montage est intégré.</div>
       </div>
-      <div class="step rv">
+      <figure class="geste-photo geste-large">
+        <img src="img/geste-imprimez.jpg" alt="Une imprimante de bureau qui sort une feuille prédécoupée Quadreti" loading="lazy">
+      </figure>
+    </div>
+    <div class="geste geste-droite rv">
+      <div class="geste-texte">
         <div class="num">2</div>
         <h3>Glissez</h3>
         <p>Chaque visuel se glisse dans son étui, sans un point de colle. Les volets se rabattent, le visuel est tenu parfaitement à plat.</p>
         <div class="hint">Le même étui servira à tous vos visuels futurs.</div>
       </div>
-      <div class="step rv">
+      <figure class="geste-photo geste-petite">
+        <img src="img/geste-glissez.jpg" alt="Deux mains glissent un visuel imprimé dans son étui transparent" loading="lazy">
+      </figure>
+    </div>
+    <div class="geste geste-gauche rv">
+      <div class="geste-texte">
         <div class="num">3</div>
         <h3>Clipsez</h3>
         <p>L'étui se clipse dans la grille — clic. Le clipsage verrouille l'ensemble, naturellement. Pour changer : déclipsez, remplacez, reclipsez. Quelques secondes.</p>
         <div class="hint">Fixation murale par punaises, recouvertes par les tesselles d'angle : rien d'apparent, trous minimes.</div>
       </div>
+      <figure class="geste-photo geste-grande">
+        <img src="img/geste-clipsez.jpg" alt="Une main clipse une tesselle blanche au milieu d'une composition orange et bleue" loading="lazy">
+      </figure>
     </div>
 
     <p class="how-foot rv">Envie d'utiliser vos propres papiers, une perforatrice, un Posca ? <a href="quadreti-guide-interactif.html" target="_blank" rel="noopener">Découvrez le chemin créatif libre</a> — et pour le pas-à-pas complet, <a href="quadreti-guide-interactif.html" target="_blank" rel="noopener">le guide de première utilisation</a>.</p>
   </div>
 </section>
 
-<!-- ============ 3. L'APP ============ -->
-<section class="blk" id="app">
+<!-- ============ 4. APP ============
+     14/09 : Avec quoi on compose : le Designer, puis les quatre autres outils du Studio. -->
+<section class="blk alt" id="app">
   <div class="wrap center">
-    <div class="eyebrow rv">L'app Quadreti Designer</div>
-    <h2 class="rv">De l'app au mur.</h2>
-    <p class="lead rv">Passez de l'écran au support — concevez, composez, assemblez de vos mains. Cinq modes, un seul geste : le vôtre.</p>
+    <div class="eyebrow rv">L'écosystème Quadreti</div>
+    <h2 class="rv">Cinq outils, un seul mur.</h2>
+    <p class="lead rv">Le visuel se compose à l'écran, chez vous, gratuitement. Chaque outil fait une chose et la fait bien — et tout finit sur la même grille.</p>
+
+    <!-- 14/09, demande du fondateur : « le prisme remplace la presentation ancienne ». Les cartes qui detaillaient les cinq MODES
+         du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
+         que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
+         n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
+    <script src="/prisme-outils.js" data-mode="bandeau"></script>
+
+    <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
+  </div>
+</section>
+
+<!-- ============ QUADRETI DESIGNER ============
+     14/09, demande du fondateur : une section dediee a l outil principal, « pour expliquer l etendue artistique disponible ».
+     Elle recupere ce qui decrivait l APP et se trouvait par erreur dans « C est quoi » : les rendus, la note sur la couleur, et
+     les cinq modes. Placee juste apres l ecosysteme : on dit d abord qu il y a cinq outils, puis on ouvre le principal. -->
+<section class="blk" id="designer">
+  <div class="wrap center">
+    <div class="eyebrow rv">Quadreti Designer</div>
+    <h2 class="rv">Tout ce que vous pouvez en faire.</h2>
+    <p class="lead rv">Cinq façons de composer, du motif de couleurs à la photo mosaïque à double lecture. Vous choisissez, Quadreti Designer compose — aucun talent requis.</p>
 
     <div class="app-grid">
       <div class="mode rv">
@@ -754,17 +1015,10 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
     </div>
 
-    <p class="app-reassure rv"><b>Vous choisissez, l'app compose.</b> Aucun talent requis — vous ne dessinez rien, vous décidez. Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
-    <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Essayer l'app — c'est gratuit</a></div>
-  </div>
-</section>
-
-<!-- ============ 4. TOUS LES STYLES ============ -->
-<section class="blk alt" id="styles">
-  <div class="wrap center">
-    <div class="eyebrow rv">Un seul support</div>
-    <h2 class="rv">Tout ce que le marché vend séparément.</h2>
-    <p class="lead rv">Pixel art, mosaïque, photo mosaïque à double lecture, composition libre, pointillisme, peinture, gravure — chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
+    <!-- 14/09 : rien ne reliait les cinq modes aux sept rendus annonces juste apres — le lecteur sautait d une liste a l autre.
+         Cette phrase fait le pont : ce sont les MEMES modes, regles autrement. -->
+    <p class="lead rv" style="margin-top:44px">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
+    <p class="lead rv" style="margin-top:10px">Chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
     <div class="chips rv">
       <span class="chip">Pixel art</span>
       <span class="chip">Mosaïque</span>
@@ -774,7 +1028,6 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="chip">Peinture</span>
       <span class="chip">Gravure</span>
     </div>
-  </div>
 
   <div class="color-note rv">
     <div class="palette-band" aria-hidden="true">
@@ -783,61 +1036,103 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="styles-veil" aria-hidden="true"></div>
     <p class="cn-text"><b>Et la couleur n'est pas un stock.</b> Chez les systèmes à pièces, chaque teinte est une référence à acheter, sur une palette fermée. Chez Quadreti, la couleur sort de votre imprimante : toutes les teintes, tous les dégradés, toutes les photos — sur la même feuille, au même prix.</p>
   </div>
+
+    <p class="app-reassure rv"><b>Vous ne dessinez rien, vous décidez.</b> Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
+    <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
+  </div>
 </section>
 
-<!-- ============ 5. SCALABILITÉ ============ -->
+<!-- ============ LE RESULTAT ============
+     14/09 : section reprise de la maquette de presentation. Deux photos de la MEME grille, vide et composee, au meme cadrage —
+     c est la demonstration la plus courte de ce que fait le produit. -->
+<section class="blk" id="resultat">
+  <div class="wrap">
+    <div class="deux-col">
+      <div>
+        <div class="eyebrow rv">Le résultat</div>
+        <h2 class="rv">Le même mur, transformé.</h2>
+        <!-- 14/09 : ce chapo n etait qu un mode d emploi du curseur. Il dit maintenant ce que la demonstration prouve ; le mode d
+             emploi tient en quatre mots a la fin. -->
+        <p class="lead rv" style="margin:0 0 22px">La grille ne bouge plus. C'est ce qu'on y affiche qui change — en quelques minutes, autant de fois que vous voulez. <b>Faites glisser le curseur.</b></p>
+        <figure class="mur-situation rv">
+          <img src="img/mur-salon.jpg" alt="Une composition Quadreti accrochée dans un salon, au-dessus d'un canapé" loading="lazy">
+          <figcaption>Et chez vous, ça donne ça.</figcaption>
+        </figure>
+      </div>
+      <div class="rv">
+        <div class="comparateur" id="comparateur">
+          <img class="avant" src="img/kit-grille.jpg" alt="La grille Quadreti vide, ses 49 cases">
+          <img class="apres" src="img/mur-apres.jpg" alt="La même grille, composée d'un motif en tesselles orange et bleues">
+          <span class="cote a">Avant</span>
+          <span class="cote b">Après</span>
+          <div class="ligne"></div>
+          <div class="poignee"></div>
+          <input type="range" min="0" max="100" value="50" aria-label="Comparer la grille vide et la grille composée">
+        </div>
+        <p class="comparateur-note">La même grille, la même place au mur. Seul le visuel a changé.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POUR QUI ============
+     14/09 : section reprise de la maquette. Sa colonne droite reprend « Et demain ? », resserree en trois arguments — la maquette
+     n en fait pas une section a part, et c est une section de moins sur une page deja longue. -->
+<section class="blk alt" id="pourqui">
+  <div class="wrap">
+    <div class="deux-col">
+      <div class="rv">
+        <div class="eyebrow">Pour qui</div>
+        <h2>D'abord vous.</h2>
+        <p class="lead" style="margin:0">Quadreti est fait pour vous : un souvenir personnel qui prend forme sur votre mur, sans compétence créative particulière. <b>Pour offrir, ou pour vous offrir.</b> Les makers et les créateurs y trouvent aussi un terrain de jeu : ils sont nos premiers ambassadeurs.</p>
+      </div>
+      <div class="rv">
+        <div class="eyebrow">Et demain ?</div>
+        <h2 style="font-size:23px">Changer d'avis n'est plus un défaut. C'est une fonctionnalité.</h2>
+        <div class="arg"><b>Une tesselle</b><p>se déclipse et se remplace en secondes : une photo remplace un souvenir, une couleur corrige une envie.</p></div>
+        <div class="arg"><b>Le mur entier</b><p>change d'image pour le prix d'une feuille imprimée. Vos compositions se gardent et se reclipsent quand vous voulez.</p></div>
+        <div class="arg"><b>Rien ne s'abîme</b><p>ni le support, ni la tesselle, ni le visuel. Achetez le support une fois, changez l'œuvre pour toujours.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. GRANDIR ============
+     14/09 : Quelle taille — la question qui vient juste avant le prix. -->
 <section class="blk" id="grandir">
   <div class="wrap center">
     <div class="eyebrow rv">Votre mur grandit avec vous</div>
     <h2 class="rv">Commencez petit. Le mur suivra.</h2>
-    <p class="lead rv">Un carreau aujourd'hui, un mur entier quand vous voudrez : les carreaux s'accolent sans rupture visible, de 20 × 20 cm à 100 × 100 cm et au-delà.</p>
+    <!-- 14/09 : le mot du fondateur — « un pele-mele qui peut devenir tres grand ». C est exactement ce que cette section raconte. -->
+    <p class="lead rv">Un carreau aujourd'hui, un pêle-mêle entier quand vous voudrez : les carreaux s'accolent sans rupture visible, de 20 × 20 cm à 100 × 100 cm et au-delà.</p>
 
-    <div class="scal rv" aria-hidden="true">
-      <div>
-        <div class="sg" style="grid-template-columns:repeat(1,16px)"><i class="t"></i></div>
-        <div class="lbl">×1 · 20 cm</div>
-      </div>
-      <div class="arrow">→</div>
-      <div>
-        <div class="sg" style="grid-template-columns:repeat(2,16px)"><i class="t"></i><i></i><i></i><i class="t"></i></div>
-        <div class="lbl">×4 · 40 cm</div>
-      </div>
-      <div class="arrow">→</div>
-      <div>
-        <div class="sg" style="grid-template-columns:repeat(3,16px)"><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i class="t"></i></div>
-        <div class="lbl">×9 · 60 cm</div>
-      </div>
+    <!-- 14/09, demande du fondateur : ses photos remplacent le schema en petits carres. Elles montrent les vraies grilles au mur,
+         meme cadrage et meme lumiere — la progression se lit d un coup d oeil. Formats verifies un par un avant d etre nommes :
+         7x7 tesselles pour un carreau, 2x2 carreaux pour le ×4, 3x3 pour le ×9. -->
+    <div class="scal rv">
+      <figure class="scal-etape">
+        <img src="img/mur-x1.jpg" alt="Un carreau Quadreti seul au mur, 49 cases" loading="lazy">
+        <figcaption class="lbl">×1 · 20 × 20 cm</figcaption>
+      </figure>
+      <div class="arrow" aria-hidden="true">→</div>
+      <figure class="scal-etape">
+        <img src="img/mur-x4.jpg" alt="Quatre carreaux accolés, sans rupture visible entre eux" loading="lazy">
+        <figcaption class="lbl">×4 · 40 × 40 cm</figcaption>
+      </figure>
+      <div class="arrow" aria-hidden="true">→</div>
+      <figure class="scal-etape">
+        <img src="img/mur-x9.jpg" alt="Neuf carreaux accolés, formant un mur continu" loading="lazy">
+        <figcaption class="lbl">×9 · 60 × 60 cm</figcaption>
+      </figure>
     </div>
 
     <p class="scal-foot rv"><b>Une imprimante de salon. Un mur XXL.</b> La grande composition naît de petits visuels imprimés chez vous, un par un — pas besoin de matériel professionnel. La taille de départ n'est jamais une décision définitive.</p>
   </div>
 </section>
 
-<!-- ============ 6. CHANGEZ ============ -->
-<section class="blk alt" id="changer">
-  <div class="wrap change">
-    <div class="rv">
-      <div class="eyebrow">Et demain ?</div>
-      <h2>Changer d'avis n'est plus un défaut. C'est une fonctionnalité.</h2>
-      <ul>
-        <li><b>Une tesselle</b> se déclipse et se remplace en secondes — une photo remplace un souvenir, une couleur corrige une envie.</li>
-        <li><b>Le mur entier</b> change d'image pour le prix d'une feuille imprimée. Redécorer coûte une feuille.</li>
-        <li><b>Vos compositions se gardent</b> : rangées dans leur enveloppe, elles se reclipsent quand vous voulez. Le mur de Noël ressort chaque année en quelques minutes.</li>
-        <li><b>Rien ne s'abîme</b> : ni le support, ni la tesselle, ni le visuel. Achetez le support une fois — changez l'œuvre pour toujours.</li>
-      </ul>
-    </div>
-    <div class="rv">
-      <div class="swap-visu" aria-hidden="true">
-        <div class="tile" style="background:#E2725B"></div>
-        <span class="fleche">⇄</span>
-        <div class="tile" style="background:#CBBD93"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 7. GAMME ============ -->
-<section class="blk" id="gamme">
+<!-- ============ 6. GAMME ============
+     14/09 : Le prix. Il arrive en 6e position au lieu de la 8e. -->
+<section class="blk alt" id="gamme">
   <div class="wrap center">
     <div class="eyebrow rv">La gamme</div>
     <h2 class="rv">La seule décision qui n'est pas définitive : la taille.</h2>
@@ -884,8 +1179,9 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </section>
 
-<!-- ============ 8. CADEAU ============ -->
-<section class="blk alt" id="cadeau">
+<!-- ============ 7. CADEAU ============
+     14/09 : A offrir. -->
+<section class="blk" id="cadeau">
   <div class="wrap center">
     <div class="eyebrow rv">À offrir</div>
     <h2 class="rv">Un cadeau qui continue.</h2>
@@ -904,8 +1200,9 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </section>
 
-<!-- ============ 9. FAQ ============ -->
-<section class="blk" id="faq">
+<!-- ============ 8. FAQ ============
+     14/09 : Les questions qui restent. -->
+<section class="blk alt" id="faq">
   <div class="wrap center">
     <div class="eyebrow rv">Questions fréquentes</div>
     <h2 class="rv">Tout ce que vous vous demandez.</h2>
@@ -924,7 +1221,7 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
       <div class="qa">
         <button class="q">Ça marche avec quelles photos ?</button>
-        <div class="a"><p>Toutes les photos de votre téléphone. L'app vous guide : vous choisissez, elle convertit, et l'aperçu vous montre le résultat avant impression. Vous ne dessinez rien — vous décidez.</p></div>
+        <div class="a"><p>Toutes les photos de votre téléphone. Quadreti Designer vous guide : vous choisissez, il convertit, et l'aperçu vous montre le résultat avant impression. Vous ne dessinez rien — vous décidez.</p></div>
       </div>
       <div class="qa">
         <button class="q">Il faut être doué de ses mains ?</button>
@@ -934,8 +1231,9 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </section>
 
-<!-- ============ 10. LIVRAISON & PAIEMENT ============ -->
-<section class="blk alt" id="livraison">
+<!-- ============ 9. LIVRAISON ============
+     14/09 : Comment ca arrive et comment on paye. -->
+<section class="blk" id="livraison">
   <div class="wrap center">
     <div class="eyebrow rv">Livraison &amp; paiement</div>
     <h2 class="rv">Commandez en confiance.</h2>
@@ -994,6 +1292,28 @@ document.addEventListener('DOMContentLoaded', function(){
         </div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. HISTOIRE ============
+     14/09 : A propos — d ou vient l objet. En fin de page : c est le supplement d ame, pas l argument d achat. -->
+<section class="blk alt" id="histoire">
+  <div class="wrap story">
+    <div class="txt rv">
+      <div class="eyebrow">À propos</div>
+      <!-- 14/09 : l ancien titre — « La mosaique pixel, revisitee » — definissait le produit comme une mosaique, alors que la page
+           vient d expliquer qu il affiche bien plus que ca. Ici on raconte d ou vient la TESSELLE, pas ce qu est le produit. -->
+      <h2>D'où vient la tesselle.</h2>
+      <p>Il y a deux mille ans, les mosaïstes romains posaient leurs <b>tesselles</b> une à une, scellées pour durer toute une vie. Une œuvre magnifique — et définitive.</p>
+      <p>Quadreti reprend la tesselle là où ils l'ont laissée : le même petit carré, la même patience heureuse du geste, le même plaisir de voir l'image naître pièce par pièce.</p>
+      <p class="reinvente">Ce que nous avons réinventé, c'est la façon de la poser : elle ne se colle pas, elle se clipse.</p>
+      <!-- 14/09 : la page ne disait nulle part QUI fait Quadreti. « Conception et fabrication francaises » passait en une ligne dans
+           le bandeau defilant, et c etait tout. Une section A propos qui ne le dit pas passe a cote de son role. -->
+      <p>Quadreti est conçu et fabriqué en France. La grille, les tesselles et les étuis sortent de notre atelier ; le reste — le visuel, le choix, l'envie du moment — sort de chez vous.</p>
+    </div>
+    <div class="rv">
+      <div class="tessera" id="tessera" aria-hidden="true"></div>
     </div>
   </div>
 </section>

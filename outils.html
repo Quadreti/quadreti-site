@@ -34,58 +34,45 @@
 </script>
 <!-- GARDE-ACCES-FIN -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quadreti — Nos outils</title>
-<meta name="description" content="Tous les outils QuadretI réunis : composez votre mosaïque, créez vos QR codes, préparez vos photos, jouez — chaque outil fait une chose et la fait bien.">
+<title>Quadreti — Studio de création</title>
+<meta name="description" content="Le Studio de création QuadretI : composez votre mosaïque, créez vos QR codes, préparez vos photos — chaque outil fait une chose et la fait bien.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/commun.css">
+<link rel="stylesheet" href="/prisme-outils.css">
 <style>
-  body{ margin:0; background:var(--fond,#F5F5F5); font-family:'Jura',sans-serif; color:var(--charbon,#2b353e); }
+  /* 13/09, demande du fondateur : le menu est sur gris, donc le CONTENU est sur bleu — l inversion de la charte, appliquee a la page.
+     Le selecteur passe par l identifiant que le corps porte deja : la feuille que le panneau injecte a l execution pose body{...} a
+     specificite 0,0,1 et arrive apres celle-ci ; body#qz-top (0,1,1) la bat sans avoir besoin d un !important. */
+  body#qz-top{ margin:0; background:#1e2b35; font-family:'Jura',sans-serif; color:#dedede; }
   .wrap{ max-width:1060px; margin:0 auto; padding:0 22px; }
   .rv{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
   .rv.in{ opacity:1; transform:none; }
   @media (prefers-reduced-motion:reduce){ .rv{ transition:none; opacity:1; transform:none; } }
-  section.blk{ padding:clamp(48px,7vw,80px) 0; }
+  /* 13/09, demande du fondateur : « remonte tout le bloc ». L air au-dessus du titre tombe a 18 px. Toute la place rendue va au
+     prisme, qui la prend de lui-meme : sa hauteur est calculee sur ce qui reste sous le titre. */
+  section.blk{ padding:18px 0; }
+  #outils-hero{ padding-bottom:0; }
+  .blk h1{ margin-bottom:0; }
   .center{ text-align:center; }
-  .eyebrow{ font-family:'Jura',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--terracotta,#e2725b); margin-bottom:10px; }
-  .blk h1{ font-family:'Jura',sans-serif; font-size:clamp(24px,3.4vw,36px); font-weight:700; letter-spacing:-.01em; line-height:1.15; margin:0 0 14px; }
-  .blk p.lead{ font-size:16px; color:#5c646c; max-width:560px; margin:0 auto; }
+  .eyebrow{ font-family:'Jura',sans-serif; font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#9c4514; margin-bottom:10px;   /* 13/09 : un mot orange sur fond clair prend la version foncee — l orange de marque est fait pour les fonds */ }
+  /* 13/09 : ces deux regles passent par l identifiant de la section, expres. La feuille que le panneau injecte a l execution pose
+     body{color:#fff} et .eyebrow{color:#a39c92} ; elle arrive apres celle-ci et gagnerait a specificite egale — le titre partait
+     en blanc sur gris (contraste 1,35) et le surtitre en beige (2,02). Un identifiant la met hors de portee : la page reste juste
+     quelle que soit la palette enregistree. La palette du panneau, elle, reste a corriger de son cote. */
+  #outils-hero h1{ color:#dedede; }              /* le gris du site, pose sur le bleu du site */
+  #outils-hero .eyebrow{ color:#f0a06a; }        /* l orange eclairci : le #d96c2f de marque ne donne que 3,97 sur le bleu, trop juste pour du texte */
+  .blk h1{ font-family:'Jura',sans-serif; font-size:clamp(22px,2.5vw,30px);   /* 13/09 : un cran plus petit, la place va au prisme */ font-weight:700; letter-spacing:-.01em; line-height:1.15; margin:0 0 14px; }
 
   .icon{ width:20px; height:20px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
-  .outils-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:38px; }
-  .outil{
-    background:#fff; border:1.5px solid #2b353e18; border-radius:8px 8px 8px 22px;
-    padding:24px 22px 20px; text-align:left; transition:transform .15s ease, border-color .15s ease;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .outil:hover{ transform:translateY(-3px); border-color:var(--charbon,#2b353e); }
-  @media (prefers-reduced-motion:reduce){ .outil:hover{ transform:none; } }
-  .outil.bientot{ opacity:.72; }
-  .outil-tete{ display:flex; align-items:center; gap:12px; }
-  .outil .ic{
-    width:38px; height:38px; flex-shrink:0; border-radius:8px 8px 8px 15px; background:var(--terracotta,#e2725b); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .outil.bientot .ic{ background:#8a9099; }
-  .outil h2{ font-family:'Jura',sans-serif; font-size:16.5px; font-weight:700; margin:0; flex:1; }
-  .statut{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; border-radius:20px; padding:3px 10px; white-space:nowrap; }
-  .s-ligne{ background:#e7f3ec; color:#3f8a5a; }
-  .s-bientot{ background:#eceef0; color:#6a727b; }
-  .outil p{ font-size:13.5px; color:#5a636b; line-height:1.6; margin:0; }
-  .outil-lien{ font-family:'Jura',sans-serif; font-size:13px; font-weight:700; color:var(--terracotta,#e2725b); text-decoration:none; margin-top:auto; }
-  .outil-lien:hover{ text-decoration:underline; }
-  .sous-liens{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
-  .sous-liens a{
-    font-size:11.5px; font-weight:600; color:var(--charbon,#2b353e); text-decoration:none;
-    background:var(--fond,#F5F5F5); border:1px solid #2b353e18; border-radius:99px; padding:4px 11px;
-  }
-  .sous-liens a:hover{ border-color:var(--terracotta,#e2725b); color:var(--terracotta,#e2725b); }
+  /* 14/09 : l habillage du prisme vit desormais dans /prisme-outils.css — l accueil s en sert aussi (« le prisme remplace la
+     presentation ancienne »), il ne peut pas exister en deux exemplaires. Seuls les jetons propres a CETTE page restent ici. */
 
-  .avenir{
-    max-width:640px; margin:36px auto 0; text-align:center; font-size:13.5px; color:#6a727b;
-    background:#fff; border:1px dashed #2b353e2a; border-radius:14px; padding:16px 22px;
+  /* 13/09, demande du fondateur : le bloc « Jeux & coloriages » quitte cette page — « je trouve qu elle n a pas sa place ici ». Il
+     rejoint le MENU du site, en rubrique a part (voir commun-bandeau.js). La phrase sur le compte unique est retiree elle aussi.
+     Leurs styles partent avec eux : rien ne sert a rien ici. */
   }
 </style>
 </head>
@@ -97,83 +84,22 @@
 <section class="blk" id="outils-hero">
   <div class="wrap center">
     <div class="eyebrow">L'écosystème QuadretI</div>
-    <h1>Tous les outils, réunis ici.</h1>
-    <p class="lead">Chaque outil fait une chose et la fait bien. Composez votre mosaïque, personnalisez vos QR codes, préparez vos photos ou jouez — tout part d'ici.</p>
+    <h1>Studio de création</h1>
+    <!-- 13/09, demande du fondateur : le chapo est retire. Le titre annonce, les cartes disent — une phrase entre les deux ne faisait
+         que repousser le prisme vers le bas. -->
   </div>
 </section>
 
-<section class="blk" id="outils-grille" style="padding-top:0">
+<!-- ===== LES CINQ OUTILS, SUR UN PRISME (13/09, piste B validee par le fondateur) =====
+     Cinq faces, pas six : les jeux, les coloriages et Pixel Number ne sont pas des outils (arbitrage du fondateur) — ils sont
+     passes dans le MENU du site. Le prisme tourne ; sous 900 px, ou si le visiteur demande moins d animation, il redevient une
+     liste. Chaque face reste un article complet, lisible meme sans la rotation. -->
+<section class="blk" id="outils-prisme" style="padding-top:0">
   <div class="wrap">
-    <div class="outils-grid">
+      <!-- 14/09 : le prisme est ecrit par /prisme-outils.js, qui declare aussi les cinq outils. Jamais en defer ni async : il
+           ecrit au fil de la lecture, exactement ici. -->
+      <script src="/prisme-outils.js"></script>
 
-      <div class="outil rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 8c0-2 2-4 4-4h8c2 0 4 2 4 4v8c0 2-2 4-4 4H8c-2 0-4-2-4-4z"/><path d="M12 4v16M4 12h16"/></svg></span>
-          <h2>Quadreti Designer</h2>
-        </div>
-        <span class="statut s-ligne" style="align-self:flex-start">En ligne</span>
-        <p>Le cœur de QuadretI : composez votre mosaïque photo, prévisualisez le mur, imprimez vos planches sur feuilles prédécoupées.</p>
-        <a class="outil-lien" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Composer ma mosaïque →</a>
-      </div>
-
-      <div class="outil rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M14 5l5 5-9 9H5v-5z"/><path d="M13 6l5 5"/></svg></span>
-          <h2>Éditeur Créatif</h2>
-        </div>
-        <span class="statut s-ligne" style="align-self:flex-start">En ligne</span>
-        <p>Composez librement : photos, textes, formes, stickers — avec le repère des tuiles physiques pour voir votre découpe en direct.</p>
-        <a class="outil-lien" href="/editeur-creatif/">Créer →</a>
-      </div>
-
-      <div class="outil rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg></span>
-          <h2>Mosaïque Créative</h2>
-        </div>
-        <span class="statut s-ligne" style="align-self:flex-start">En ligne</span>
-        <p>La vraie mosaïque décorative : pièces qui se découpent entre elles, scènes à colorier, motifs géométriques.</p>
-        <a class="outil-lien" href="/mosaique-creative/">Explorer →</a>
-      </div>
-
-      <div class="outil rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v4M6 13h4"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="18.5" cy="14.5" r="1" fill="currentColor" stroke="none"/></svg></span>
-          <h2>Jeux &amp; créativité</h2>
-        </div>
-        <span class="statut s-ligne" style="align-self:flex-start">En ligne</span>
-        <p>Des jeux gratuits dans l'univers QuadretI, avec vos propres photos.</p>
-        <div class="sous-liens">
-          <a href="/taquin/">Taquin</a>
-          <a href="/mosaique-revelee/">Mosaïque Révélée</a>
-          <a href="/mandala/">Mandala</a>
-          <a href="/memo/">Mémo</a>
-          <a href="/set/">SET</a>
-          <a href="/pixel-number/">Pixel Number</a>
-        </div>
-      </div>
-
-      <div class="outil bientot rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><path d="M13 13h3v3h-3zM17 17h3v3h-3z"/></svg></span>
-          <h2>QR Designer</h2>
-        </div>
-        <span class="statut s-bientot" style="align-self:flex-start">Bientôt</span>
-        <p>Des QR codes qui sont de vraies créations : styles, couleurs, logo — et bientôt des œuvres d'art générées autour de votre propre silhouette.</p>
-      </div>
-
-      <div class="outil bientot rv">
-        <div class="outil-tete">
-          <span class="ic"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M3 17l6-5 4 3 3-2 5 4"/></svg></span>
-          <h2>Photo Quadreti</h2>
-        </div>
-        <span class="statut s-bientot" style="align-self:flex-start">Bientôt</span>
-        <p>Préparez vos photos avant la mosaïque : détourage, correction, recadrage, restauration de photos anciennes.</p>
-      </div>
-
-    </div>
-
-    <p class="avenir">Un seul compte réunira bientôt vos créations, vos QR modifiables et votre forfait, quel que soit l'outil. En attendant, chaque outil reste utilisable directement, sans compte.</p>
   </div>
 </section>
 

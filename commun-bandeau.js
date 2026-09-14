@@ -113,7 +113,7 @@ var QZ_BANDEAU_HTML = (
       '<li class="qz-hassub" id="qzCcmItem">' +
         '<button class="qz-subtoggle" id="qzCcmToggle" aria-expanded="false">Comment ça marche <span class="qz-chev">▾</span></button>' +
         '<ul class="qz-sublist">' +
-          '<li><a href="/quadreti-guide-interactif.html">Guide de l\'app</a></li>' +
+          '<li><a href="/quadreti-guide-interactif.html">Guide du Designer</a></li>' +
           '<li><a href="/quadreti-guide-codification.html">Guide de montage</a></li>' +
           /* 13/09 fondateur : menu reduit de 8 a 6 rubriques -- FAQ et Livraison rejoignent le sous-menu (a synchroniser avec menu_liens en base) */
           '<li><a href="/index.html#faq">FAQ</a></li>' +
@@ -121,7 +121,25 @@ var QZ_BANDEAU_HTML = (
         '</ul>' +
       '</li>' +
       '<li><a href="/boutique/">Boutique</a></li>' +
-      '<li><a href="/outils.html">Nos outils</a></li>' +
+      /* 13/09, fondateur : la rubrique s appelle « Studio », plus « Nos outils ». L adresse ne change pas — renommer le fichier
+         casserait les liens deja publies ; c est le libelle qui change, pas la porte. */
+      '<li><a href="/outils.html">Studio</a></li>' +
+      /* 13/09, demande du fondateur : les jeux et les coloriages quittent la page des outils (« elle n a pas sa place ici ») et
+         deviennent une rubrique a part. Ce ne sont pas des outils — ils ne doivent donc pas vivre sous « Studio ».
+         Un sous-menu plutot qu un lien : il n existe pas de page qui les reunisse, ils sont chacun a leur adresse. Et un libelle
+         court, « Jeux » : la ligne du menu est deja juste, elle a deja casse ailleurs. */
+      '<li class="qz-hassub">' +
+        '<button class="qz-subtoggle" aria-expanded="false">Détente <span class="qz-chev">▾</span></button>' +
+          '<ul class="qz-sublist">' +
+            '<li><a href="/taquin/">Taquin</a></li>' +
+            '<li><a href="/mosaique-revelee/">Mosaïque Révélée</a></li>' +
+            '<li><a href="/mandala/">Mandala</a></li>' +
+            '<li><a href="/memo/">Mémo</a></li>' +
+            '<li><a href="/set/">SET</a></li>' +
+            '<li><a href="/pixel-number/">Pixel Number</a></li>' +
+            '<li><a href="/coloriages/">Coloriages</a></li>' +
+          '</ul>' +
+      '</li>' +
       '<li><a href="/blog/">Blog</a></li>' +
       '<li><a href="/contact.html">Contact</a></li>' +
     '</ul>' +

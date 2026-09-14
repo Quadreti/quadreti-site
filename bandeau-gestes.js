@@ -8,7 +8,7 @@
     defile: { textes: ['Conception et fabrication françaises', 'Livraison en point relais', 'Paiement sécurisé'], duree: 24 }, /* 13/09 fondateur : le bandeau defilant porte la reassurance (ce qui n est dit nulle part ailleurs), plus les gestes deja dits dans le bloc logo et la bande */
     variante: 'B', /* 'A' = dans la continuité du bandeau (navy), 'B' = sur le fond de page, 'C' = bande crème posée sur le navy */
     gestes: [
-      { icone: 'composez', titre: 'Composez', texte: 'Sur téléphone ou ordinateur, composez votre visuel dans l\x27app Quadreti Designer.' },
+      { icone: 'composez', titre: 'Composez', texte: 'Sur téléphone ou ordinateur, composez votre visuel dans Quadreti Designer.' },
       { icone: 'imprimez', titre: 'Imprimez', texte: 'Une imprimante de salon suffit : imprimez sur papier ordinaire, découpez.' },
       { icone: 'clipsez', titre: 'Clipsez', texte: 'Glissez le visuel dans l\x27étui, pressez : la tesselle se clipse dans la grille.' },
       { icone: 'changez', titre: 'Changez', texte: 'Envie d\x27autre chose ? Déclipsez, remplacez, c\x27est reparti. Sans colle, sans trace.' }

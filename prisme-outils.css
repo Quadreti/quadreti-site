@@ -1,0 +1,196 @@
+/* QuadretI — le prisme des outils (14/09).
+   Cinq outils sur les cinq faces d un prisme pentagonal. Extrait de outils.html le 14/09, quand le fondateur a demande que « le
+   prisme remplace la presentation ancienne » sur l accueil : deux pages s en servent, il ne peut pas exister en deux exemplaires.
+   LES COULEURS QUI DEPENDENT DE LA PAGE passent par des jetons. Valeurs par defaut = celles du Studio (fond bleu) ; l accueil, sur
+   fond clair, les redefinit chez lui. */
+:root{
+  --prisme-encre:#dedede;        /* le texte de la barre de pilotage, sur le fond de la page */
+  --prisme-ombre:#00000080;      /* l ombre portee des cartes — a alleger sur fond clair */
+}
+
+  /* ============ LE PRISME (13/09, piste B validee par le fondateur) ============
+     Cinq outils sur les cinq faces d un prisme pentagonal. Chaque face pivote de 72 degres et recule de R = (310/2)/tan(36 deg)
+     = 214 px : a cette distance exacte les faces se touchent bord a bord, c est un volume ferme, pas cinq cartes flottantes.
+     Le fondateur ne voulait pas « des carres poses les uns a cote des autres » — ici on tourne autour d un objet. */
+  .prisme-zone{ margin-top:14px; }   /* 13/09 : le prisme colle au titre, la place gagnee lui revient */
+  .prisme-scene{
+    perspective:1500px; perspective-origin:50% 44%;
+    /* Depuis que le prisme recule de son rayon, la face de devant est dans le plan de l ecran : elle ne deborde plus de la scene,
+       qui peut donc faire exactement sa hauteur. Le script la reecrit au chargement. */
+    height:452px; position:relative; display:flex; align-items:center; justify-content:center;
+    touch-action:pan-y;
+  }
+  /* 13/09 : le prisme RECULE de son rayon. Sans ce recul, la face de devant est a 239 px devant l ecran et la perspective la
+     grossit de 17 % — le navigateur dessine le texte a sa taille de mise en page puis etire l image, d ou le flou signale par le
+     fondateur. Recule d autant, la face de devant tombe pile dans le plan de l ecran : taille native, texte net. Les faces de
+     cote, elles, s eloignent — c est justement ce qui fait le volume.
+     La hauteur est pilotee par le script, en PIXELS REELS (--h) : plus de mise a l echelle, qui reintroduirait le flou. */
+  .prisme{
+    /* 13/09, fondateur : « ecarte un peu les cartes, ca fait boite a crayon ». A 239 px — le rayon exact d un pentagone de 348 px
+       de cote — les cinq faces se touchent bord a bord : c est un volume ferme, donc une boite. En eloignant les faces de l axe,
+       elles se detachent les unes des autres et on voit cinq cartes qui tournent, pas un objet plein.
+       Le recul du prisme suit ce meme rayon : la face de devant reste donc dans le plan de l ecran, et son texte reste net. */
+    --r:286px;
+    position:relative; width:348px; height:var(--h, 452px); transform-style:preserve-3d;
+    transform:translateZ(calc(-1 * var(--r))) rotateY(calc(var(--face, 0) * -72deg));
+    transition:transform .72s cubic-bezier(.22,.68,.24,1);
+  }
+  .prisme.saisi{ transition:none; }   /* pendant un glisser, la rotation suit le doigt sans retard */
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    /* 13/09, demande du fondateur : des rectangles avec le MEME petit arrondi aux quatre angles. Le coin bas-gauche marque de la
+       charte (26 px) est laisse a l entete et au pied ; sur cinq cartes qui tournent, il tirait l oeil vers un angle au lieu du
+       contenu. */
+    background:#fff; border:1.5px solid #1e2b3518; border-radius:10px;
+    overflow:hidden; display:flex; flex-direction:column;
+    box-shadow:0 26px 50px -30px #1e2b3566;
+  }
+  .face:nth-child(1){ transform:rotateY(0deg) translateZ(var(--r)); }
+  .face:nth-child(2){ transform:rotateY(72deg) translateZ(var(--r)); }
+  .face:nth-child(3){ transform:rotateY(144deg) translateZ(var(--r)); }
+  .face:nth-child(4){ transform:rotateY(216deg) translateZ(var(--r)); }
+  .face:nth-child(5){ transform:rotateY(288deg) translateZ(var(--r)); }
+  /* Les faces de cote s assombrissent : c est ce qui donne le relief, et ca dit aussi laquelle est active. */
+  .face::after{
+    content:""; position:absolute; inset:0; background:#1e2b35; opacity:.42; pointer-events:none;
+    transition:opacity .72s ease;
+  }
+  .face.devant::after{ opacity:0; }
+  .face:not(.devant){ pointer-events:none; }
+
+  /* L espace image demande : une vraie photo quand elle existe, sinon le motif de tesselles de la marque, teinte par outil. */
+  .face-visuel{
+    /* 13/09 : la bande visuelle prend la hauteur que la carte gagne, au lieu de laisser un vide sous le texte. Le corps garde
+       sa taille, c est l image qui s etire — une carte plus haute montre plus de visuel, pas plus de blanc. */
+    position:relative; flex:1 1 178px; min-height:178px; overflow:hidden;
+    background:var(--teinte,#1e2b35);
+  }
+  .face-visuel img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .face-visuel .tesselles{
+    position:absolute; inset:0;
+    background-image:linear-gradient(#ffffff26 1.5px, transparent 1.5px), linear-gradient(90deg, #ffffff26 1.5px, transparent 1.5px);
+    background-size:27px 27px;   /* le pas reel d une tesselle sur un carreau : 27 mm */
+  }
+  .face-visuel .initiale{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Jura',sans-serif; font-weight:700; font-size:62px; color:#ffffffe0; letter-spacing:.04em;
+  }
+  .face-corps{ padding:18px 20px 20px; display:flex; flex-direction:column; gap:9px; flex:0 0 auto; text-align:left; }
+  .face-corps h2{ font-family:'Jura',sans-serif; font-size:17px; font-weight:700; margin:0; }
+  .face-corps p{ font-size:13.5px; color:#5a636b; line-height:1.55; margin:0; }
+  .statut{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; border-radius:20px; padding:3px 10px; white-space:nowrap; align-self:flex-start; }
+  .s-ligne{ background:#e7f3ec; color:#2f6f47; }
+  .s-bientot{ background:#eceef0; color:#5f6771; }
+  /* Le lien de la face reprend le CTA du site : rectangle orange, texte gris, relief et eclat au survol. */
+  .face-lien{
+    position:relative; overflow:hidden; margin-top:auto; align-self:flex-start; text-decoration:none;
+    font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; line-height:1.15;
+    background:#d96c2f; color:#dedede; border-radius:8px; padding:9px 18px;
+    box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000026;
+    transition:box-shadow .18s ease, transform .18s ease;
+  }
+  .face-lien::after{
+    content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
+    background:linear-gradient(105deg, #ffffff00 0%, #ffffff8c 50%, #ffffff00 100%);
+    transform:translateX(-120%) skewX(-18deg); opacity:0;
+  }
+  .face-lien:hover::after, .face-lien:focus-visible::after{ animation:face-reflet .75s cubic-bezier(.4,0,.2,1) forwards; }
+  .face-lien:hover, .face-lien:focus-visible{ transform:translateY(-1px); box-shadow:inset 1px 1px 0 #ffffff80, inset -1px -1px 0 #00000047, 0 7px 16px #0000004d; }
+  @keyframes face-reflet{ 0%{ transform:translateX(-120%) skewX(-18deg); opacity:0 } 15%{ opacity:1 } 100%{ transform:translateX(420%) skewX(-18deg); opacity:0 } }
+  .face-attente{ margin-top:auto; font-size:12px; color:#6a727b; font-weight:600; }
+
+  /* La barre de pilotage : deux fleches, et un point par outil qui le NOMME (un point anonyme ne dit pas ou l on va). */
+  .prisme-barre{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:26px; flex-wrap:wrap; }
+  /* 13/09, demande du fondateur : fleches et pastilles prennent le CTA du site — orange, relief, et l eclat qui balaie au survol.
+     Le texte est en gris #dedede, pas en blanc : regle posee pour tout texte sur un bouton orange. */
+  /* Le relief et le mouvement sont communs aux fleches et aux pastilles ; le fond et l encre, eux, different (voir plus bas). */
+  .prisme-fleche, .prisme-puces button{
+    position:relative; overflow:hidden; cursor:pointer; border:none;
+    font-family:'Jura',sans-serif; font-weight:700; line-height:1.15;
+    box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000033;
+    transition:box-shadow .18s ease, transform .18s ease, background .15s ease;
+  }
+  /* Les fleches gardent l orange plein : ce sont des COMMANDES, pas des etiquettes. */
+  .prisme-fleche{ background:#d96c2f; color:#dedede; }
+  .prisme-fleche::after, .prisme-puces button::after{
+    content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
+    background:linear-gradient(105deg, #ffffff00 0%, #ffffff8c 50%, #ffffff00 100%);
+    transform:translateX(-120%) skewX(-18deg); opacity:0;
+  }
+  .prisme-fleche:hover::after, .prisme-fleche:focus-visible::after,
+  .prisme-puces button:hover::after, .prisme-puces button:focus-visible::after{
+    animation:face-reflet .75s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .prisme-fleche:hover, .prisme-fleche:focus-visible,
+  .prisme-puces button:hover, .prisme-puces button:focus-visible{
+    transform:translateY(-1px);
+    box-shadow:inset 1px 1px 0 #ffffff80, inset -1px -1px 0 #00000047, 0 7px 16px #00000040;
+  }
+  .prisme-fleche:active, .prisme-puces button:active{ transform:none; box-shadow:inset 2px 2px 4px #00000059; }
+  .prisme-fleche{ width:40px; height:40px; flex-shrink:0; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .prisme-puces{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+  /* 13/09, demande du fondateur : les pastilles en gris du site, texte au bleu de marque — c est le survol qui apporte l orange. */
+  .prisme-puces button{
+    font-size:11.5px; border-radius:8px; padding:9px 14px;
+    background:#dedede; color:#1e2b35;
+  }
+  /* « Surbrillance au contact orange » : un cerne orange, l eclat teinte d orange, et le bouton se souleve. */
+  .prisme-puces button:hover, .prisme-puces button:focus-visible{
+    box-shadow:inset 1px 1px 0 #ffffff9e, inset -1px -1px 0 #00000029, 0 0 0 2px #d96c2f, 0 7px 16px #00000040;
+  }
+  .prisme-puces button::after{ background:linear-gradient(105deg, #d96c2f00 0%, #d96c2f8c 50%, #d96c2f00 100%); }
+  /* L outil choisi prend l orange plein, texte gris : sur une rangee de pastilles grises, c est lui qui dit ou l on est.
+     Il ne se souleve pas au survol — il est deja en place. */
+  .prisme-puces button[aria-current="true"]{ background:#d96c2f; color:#dedede; }
+  .prisme-puces button[aria-current="true"]:hover, .prisme-puces button[aria-current="true"]:focus-visible{
+    transform:none; box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000033;
+  }
+  .face{ box-shadow:0 26px 50px -26px #00000080; }   /* l ombre portee doit se voir sur le bleu, pas sur le gris */
+
+  /* 13/09, demande du fondateur : les deux boutons flottants disparaissent SUR CETTE PAGE. Ils viennent du pied commun ; le reste
+     du site les garde. Le contact reste dans le pied, et la remontee n a pas d objet : la page tient sur un ecran. */
+  .qz-fab, .qz-bulle-contact{ display:none !important; }
+
+  /* ===== Repli : sous 900 px, et pour qui demande moins d animation, le prisme redevient une liste. Le volume est un plus,
+     jamais la condition pour atteindre un outil. ===== */
+  @media (max-width:900px), (prefers-reduced-motion:reduce){
+    .prisme-scene{ perspective:none; height:auto; display:block; }
+    .prisme{ width:auto; height:auto; transform:none !important; transform-style:flat; display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); }
+    .face{ position:static; transform:none !important; box-shadow:none; }
+    .face::after{ display:none; }
+    .face:not(.devant){ pointer-events:auto; }
+    .prisme-barre{ display:none; }
+  }
+
+/* ============ MODE BANDEAU (14/09, demande du fondateur) ============
+   « Les volets du carrousel en bandeau defilant lentement, uniquement pour cette section. » Memes cartes que le prisme, posees a
+   plat et mises en mouvement. 60 secondes pour un tour complet : assez lent pour qu on lise une carte sans la poursuivre.
+   Le defilement s arrete au survol ET au focus clavier — un bandeau qui fuit sous le curseur est une animation contre son
+   utilisateur. Et pour qui demande moins d animation, il ne bouge pas : il devient une rangee qu on fait defiler soi-meme. */
+.bandeau-outils{ position:relative; overflow:hidden; margin-top:34px; }
+/* les deux fondus sur les bords : les cartes entrent et sortent du champ au lieu d etre coupees net */
+.bandeau-outils::before, .bandeau-outils::after{
+  content:""; position:absolute; top:0; bottom:0; width:70px; z-index:2; pointer-events:none;
+}
+.bandeau-outils::before{ left:0; background:linear-gradient(90deg, var(--bandeau-fond,#dedede), transparent); }
+.bandeau-outils::after{ right:0; background:linear-gradient(270deg, var(--bandeau-fond,#dedede), transparent); }
+
+.bandeau-piste{ display:flex; gap:22px; width:max-content; animation:bandeau-defile 60s linear infinite; }
+.bandeau-outils:hover .bandeau-piste, .bandeau-piste:focus-within{ animation-play-state:paused; }
+@keyframes bandeau-defile{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
+
+/* Les cartes du prisme sont posees en absolu dans leur scene ; ici elles reprennent le fil normal du document. */
+.bandeau-piste .face{
+  position:static; inset:auto; transform:none; width:300px; flex:0 0 300px; height:auto;
+  backface-visibility:visible; pointer-events:auto;
+}
+.bandeau-piste .face::after{ display:none; }   /* le voile qui assombrit les faces de cote n a pas d objet a plat */
+.bandeau-piste .face-visuel{ height:150px; flex:none; min-height:0; }
+.bandeau-piste .face-corps{ padding:16px 18px 18px; }
+.bandeau-piste .face-corps h2{ font-size:16px; }
+.bandeau-piste .face-corps p{ font-size:13px; }
+
+@media (prefers-reduced-motion:reduce){
+  .bandeau-piste{ animation:none; width:auto; overflow-x:auto; padding-bottom:8px; }
+  .bandeau-outils::before, .bandeau-outils::after{ display:none; }
+}

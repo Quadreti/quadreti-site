@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo Quadreti — détourez et préparez vos photos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Jetons repris tels quels de l'Éditeur Créatif réel (même base, fichier
+     séparé — zéro couplage technique, voir CLAUDE.md). --charbon/--terracotta/
+     --kraft étaient déjà identiques à l'ancienne palette de cet outil. */
+  :root{
+    /* ---- charte QuadretI (13/09) : les jetons ci-dessous portent encore leurs anciens NOMS de la charte kraft, mais plus ses
+       valeurs. Renommer --terracotta (23 usages) et --charbon par leur ROLE reste a faire — regle 3 de la charte : un jeton nomme
+       par sa teinte qui contient autre chose est la couche de trop. Repointer les valeurs donne la bonne couleur sans ce risque. ---- */
+    --charbon:#1e2b35;        /* le bleu de la marque ; #2B353E etait l ancien */
+    --terracotta:#d96c2f;     /* l orange de marque ; jeton le plus utilise du fichier, 23 fois */
+    --creme:#dedede;          /* le gris de la marque, a la place du creme kraft */
+    --kraft:#dedede;          /* l ocre kraft n existe plus dans la charte */
+    --papier:#ffffff;         /* le blanc casse kraft devient le blanc de la charte */
+    --texte:#10181f;          /* l encre, pour le texte pose sur du clair */
+    --accent-soft:#f4ded2;    /* le rose kraft devient un orange tres pale */
+    --teinte-actif:#d96c2f12; /* meme transparence qu avant, sur l orange de marque */
+
+    /* ---- jetons deja a la charte avant cette passe ---- */
+    --gris:#dedede; --marine:#1e2b35; --brule:#d96c2f; --blanc:#ffffff;
+
+    /* ---- neutres d interface ---- */
+    --surface:#FFFFFF; --bord:#2b353e1c; --doux:#5c646c; --doux-sombre:#b9c0c7;
+    --rail-survol:#ffffff1a; --rail-filet:#ffffff1f;
+  }
+  *{ box-sizing:border-box; }
+  @media (prefers-reduced-motion:reduce){ *,*::before,*::after{ animation-duration:.001ms!important; transition-duration:.001ms!important; } }
+  body{ margin:0; background:var(--gris); color:var(--texte); font-family:'Jura',sans-serif; font-size:16px; line-height:1.5; }
+  h1,h2,h3{ font-family:'Jura',sans-serif; margin:0; text-wrap:balance; }
+  ::selection{ background:var(--terracotta); color:#fff; }
+  :focus-visible{ outline:2.5px solid var(--charbon); outline-offset:2px; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  /* 13/09 : ces regles visaient la balise <header> par son nom. Le bandeau commun EST un <header> : elles lui tombaient dessus.
+     La zone d intro de l app a donc sa propre classe, et son titre a disparu — c est la barre qui nomme l app. */
+  /* 13/09 : la barre fait 58 px mais le bloc logo descend a 82 et l onglet a 98 — ils DEBORDENT volontairement sur la page,
+     c est ce qui fait la marche. Sans ce degagement, la premiere ligne de l app se coince a cote de l onglet. Sous 900 px la barre
+     se replie et le debord n a plus lieu d etre. */
+  :root{ --debord-onglet:40px; }
+  @media (max-width:900px){ :root{ --debord-onglet:0px } }
+  .intro-app{ padding:18px 24px 16px; text-align:center; }
+  /* La barre fait 58 px, l onglet descend a 98 : il faut 40 px de degagement. Il est porte par les RAILS et la colonne centrale,
+     pas par une bande pleine largeur — sinon le gris traverse tout l ecran sous le lisere, ce que le fondateur a entoure. */
+  .rail{ padding-top:calc(14px + var(--debord-onglet)); }
+  /* 13/09, demande du fondateur : les rails vont JUSQU AU lisere, sans laisser de gris entre eux et lui.
+     A DROITE, en haut : l onglet de l en-tete descend bas a gauche et remonte a droite ; au-dessus du rail droit il restait donc une
+     lisiere grise. Le rail remonte jusqu au bord de la page. Rien a craindre pour le menu : il est deja clair sur navy, et il se peint
+     par-dessus (l en-tete a un z-index de 60).
+     A GAUCHE, en bas : la bande du decroche n a aucun fond — c est le remplissage du SVG qui peint la marche. A gauche de la marche,
+     le dessin est au niveau BAS, donc le gris de la page passait au-dessus du lisere. Le rail descend derriere cette bande et la comble. */
+  .rail-droite{ margin-top:-58px; padding-top:calc(58px + 14px + var(--debord-onglet)); }
+  .rail-gauche{ margin-bottom:-22px; padding-bottom:36px; }
+  @media (max-width:900px){ .rail-droite{ margin-top:0; padding-top:calc(14px + var(--debord-onglet)); } .rail-gauche{ margin-bottom:0; padding-bottom:14px; } }
+  .zone-travail{ padding-top:var(--debord-onglet); }
+  .intro-app p{ margin:0 auto; max-width:520px; color:var(--doux); font-size:14.5px; }
+  .badge-local{ display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 12px; background:var(--creme); border:1px solid var(--bord); border-radius:10px; font-size:12.5px; font-weight:600; color:#6a6045; }
+  .badge-local svg{ width:14px; height:14px; flex:none; }
+
+  main{ max-width:1080px; margin:0 auto; padding:0 20px 40px; }
+  main.pleine-largeur{ max-width:none; padding:0; }
+
+  /* --- Composants partages (memes classes que l'Editeur Creatif) --- */
+  .carte{ background:var(--surface); border:1px solid var(--bord); border-radius:14px; padding:12px 14px; }
+  .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; border:none; border-radius:10px; padding:9px 14px; cursor:pointer; text-align:center; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+  .btn.principal{ background:var(--charbon); color:var(--creme); }
+  .btn.principal:hover{ background:#1c232a; }
+  .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
+  .btn.secondaire:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn.secondaire:disabled{ opacity:.4; cursor:default; }
+  .btn.large{ width:100%; padding:12px 16px; font-size:14px; }
+  .note{ font-size:12px; color:var(--doux); }
+
+  /* --- Invite d'import, compacte, a l'interieur du canevas --- */
+  .invite-import{
+    background:var(--surface); border:2px dashed var(--doux-sombre); border-radius:12px;
+    padding:22px 28px; text-align:center; transition:border-color .15s, background .15s;
+    display:flex; flex-direction:column; align-items:center; gap:6px; margin:auto;
+  }
+  .invite-import.survol{ border-color:var(--terracotta); background:var(--teinte-actif); }
+  .invite-import svg{ width:26px; height:26px; color:var(--doux); }
+  .invite-import p{ margin:2px 0 6px; color:var(--doux); font-size:13px; }
+  input[type=file]{ display:none; }
+
+  /* --- Bandeau chargement modele (dans la zone canevas) --- */
+  .bandeau-modele{ display:none; text-align:center; padding:40px 20px; }
+  .bandeau-modele.actif{ display:block; }
+  .spinner{ width:34px; height:34px; margin:0 auto 16px; border:3.5px solid var(--bord); border-top-color:var(--terracotta); border-radius:50%; animation:tourner 0.8s linear infinite; }
+  @keyframes tourner{ to{ transform:rotate(360deg); } }
+  .bandeau-modele .titre-etat{ font-family:'Jura',sans-serif; font-weight:700; font-size:16px; margin-bottom:6px; }
+  .bandeau-modele .detail-etat{ color:var(--doux); font-size:13.5px; }
+  .barre-progres{ max-width:280px; margin:16px auto 0; height:7px; background:var(--bord); border-radius:6px; overflow:hidden; }
+  .barre-progres > div{ height:100%; background:var(--terracotta); width:0%; transition:width .2s; }
+
+  /* --- Atelier : memes rails qu'Editeur Creatif (icone-outil + popover-outil).
+     Toujours visible des l'ouverture (outils accessibles avant meme d'avoir
+     une photo), plus de second ecran d'import separe. --- */
+  .atelier{ margin:0; padding:0; }
+  .rangee-atelier{
+    display:grid; grid-template-columns:92px 1fr 64px; align-items:stretch; min-height:calc(100vh - 130px);
+    background:var(--gris);
+  }
+  @media (max-width:760px){ .rangee-atelier{ grid-template-columns:76px 1fr 54px; } }
+
+  .rail{ display:flex; flex-direction:column; align-items:center; padding:14px 0; gap:10px; background:var(--marine); }
+  .rail-gauche{ justify-content:space-between; border-right:1px solid var(--bord); padding:16px 8px; gap:6px; }
+  .rail-droite{ justify-content:flex-end; border-left:1px solid var(--bord); }
+  .rail .groupe-haut, .rail .groupe-bas{ display:flex; flex-direction:column; gap:4px; width:100%; align-items:center; }
+
+  .icone-outil-conteneur{ position:relative; width:100%; }
+  .icone-outil{
+    width:100%; height:auto; flex-direction:column; gap:5px; padding:9px 4px 8px; border-radius:11px;
+    border:none; cursor:pointer; background:transparent; color:var(--blanc); text-decoration:none;
+    display:flex; align-items:center; justify-content:center; transition:background .12s ease;
+  }
+  .icone-outil svg{ width:19px; height:19px; }
+  .icone-outil .etiquette{ font-family:'Jura',sans-serif; font-size:10px; font-weight:700; line-height:1.15; text-align:center; color:var(--doux-sombre); }
+  .icone-outil:hover{ background:var(--rail-survol); }
+  .icone-outil:hover .etiquette{ color:var(--blanc); }
+  .icone-outil.actif{ background:var(--rail-survol); color:var(--brule); }
+  .icone-outil.actif .etiquette{ color:var(--brule); }
+  .icone-outil:disabled{ opacity:.35; cursor:not-allowed; }
+  @media (max-width:760px){
+    .icone-outil{ padding:7px 2px 6px; }
+    .icone-outil svg{ width:17px; height:17px; }
+    .icone-outil .etiquette{ font-size:8.5px; }
+  }
+
+  .popover-outil{
+    position:fixed; top:50%; left:100px; transform:translateY(-50%); width:min(360px, calc(100vw - 130px));
+    max-height:82vh; overflow-y:auto; background:var(--surface); color:var(--texte);
+    border-radius:14px; box-shadow:0 18px 44px -14px #00000066; padding:16px; display:none; z-index:210;
+  }
+  .popover-outil.large{ width:min(680px, calc(100vw - 150px)); }
+  .popover-outil.ouvert{ display:block; }
+  .popover-outil h3{ font-family:'Jura',sans-serif; font-size:12px; font-weight:700; margin:0 0 10px; text-transform:uppercase; letter-spacing:.03em; color:var(--doux); }
+  @media (max-width:900px){ .popover-outil{ left:50%; transform:translate(-50%,-50%); width:min(420px, calc(100vw - 40px)); } .popover-outil.large{ width:min(94vw, 640px); } }
+
+  .voile-popover{ position:fixed; inset:0; background:transparent; z-index:200; display:none; }
+  .voile-popover.ouvert{ display:block; }
+
+  /* Rail de vignettes (lot) -- pas d'equivalent dans l'Editeur Creatif (composition
+     unique), place en bandeau fin au-dessus du canevas dans la meme zone-travail. */
+  .rail-vignettes{ display:flex; gap:10px; overflow-x:auto; padding:10px 14px; background:var(--surface); border-bottom:1px solid var(--bord); }
+  .vignette{
+    position:relative; flex:none; width:56px; height:56px; border-radius:10px;
+    border:2px solid transparent; overflow:hidden; background:
+      linear-gradient(45deg,#ddd 25%,transparent 25%),linear-gradient(-45deg,#ddd 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#ddd 75%),linear-gradient(-45deg,transparent 75%,#ddd 75%);
+    background-size:12px 12px; background-position:0 0,0 6px,6px -6px,-6px 0px; background-color:#f0f0f0;
+  }
+  .vignette img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .vignette.actif{ border-color:var(--terracotta); }
+  .vignette .etat-vignette{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.75); }
+  .vignette .spinner{ width:20px; height:20px; margin:0; border-width:2.5px; }
+  .vignette .erreur-vignette{ color:#b5473a; font-size:11px; font-weight:700; text-align:center; }
+  .vignette-ajouter{
+    flex:none; width:56px; height:56px; border-radius:10px; border:2px dashed var(--doux-sombre);
+    background:var(--papier); display:flex; align-items:center; justify-content:center; color:var(--doux);
+  }
+  .vignette-ajouter:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .vignette-ajouter svg{ width:18px; height:18px; }
+
+  .panneau-onglet{ display:none; }
+  .panneau-onglet.actif{ display:block; }
+
+  /* --- Panneau Rogner --- */
+  .options-ratio{ display:flex; flex-wrap:wrap; gap:6px; }
+  .btn-ratio{ background:var(--papier); border:1.5px solid var(--bord); color:var(--doux); border-radius:8px; padding:8px 12px; font-size:12px; font-weight:700; font-family:'Jura',sans-serif; }
+  .btn-ratio.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .cadre-rognage{
+    position:absolute; border:2px solid #fff; box-shadow:0 0 0 2000px rgba(0,0,0,.5); cursor:move;
+  }
+  .poignee-rognage{
+    position:absolute; width:14px; height:14px; background:#fff; border:2px solid var(--terracotta); border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  .poignee-rognage.haut-gauche{ top:0; left:0; cursor:nwse-resize; }
+  .poignee-rognage.haut-droite{ top:0; left:100%; cursor:nesw-resize; }
+  .poignee-rognage.bas-gauche{ top:100%; left:0; cursor:nesw-resize; }
+  .poignee-rognage.bas-droite{ top:100%; left:100%; cursor:nwse-resize; }
+
+  /* --- Panneau Filtres (carrousels) --- */
+  .categorie-filtres{ margin-bottom:22px; }
+  .categorie-filtres h4{ font-size:14px; font-weight:700; color:var(--texte); margin-bottom:10px; font-family:'Jura',sans-serif; }
+  .carrousel-conteneur{ display:flex; align-items:center; gap:4px; }
+  .carrousel-filtres{
+    display:flex; gap:10px; overflow-x:auto; padding:2px 2px 10px; scroll-snap-type:x mandatory;
+    scroll-behavior:smooth; width:100%;
+  }
+  .fleche-carrousel{
+    flex:none; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--bord);
+    background:var(--papier); color:var(--doux); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0;
+  }
+  .fleche-carrousel:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .fleche-carrousel svg{ width:13px; height:13px; }
+  .carte-filtre{
+    flex:none; width:84px; display:flex; flex-direction:column; align-items:center; gap:6px;
+    background:none; border:none; padding:0; scroll-snap-align:start;
+  }
+  .carte-filtre canvas{
+    width:84px; height:84px; border-radius:10px; border:2.5px solid transparent;
+    background:var(--papier); display:block;
+  }
+  .carte-filtre.actif canvas{ border-color:var(--terracotta); }
+  .carte-filtre span{ font-size:12px; font-weight:600; color:var(--doux); text-align:center; }
+  .carte-filtre.actif span{ color:var(--texte); }
+
+  .panneau-duotone-perso{
+    display:none; margin-top:8px; background:var(--papier); border:1px solid var(--bord); border-radius:10px;
+    padding:14px; gap:14px; flex-wrap:wrap; align-items:center;
+  }
+  .panneau-duotone-perso.visible{ display:flex; }
+  .champ-couleur-duotone{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--doux); font-weight:600; }
+  .champ-couleur-duotone input[type=color]{ width:30px; height:30px; padding:0; border:1px solid var(--bord); border-radius:6px; background:none; }
+  .champ-couleur-duotone input[type=text]{ width:80px; font-family:monospace; font-size:12.5px; border:1px solid var(--bord); border-radius:6px; padding:5px 7px; color:var(--texte); }
+  .champ-intensite-duotone{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--doux); font-weight:600; }
+  .champ-intensite-duotone input[type=range]{ width:120px; accent-color:var(--terracotta); }
+
+  /* --- Panneau Reglages --- */
+  .grille-reglages{ display:grid; grid-template-columns:1fr; gap:16px; }
+  .ligne-reglage{ display:flex; flex-direction:column; gap:6px; }
+  .ligne-reglage .entete-reglage{ display:flex; justify-content:space-between; font-size:13.5px; font-weight:600; color:var(--texte); }
+  .ligne-reglage .entete-reglage span.valeur{ color:var(--doux); font-weight:500; font-variant-numeric:tabular-nums; }
+  .ligne-reglage input[type=range]{ width:100%; accent-color:var(--terracotta); }
+  .bascule-nb{ display:flex; align-items:center; gap:10px; }
+  .interrupteur{ position:relative; width:42px; height:24px; flex:none; }
+  .interrupteur input{ opacity:0; width:0; height:0; position:absolute; }
+  .interrupteur .glissiere{ position:absolute; inset:0; background:var(--doux-sombre); border-radius:24px; cursor:pointer; transition:background .15s; }
+  .interrupteur .glissiere::before{ content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform .15s; }
+  .interrupteur input:checked + .glissiere{ background:var(--terracotta); }
+  .interrupteur input:checked + .glissiere::before{ transform:translateX(18px); }
+
+  .barre-outils{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+  .groupe-outils{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .separateur-v{ width:1px; align-self:stretch; background:var(--bord); margin:0 2px; }
+  .separateur-h{ height:1px; background:var(--bord); margin:12px 0; }
+
+  .btn-outil{
+    display:flex; align-items:center; gap:6px; background:var(--papier); border:1.5px solid var(--bord);
+    color:var(--doux); border-radius:9px; padding:8px 12px; font-size:12.5px; font-weight:700; font-family:'Jura',sans-serif;
+  }
+  .btn-outil svg{ width:15px; height:15px; }
+  .btn-outil:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-outil.actif{ background:var(--charbon); border-color:var(--charbon); color:var(--creme); }
+  .btn-outil:disabled{ opacity:.4; cursor:not-allowed; }
+
+  .reglage-brosse, .reglage-tolerance{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--doux); font-weight:600; }
+  .reglage-brosse input[type=range], .reglage-tolerance input[type=range]{ width:100px; accent-color:var(--terracotta); }
+  .reglage-tolerance{ display:none; }
+  .reglage-tolerance.visible{ display:flex; }
+
+  /* --- Barre fond (couleur / image) --- */
+  .barre-fond{ display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .barre-fond .etiquette-fond{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); }
+  .options-fond{ display:flex; gap:6px; }
+  .btn-mode-fond{ background:var(--papier); border:1.5px solid var(--bord); color:var(--doux); border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; font-family:'Jura',sans-serif; }
+  .btn-mode-fond.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .reglages-fond-couleur{ display:none; align-items:center; gap:8px; }
+  .reglages-fond-couleur.visible{ display:flex; }
+  .pastilles-fond{ display:flex; gap:5px; }
+  .pastille-fond{ width:22px; height:22px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--bord); padding:0; }
+  #entreeCouleurFond{ width:30px; height:30px; padding:0; border:1px solid var(--bord); border-radius:6px; background:none; }
+  #entreeHexFond{ width:88px; font-family:monospace; font-size:13px; border:1px solid var(--bord); border-radius:6px; padding:6px 8px; color:var(--texte); }
+  .reglages-fond-image{ display:none; align-items:center; gap:8px; }
+  .reglages-fond-image.visible{ display:flex; }
+  .nom-image-fond{ font-size:12.5px; color:var(--doux); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .zone-travail{ position:relative; display:flex; flex-direction:column; }
+  .zone-canvas-scroll{
+    background:
+      linear-gradient(45deg,#ddd 25%,transparent 25%),linear-gradient(-45deg,#ddd 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#ddd 75%),linear-gradient(-45deg,transparent 75%,#ddd 75%);
+    background-size:20px 20px; background-position:0 0,0 10px,10px -10px,-10px 0px;
+    background-color:#f0f0f0; overflow:auto; flex:1 1 auto;
+    display:flex; align-items:flex-start; justify-content:flex-start; min-height:340px;
+    position:relative;
+  }
+  .zone-canvas-scroll.centrer{ align-items:center; justify-content:center; }
+  #canevasResultat{ display:block; touch-action:none; cursor:crosshair; }
+  #canevasResultat.mode-vue{ cursor:default; }
+  #canevasOriginal{ display:none; }
+
+  .curseur-brosse{
+    position:absolute; pointer-events:none; border-radius:50%; border:1.5px solid var(--charbon);
+    box-shadow:0 0 0 1.5px rgba(255,255,255,.9); display:none;
+  }
+
+  .info-photo{ font-size:11.5px; color:var(--doux); text-align:center; padding:8px; background:var(--surface); border-top:1px solid var(--bord); }
+
+  .bloc-zoom{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .icone-mini{
+    width:30px; height:30px; border-radius:8px; border:none; background:transparent; color:var(--blanc);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .icone-mini:hover{ background:var(--rail-survol); color:var(--brule); }
+  .icone-mini svg{ width:15px; height:15px; }
+  .valeur-zoom{ font-family:'Jura',sans-serif; font-weight:700; font-size:10px; color:var(--doux-sombre); }
+  .groupe-fonctions{ display:flex; flex-direction:column; width:100%; gap:4px; margin-top:10px; padding-top:10px; border-top:1px solid var(--rail-filet); }
+
+  /* 13/09 : la note vit maintenant DANS la colonne centrale — plus de largeur maximale ni de centrage sur la page entiere. */
+  .aide-volet{ font-size:12px; color:var(--doux); line-height:1.45; margin:0 0 10px; }
+  .choix-carreaux{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .mesure-mur{ font-size:12px; color:var(--doux); margin:10px 0; font-variant-numeric:tabular-nums; }
+  .note-modele{ margin:14px 0 18px; padding:0 20px; font-size:12.5px; color:var(--doux); text-align:center; }
+  .note-modele a{ color:var(--doux); }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--charbon); color:#fff; padding:12px 22px; border-radius:12px;
+    font-size:13.5px; font-weight:600; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+    z-index:500; display:flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(0,0,0,.18);
+  }
+  .toast.visible{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast svg{ width:16px; height:16px; flex:none; color:var(--kraft); }
+</style>
+</head>
+<!-- 13/09 : feuille commune du site. ELLE DOIT VENIR AVANT logo-v5.css, que commun-bandeau.js charge plus bas :
+     les deux ont des regles de meme force sur le logo, et a egalite la derniere chargee gagne. -->
+<link rel="stylesheet" href="/commun.css">
+<style>
+  /* 13/09 : sur le SITE, ces jetons sont poses a l execution par le panneau ; ici il n y a pas de panneau, et les valeurs par defaut
+     de commun.css sont celles de la charte KRAFT abandonnee — la baseline sortait en #E2725B au lieu de l orange de marque.
+     Ce bloc vient APRES commun.css : a specificite egale, c est le dernier charge qui gagne. */
+  :root{ --qz-terracotta:#d96c2f; --qz-kraft:#dedede; --qz-creme:#f2eedf; --qz-charbon:#1e2b35; }
+
+</style>
+<body>
+
+<!-- 13/09 : identite de l app. A declarer AVANT commun-bandeau.js, qui lit qzApp au fil de la lecture de la page. -->
+<script>window.qzApp = { lettre: 'P', nom: 'Photo Quadreti', baseline: 'Détourez. Ajustez. Exportez.' };</script>
+<!-- 14/09 : l app est servie depuis le site, elle prend donc les fichiers communs de la RACINE. Sa copie locale datait d hier et
+     ignorait le pied gris, « Studio », la rubrique « Detente » et « Guide du Designer ». data-base disparait avec elle : il ne
+     servait qu a prefixer les liens quand l app vivait hors du site. -->
+<script src="/commun-bandeau.js"></script>
+
+<!-- 13/09 : l intro a rejoint la colonne centrale (voir plus bas) ; en pleine largeur, elle coupait les rails. -->
+
+<div class="atelier actif" id="atelier">
+  <div class="rangee-atelier">
+
+    <div class="rail rail-gauche">
+      <div class="groupe-haut">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletDetourer" data-cible="ongletPanneauDetourer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span class="etiquette">Détourer</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauDetourer">
+            <h3>Détourer</h3>
+            <div class="barre-outils">
+              <div class="groupe-outils">
+                <button class="btn-outil actif" id="btnVue" title="Voir le résultat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Vue
+                </button>
+                <button class="btn-outil" id="btnRestaurer" title="Restaurer une zone effacée">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+                  Restaurer
+                </button>
+                <button class="btn-outil" id="btnEffacer" title="Effacer une zone">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+                  Effacer
+                </button>
+              </div>
+              <div class="separateur-h"></div>
+              <div class="groupe-outils">
+                <button class="btn-outil actif" id="btnMethodePinceau" title="Pinceau rond">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg>
+                  Pinceau
+                </button>
+                <button class="btn-outil" id="btnMethodeLasso" title="Lasso — entourez une zone à la main">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4c-4.4 0-8 2.7-8 6 0 2.4 1.9 4.5 4.6 5.4L7 20l2.4-2c.8.2 1.7.3 2.6.3 4.4 0 8-2.7 8-6s-3.6-6-8-6Z"/></svg>
+                  Lasso
+                </button>
+                <button class="btn-outil" id="btnMethodeBaguette" title="Baguette — clic sur une couleur pour sélectionner la zone similaire">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l8-8"/><path d="M15 4l1.5 1.5M19 8l1.5 1.5M11 4l1 3-3-1-1-3zM17 10l1 3-3-1-1-3z"/></svg>
+                  Baguette
+                </button>
+              </div>
+              <div class="reglage-brosse" id="reglageTaille">
+                Taille
+                <input type="range" id="curseurTaille" min="8" max="120" value="34">
+              </div>
+              <div class="reglage-tolerance" id="reglageTolerance">
+                Tolérance
+                <input type="range" id="curseurTolerance" min="5" max="100" value="30">
+              </div>
+              <div class="separateur-h"></div>
+              <div class="groupe-outils">
+                <button class="btn-outil" id="btnAnnuler" title="Annuler la dernière retouche" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></svg>
+                  Annuler
+                </button>
+                <button class="btn-outil" id="btnComparer" title="Maintenir pour voir la photo d'origine">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 3v18"/></svg>
+                  Comparer
+                </button>
+                <button class="btn-outil" id="btnRecommencer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-6h6"/></svg>
+                  Refaire la détection
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletFond" data-cible="ongletPanneauFond">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke-linejoin="round"/></svg>
+            <span class="etiquette">Fond</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauFond">
+            <h3>Fond</h3>
+            <div class="barre-fond">
+              <div class="options-fond">
+                <button class="btn-mode-fond actif" id="btnFondTransparent">Transparent</button>
+                <button class="btn-mode-fond" id="btnFondCouleur">Couleur</button>
+                <button class="btn-mode-fond" id="btnFondImage">Photo</button>
+              </div>
+              <div class="reglages-fond-couleur" id="reglagesFondCouleur">
+                <div class="pastilles-fond" id="pastillesFond"></div>
+                <input type="color" id="entreeCouleurFond" value="#FFFFFF">
+                <input type="text" id="entreeHexFond" value="#FFFFFF" maxlength="7" spellcheck="false">
+              </div>
+              <div class="reglages-fond-image" id="reglagesFondImage">
+                <button class="btn secondaire" id="btnChoisirFondImage">Choisir une image</button>
+                <input type="file" id="champFondImage" accept="image/png,image/jpeg,image/webp">
+                <span class="nom-image-fond" id="nomImageFond">Aucune image</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletRotation" data-cible="ongletPanneauRotation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+            <span class="etiquette">Rotation</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauRotation">
+            <h3>Rotation &amp; symétrie</h3>
+            <div class="barre-outils">
+              <div class="groupe-outils">
+                <button class="btn-outil" id="btnPivoterGauche" title="Pivoter 90° à gauche">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
+                  90° gauche
+                </button>
+                <button class="btn-outil" id="btnPivoterDroite" title="Pivoter 90° à droite">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>
+                  90° droite
+                </button>
+              </div>
+              <div class="separateur-h"></div>
+              <div class="groupe-outils">
+                <button class="btn-outil" id="btnMiroirH" title="Miroir horizontal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg>
+                  Miroir H
+                </button>
+                <button class="btn-outil" id="btnMiroirV" title="Miroir vertical">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M7 8l5-4 5 4M7 16l5 4 5-4"/></svg>
+                  Miroir V
+                </button>
+              </div>
+              <!-- 13/09 : redressement a l angle. Pivoter de 90 degres ne repare pas un horizon de travers. -->
+              <div class="champ-mini champ-redresse">
+                <label for="curseurRedresse">Redresser <span id="valeurRedresse">0°</span></label>
+                <input type="range" id="curseurRedresse" min="-15" max="15" step="0.5" value="0">
+                <button class="btn secondaire" type="button" id="btnRedresseZero">Remettre à plat</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletRogner" data-cible="ongletPanneauRogner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+            <span class="etiquette">Rogner</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauRogner">
+            <h3>Rogner</h3>
+            <div class="barre-outils">
+              <span class="etiquette-fond">Format</span>
+              <div class="options-ratio" id="optionsRatio">
+                <button class="btn-ratio actif" data-ratio="libre">Libre</button>
+                <button class="btn-ratio" data-ratio="1:1">Carré</button>
+                <button class="btn-ratio" data-ratio="4:5">Portrait 4:5</button>
+                <button class="btn-ratio" data-ratio="3:2">Paysage 3:2</button>
+                <button class="btn-ratio" data-ratio="9:16">Story 9:16</button>
+              </div>
+              <div class="separateur-h"></div>
+              <div class="groupe-outils">
+                <button class="btn secondaire" id="btnAnnulerRognage">Annuler le rognage</button>
+                <button class="btn principal" id="btnAppliquerRognage">Appliquer le rognage</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletReglages" data-cible="ongletPanneauReglages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+            <span class="etiquette">Réglages</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauReglages">
+            <h3>Réglages</h3>
+            <div class="grille-reglages">
+              <div class="ligne-reglage">
+                <div class="entete-reglage"><span>Luminosité</span><span class="valeur" id="valLuminosite">0</span></div>
+                <input type="range" id="curseurLuminosite" min="-100" max="100" value="0">
+              </div>
+              <div class="ligne-reglage">
+                <div class="entete-reglage"><span>Contraste</span><span class="valeur" id="valContraste">0</span></div>
+                <input type="range" id="curseurContraste" min="-100" max="100" value="0">
+              </div>
+              <div class="ligne-reglage">
+                <div class="entete-reglage"><span>Saturation</span><span class="valeur" id="valSaturation">0</span></div>
+                <input type="range" id="curseurSaturation" min="-100" max="100" value="0">
+              </div>
+              <div class="ligne-reglage">
+                <div class="bascule-nb">
+                  <label class="interrupteur">
+                    <input type="checkbox" id="caseNoirEtBlanc">
+                    <span class="glissiere"></span>
+                  </label>
+                  <span class="entete-reglage" style="margin:0"><span>Noir et blanc</span></span>
+                </div>
+              </div>
+              <button class="btn secondaire" id="btnReinitialiserReglages" style="align-self:flex-start">Réinitialiser les réglages</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="ongletFiltres" data-cible="ongletPanneauFiltres">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+            <span class="etiquette">Filtres</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauFiltres">
+            <h3>Filtres</h3>
+            <div id="conteneurCategoriesFiltres"></div>
+            <button class="btn secondaire" id="btnReinitialiserFiltres">Retirer le filtre</button>
+          </div>
+          <!-- 13/09 : apercu du rendu en mosaique, aux cotes reels du produit (carreau 189 mm, tesselle 26 mm). -->
+          <button class="icone-outil" id="ongletMosaique" data-cible="ongletPanneauMosaique">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span class="etiquette">Mosaïque</span>
+          </button>
+          <div class="popover-outil" id="ongletPanneauMosaique">
+            <h3>Aperçu en mosaïque</h3>
+            <p class="aide-volet">Votre photo telle qu'elle sortirait en tesselles. Sert à juger si elle reste lisible, pas à choisir les couleurs définitives.</p>
+            <div class="choix-carreaux">
+              <button class="btn-outil" type="button" data-carreaux="1">1 carreau</button>
+              <button class="btn-outil actif" type="button" data-carreaux="2">2 carreaux</button>
+              <button class="btn-outil" type="button" data-carreaux="3">3 carreaux</button>
+              <button class="btn-outil" type="button" data-carreaux="4">4 carreaux</button>
+            </div>
+            <p class="mesure-mur" id="mesureMur"></p>
+            <button class="btn principal" type="button" id="btnBasculerMosaique">Voir en mosaïque</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="groupe-bas">
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="btnRetour" title="Retour — annule la dernière action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
+            <span class="etiquette">Retour</span>
+          </button>
+        </div>
+        <div class="icone-outil-conteneur">
+          <button class="icone-outil" id="btnRetablir" title="Rétablir — refait la dernière action annulée">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>
+            <span class="etiquette">Rétablir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="voile-popover" id="voilePopover"></div>
+
+    <div class="zone-travail">
+      <div class="intro-app">
+        <p>Déposez une ou plusieurs photos : détourez, rognez, ajustez la lumière et les couleurs, puis téléchargez en PNG à la résolution d'origine.</p>
+        <span class="badge-local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          100% dans votre navigateur — vos photos ne sont jamais envoyées à un serveur
+        </span>
+      </div>
+      <div class="rail-vignettes" id="railVignettes"></div>
+      <div class="zone-canvas-scroll centrer" id="zoneCanevas">
+        <div class="invite-import" id="inviteImport">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+          <p>Glissez des photos ici, ou</p>
+          <button class="btn principal" id="btnChoisir">Choisir des photos</button>
+          <input type="file" id="champFichier" accept="image/png,image/jpeg,image/webp" multiple>
+        </div>
+        <div class="bandeau-modele" id="bandeauModele">
+          <div class="spinner"></div>
+          <div class="titre-etat" id="titreEtat">Préparation du modèle…</div>
+          <div class="detail-etat" id="detailEtat">Premier lancement : le modèle se télécharge (une seule fois, puis mis en cache par le navigateur).</div>
+          <div class="barre-progres"><div id="barreProgresRemplissage"></div></div>
+        </div>
+        <canvas id="canevasResultat" width="0" height="0"></canvas>
+        <canvas id="canevasOriginal" width="0" height="0"></canvas>
+        <div class="curseur-brosse" id="curseurBrosse"></div>
+        <div class="cadre-rognage" id="cadreRognage" style="display:none">
+          <div class="poignee-rognage haut-gauche" data-poignee="hg"></div>
+          <div class="poignee-rognage haut-droite" data-poignee="hd"></div>
+          <div class="poignee-rognage bas-gauche" data-poignee="bg"></div>
+          <div class="poignee-rognage bas-droite" data-poignee="bd"></div>
+        </div>
+      </div>
+      <div class="info-photo" id="infoPhoto"></div>
+      <p class="note-modele" id="noteModele">Modèle de segmentation : <a href="https://huggingface.co/onnx-community/ormbg-ONNX" target="_blank" rel="noopener">ormbg</a> (licence Apache 2.0, libre d'usage commercial), exécuté localement via <a href="https://github.com/huggingface/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</p>
+    </div>
+
+    <div class="rail rail-droite">
+      <div class="groupe-bas bloc-zoom">
+        <button class="icone-mini" id="btnZoomPlus" title="Zoom avant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+        </button>
+        <span class="valeur-zoom" id="valeurZoom">100%</span>
+        <button class="icone-mini" id="btnZoomMoins" title="Zoom arrière">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg>
+        </button>
+        <div class="groupe-fonctions">
+          <button class="icone-outil" id="btnEnregistrerAlbum" title="Enregistrer dans Mon album photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            <span class="etiquette">Album</span>
+          </button>
+          <button class="icone-outil" id="btnToutTelecharger" title="Tout télécharger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+            <span class="etiquette">Tout</span>
+          </button>
+          <button class="icone-outil" id="btnTelecharger" title="Télécharger le PNG">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
+            <span class="etiquette">PNG</span>
+          </button>
+          <a class="icone-outil" href="/outils.html" target="_blank" title="Découvrir les autres outils QuadretI">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l1.5-4h13L20 8M4 8h16M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M9 12a3 3 0 0 0 6 0"/></svg>
+            <span class="etiquette">Autres outils</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13/09 : la mention du modele a rejoint la colonne centrale ; en pleine largeur, elle posait une bande grise avant le pied. -->
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastTexte"></span>
+</div>
+
+<script type="module">
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.4.2';
+
+const inviteImport = document.getElementById('inviteImport');
+const champFichier = document.getElementById('champFichier');
+const btnChoisir = document.getElementById('btnChoisir');
+const atelier = document.getElementById('atelier');
+const railVignettes = document.getElementById('railVignettes');
+const zoneCanevas = document.getElementById('zoneCanevas');
+const bandeauModele = document.getElementById('bandeauModele');
+const titreEtat = document.getElementById('titreEtat');
+const detailEtat = document.getElementById('detailEtat');
+const barreProgres = document.getElementById('barreProgresRemplissage');
+const canevasResultat = document.getElementById('canevasResultat');
+const canevasOriginal = document.getElementById('canevasOriginal');
+const ctxResultat = canevasResultat.getContext('2d');
+const ctxOriginal = canevasOriginal.getContext('2d');
+const curseurBrosse = document.getElementById('curseurBrosse');
+const infoPhoto = document.getElementById('infoPhoto');
+
+const btnRetour = document.getElementById('btnRetour');
+const btnRetablir = document.getElementById('btnRetablir');
+const btnVue = document.getElementById('btnVue');
+const btnRestaurer = document.getElementById('btnRestaurer');
+const btnEffacer = document.getElementById('btnEffacer');
+const btnMethodePinceau = document.getElementById('btnMethodePinceau');
+const btnMethodeLasso = document.getElementById('btnMethodeLasso');
+const btnMethodeBaguette = document.getElementById('btnMethodeBaguette');
+const reglageTaille = document.getElementById('reglageTaille');
+const reglageTolerance = document.getElementById('reglageTolerance');
+const curseurTaille = document.getElementById('curseurTaille');
+const curseurTolerance = document.getElementById('curseurTolerance');
+const btnZoomMoins = document.getElementById('btnZoomMoins');
+const btnZoomPlus = document.getElementById('btnZoomPlus');
+const valeurZoom = document.getElementById('valeurZoom');
+const btnAnnuler = document.getElementById('btnAnnuler');
+const btnComparer = document.getElementById('btnComparer');
+const btnRecommencer = document.getElementById('btnRecommencer');
+const btnTelecharger = document.getElementById('btnTelecharger');
+const btnToutTelecharger = document.getElementById('btnToutTelecharger');
+const btnEnregistrerAlbum = document.getElementById('btnEnregistrerAlbum');
+const toast = document.getElementById('toast');
+const toastTexte = document.getElementById('toastTexte');
+
+const btnFondTransparent = document.getElementById('btnFondTransparent');
+const btnFondCouleur = document.getElementById('btnFondCouleur');
+const btnFondImage = document.getElementById('btnFondImage');
+const reglagesFondCouleur = document.getElementById('reglagesFondCouleur');
+const reglagesFondImage = document.getElementById('reglagesFondImage');
+const pastillesFond = document.getElementById('pastillesFond');
+const entreeCouleurFond = document.getElementById('entreeCouleurFond');
+const entreeHexFond = document.getElementById('entreeHexFond');
+const btnChoisirFondImage = document.getElementById('btnChoisirFondImage');
+const champFondImage = document.getElementById('champFondImage');
+const nomImageFond = document.getElementById('nomImageFond');
+
+const ongletDetourer = document.getElementById('ongletDetourer');
+const ongletFond = document.getElementById('ongletFond');
+const ongletRotation = document.getElementById('ongletRotation');
+const ongletRogner = document.getElementById('ongletRogner');
+const ongletReglages = document.getElementById('ongletReglages');
+const ongletPanneauDetourer = document.getElementById('ongletPanneauDetourer');
+const ongletPanneauFond = document.getElementById('ongletPanneauFond');
+const ongletPanneauRotation = document.getElementById('ongletPanneauRotation');
+const ongletPanneauRogner = document.getElementById('ongletPanneauRogner');
+const ongletPanneauReglages = document.getElementById('ongletPanneauReglages');
+const ongletFiltres = document.getElementById('ongletFiltres');
+const ongletPanneauFiltres = document.getElementById('ongletPanneauFiltres');
+const conteneurCategoriesFiltres = document.getElementById('conteneurCategoriesFiltres');
+const btnReinitialiserFiltres = document.getElementById('btnReinitialiserFiltres');
+
+const btnPivoterGauche = document.getElementById('btnPivoterGauche');
+const btnPivoterDroite = document.getElementById('btnPivoterDroite');
+const curseurRedresse = document.getElementById('curseurRedresse');
+const valeurRedresse = document.getElementById('valeurRedresse');
+const btnRedresseZero = document.getElementById('btnRedresseZero');
+const btnMiroirH = document.getElementById('btnMiroirH');
+const btnMiroirV = document.getElementById('btnMiroirV');
+
+const optionsRatio = document.getElementById('optionsRatio');
+const btnAnnulerRognage = document.getElementById('btnAnnulerRognage');
+const btnAppliquerRognage = document.getElementById('btnAppliquerRognage');
+const cadreRognage = document.getElementById('cadreRognage');
+
+const curseurLuminosite = document.getElementById('curseurLuminosite');
+const curseurContraste = document.getElementById('curseurContraste');
+const curseurSaturation = document.getElementById('curseurSaturation');
+const valLuminosite = document.getElementById('valLuminosite');
+const valContraste = document.getElementById('valContraste');
+const valSaturation = document.getElementById('valSaturation');
+const caseNoirEtBlanc = document.getElementById('caseNoirEtBlanc');
+const btnReinitialiserReglages = document.getElementById('btnReinitialiserReglages');
+
+// --- Etat global ---
+let segmenteur = null;
+let promesseModele = null;
+let elements = [];        // {id, nom, largeurNative, hauteurNative, pixelsOriginaux, masqueAlpha, historiqueMasques, statut, messageErreur, urlVignette}
+let indexActif = -1;
+let compteurId = 0;
+let outilActif = 'vue';
+let methodeActive = 'pinceau'; // 'pinceau' | 'lasso' | 'baguette'
+let enTrainDePeindre = false;
+let pointsLasso = [];
+let zoomActuel = 1;
+let echelleBase = 1; // echelle CSS a zoom=1 (ajustee au conteneur)
+let modeFond = 'transparent';
+let couleurFond = '#FFFFFF';
+let imageFond = null;
+let ongletActif = null;
+let ratioActif = 'libre'; // 'libre' | {w,h}
+let rognagePointeur = null; // {mode:'deplacer'|'hg'|'hd'|'bg'|'bd', depart:{x,y}, rectDepart}
+
+/* 13/09 : les fonds proposes au client passent a la charte. Ils etaient en kraft (#2B353E charbon, #CBBD93 ocre, #E2725B
+   terracotta, #F1ECDD creme) — une identite abandonnee, et c est le client qui la voyait. */
+const PASTILLES = ['#ffffff', '#1e2b35', '#dedede', '#d96c2f', '#10181f'];
+PASTILLES.forEach(hex => {
+  const b = document.createElement('button');
+  b.className = 'pastille-fond';
+  b.style.background = hex;
+  b.title = hex;
+  b.addEventListener('click', () => appliquerCouleurFond(hex));
+  pastillesFond.appendChild(b);
+});
+
+// --- Import (glisser-deposer + selection, multi-fichiers) ---
+['dragover','dragenter'].forEach(evt => zoneCanevas.addEventListener(evt, e => { e.preventDefault(); if (!elements.length) inviteImport.classList.add('survol'); }));
+['dragleave','drop'].forEach(evt => zoneCanevas.addEventListener(evt, e => { e.preventDefault(); inviteImport.classList.remove('survol'); }));
+zoneCanevas.addEventListener('drop', e => ajouterFichiers(e.dataTransfer.files));
+btnChoisir.addEventListener('click', () => champFichier.click());
+champFichier.addEventListener('change', () => { ajouterFichiers(champFichier.files); champFichier.value = ''; });
+
+function ajouterFichiers(fileList){
+  const fichiers = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  if (!fichiers.length) return;
+  inviteImport.style.display = 'none';
+  fichiers.forEach(fichier => {
+    const item = {
+      id: ++compteurId,
+      nom: fichier.name.replace(/\.[^.]+$/, '') || 'photo',
+      fichier,
+      largeurNative: 0, hauteurNative: 0,
+      pixelsOriginaux: null, masqueAlpha: null,
+      historiqueMasques: [], statut: 'attente', messageErreur: '',
+      urlVignette: URL.createObjectURL(fichier),
+      reglages: { luminosite: 0, contraste: 0, saturation: 0, noirEtBlanc: false, teinte: 0, sepia: 0, duotone: null, filtrePreset: null },
+      cadreRognage: null,
+      avantRognage: null,
+      angleRedresse: 0 /* 13/09 : redressement, en degres. Reglage non destructif, applique a la composition. */
+    };
+    elements.push(item);
+  });
+  redessinerRail();
+  lancerFileTraitement();
+}
+
+function redessinerRail(){
+  railVignettes.innerHTML = '';
+  elements.forEach((item, i) => {
+    const v = document.createElement('div');
+    v.className = 'vignette' + (i === indexActif ? ' actif' : '');
+    v.title = item.nom;
+    const img = document.createElement('img');
+    img.src = item.urlVignette;
+    v.appendChild(img);
+    if (item.statut === 'attente' || item.statut === 'traitement'){
+      const overlay = document.createElement('div');
+      overlay.className = 'etat-vignette';
+      overlay.innerHTML = '<div class="spinner"></div>';
+      v.appendChild(overlay);
+    } else if (item.statut === 'erreur'){
+      const overlay = document.createElement('div');
+      overlay.className = 'etat-vignette';
+      overlay.innerHTML = '<span class="erreur-vignette">Erreur</span>';
+      v.appendChild(overlay);
+    }
+    v.addEventListener('click', () => chargerElementActif(i));
+    railVignettes.appendChild(v);
+  });
+  const ajouter = document.createElement('button');
+  ajouter.className = 'vignette-ajouter';
+  ajouter.title = 'Ajouter des photos';
+  ajouter.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+  ajouter.addEventListener('click', () => champFichier.click());
+  railVignettes.appendChild(ajouter);
+}
+
+// --- File de traitement (lot) ---
+let enTraitement = false;
+async function lancerFileTraitement(){
+  if (enTraitement) return;
+  enTraitement = true;
+  let item;
+  while ((item = elements.find(e => e.statut === 'attente'))){
+    item.statut = 'traitement';
+    redessinerRail();
+    if (indexActif === -1 || elements[indexActif] === item) afficherBandeauTraitement(item);
+    try{
+      await traiterUnElement(item);
+      item.statut = 'pret';
+    } catch (err){
+      console.error(err);
+      item.statut = 'erreur';
+      item.messageErreur = err.message || String(err);
+    }
+    redessinerRail();
+    if (indexActif === -1){
+      indexActif = elements.indexOf(item);
+      chargerElementActif(indexActif);
+    } else if (elements[indexActif] === item){
+      chargerElementActif(indexActif);
+    }
+  }
+  enTraitement = false;
+}
+
+function afficherBandeauTraitement(item){
+  bandeauModele.classList.add('actif');
+  canevasResultat.style.display = 'none';
+  if (!segmenteur){
+    titreEtat.textContent = 'Préparation du modèle…';
+    detailEtat.textContent = 'Premier lancement : le modèle se télécharge (une seule fois, puis mis en cache par le navigateur).';
+  } else {
+    titreEtat.textContent = 'Analyse de « ' + item.nom + ' »…';
+    detailEtat.textContent = 'Détection de l’arrière-plan en cours.';
+    barreProgres.style.width = '100%';
+  }
+}
+
+async function chargerModele(){
+  if (segmenteur) return segmenteur;
+  if (!promesseModele){
+    promesseModele = pipeline('background-removal', 'onnx-community/ormbg-ONNX', {
+      progress_callback: (p) => {
+        if (p.status === 'progress' && p.total){
+          const pct = Math.round((p.loaded / p.total) * 100);
+          barreProgres.style.width = pct + '%';
+          detailEtat.textContent = 'Téléchargement du modèle… ' + pct + '%';
+        }
+      }
+    });
+  }
+  segmenteur = await promesseModele;
+  return segmenteur;
+}
+
+async function traiterUnElement(item){
+  const img = await new Promise((resolve, reject) => {
+    const im = new Image();
+    im.onload = () => resolve(im);
+    im.onerror = reject;
+    im.src = item.urlVignette;
+  });
+  item.largeurNative = img.naturalWidth;
+  item.hauteurNative = img.naturalHeight;
+
+  const cOrig = document.createElement('canvas');
+  cOrig.width = item.largeurNative; cOrig.height = item.hauteurNative;
+  cOrig.getContext('2d').drawImage(img, 0, 0);
+  item.pixelsOriginaux = cOrig.getContext('2d').getImageData(0, 0, item.largeurNative, item.hauteurNative);
+
+  const modele = await chargerModele();
+  if (elements[indexActif] === item || indexActif === -1) afficherBandeauTraitement(item);
+
+  const resultat = await modele(item.urlVignette);
+  const sortie = Array.isArray(resultat) ? resultat[0] : resultat;
+  const canevasIA = sortie.toCanvas ? sortie.toCanvas() : sortie;
+
+  const cTmp = document.createElement('canvas');
+  cTmp.width = item.largeurNative; cTmp.height = item.hauteurNative;
+  const ctxTmp = cTmp.getContext('2d');
+  ctxTmp.drawImage(canevasIA, 0, 0, item.largeurNative, item.hauteurNative);
+  const donneesIA = ctxTmp.getImageData(0, 0, item.largeurNative, item.hauteurNative);
+
+  item.masqueAlpha = new Uint8ClampedArray(item.largeurNative * item.hauteurNative);
+  for (let i = 0; i < item.masqueAlpha.length; i++){
+    item.masqueAlpha[i] = donneesIA.data[i * 4 + 3];
+  }
+  if (sourceMiniaturesFiltres && sourceMiniaturesFiltres.itemId === item.id) sourceMiniaturesFiltres = null;
+}
+
+// --- Affichage de l'element actif ---
+function chargerElementActif(i){
+  indexActif = i;
+  redessinerRail();
+  const item = elements[i];
+  if (!item) return;
+
+  if (item.statut !== 'pret'){
+    afficherBandeauTraitement(item);
+    infoPhoto.textContent = item.nom;
+    btnTelecharger.disabled = true;
+    btnEnregistrerAlbum.disabled = true;
+    return;
+  }
+
+  bandeauModele.classList.remove('actif');
+  canevasResultat.style.display = 'block';
+  btnTelecharger.disabled = false;
+  btnEnregistrerAlbum.disabled = false;
+
+  canevasOriginal.width = item.largeurNative;
+  canevasOriginal.height = item.hauteurNative;
+  canevasOriginal.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+
+  canevasResultat.width = item.largeurNative;
+  canevasResultat.height = item.hauteurNative;
+
+  calculerEchelleBase();
+  appliquerZoom();
+  redessinerResultat();
+  majBoutonAnnuler();
+  infoPhoto.textContent = item.nom + ' — ' + item.largeurNative + ' × ' + item.hauteurNative + ' px';
+  if (ongletActif === 'reglages') synchroniserReglagesUI();
+  if (ongletActif === 'rogner') ouvrirOngletRognage();
+  if (ongletActif === 'filtres') rafraichirVignettesFiltres();
+}
+
+function calculerEchelleBase(){
+  const item = elements[indexActif];
+  if (!item) return;
+  const largeurDispo = zoneCanevas.clientWidth - 32;
+  const hauteurDispo = Math.min(window.innerHeight * 0.7, zoneCanevas.clientHeight || 500) - 32;
+  echelleBase = Math.min(1, largeurDispo / item.largeurNative, hauteurDispo / item.hauteurNative);
+  if (!isFinite(echelleBase) || echelleBase <= 0) echelleBase = 1;
+}
+
+function appliquerZoom(){
+  const item = elements[indexActif];
+  if (!item) return;
+  const echelle = echelleBase * zoomActuel;
+  canevasResultat.style.width = Math.round(item.largeurNative * echelle) + 'px';
+  canevasResultat.style.height = Math.round(item.hauteurNative * echelle) + 'px';
+  zoneCanevas.classList.toggle('centrer', zoomActuel <= 1);
+  valeurZoom.textContent = Math.round(zoomActuel * 100) + '%';
+  if (ongletActif === 'rogner') positionnerCadreRognage();
+}
+btnZoomMoins.addEventListener('click', () => { zoomActuel = Math.max(1, zoomActuel - 0.5); appliquerZoom(); });
+btnZoomPlus.addEventListener('click', () => { zoomActuel = Math.min(6, zoomActuel + 0.5); appliquerZoom(); });
+
+// --- Rendu (fond + decoupe composee) ---
+function construireCompositeSur(ctxCible, item, sansRedresser){
+  const l = item.largeurNative, h = item.hauteurNative;
+  /* 13/09 : redressement. On compose d abord l image a plat dans un canevas de travail, puis on la repose pivotee et agrandie juste
+     assez pour que le cadre reste plein — sinon des coins transparents apparaitraient. Meme chemin pour l ecran et pour l export. */
+  if (item.angleRedresse && !sansRedresser){
+    if (ctxCible.canvas.width !== l || ctxCible.canvas.height !== h){ ctxCible.canvas.width = l; ctxCible.canvas.height = h; }
+    const plat = document.createElement('canvas'); plat.width = l; plat.height = h;
+    construireCompositeSur(plat.getContext('2d'), item, true);
+    const a = item.angleRedresse * Math.PI / 180, co = Math.abs(Math.cos(a)), si = Math.abs(Math.sin(a));
+    const k = Math.max((l * co + h * si) / l, (l * si + h * co) / h);
+    ctxCible.clearRect(0, 0, l, h);
+    ctxCible.save();
+    ctxCible.translate(l / 2, h / 2); ctxCible.rotate(a); ctxCible.scale(k, k);
+    ctxCible.drawImage(plat, -l / 2, -h / 2);
+    ctxCible.restore();
+    return;
+  }
+  if (ctxCible.canvas.width !== l || ctxCible.canvas.height !== h){
+    ctxCible.canvas.width = l; ctxCible.canvas.height = h;
+  }
+  const sortie = new ImageData(l, h);
+  const px = item.pixelsOriginaux.data, mq = item.masqueAlpha;
+  for (let i = 0; i < l * h; i++){
+    sortie.data[i*4]   = px[i*4];
+    sortie.data[i*4+1] = px[i*4+1];
+    sortie.data[i*4+2] = px[i*4+2];
+    sortie.data[i*4+3] = mq[i];
+  }
+  const cMasque = document.createElement('canvas');
+  cMasque.width = l; cMasque.height = h;
+  cMasque.getContext('2d').putImageData(sortie, 0, 0);
+
+  ctxCible.clearRect(0, 0, l, h);
+  ctxCible.filter = 'none';
+  if (modeFond === 'couleur'){
+    ctxCible.fillStyle = couleurFond;
+    ctxCible.fillRect(0, 0, l, h);
+  } else if (modeFond === 'image' && imageFond){
+    dessinerImageCouverture(ctxCible, imageFond, l, h);
+  }
+  ctxCible.filter = construireFiltreCss(item.reglages);
+  ctxCible.drawImage(cMasque, 0, 0);
+  ctxCible.filter = 'none';
+
+  if (item.reglages.duotone){
+    const donnees = ctxCible.getImageData(0, 0, l, h);
+    appliquerDuotone(donnees, item.reglages.duotone);
+    ctxCible.putImageData(donnees, 0, 0);
+  }
+}
+
+function construireFiltreCss(r){
+  if (!r) return 'none';
+  const lum = Math.max(0, 100 + r.luminosite);
+  const con = Math.max(0, 100 + r.contraste);
+  const sat = Math.max(0, 100 + (r.saturation || 0));
+  let f = 'brightness(' + lum + '%) contrast(' + con + '%) saturate(' + sat + '%)';
+  if (r.sepia) f += ' sepia(' + r.sepia + '%)';
+  if (r.teinte) f += ' hue-rotate(' + r.teinte + 'deg)';
+  if (r.noirEtBlanc) f += ' grayscale(1)';
+  return f;
+}
+
+function hexVersRgb(hex){
+  const v = hex.replace('#', '');
+  return [parseInt(v.slice(0,2),16), parseInt(v.slice(2,4),16), parseInt(v.slice(4,6),16)];
+}
+
+function appliquerDuotone(imageData, duotone){
+  const [or, og, ob] = hexVersRgb(duotone.ombre);
+  const [cr, cg, cb] = hexVersRgb(duotone.clair);
+  const intensite = (duotone.intensite != null ? duotone.intensite : 100) / 100;
+  const d = imageData.data;
+  for (let i = 0; i < d.length; i += 4){
+    if (d[i+3] === 0) continue;
+    const lum = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) / 255;
+    const dr = or + (cr - or) * lum;
+    const dg = og + (cg - og) * lum;
+    const db = ob + (cb - ob) * lum;
+    d[i]   = d[i]   + (dr - d[i])   * intensite;
+    d[i+1] = d[i+1] + (dg - d[i+1]) * intensite;
+    d[i+2] = d[i+2] + (db - d[i+2]) * intensite;
+  }
+}
+
+function dessinerImageCouverture(ctx, img, largeurCible, hauteurCible){
+  const rCible = largeurCible / hauteurCible;
+  const rImg = img.naturalWidth / img.naturalHeight;
+  let sx, sy, sw, sh;
+  if (rImg > rCible){ sh = img.naturalHeight; sw = sh * rCible; sx = (img.naturalWidth - sw) / 2; sy = 0; }
+  else { sw = img.naturalWidth; sh = sw / rCible; sx = 0; sy = (img.naturalHeight - sh) / 2; }
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, largeurCible, hauteurCible);
+}
+
+function redessinerResultat(){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  construireCompositeSur(ctxResultat, item);
+  /* 13/09 : l apercu mosaique se pose ICI et nulle part ailleurs — l export appelle construireCompositeSur directement, donc le PNG
+     telecharge reste la photo propre. */
+  if (mosaique.actif) poserApercuMosaique(ctxResultat, item);
+}
+
+/* --- Apercu en mosaique (13/09) ---
+   Cotes reels du produit : carreau 189 mm, 7 tesselles par carreau, donc un pas de 27 mm pour une tesselle de 26 mm — 1 mm de joint. */
+const TESSELLES_PAR_CARREAU = 7, PAS_MM = 27, TESSELLE_MM = 26;
+const mosaique = { actif: false, carreaux: 2 };
+function grilleMosaique(item){
+  const colonnes = TESSELLES_PAR_CARREAU * mosaique.carreaux;
+  const lignes = Math.max(1, Math.round(colonnes * item.hauteurNative / item.largeurNative));
+  return { colonnes, lignes };
+}
+function majMesureMur(){
+  const item = elements[indexActif];
+  const champ = document.getElementById('mesureMur');
+  if (!champ) return;
+  if (!item || item.statut !== 'pret'){ champ.textContent = ''; return; }
+  const g = grilleMosaique(item);
+  const largeurCm = (g.colonnes * PAS_MM / 10).toFixed(1).replace('.', ',');
+  const hauteurCm = (g.lignes * PAS_MM / 10).toFixed(1).replace('.', ',');
+  champ.textContent = g.colonnes + ' × ' + g.lignes + ' tesselles — ' + largeurCm + ' × ' + hauteurCm + ' cm';
+}
+function poserApercuMosaique(ctx, item){
+  const l = item.largeurNative, h = item.hauteurNative;
+  const g = grilleMosaique(item);
+  /* on reduit la photo composee a un pixel par tesselle : la moyenne de la zone se fait toute seule au redimensionnement */
+  const petit = document.createElement('canvas');
+  petit.width = g.colonnes; petit.height = g.lignes;
+  const pc = petit.getContext('2d');
+  pc.imageSmoothingEnabled = true; pc.imageSmoothingQuality = 'high';
+  pc.drawImage(ctx.canvas, 0, 0, g.colonnes, g.lignes);
+  const px = pc.getImageData(0, 0, g.colonnes, g.lignes).data;
+
+  const pasX = l / g.colonnes, pasY = h / g.lignes;
+  const joint = (PAS_MM - TESSELLE_MM) / PAS_MM; /* 3,7 % du pas, comme sur le produit */
+  const margeX = pasX * joint / 2, margeY = pasY * joint / 2;
+  ctx.clearRect(0, 0, l, h);
+  for (let y = 0; y < g.lignes; y++) for (let x = 0; x < g.colonnes; x++){
+    const i = (y * g.colonnes + x) * 4;
+    if (px[i+3] < 8) continue; /* zone transparente : pas de tesselle, on laisse le vide */
+    ctx.fillStyle = 'rgba(' + px[i] + ',' + px[i+1] + ',' + px[i+2] + ',' + (px[i+3] / 255) + ')';
+    ctx.fillRect(x * pasX + margeX, y * pasY + margeY, pasX - 2 * margeX, pasY - 2 * margeY);
+  }
+}
+document.querySelectorAll('.choix-carreaux [data-carreaux]').forEach(function (b){
+  b.addEventListener('click', function (){
+    document.querySelectorAll('.choix-carreaux [data-carreaux]').forEach(o => o.classList.remove('actif'));
+    b.classList.add('actif');
+    mosaique.carreaux = parseInt(b.getAttribute('data-carreaux'), 10);
+    majMesureMur();
+    if (mosaique.actif) redessinerResultat();
+  });
+});
+const btnBasculerMosaique = document.getElementById('btnBasculerMosaique');
+if (btnBasculerMosaique) btnBasculerMosaique.addEventListener('click', function (){
+  mosaique.actif = !mosaique.actif;
+  this.textContent = mosaique.actif ? 'Revenir à la photo' : 'Voir en mosaïque';
+  redessinerResultat();
+});
+
+// --- Fond : mode + couleur + image ---
+function synchroniserFondUI(){
+  [btnFondTransparent, btnFondCouleur, btnFondImage].forEach(b => b.classList.remove('actif'));
+  ({transparent: btnFondTransparent, couleur: btnFondCouleur, image: btnFondImage}[modeFond]).classList.add('actif');
+  reglagesFondCouleur.classList.toggle('visible', modeFond === 'couleur');
+  reglagesFondImage.classList.toggle('visible', modeFond === 'image');
+}
+function appliquerModeFond(mode){
+  modeFond = mode;
+  synchroniserFondUI();
+  redessinerResultat();
+}
+function choisirModeFond(mode){
+  const avant = modeFond;
+  appliquerModeFond(mode);
+  if (avant !== mode) pousserHistoriqueGlobal(appliquerModeFond, avant, mode);
+}
+btnFondTransparent.addEventListener('click', () => choisirModeFond('transparent'));
+btnFondCouleur.addEventListener('click', () => choisirModeFond('couleur'));
+btnFondImage.addEventListener('click', () => choisirModeFond('image'));
+
+function appliquerCouleurFond(hex){
+  couleurFond = hex;
+  entreeCouleurFond.value = hex;
+  entreeHexFond.value = hex.toUpperCase();
+  if (modeFond === 'couleur') redessinerResultat();
+}
+entreeCouleurFond.addEventListener('input', () => appliquerCouleurFond(entreeCouleurFond.value));
+entreeHexFond.addEventListener('change', () => {
+  let v = entreeHexFond.value.trim();
+  if (!v.startsWith('#')) v = '#' + v;
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) appliquerCouleurFond(v);
+  else entreeHexFond.value = couleurFond;
+});
+
+btnChoisirFondImage.addEventListener('click', () => champFondImage.click());
+champFondImage.addEventListener('change', () => {
+  const fichier = champFondImage.files[0];
+  if (!fichier) return;
+  const url = URL.createObjectURL(fichier);
+  const img = new Image();
+  img.onload = () => {
+    imageFond = img;
+    nomImageFond.textContent = fichier.name;
+    if (modeFond === 'image') redessinerResultat();
+  };
+  img.src = url;
+});
+
+// --- Onglets Photo Quadreti ---
+const ongletMosaique = document.getElementById('ongletMosaique');
+const ongletPanneauMosaique = document.getElementById('ongletPanneauMosaique');
+const BOUTONS_ONGLETS = {detourer: ongletDetourer, fond: ongletFond, rotation: ongletRotation, rogner: ongletRogner, reglages: ongletReglages, filtres: ongletFiltres, mosaique: ongletMosaique};
+const PANNEAUX_ONGLETS = {detourer: ongletPanneauDetourer, fond: ongletPanneauFond, rotation: ongletPanneauRotation, rogner: ongletPanneauRogner, reglages: ongletPanneauReglages, filtres: ongletPanneauFiltres, mosaique: ongletPanneauMosaique};
+
+function choisirOnglet(nom){
+  ongletActif = nom;
+  Object.values(BOUTONS_ONGLETS).forEach(b => b.classList.remove('actif'));
+  Object.values(PANNEAUX_ONGLETS).forEach(p => p.classList.remove('ouvert'));
+  BOUTONS_ONGLETS[nom].classList.add('actif');
+  PANNEAUX_ONGLETS[nom].classList.add('ouvert');
+  cadreRognage.style.display = (nom === 'rogner') ? 'block' : 'none';
+  if (nom === 'rogner') ouvrirOngletRognage();
+  if (nom === 'reglages') synchroniserReglagesUI();
+  if (nom === 'filtres') rafraichirVignettesFiltres();
+  if (nom === 'mosaique') majMesureMur();
+}
+function fermerPopovers(){
+  ongletActif = null;
+  Object.values(BOUTONS_ONGLETS).forEach(b => b.classList.remove('actif'));
+  Object.values(PANNEAUX_ONGLETS).forEach(p => p.classList.remove('ouvert'));
+  cadreRognage.style.display = 'none';
+}
+function basculerOnglet(nom){
+  if (ongletActif === nom) fermerPopovers();
+  else choisirOnglet(nom);
+}
+ongletDetourer.addEventListener('click', () => basculerOnglet('detourer'));
+ongletFond.addEventListener('click', () => basculerOnglet('fond'));
+ongletRotation.addEventListener('click', () => basculerOnglet('rotation'));
+ongletRogner.addEventListener('click', () => basculerOnglet('rogner'));
+ongletReglages.addEventListener('click', () => basculerOnglet('reglages'));
+ongletFiltres.addEventListener('click', () => basculerOnglet('filtres'));
+ongletMosaique.addEventListener('click', () => basculerOnglet('mosaique'));
+
+// --- Reglages (luminosite/contraste/saturation/N&B), non destructif ---
+function synchroniserReglagesUI(){
+  const item = elements[indexActif];
+  const r = item ? item.reglages : { luminosite: 0, contraste: 0, saturation: 0, noirEtBlanc: false };
+  if (typeof synchroniserRedressement === 'function') synchroniserRedressement(); /* 13/09 : l angle suit la photo active */
+  curseurLuminosite.value = r.luminosite;
+  curseurContraste.value = r.contraste;
+  curseurSaturation.value = r.saturation;
+  caseNoirEtBlanc.checked = r.noirEtBlanc;
+  valLuminosite.textContent = r.luminosite;
+  valContraste.textContent = r.contraste;
+  valSaturation.textContent = r.saturation;
+}
+function reglerChamp(champ, curseur, affichage){
+  let valeurAvant = null;
+  curseur.addEventListener('pointerdown', () => {
+    const item = elements[indexActif];
+    valeurAvant = item ? item.reglages[champ] : null;
+  });
+  curseur.addEventListener('input', () => {
+    const item = elements[indexActif];
+    if (!item) return;
+    item.reglages[champ] = Number(curseur.value);
+    affichage.textContent = curseur.value;
+    redessinerResultat();
+  });
+  curseur.addEventListener('change', () => {
+    const item = elements[indexActif];
+    if (!item || valeurAvant === null) return;
+    const avant = valeurAvant, apres = item.reglages[champ];
+    function appliquer(valeur){
+      item.reglages[champ] = valeur;
+      if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+      else { synchroniserReglagesUI(); redessinerResultat(); }
+    }
+    if (avant !== apres) pousserHistoriqueGlobal(appliquer, avant, apres);
+    valeurAvant = null;
+  });
+}
+reglerChamp('luminosite', curseurLuminosite, valLuminosite);
+reglerChamp('contraste', curseurContraste, valContraste);
+reglerChamp('saturation', curseurSaturation, valSaturation);
+caseNoirEtBlanc.addEventListener('change', () => {
+  const item = elements[indexActif];
+  if (!item) return;
+  const avant = !caseNoirEtBlanc.checked, apres = caseNoirEtBlanc.checked;
+  function appliquer(valeur){
+    item.reglages.noirEtBlanc = valeur;
+    if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+    else { synchroniserReglagesUI(); redessinerResultat(); }
+  }
+  appliquer(apres);
+  pousserHistoriqueGlobal(appliquer, avant, apres);
+});
+btnReinitialiserReglages.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item) return;
+  const avant = { luminosite: item.reglages.luminosite, contraste: item.reglages.contraste, saturation: item.reglages.saturation, noirEtBlanc: item.reglages.noirEtBlanc };
+  const apres = { luminosite: 0, contraste: 0, saturation: 0, noirEtBlanc: false };
+  function appliquer(valeurs){
+    Object.assign(item.reglages, valeurs);
+    if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+    else { synchroniserReglagesUI(); redessinerResultat(); }
+  }
+  appliquer(apres);
+  pousserHistoriqueGlobal(appliquer, avant, apres);
+});
+
+// --- Rogner ---
+function ouvrirOngletRognage(){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  if (!item.cadreRognage){
+    const marge = 0.1;
+    item.cadreRognage = {
+      x: Math.round(item.largeurNative * marge),
+      y: Math.round(item.hauteurNative * marge),
+      w: Math.round(item.largeurNative * (1 - 2 * marge)),
+      h: Math.round(item.hauteurNative * (1 - 2 * marge))
+    };
+  }
+  btnAnnulerRognage.disabled = !item.avantRognage;
+  positionnerCadreRognage();
+}
+
+function positionnerCadreRognage(){
+  const item = elements[indexActif];
+  if (!item || !item.cadreRognage) return;
+  const rectCanevas = canevasResultat.getBoundingClientRect();
+  const rectConteneur = zoneCanevas.getBoundingClientRect();
+  const echelle = rectCanevas.width / item.largeurNative;
+  const decalX = (rectCanevas.left - rectConteneur.left) + zoneCanevas.scrollLeft;
+  const decalY = (rectCanevas.top - rectConteneur.top) + zoneCanevas.scrollTop;
+  const c = item.cadreRognage;
+  cadreRognage.style.left = (decalX + c.x * echelle) + 'px';
+  cadreRognage.style.top = (decalY + c.y * echelle) + 'px';
+  cadreRognage.style.width = (c.w * echelle) + 'px';
+  cadreRognage.style.height = (c.h * echelle) + 'px';
+}
+
+optionsRatio.querySelectorAll('.btn-ratio').forEach(b => {
+  b.addEventListener('click', () => {
+    optionsRatio.querySelectorAll('.btn-ratio').forEach(x => x.classList.remove('actif'));
+    b.classList.add('actif');
+    const val = b.dataset.ratio;
+    ratioActif = val === 'libre' ? 'libre' : (() => {
+      const [w, h] = val.split(':').map(Number);
+      return { w, h };
+    })();
+    const item = elements[indexActif];
+    if (!item || !item.cadreRognage) return;
+    if (ratioActif !== 'libre'){
+      const c = item.cadreRognage;
+      const cx = c.x + c.w / 2, cy = c.y + c.h / 2;
+      let w = c.w, h = w * (ratioActif.h / ratioActif.w);
+      if (h > item.hauteurNative){ h = item.hauteurNative; w = h * (ratioActif.w / ratioActif.h); }
+      if (w > item.largeurNative){ w = item.largeurNative; h = w * (ratioActif.h / ratioActif.w); }
+      let x = cx - w / 2, y = cy - h / 2;
+      x = Math.min(Math.max(0, x), item.largeurNative - w);
+      y = Math.min(Math.max(0, y), item.hauteurNative - h);
+      item.cadreRognage = { x, y, w, h };
+      positionnerCadreRognage();
+    }
+  });
+});
+
+cadreRognage.addEventListener('pointerdown', e => {
+  const item = elements[indexActif];
+  if (!item || !item.cadreRognage) return;
+  const cible = e.target.dataset && e.target.dataset.poignee;
+  rognagePointeur = {
+    mode: cible || 'deplacer',
+    depart: { x: e.clientX, y: e.clientY },
+    rectDepart: Object.assign({}, item.cadreRognage)
+  };
+  e.stopPropagation();
+});
+window.addEventListener('pointermove', e => {
+  if (!rognagePointeur) return;
+  // Seuil : un simple clic (quasi zero mouvement) ne redimensionne/deplace pas le cadre.
+  if (Math.hypot(e.clientX - rognagePointeur.depart.x, e.clientY - rognagePointeur.depart.y) < 4) return;
+  const item = elements[indexActif];
+  if (!item) return;
+  const rectCanevas = canevasResultat.getBoundingClientRect();
+  const echelle = item.largeurNative / rectCanevas.width;
+  const dx = (e.clientX - rognagePointeur.depart.x) * echelle;
+  const dy = (e.clientY - rognagePointeur.depart.y) * echelle;
+  const d = rognagePointeur.rectDepart;
+  let c = Object.assign({}, d);
+
+  if (rognagePointeur.mode === 'deplacer'){
+    c.x = Math.min(Math.max(0, d.x + dx), item.largeurNative - d.w);
+    c.y = Math.min(Math.max(0, d.y + dy), item.hauteurNative - d.h);
+  } else {
+    let x0 = d.x, y0 = d.y, x1 = d.x + d.w, y1 = d.y + d.h;
+    if (rognagePointeur.mode === 'hg'){ x0 += dx; y0 += dy; }
+    if (rognagePointeur.mode === 'hd'){ x1 += dx; y0 += dy; }
+    if (rognagePointeur.mode === 'bg'){ x0 += dx; y1 += dy; }
+    if (rognagePointeur.mode === 'bd'){ x1 += dx; y1 += dy; }
+    x0 = Math.max(0, Math.min(x0, x1 - 20));
+    y0 = Math.max(0, Math.min(y0, y1 - 20));
+    x1 = Math.min(item.largeurNative, Math.max(x1, x0 + 20));
+    y1 = Math.min(item.hauteurNative, Math.max(y1, y0 + 20));
+    if (ratioActif !== 'libre'){
+      const w = x1 - x0;
+      const h = w * (ratioActif.h / ratioActif.w);
+      if (rognagePointeur.mode === 'hg' || rognagePointeur.mode === 'hd') y0 = y1 - h; else y1 = y0 + h;
+    }
+    c = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  }
+  item.cadreRognage = c;
+  positionnerCadreRognage();
+});
+window.addEventListener('pointerup', () => { rognagePointeur = null; });
+
+function capturerSnapshotItem(item){
+  return { largeurNative: item.largeurNative, hauteurNative: item.hauteurNative, pixelsOriginaux: item.pixelsOriginaux, masqueAlpha: item.masqueAlpha, angleRedresse: item.angleRedresse || 0 };
+}
+function appliquerSnapshotItem(item, snapshot){
+  Object.assign(item, snapshot);
+  item.historiqueMasques = [];
+  item.cadreRognage = null;
+  sourceMiniaturesFiltres = null;
+  majBoutonAnnuler();
+  zoomActuel = 1;
+  if (elements[indexActif] !== item){ chargerElementActif(elements.indexOf(item)); return; }
+  canevasOriginal.width = item.largeurNative; canevasOriginal.height = item.hauteurNative;
+  canevasOriginal.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+  canevasResultat.width = item.largeurNative; canevasResultat.height = item.hauteurNative;
+  calculerEchelleBase();
+  appliquerZoom();
+  redessinerResultat();
+  infoPhoto.textContent = item.nom + ' — ' + item.largeurNative + ' × ' + item.hauteurNative + ' px';
+  redessinerRail();
+}
+
+btnAppliquerRognage.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item || !item.cadreRognage || item.statut !== 'pret') return;
+  const c = item.cadreRognage;
+  const x = Math.round(c.x), y = Math.round(c.y), w = Math.round(c.w), h = Math.round(c.h);
+  if (w < 10 || h < 10) return;
+
+  const avantRognage = capturerSnapshotItem(item);
+  item.avantRognage = avantRognage;
+
+  const cSource = document.createElement('canvas');
+  cSource.width = item.largeurNative; cSource.height = item.hauteurNative;
+  cSource.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+  const cRogne = document.createElement('canvas');
+  cRogne.width = w; cRogne.height = h;
+  cRogne.getContext('2d').drawImage(cSource, -x, -y);
+  const nouveauxPixels = cRogne.getContext('2d').getImageData(0, 0, w, h);
+
+  const nouveauMasque = new Uint8ClampedArray(w * h);
+  for (let py = 0; py < h; py++){
+    for (let px = 0; px < w; px++){
+      const srcIdx = (y + py) * item.largeurNative + (x + px);
+      nouveauMasque[py * w + px] = item.masqueAlpha[srcIdx];
+    }
+  }
+
+  item.pixelsOriginaux = nouveauxPixels;
+  item.masqueAlpha = nouveauMasque;
+  item.largeurNative = w;
+  item.hauteurNative = h;
+  item.historiqueMasques = [];
+  item.cadreRognage = null;
+  sourceMiniaturesFiltres = null;
+  majBoutonAnnuler();
+  btnAnnulerRognage.disabled = false;
+  zoomActuel = 1;
+
+  const apresRognage = capturerSnapshotItem(item);
+  pousserHistoriqueGlobal(snap => appliquerSnapshotItem(item, snap), avantRognage, apresRognage);
+
+  canevasOriginal.width = w; canevasOriginal.height = h;
+  canevasOriginal.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+  canevasResultat.width = w; canevasResultat.height = h;
+  calculerEchelleBase();
+  appliquerZoom();
+  redessinerResultat();
+  ouvrirOngletRognage();
+  infoPhoto.textContent = item.nom + ' — ' + w + ' × ' + h + ' px';
+  redessinerRail();
+});
+
+btnAnnulerRognage.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item || !item.avantRognage) return;
+  appliquerSnapshotItem(item, item.avantRognage);
+  item.avantRognage = null;
+  btnAnnulerRognage.disabled = true;
+  ouvrirOngletRognage();
+});
+
+// --- Redressement (13/09) ---
+/* Le curseur ne touche pas aux pixels : il pose un angle, et la composition s en charge. L historique n est pousse qu au relachement,
+   sinon chaque pixel parcouru par le curseur ferait une etape a annuler. */
+function afficherAngle(deg){
+  if (valeurRedresse) valeurRedresse.textContent = (deg > 0 ? '+' : '') + String(deg).replace('.0', '') + '°';
+}
+function poserRedressement(deg){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  item.angleRedresse = deg;
+  afficherAngle(deg);
+  redessinerResultat();
+}
+function synchroniserRedressement(){
+  const item = elements[indexActif];
+  const deg = (item && item.angleRedresse) || 0;
+  if (curseurRedresse) curseurRedresse.value = deg;
+  if (valeurRedresse) valeurRedresse.textContent = (deg > 0 ? '+' : '') + deg.toFixed(1).replace('.0', '') + '°';
+}
+/* Meme contrat que les curseurs de reglage : on retient la valeur d avant au premier mouvement, et on n inscrit l etape dans
+   l historique qu au relachement — sinon chaque pixel parcouru par le curseur ferait une etape a annuler. */
+let angleAvant = null;
+function inscrireAngle(avant, apres){
+  if (avant === apres) return;
+  const item = elements[indexActif];
+  function appliquer(valeur){
+    item.angleRedresse = valeur;
+    if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+    else { synchroniserRedressement(); redessinerResultat(); }
+  }
+  pousserHistoriqueGlobal(appliquer, avant, apres);
+}
+if (curseurRedresse){
+  curseurRedresse.addEventListener('input', function(){
+    const item = elements[indexActif];
+    if (item && angleAvant === null) angleAvant = item.angleRedresse || 0;
+    poserRedressement(parseFloat(this.value));
+  });
+  curseurRedresse.addEventListener('change', function(){
+    const item = elements[indexActif];
+    if (item && angleAvant !== null) inscrireAngle(angleAvant, item.angleRedresse);
+    angleAvant = null;
+  });
+}
+if (btnRedresseZero) btnRedresseZero.addEventListener('click', function(){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  const avant = item.angleRedresse || 0;
+  if (curseurRedresse) curseurRedresse.value = 0;
+  poserRedressement(0);
+  inscrireAngle(avant, 0);
+});
+
+// --- Rotation & symetrie ---
+function appliquerTransform(type){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  const avant = capturerSnapshotItem(item);
+  const l = item.largeurNative, h = item.hauteurNative;
+
+  const cSource = document.createElement('canvas');
+  cSource.width = l; cSource.height = h;
+  cSource.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+
+  const masqueImg = new ImageData(l, h);
+  for (let i = 0; i < l * h; i++) masqueImg.data[i * 4 + 3] = item.masqueAlpha[i];
+  const cMasqueSrc = document.createElement('canvas');
+  cMasqueSrc.width = l; cMasqueSrc.height = h;
+  cMasqueSrc.getContext('2d').putImageData(masqueImg, 0, 0);
+
+  const permute = (type === 'rotate-cw' || type === 'rotate-ccw');
+
+  function transformerCanvas(source){
+    const cible = document.createElement('canvas');
+    cible.width = permute ? h : l;
+    cible.height = permute ? l : h;
+    const ctx = cible.getContext('2d');
+    ctx.translate(cible.width / 2, cible.height / 2);
+    if (type === 'rotate-cw') ctx.rotate(Math.PI / 2);
+    else if (type === 'rotate-ccw') ctx.rotate(-Math.PI / 2);
+    else if (type === 'flip-h') ctx.scale(-1, 1);
+    else if (type === 'flip-v') ctx.scale(1, -1);
+    ctx.drawImage(source, -l / 2, -h / 2);
+    return ctx.getImageData(0, 0, cible.width, cible.height);
+  }
+
+  const nouvellesPixels = transformerCanvas(cSource);
+  const nouvelleMasqueImg = transformerCanvas(cMasqueSrc);
+  const nl2 = nouvellesPixels.width, nh2 = nouvellesPixels.height;
+  const nouveauMasque = new Uint8ClampedArray(nl2 * nh2);
+  for (let i = 0; i < nouveauMasque.length; i++) nouveauMasque[i] = nouvelleMasqueImg.data[i * 4 + 3];
+
+  item.pixelsOriginaux = nouvellesPixels;
+  item.masqueAlpha = nouveauMasque;
+  item.largeurNative = nl2;
+  item.hauteurNative = nh2;
+  item.historiqueMasques = [];
+  item.cadreRognage = null;
+  item.avantRognage = null;
+  btnAnnulerRognage.disabled = true;
+  sourceMiniaturesFiltres = null;
+  majBoutonAnnuler();
+  zoomActuel = 1;
+
+  const apres = capturerSnapshotItem(item);
+  pousserHistoriqueGlobal(snap => appliquerSnapshotItem(item, snap), avant, apres);
+
+  canevasOriginal.width = nl2; canevasOriginal.height = nh2;
+  canevasOriginal.getContext('2d').putImageData(item.pixelsOriginaux, 0, 0);
+  canevasResultat.width = nl2; canevasResultat.height = nh2;
+  calculerEchelleBase();
+  appliquerZoom();
+  redessinerResultat();
+  infoPhoto.textContent = item.nom + ' — ' + nl2 + ' × ' + nh2 + ' px';
+  redessinerRail();
+}
+btnPivoterGauche.addEventListener('click', () => appliquerTransform('rotate-ccw'));
+btnPivoterDroite.addEventListener('click', () => appliquerTransform('rotate-cw'));
+btnMiroirH.addEventListener('click', () => appliquerTransform('flip-h'));
+btnMiroirV.addEventListener('click', () => appliquerTransform('flip-v'));
+
+// --- Filtres (carrousels de presets nommes + duotone personnalisable) ---
+const CATEGORIES_FILTRES = [
+  { id:'naturel', nom:'Naturel', filtres:[
+    { id:'doux', nom:'Doux', l:0, c:-5, s:5 },
+    { id:'clair', nom:'Clair', l:10, c:0, s:5 },
+    { id:'frais', nom:'Frais', l:0, c:5, s:-10, teinte:-6 },
+    { id:'neutre', nom:'Neutre', l:0, c:0, s:0 },
+    { id:'eclat', nom:'Éclat', l:6, c:10, s:10 },
+    { id:'pur', nom:'Pur', l:4, c:6, s:-4 }
+  ]},
+  { id:'chaleureux', nom:'Chaleureux', filtres:[
+    { id:'terracotta', nom:'Terracotta', l:2, c:8, s:12, teinte:8, sepia:20 },
+    { id:'miel', nom:'Miel', l:8, c:4, s:15, teinte:10, sepia:25 },
+    { id:'kraft', nom:'Kraft', l:0, c:6, s:-10, teinte:6, sepia:35 },
+    { id:'ambre', nom:'Ambré', l:5, c:10, s:18, teinte:12, sepia:30 },
+    { id:'cuivre', nom:'Cuivre', l:-3, c:12, s:10, teinte:15, sepia:40 },
+    { id:'automne', nom:'Automne', l:0, c:8, s:5, teinte:18, sepia:45 }
+  ]},
+  { id:'doux-cat', nom:'Doux', filtres:[
+    { id:'brume', nom:'Brume', l:8, c:-15, s:-15 },
+    { id:'coton', nom:'Coton', l:12, c:-10, s:-20, sepia:5 },
+    { id:'perle', nom:'Perle', l:6, c:-8, s:-10, teinte:-4 },
+    { id:'ivoire', nom:'Ivoire', l:10, c:-5, s:-25, teinte:4, sepia:10 },
+    { id:'duvet', nom:'Duvet', l:14, c:-18, s:-18 },
+    { id:'nuage', nom:'Nuage', l:9, c:-12, s:-12, teinte:-8 }
+  ]},
+  { id:'vintage', nom:'Vintage', filtres:[
+    { id:'polaroid', nom:'Polaroid', l:5, c:-8, s:-20, teinte:6, sepia:35 },
+    { id:'sepia-v', nom:'Sépia', l:0, c:5, s:-40, sepia:70 },
+    { id:'pellicule', nom:'Pellicule', l:-3, c:12, s:-15, teinte:-5, sepia:20 },
+    { id:'grain', nom:'Grain', l:-5, c:15, s:-10, sepia:15 },
+    { id:'retro', nom:'Rétro', l:3, c:-5, s:-30, teinte:10, sepia:45 },
+    { id:'poussiere', nom:'Poussière', l:8, c:-10, s:-35, teinte:5, sepia:30 }
+  ]},
+  { id:'nb', nom:'Noir et blanc', filtres:[
+    { id:'classique-nb', nom:'Classique', l:0, c:5, s:0, nb:true },
+    { id:'contraste-nb', nom:'Contraste', l:0, c:30, s:0, nb:true },
+    { id:'argentique', nom:'Argentique', l:5, c:15, s:0, sepia:8, nb:true },
+    { id:'charbon', nom:'Charbon', l:-8, c:25, s:0, nb:true },
+    { id:'encre', nom:'Encre', l:-12, c:35, s:0, nb:true },
+    { id:'doux-nb', nom:'Doux N&B', l:10, c:-10, s:0, nb:true }
+  ]},
+  { id:'pop', nom:'Couleur pop', filtres:[
+    { id:'vif', nom:'Vif', l:0, c:15, s:45 },
+    { id:'neon', nom:'Néon', l:5, c:25, s:60, teinte:-10 },
+    { id:'tropical', nom:'Tropical', l:8, c:10, s:50, teinte:-20 },
+    { id:'amethyste', nom:'Améthyste', l:0, c:15, s:40, teinte:40 },
+    { id:'corail-vif', nom:'Corail vif', l:5, c:15, s:55, teinte:15 },
+    { id:'electrique', nom:'Électrique', l:-5, c:30, s:55, teinte:-30 }
+  ]}
+];
+
+const DUOTONS = [
+  { id:'cerise', nom:'Cerise', ombre:'#3B0B14', clair:'#FFD1DC' },
+  { id:'prune', nom:'Prune', ombre:'#2A0E3D', clair:'#E7C8FF' },
+  { id:'ocean', nom:'Océan', ombre:'#04263B', clair:'#BFEFFF' },
+  { id:'emeraude', nom:'Émeraude', ombre:'#052E24', clair:'#C8FFE8' },
+  { id:'moutarde', nom:'Moutarde', ombre:'#3B2E05', clair:'#FFEFB0' },
+  { id:'ambre-d', nom:'Ambre', ombre:'#3B1C05', clair:'#FFD9A0' },
+  { id:'rose', nom:'Rose', ombre:'#3B0524', clair:'#FFD6EE' },
+  { id:'lavande', nom:'Lavande', ombre:'#1C0E3B', clair:'#DCD3FF' },
+  { id:'sepia-d', nom:'Sépia', ombre:'#2B1C10', clair:'#F1E0C2' },
+  { id:'ardoise', nom:'Ardoise', ombre:'#12181F', clair:'#DDE5EC' }
+];
+
+let sourceMiniaturesFiltres = null; // {canvas, itemId} -- cache de la vignette de base (photo actuelle, decoupee, sans filtre)
+
+function clonerReglages(r){
+  return {
+    luminosite:r.luminosite, contraste:r.contraste, saturation:r.saturation, noirEtBlanc:r.noirEtBlanc,
+    teinte:r.teinte, sepia:r.sepia, filtrePreset:r.filtrePreset,
+    duotone: r.duotone ? Object.assign({}, r.duotone) : null
+  };
+}
+function appliquerReglagesAvecUndo(item, nouveaux){
+  const avant = clonerReglages(item.reglages);
+  Object.assign(item.reglages, nouveaux);
+  const apres = clonerReglages(item.reglages);
+  function appliquer(snapshot){
+    item.reglages = snapshot;
+    if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+    else {
+      redessinerResultat();
+      rafraichirVignettesFiltres();
+      if (ongletActif === 'reglages') synchroniserReglagesUI();
+    }
+  }
+  pousserHistoriqueGlobal(appliquer, avant, apres);
+}
+
+function envelopperCarrousel(rangee){
+  const conteneur = document.createElement('div');
+  conteneur.className = 'carrousel-conteneur';
+  const flecheGauche = document.createElement('button');
+  flecheGauche.className = 'fleche-carrousel';
+  flecheGauche.type = 'button';
+  flecheGauche.title = 'Précédent';
+  flecheGauche.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+  flecheGauche.addEventListener('click', () => rangee.scrollBy({left:-220, behavior:'smooth'}));
+  const flecheDroite = document.createElement('button');
+  flecheDroite.className = 'fleche-carrousel';
+  flecheDroite.type = 'button';
+  flecheDroite.title = 'Suivant';
+  flecheDroite.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+  flecheDroite.addEventListener('click', () => rangee.scrollBy({left:220, behavior:'smooth'}));
+  conteneur.appendChild(flecheGauche);
+  conteneur.appendChild(rangee);
+  conteneur.appendChild(flecheDroite);
+  return conteneur;
+}
+
+function construireCarrousels(){
+  conteneurCategoriesFiltres.innerHTML = '';
+  CATEGORIES_FILTRES.forEach(cat => {
+    const bloc = document.createElement('div');
+    bloc.className = 'categorie-filtres';
+    const titre = document.createElement('h4');
+    titre.textContent = cat.nom;
+    bloc.appendChild(titre);
+    const rangee = document.createElement('div');
+    rangee.className = 'carrousel-filtres';
+    rangee.dataset.categorie = cat.id;
+
+    const carteAucun = creerCarteFiltre('aucun', 'Original', () => {
+      const item = elements[indexActif];
+      if (!item) return;
+      const p = document.getElementById('panneauDuotonePerso');
+      if (p) p.classList.remove('visible');
+      appliquerReglagesAvecUndo(item, {filtrePreset:null, duotone:null, teinte:0, sepia:0, noirEtBlanc:false});
+      redessinerResultat();
+      rafraichirVignettesFiltres();
+    });
+    rangee.appendChild(carteAucun);
+
+    cat.filtres.forEach(f => {
+      const carte = creerCarteFiltre(f.id, f.nom, () => {
+        const item = elements[indexActif];
+        if (!item) return;
+        const p = document.getElementById('panneauDuotonePerso');
+        if (p) p.classList.remove('visible');
+        appliquerReglagesAvecUndo(item, {
+          filtrePreset: f.id, luminosite: f.l || 0, contraste: f.c || 0, saturation: f.s || 0,
+          teinte: f.teinte || 0, sepia: f.sepia || 0, noirEtBlanc: !!f.nb, duotone: null
+        });
+        redessinerResultat();
+        rafraichirVignettesFiltres();
+        if (ongletActif === 'reglages') synchroniserReglagesUI();
+      });
+      rangee.appendChild(carte);
+    });
+    bloc.appendChild(envelopperCarrousel(rangee));
+    conteneurCategoriesFiltres.appendChild(bloc);
+  });
+
+  // Categorie Duochromie (duoton presets + carte Personnalise)
+  const blocDuo = document.createElement('div');
+  blocDuo.className = 'categorie-filtres';
+  const titreDuo = document.createElement('h4');
+  titreDuo.textContent = 'Duochromie';
+  blocDuo.appendChild(titreDuo);
+  const rangeeDuo = document.createElement('div');
+  rangeeDuo.className = 'carrousel-filtres';
+  rangeeDuo.dataset.categorie = 'duochromie';
+
+  const cartePerso = creerCarteFiltre('perso', 'Personnalisé', () => {
+    const item = elements[indexActif];
+    if (!item) return;
+    const nouveauDuotone = item.reglages.duotone || { ombre:'#1e2b35', clair:'#f4ded2', intensite:100 } /* 13/09 : bleu de marque + orange pale, etait kraft */;
+    appliquerReglagesAvecUndo(item, {duotone: nouveauDuotone, filtrePreset: null});
+    synchroniserPanneauDuotonePerso();
+    panneauDuotonePerso.classList.add('visible');
+    redessinerResultat();
+    rafraichirVignettesFiltres();
+  });
+  cartePerso.classList.add('perso');
+  rangeeDuo.appendChild(cartePerso);
+
+  DUOTONS.forEach(dt => {
+    const carte = creerCarteFiltre(dt.id, dt.nom, () => {
+      const item = elements[indexActif];
+      if (!item) return;
+      appliquerReglagesAvecUndo(item, {duotone: { ombre: dt.ombre, clair: dt.clair, intensite: 100 }, filtrePreset: null});
+      panneauDuotonePerso.classList.remove('visible');
+      redessinerResultat();
+      rafraichirVignettesFiltres();
+    });
+    rangeeDuo.appendChild(carte);
+  });
+  blocDuo.appendChild(envelopperCarrousel(rangeeDuo));
+
+  const panneauDuotonePerso = document.createElement('div');
+  panneauDuotonePerso.className = 'panneau-duotone-perso';
+  panneauDuotonePerso.id = 'panneauDuotonePerso';
+  panneauDuotonePerso.innerHTML =
+    '<span class="champ-couleur-duotone">Ombres <input type="color" id="coulOmbreDuotone"><input type="text" id="hexOmbreDuotone" maxlength="7" spellcheck="false"></span>' +
+    '<span class="champ-couleur-duotone">Tons clairs <input type="color" id="coulClairDuotone"><input type="text" id="hexClairDuotone" maxlength="7" spellcheck="false"></span>' +
+    '<span class="champ-intensite-duotone">Intensité <input type="range" id="curseurIntensiteDuotone" min="0" max="100" value="100"><span id="valIntensiteDuotone">100</span></span>';
+  blocDuo.appendChild(panneauDuotonePerso);
+  conteneurCategoriesFiltres.appendChild(blocDuo);
+
+  const coulOmbreDuotone = panneauDuotonePerso.querySelector('#coulOmbreDuotone');
+  const hexOmbreDuotone = panneauDuotonePerso.querySelector('#hexOmbreDuotone');
+  const coulClairDuotone = panneauDuotonePerso.querySelector('#coulClairDuotone');
+  const hexClairDuotone = panneauDuotonePerso.querySelector('#hexClairDuotone');
+  const curseurIntensiteDuotone = panneauDuotonePerso.querySelector('#curseurIntensiteDuotone');
+  const valIntensiteDuotone = panneauDuotonePerso.querySelector('#valIntensiteDuotone');
+
+  function majDuotonePerso(){
+    const item = elements[indexActif];
+    if (!item || !item.reglages.duotone) return;
+    item.reglages.duotone.ombre = coulOmbreDuotone.value;
+    item.reglages.duotone.clair = coulClairDuotone.value;
+    item.reglages.duotone.intensite = Number(curseurIntensiteDuotone.value);
+    hexOmbreDuotone.value = coulOmbreDuotone.value.toUpperCase();
+    hexClairDuotone.value = coulClairDuotone.value.toUpperCase();
+    valIntensiteDuotone.textContent = curseurIntensiteDuotone.value;
+    redessinerResultat();
+  }
+  coulOmbreDuotone.addEventListener('input', majDuotonePerso);
+  coulClairDuotone.addEventListener('input', majDuotonePerso);
+  curseurIntensiteDuotone.addEventListener('input', majDuotonePerso);
+  hexOmbreDuotone.addEventListener('change', () => {
+    let v = hexOmbreDuotone.value.trim(); if (!v.startsWith('#')) v = '#' + v;
+    if (/^#[0-9a-fA-F]{6}$/.test(v)){ coulOmbreDuotone.value = v; majDuotonePerso(); }
+  });
+  hexClairDuotone.addEventListener('change', () => {
+    let v = hexClairDuotone.value.trim(); if (!v.startsWith('#')) v = '#' + v;
+    if (/^#[0-9a-fA-F]{6}$/.test(v)){ coulClairDuotone.value = v; majDuotonePerso(); }
+  });
+
+  window.synchroniserPanneauDuotonePerso = function(){
+    const item = elements[indexActif];
+    if (!item || !item.reglages.duotone) return;
+    coulOmbreDuotone.value = item.reglages.duotone.ombre;
+    coulClairDuotone.value = item.reglages.duotone.clair;
+    curseurIntensiteDuotone.value = item.reglages.duotone.intensite;
+    hexOmbreDuotone.value = item.reglages.duotone.ombre.toUpperCase();
+    hexClairDuotone.value = item.reglages.duotone.clair.toUpperCase();
+    valIntensiteDuotone.textContent = item.reglages.duotone.intensite;
+  };
+}
+function synchroniserPanneauDuotonePerso(){ if (window.synchroniserPanneauDuotonePerso) window.synchroniserPanneauDuotonePerso(); }
+
+function creerCarteFiltre(id, nom, onClick){
+  const bouton = document.createElement('button');
+  bouton.className = 'carte-filtre';
+  bouton.dataset.filtreId = id;
+  const canevas = document.createElement('canvas');
+  canevas.width = 84; canevas.height = 84;
+  const etiquette = document.createElement('span');
+  etiquette.textContent = nom;
+  bouton.appendChild(canevas);
+  bouton.appendChild(etiquette);
+  bouton.addEventListener('click', onClick);
+  return bouton;
+}
+
+function preparerSourceMiniature(item){
+  if (sourceMiniaturesFiltres && sourceMiniaturesFiltres.itemId === item.id) return sourceMiniaturesFiltres.canvas;
+  const l = item.largeurNative, h = item.hauteurNative;
+  const cote = Math.min(l, h);
+  const sx = (l - cote) / 2, sy = (h - cote) / 2;
+  const sortie = new ImageData(l, h);
+  const px = item.pixelsOriginaux.data, mq = item.masqueAlpha;
+  for (let i = 0; i < l * h; i++){
+    sortie.data[i*4] = px[i*4]; sortie.data[i*4+1] = px[i*4+1]; sortie.data[i*4+2] = px[i*4+2]; sortie.data[i*4+3] = mq[i];
+  }
+  const cComplet = document.createElement('canvas');
+  cComplet.width = l; cComplet.height = h;
+  cComplet.getContext('2d').putImageData(sortie, 0, 0);
+
+  const cMini = document.createElement('canvas');
+  cMini.width = 84; cMini.height = 84;
+  const ctxMini = cMini.getContext('2d');
+  ctxMini.fillStyle = '#EDEDED';
+  ctxMini.fillRect(0, 0, 84, 84);
+  ctxMini.drawImage(cComplet, sx, sy, cote, cote, 0, 0, 84, 84);
+  sourceMiniaturesFiltres = { canvas: cMini, itemId: item.id };
+  return cMini;
+}
+
+function rafraichirVignettesFiltres(){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  if (!conteneurCategoriesFiltres.children.length) construireCarrousels();
+  const source = preparerSourceMiniature(item);
+
+  conteneurCategoriesFiltres.querySelectorAll('.carte-filtre').forEach(carte => {
+    const id = carte.dataset.filtreId;
+    const canevas = carte.querySelector('canvas');
+    const ctx = canevas.getContext('2d');
+    ctx.clearRect(0, 0, 84, 84);
+
+    if (id === 'aucun'){
+      ctx.drawImage(source, 0, 0);
+      carte.classList.toggle('actif', !item.reglages.filtrePreset && !item.reglages.duotone);
+      return;
+    }
+    if (id === 'perso'){
+      ctx.filter = 'none';
+      ctx.fillStyle = '#1e2b35'; /* 13/09 : bleu de marque */
+      ctx.fillRect(0, 0, 84, 84);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(28, 42); ctx.lineTo(38, 52); ctx.lineTo(58, 30); ctx.stroke();
+      const estPerso = !!(item.reglages.duotone && !DUOTONS.some(d => d.ombre === item.reglages.duotone.ombre && d.clair === item.reglages.duotone.clair));
+      carte.classList.toggle('actif', estPerso);
+      return;
+    }
+    const duo = DUOTONS.find(d => d.id === id);
+    if (duo){
+      ctx.filter = 'none';
+      ctx.drawImage(source, 0, 0);
+      const donnees = ctx.getImageData(0, 0, 84, 84);
+      appliquerDuotone(donnees, { ombre: duo.ombre, clair: duo.clair, intensite: 100 });
+      ctx.putImageData(donnees, 0, 0);
+      carte.classList.toggle('actif', !!(item.reglages.duotone && item.reglages.duotone.ombre === duo.ombre && item.reglages.duotone.clair === duo.clair));
+      return;
+    }
+    let preset = null;
+    CATEGORIES_FILTRES.forEach(cat => { const f = cat.filtres.find(x => x.id === id); if (f) preset = f; });
+    if (preset){
+      ctx.filter = construireFiltreCss({ luminosite: preset.l||0, contraste: preset.c||0, saturation: preset.s||0, teinte: preset.teinte||0, sepia: preset.sepia||0, noirEtBlanc: !!preset.nb });
+      ctx.drawImage(source, 0, 0);
+      ctx.filter = 'none';
+      carte.classList.toggle('actif', item.reglages.filtrePreset === id);
+    }
+  });
+}
+
+btnReinitialiserFiltres.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item) return;
+  const p = document.getElementById('panneauDuotonePerso');
+  if (p) p.classList.remove('visible');
+  appliquerReglagesAvecUndo(item, {filtrePreset:null, duotone:null, teinte:0, sepia:0, noirEtBlanc:false});
+  redessinerResultat();
+  rafraichirVignettesFiltres();
+});
+
+// --- Outils de retouche ---
+function svgCurseur(svg){
+  return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") 11 11, crosshair';
+}
+const CURSEUR_LASSO = svgCurseur('<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><circle cx="11" cy="11" r="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="11" cy="11" r="8" fill="none" stroke="#1e2b35" stroke-width="1.4" stroke-dasharray="3 2.5"/></svg>');
+const CURSEUR_BAGUETTE = svgCurseur('<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><path d="M11 2l1.6 4.8L17 8l-4.4 1.6L11 14l-1.6-4.4L5 8l4.4-1.2z" fill="#d96c2f" stroke="#1e2b35" stroke-width="1.2"/></svg>');
+
+function majCurseurCanevas(){
+  if (outilActif === 'vue'){ canevasResultat.style.cursor = 'default'; return; }
+  if (methodeActive === 'lasso') canevasResultat.style.cursor = CURSEUR_LASSO;
+  else if (methodeActive === 'baguette') canevasResultat.style.cursor = CURSEUR_BAGUETTE;
+  else canevasResultat.style.cursor = 'crosshair';
+}
+
+function choisirOutil(nom){
+  outilActif = nom;
+  [btnVue, btnRestaurer, btnEffacer].forEach(b => b.classList.remove('actif'));
+  ({vue: btnVue, restaurer: btnRestaurer, effacer: btnEffacer}[nom]).classList.add('actif');
+  canevasResultat.classList.toggle('mode-vue', nom === 'vue');
+  curseurBrosse.style.display = 'none';
+  majCurseurCanevas();
+}
+btnVue.addEventListener('click', () => choisirOutil('vue'));
+btnRestaurer.addEventListener('click', () => choisirOutil('restaurer'));
+btnEffacer.addEventListener('click', () => choisirOutil('effacer'));
+
+function choisirMethode(nom){
+  methodeActive = nom;
+  pointsLasso = [];
+  [btnMethodePinceau, btnMethodeLasso, btnMethodeBaguette].forEach(b => b.classList.remove('actif'));
+  ({pinceau: btnMethodePinceau, lasso: btnMethodeLasso, baguette: btnMethodeBaguette}[nom]).classList.add('actif');
+  reglageTaille.style.display = (nom === 'pinceau') ? 'flex' : 'none';
+  reglageTolerance.classList.toggle('visible', nom === 'baguette');
+  curseurBrosse.style.display = 'none';
+  majCurseurCanevas();
+}
+btnMethodePinceau.addEventListener('click', () => choisirMethode('pinceau'));
+btnMethodeLasso.addEventListener('click', () => choisirMethode('lasso'));
+btnMethodeBaguette.addEventListener('click', () => choisirMethode('baguette'));
+
+function coordCanevas(e){
+  const rect = canevasResultat.getBoundingClientRect();
+  const item = elements[indexActif];
+  return {
+    x: (e.clientX - rect.left) * (item.largeurNative / rect.width),
+    y: (e.clientY - rect.top) * (item.hauteurNative / rect.height),
+    rect
+  };
+}
+
+function peindre(item, x, y, rayon, valeur){
+  const l = item.largeurNative, h = item.hauteurNative, mq = item.masqueAlpha;
+  const x0 = Math.max(0, Math.floor(x - rayon));
+  const x1 = Math.min(l - 1, Math.ceil(x + rayon));
+  const y0 = Math.max(0, Math.floor(y - rayon));
+  const y1 = Math.min(h - 1, Math.ceil(y + rayon));
+  const bord = rayon * 0.7;
+  for (let py = y0; py <= y1; py++){
+    for (let px = x0; px <= x1; px++){
+      const d = Math.hypot(px - x, py - y);
+      if (d > rayon) continue;
+      const force = d <= bord ? 1 : 1 - (d - bord) / (rayon - bord);
+      const idx = py * l + px;
+      mq[idx] = mq[idx] + (valeur - mq[idx]) * force;
+    }
+  }
+}
+
+function lassoAppliquer(item, points, valeur){
+  if (points.length < 3) return;
+  const l = item.largeurNative, h = item.hauteurNative;
+  const c = document.createElement('canvas');
+  c.width = l; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+  ctx.closePath();
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  const donnees = ctx.getImageData(0, 0, l, h).data;
+  const mq = item.masqueAlpha;
+  for (let i = 0; i < l * h; i++){
+    if (donnees[i * 4 + 3] > 0) mq[i] = valeur;
+  }
+}
+
+function dessinerApercuLasso(item){
+  redessinerResultat();
+  if (pointsLasso.length < 2) return;
+  const rect = canevasResultat.getBoundingClientRect();
+  const largeurTrait = 2 * (item.largeurNative / rect.width);
+  ctxResultat.save();
+  ctxResultat.strokeStyle = '#d96c2f'; /* 13/09 : orange de marque */
+  ctxResultat.lineWidth = largeurTrait;
+  ctxResultat.setLineDash([largeurTrait * 3, largeurTrait * 2]);
+  ctxResultat.beginPath();
+  ctxResultat.moveTo(pointsLasso[0].x, pointsLasso[0].y);
+  for (let i = 1; i < pointsLasso.length; i++) ctxResultat.lineTo(pointsLasso[i].x, pointsLasso[i].y);
+  ctxResultat.stroke();
+  ctxResultat.restore();
+}
+
+function baguetteAppliquer(item, xClic, yClic, tolerance, valeur){
+  const l = item.largeurNative, h = item.hauteurNative;
+  const x0 = Math.round(xClic), y0 = Math.round(yClic);
+  if (x0 < 0 || x0 >= l || y0 < 0 || y0 >= h) return;
+  const px = item.pixelsOriginaux.data, mq = item.masqueAlpha;
+  const startIdx = y0 * l + x0;
+  const r0 = px[startIdx * 4], g0 = px[startIdx * 4 + 1], b0 = px[startIdx * 4 + 2];
+  const tol2 = tolerance * tolerance * 3;
+  const visite = new Uint8Array(l * h);
+  const pile = [startIdx];
+  visite[startIdx] = 1;
+  while (pile.length){
+    const idx = pile.pop();
+    mq[idx] = valeur;
+    const x = idx % l, y = (idx / l) | 0;
+    const voisins = [];
+    if (x > 0) voisins.push(idx - 1);
+    if (x < l - 1) voisins.push(idx + 1);
+    if (y > 0) voisins.push(idx - l);
+    if (y < h - 1) voisins.push(idx + l);
+    for (const v of voisins){
+      if (visite[v]) continue;
+      visite[v] = 1;
+      const dr = px[v * 4] - r0, dg = px[v * 4 + 1] - g0, db = px[v * 4 + 2] - b0;
+      if (dr * dr + dg * dg + db * db <= tol2) pile.push(v);
+    }
+  }
+}
+
+function majBoutonAnnuler(){
+  const item = elements[indexActif];
+  btnAnnuler.disabled = !item || !item.historiqueMasques.length;
+}
+
+function annulerMasqueItem(item){
+  if (!item || !item.historiqueMasques.length) return;
+  item.masqueAlpha = item.historiqueMasques.pop();
+  majBoutonAnnuler();
+  if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+  else redessinerResultat();
+}
+function appliquerMasqueItem(item, masque){
+  item.masqueAlpha = masque;
+  majBoutonAnnuler();
+  if (elements[indexActif] !== item) chargerElementActif(elements.indexOf(item));
+  else redessinerResultat();
+}
+
+let coupPinceauAvant = null; // {item, masque} captures au pointerdown, pousse au relachement (coup entier)
+
+canevasResultat.addEventListener('pointerdown', e => {
+  const item = elements[indexActif];
+  if (outilActif === 'vue' || !item || item.statut !== 'pret') return;
+  const valeur = outilActif === 'restaurer' ? 255 : 0;
+  const {x, y, rect} = coordCanevas(e);
+
+  if (methodeActive === 'baguette'){
+    const avant = item.masqueAlpha.slice();
+    item.historiqueMasques.push(avant);
+    if (item.historiqueMasques.length > 15) item.historiqueMasques.shift();
+    majBoutonAnnuler();
+    baguetteAppliquer(item, x, y, Number(curseurTolerance.value), valeur);
+    redessinerResultat();
+    pousserHistoriqueGlobal(m => appliquerMasqueItem(item, m), avant, item.masqueAlpha.slice());
+    return;
+  }
+  if (methodeActive === 'lasso'){
+    pointsLasso = [{x, y}];
+    enTrainDePeindre = true;
+    return;
+  }
+  // pinceau
+  const avant = item.masqueAlpha.slice();
+  item.historiqueMasques.push(avant);
+  if (item.historiqueMasques.length > 15) item.historiqueMasques.shift();
+  majBoutonAnnuler();
+  coupPinceauAvant = { item, masque: avant };
+  enTrainDePeindre = true;
+  const rayonNatif = Number(curseurTaille.value) * (item.largeurNative / rect.width);
+  peindre(item, x, y, rayonNatif, valeur);
+  redessinerResultat();
+});
+window.addEventListener('pointermove', e => {
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret' || canevasResultat.style.display === 'none'){ curseurBrosse.style.display = 'none'; return; }
+  const {x, y, rect} = coordCanevas(e);
+  const dansZone = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+  if (dansZone && outilActif !== 'vue' && methodeActive === 'pinceau'){
+    curseurBrosse.style.display = 'block';
+    curseurBrosse.style.width = curseurBrosse.style.height = (Number(curseurTaille.value) * 2) + 'px';
+    curseurBrosse.style.left = (e.clientX - Number(curseurTaille.value)) + 'px';
+    curseurBrosse.style.top = (e.clientY - Number(curseurTaille.value)) + 'px';
+  } else {
+    curseurBrosse.style.display = 'none';
+  }
+  if (!enTrainDePeindre || !dansZone || outilActif === 'vue') return;
+
+  if (methodeActive === 'lasso'){
+    pointsLasso.push({x, y});
+    dessinerApercuLasso(item);
+    return;
+  }
+  if (methodeActive === 'pinceau'){
+    const rayonNatif = Number(curseurTaille.value) * (item.largeurNative / rect.width);
+    peindre(item, x, y, rayonNatif, outilActif === 'restaurer' ? 255 : 0);
+    redessinerResultat();
+  }
+});
+window.addEventListener('pointerup', () => {
+  if (methodeActive === 'lasso' && enTrainDePeindre){
+    const item = elements[indexActif];
+    if (item && pointsLasso.length >= 3){
+      const avant = item.masqueAlpha.slice();
+      item.historiqueMasques.push(avant);
+      if (item.historiqueMasques.length > 15) item.historiqueMasques.shift();
+      majBoutonAnnuler();
+      lassoAppliquer(item, pointsLasso, outilActif === 'restaurer' ? 255 : 0);
+      redessinerResultat();
+      pousserHistoriqueGlobal(m => appliquerMasqueItem(item, m), avant, item.masqueAlpha.slice());
+    }
+    pointsLasso = [];
+  }
+  if (coupPinceauAvant){
+    const { item, masque: avant } = coupPinceauAvant;
+    pousserHistoriqueGlobal(m => appliquerMasqueItem(item, m), avant, item.masqueAlpha.slice());
+    coupPinceauAvant = null;
+  }
+  enTrainDePeindre = false;
+});
+
+btnAnnuler.addEventListener('click', () => annulerMasqueItem(elements[indexActif]));
+
+// Comparer : maintenir pour voir l'original (sans fond applique)
+function afficherOriginal(afficher){
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  if (afficher){
+    ctxResultat.clearRect(0, 0, item.largeurNative, item.hauteurNative);
+    ctxResultat.drawImage(canevasOriginal, 0, 0);
+  } else {
+    redessinerResultat();
+  }
+}
+btnComparer.addEventListener('pointerdown', () => afficherOriginal(true));
+btnComparer.addEventListener('pointerup', () => afficherOriginal(false));
+btnComparer.addEventListener('pointerleave', () => afficherOriginal(false));
+
+btnRecommencer.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  if (!confirm('Relancer la détection automatique sur cette photo ? Vos retouches manuelles seront perdues.')) return;
+  item.statut = 'attente';
+  item.historiqueMasques = [];
+  redessinerRail();
+  lancerFileTraitement();
+});
+
+// --- Retour : referme l'outil ouvert, ne touche jamais aux photos chargees ---
+// --- Retour / Retablir = undo/redo general, toutes photos/outils confondus ---
+// Chaque entree = {appliquer, avant, apres} : appliquer(etat) restitue un etat donne
+// et redessine. Retour appelle appliquer(avant), Retablir appelle appliquer(apres).
+let historiqueGlobal = [];
+let pileRetablir = [];
+function pousserHistoriqueGlobal(appliquer, avant, apres){
+  historiqueGlobal.push({appliquer, avant, apres});
+  pileRetablir = [];
+  if (historiqueGlobal.length > 40) historiqueGlobal.shift();
+  majBoutonsHistorique();
+}
+function majBoutonsHistorique(){
+  btnRetour.disabled = historiqueGlobal.length === 0;
+  btnRetablir.disabled = pileRetablir.length === 0;
+}
+btnRetour.disabled = true;
+btnRetablir.disabled = true;
+btnRetour.addEventListener('click', () => {
+  const e = historiqueGlobal.pop();
+  if (!e) return;
+  e.appliquer(e.avant);
+  pileRetablir.push(e);
+  majBoutonsHistorique();
+});
+btnRetablir.addEventListener('click', () => {
+  const e = pileRetablir.pop();
+  if (!e) return;
+  e.appliquer(e.apres);
+  historiqueGlobal.push(e);
+  majBoutonsHistorique();
+});
+
+// --- Toast de confirmation ---
+let minuteurToast = null;
+function afficherToast(texte){
+  toastTexte.textContent = texte;
+  toast.classList.add('visible');
+  clearTimeout(minuteurToast);
+  minuteurToast = setTimeout(() => toast.classList.remove('visible'), 3200);
+}
+
+// --- Enregistrer dans Mon album photo (meme origine http://localhost:8737) ---
+function ouvrirBaseAlbum(){
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB){ reject(new Error('IndexedDB indisponible')); return; }
+    const requete = indexedDB.open('albumQuadretiFichiers', 1);
+    requete.onupgradeneeded = () => requete.result.createObjectStore('fichiers');
+    requete.onsuccess = () => resolve(requete.result);
+    requete.onerror = () => reject(requete.error);
+  });
+}
+
+async function enregistrerVersAlbum(item){
+  const cTmp = document.createElement('canvas');
+  construireCompositeSur(cTmp.getContext('2d'), item);
+  const blob = await new Promise(res => cTmp.toBlob(res, 'image/png'));
+
+  const fichierId = 'detoure-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+  const db = await ouvrirBaseAlbum();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction('fichiers', 'readwrite');
+    tx.objectStore('fichiers').put(blob, fichierId);
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+
+  const CLE = 'albumQuadretiEtat';
+  let etatAlbum;
+  try { etatAlbum = JSON.parse(localStorage.getItem(CLE)); } catch (e){ etatAlbum = null; }
+  if (!etatAlbum || typeof etatAlbum !== 'object') etatAlbum = {};
+  if (!Array.isArray(etatAlbum.photos)) etatAlbum.photos = [];
+  if (!etatAlbum.mode) etatAlbum.mode = 'grille';
+  if (!etatAlbum.titre) etatAlbum.titre = 'Mon Album Photo';
+  if (!etatAlbum.sousTitre) etatAlbum.sousTitre = 'Album personnel — 100% hors ligne, rien ne quitte cet ordinateur.';
+  if (etatAlbum.photoCouverture === undefined) etatAlbum.photoCouverture = null;
+  if (!etatAlbum.fond) etatAlbum.fond = null;
+  etatAlbum.photos.push({
+    id: 'photo-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+    fichierId: fichierId,
+    legende: item.nom + ' (détouré)',
+    dateAjout: new Date().toISOString()
+  });
+  localStorage.setItem(CLE, JSON.stringify(etatAlbum));
+}
+
+btnEnregistrerAlbum.addEventListener('click', async () => {
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  btnEnregistrerAlbum.disabled = true;
+  try{
+    await enregistrerVersAlbum(item);
+    afficherToast('Enregistré dans Mon album photo');
+  } catch (err){
+    console.error(err);
+    afficherToast('Échec de l\'enregistrement (' + (err.message || err) + ')');
+  } finally {
+    btnEnregistrerAlbum.disabled = false;
+  }
+});
+
+// --- Export ---
+btnTelecharger.addEventListener('click', () => {
+  const item = elements[indexActif];
+  if (!item || item.statut !== 'pret') return;
+  redessinerResultat();
+  canevasResultat.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = item.nom + ' - détouré.png';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, 'image/png');
+});
+
+btnToutTelecharger.addEventListener('click', async () => {
+  const pretes = elements.filter(e => e.statut === 'pret');
+  if (!pretes.length) return;
+  const cTmp = document.createElement('canvas');
+  const ctxTmp = cTmp.getContext('2d');
+  for (const item of pretes){
+    construireCompositeSur(ctxTmp, item);
+    const blob = await new Promise(res => cTmp.toBlob(res, 'image/png'));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = item.nom + ' - détouré.png';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    await new Promise(res => setTimeout(res, 350));
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (indexActif === -1) return;
+  calculerEchelleBase();
+  appliquerZoom();
+});
+zoneCanevas.addEventListener('scroll', () => {
+  if (ongletActif === 'rogner') positionnerCadreRognage();
+});
+</script>
+
+<!-- 13/09 : pied commun du site, meme fichier que partout ailleurs. -->
+<script src="/commun-pied.js"></script>
+
+</body>
+</html>
