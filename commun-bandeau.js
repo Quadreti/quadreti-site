@@ -159,6 +159,9 @@ var QZ_BANDEAU_HTML = (
       '</li>' +
       '<li><a href="/blog/">Blog</a></li>' +
       '<li><a href="/contact.html">Contact</a></li>' +
+      /* 15/09, fondateur : l espace du client en derniere rubrique — la place ou on le cherche. La page existait depuis la
+         veille mais aucun lien du site n y menait : on n y entrait que par le bouton pose dans les apps. */
+      '<li><a href="/mon-espace/">Mon Espace</a></li>' +
     '</ul>' +
   '</nav>' +
   '<div class="qz-nav-voile" id="qzNavVoile"></div>'

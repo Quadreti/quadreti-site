@@ -42,6 +42,9 @@ var QZ_PIED_HTML = (
         /* 13/09, fondateur : « Studio », comme dans le menu du haut — les deux doivent dire la meme chose. */
         '<li><a href="/outils.html">Studio</a></li>' +
         '<li><a href="/blog/">Blog</a></li>' +
+        /* 15/09, fondateur : « Mon Espace » dans le menu ET dans le pied. Ce pied n est pas pilote par le panneau —
+           il se modifie ici, et nulle part ailleurs. */
+        '<li><a href="/mon-espace/">Mon Espace</a></li>' +
       '</ul>' +
     '</nav>' +
 
