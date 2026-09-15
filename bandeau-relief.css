@@ -289,6 +289,10 @@
    Le texte suit le fond : sur le navy, gris pour le courant, #aab2ba pour le secondaire, orange eclairci pour l accent —
    l orange de marque n y passe pas (3,97). Tout est mesure section par section, jamais suppose. */
 .blk.sombre{position:relative;background:#1e2b35;color:#dedede;z-index:0}
+/* 15/09 : TOUTE section qui porte une marche doit etre un repere de position, pas seulement les sombres. Sans ca la marche
+   se cale sur la page : celle de « comment » atterrissait a -44..0, au-dessus du haut du document, donc invisible. Le
+   selecteur passe par l attribut MEME qui declenche la marche — impossible de poser l un en oubliant l autre. */
+.blk[data-marche-haut],.blk[data-marche-bas]{position:relative}
 .blk.sombre h2,.blk.sombre h3{color:#dedede!important}
 .blk.sombre p,.blk.sombre li{color:#aab2ba}
 .blk.sombre .eyebrow{color:#f0a06a!important}   /* 6,85 sur le navy ; le #d96c2f de marque n y donne que 3,97 */
