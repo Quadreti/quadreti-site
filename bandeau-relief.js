@@ -83,7 +83,10 @@
         [false, true].forEach(function (seulLigne) {
           var svg = bordElement(trace, 'qz-marche qz-marche-' + bord + (seulLigne ? ' qb-bord-ligne' : ''), fond, seulLigne);
           /* Miroir : vertical pour la marche du HAUT (le tracé est dessine pour un bord bas), horizontal pour le cote droit. */
-          var sx = (cote === 'droite') ? -1 : 1, sy = (bord === 'haut') ? -1 : 1;
+          /* 15/09 : le miroir vertical etait a l ENVERS. Le trace porte sa matiere SOUS la ligne — il sert normalement de
+             bord HAUT d une bande. Au bas d une section, il faut donc le retourner pour que la couleur se tienne au-dessus
+             du lisere ; en haut, il va tel quel. Constate par le fondateur : le navy pendait sous le lisere. */
+          var sx = (cote === 'droite') ? -1 : 1, sy = (bord === 'bas') ? -1 : 1;
           if (sx < 0 || sy < 0) svg.style.transform = 'scale(' + sx + ',' + sy + ')';
           sec.appendChild(svg);
         });
