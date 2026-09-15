@@ -80,9 +80,9 @@
   .espace-bouton{
     flex:none; background:#dedede; color:#1e2b35; text-decoration:none;
     font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:.04em;
-    padding:11px 20px; border-radius:999px; white-space:nowrap;
+    padding:11px 20px; border-radius:4px; white-space:nowrap;   /* 15/09, fondateur : leger arrondi, jamais la pilule */
   }
-  .espace-bouton:hover, .espace-bouton:focus-visible{ color:#9c4514; }   /* 4,77 sur le gris — l orange de marque n y passe pas (2,54) */
+  .espace-bouton:hover, .espace-bouton:focus-visible{ background:#ffffff; }   /* 15/09 : surbrillance — le fond s eclaircit, comme le bouton principal du site. Texte navy sur blanc : 14,46 */
   @media (max-width:700px){ .espace-bandeau{ flex-direction:column; align-items:flex-start; } }
 
   /* 14/09 : l habillage du prisme vit desormais dans /prisme-outils.css — l accueil s en sert aussi (« le prisme remplace la

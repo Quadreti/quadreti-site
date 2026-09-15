@@ -116,7 +116,9 @@
    boite pleine largeur qui ne ressemble a rien. */
 @media (min-width:901px){
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
-    border:1px solid currentColor;border-radius:999px;padding:7px 15px;margin-left:12px
+    /* 15/09, fondateur : « aucun rectangle arrondi completement ». 4 px, comme tous les boutons d action du site depuis
+       le 11/09 (regle de commun.css, a laquelle ce selecteur echappait). */
+    border:1px solid currentColor;border-radius:4px;padding:7px 15px;margin-left:12px
   }
 }
 /* 15/09, mesure : a 905 px la ligne passait a DEUX lignes alors qu elle en tenait une AVEC huit rubriques. La cause n etait
@@ -139,6 +141,9 @@
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
     background:#1e2b35;border-color:#1e2b35;color:#dedede!important
   }
+  /* 15/09 : la surbrillance du site, c est le fond qui S ECLAIRCIT (le bouton principal passe de #d96c2f a #df824e).
+     Le navy s eclaircit donc vers #2f4150 — texte gris dessus : 7,83. Le texte ne bouge pas : un seul changement par
+     survol se lit mieux que deux. */
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
-  .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{color:#e89a63!important}
+  .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#2f4150;border-color:#2f4150}
 }

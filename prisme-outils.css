@@ -95,7 +95,9 @@
     transform:translateX(-120%) skewX(-18deg); opacity:0;
   }
   .face-lien:hover::after, .face-lien:focus-visible::after{ animation:face-reflet .75s cubic-bezier(.4,0,.2,1) forwards; }
-  .face-lien:hover, .face-lien:focus-visible{ transform:translateY(-1px); box-shadow:inset 1px 1px 0 #ffffff80, inset -1px -1px 0 #00000047, 0 7px 16px #0000004d; }
+  /* 15/09 : le fond s eclaircit au survol, comme tous les boutons d action du site — le reflet seul ne disait pas assez
+     que le bouton repond. #df824e est la valeur de survol du panneau ; l encre y donne 6,35, mieux qu au repos (5,23). */
+  .face-lien:hover, .face-lien:focus-visible{ background:#df824e; transform:translateY(-1px); box-shadow:inset 1px 1px 0 #ffffff80, inset -1px -1px 0 #00000047, 0 7px 16px #0000004d; }
   @keyframes face-reflet{ 0%{ transform:translateX(-120%) skewX(-18deg); opacity:0 } 15%{ opacity:1 } 100%{ transform:translateX(420%) skewX(-18deg); opacity:0 } }
   .face-attente{ margin-top:auto; font-size:12px; color:#6a727b; font-weight:600; }
 
@@ -115,6 +117,7 @@
   }
   /* Les fleches gardent l orange plein : ce sont des COMMANDES, pas des etiquettes. */
   .prisme-fleche{ background:#d96c2f; color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
+  .prisme-fleche:hover, .prisme-fleche:focus-visible{ background:#df824e; }   /* 15/09 : meme surbrillance que partout ailleurs */
   .prisme-fleche::after, .prisme-puces button::after{
     content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
     background:linear-gradient(105deg, #ffffff00 0%, #ffffff8c 50%, #ffffff00 100%);

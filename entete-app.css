@@ -102,8 +102,10 @@
   .qz-header.qz-app.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
     background:#dedede!important;border-color:#dedede!important;color:#1e2b35!important
   }
+  /* Surbrillance : le gris s eclaircit vers le blanc — texte navy dessus, 14,46. Meme geste que sur la barre du site,
+     dans l autre sens. */
   .qz-header.qz-app.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
-  .qz-header.qz-app.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{color:#9c4514!important}
+  .qz-header.qz-app.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#ffffff!important;border-color:#ffffff!important}
 }
 
 /* ---- 14/09 : ecrans tres etroits (sous 375 px) ----
