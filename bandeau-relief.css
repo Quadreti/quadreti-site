@@ -294,7 +294,10 @@
 .blk.sombre .eyebrow{color:#f0a06a!important}   /* 6,85 sur le navy ; le #d96c2f de marque n y donne que 3,97 */
 .blk.sombre b,.blk.sombre strong{color:#dedede}
 /* Les marches : meme mecanique que les bords du bandeau, posees sur la section elle-meme. */
-.qz-marche{position:absolute;left:0;width:100%;display:block;pointer-events:none;height:var(--marche-h,26px)}
+/* 15/09, fondateur : « un decroche plus marque ». La profondeur passe de 26 a 44 px. Le trace est etire verticalement
+   (preserveAspectRatio=none) : la pente devient plus franche en meme temps que la marche se creuse — c est bien la meme
+   main, juste plus affirmee. La valeur reste une variable : elle se regle d un seul endroit pour toutes les sections. */
+.qz-marche{position:absolute;left:0;width:100%;display:block;pointer-events:none;height:var(--marche-h,44px)}
 .qz-marche-haut{bottom:calc(100% - 4px)}
 .qz-marche-bas{top:calc(100% - 4px)}
 .qz-marche.qb-bord-ligne{z-index:5;overflow:visible}
