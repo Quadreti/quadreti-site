@@ -77,7 +77,9 @@
       ['haut', 'bas'].forEach(function (bord) {
         var v = sec.getAttribute('data-marche-' + bord); if (!v) return;
         if (sec.querySelector('.qz-marche-' + bord)) return;
-        var p = v.split(':'), trace = p[0], cote = p[1] || 'gauche';
+        /* 15/09 : `trace:cote[:inverse]`. Le sens vertical se deduit du bord ; « inverse » le retourne, pour alterner
+           l endroit et l envers d une frontiere a l autre (demande du fondateur : « ca creera l effet »). */
+        var p = v.split(':'), trace = p[0], cote = p[1] || 'gauche', inverse = p[2] === 'inverse';
         if (!BORDS[trace]) return;
         /* Le fond d abord, la ligne ensuite et par-dessus : la ligne doit pouvoir deborder du rognage. */
         /* 15/09 : fond peint pour les sections SOMBRES uniquement — ailleurs la marche est une ligne, et rien d autre.
@@ -107,6 +109,7 @@
              bord HAUT d une bande. Au bas d une section, il faut donc le retourner pour que la couleur se tienne au-dessus
              du lisere ; en haut, il va tel quel. Constate par le fondateur : le navy pendait sous le lisere. */
           var sx = (cote === 'droite') ? -1 : 1, sy = (bord === 'bas') ? -1 : 1;
+          if (inverse) sy = -sy;   /* sur une section claire il n y a pas de matiere : seule la ligne bascule */
           if (sx < 0 || sy < 0) svg.style.transform = 'scale(' + sx + ',' + sy + ')';
           sec.appendChild(svg);
         });
