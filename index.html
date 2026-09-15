@@ -452,14 +452,18 @@
 
   /* ===== App / modes ===== */
   .app-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-top:34px; }
+  /* 15/09, fondateur : « carte rectangulaire arrondi leger, navy + texte gris, tesselles en orange Quadreti ».
+     Le rayon quitte la forme tesselle (8/8/8/22) pour les 4 px des boutons du site. */
   .mode{
-    background:#fff; border:1px solid var(--border); border-radius:var(--tess);
-    padding:20px 18px;
+    background:#1e2b35; border:1px solid #1e2b35; border-radius:4px;
+    padding:20px 18px; color:#dedede;
   }
   .mode .sw{ display:flex; gap:4px; margin-bottom:12px; }
-  .mode .sw i{ width:14px; height:14px; border-radius:3px; display:block; }
-  .mode h3{ font-size:15.5px; font-weight:700; margin-bottom:6px; }
-  .mode p{ font-size:13.5px; color:#5a636b; font-style:italic; }
+  /* Les tesselles etaient peintes en style INLINE, avec les teintes kraft (#E2725B, #CBBD93, #556B2F) : seul un
+     !important peut les reprendre. Orange de marque sur le navy : 4,23 — au-dessus du 3:1 des objets graphiques. */
+  .mode .sw i{ width:14px; height:14px; border-radius:3px; display:block; background:#d96c2f!important; }
+  .mode h3{ font-size:15.5px; font-weight:700; margin-bottom:6px; color:#dedede; }   /* 10,75 sur le navy */
+  .mode p{ font-size:13.5px; color:#aab2ba; font-style:italic; }   /* 6,74 */
   .app-cta{ text-align:center; margin-top:34px; }
   .app-reassure{ text-align:center; margin-top:18px; font-size:14.5px; color:#4F5A65; }
   .app-reassure b{ color:var(--charbon); }
@@ -540,10 +544,12 @@
     font-size:14px; font-weight:700; background:#fff; border:1.5px solid var(--border); color:var(--charbon);
     border-radius:99px; padding:8px 18px;
   }
+  /* 15/09, fondateur : cette bande etait en creme #F1ECDD avec un texte #4a4636 — du kraft pur, l identite abandonnee.
+     Navy et gris, comme le reste. 10,75 dans les deux sens. */
   .color-note{
-    background:var(--kraft-soft); padding:26px clamp(20px,6vw,60px); font-size:14.5px; color:#4a4636; text-align:center;
+    background:#1e2b35; padding:26px clamp(20px,6vw,60px); font-size:14.5px; color:#dedede; text-align:center;
   }
-  .color-note b{ color:var(--charbon); }
+  .color-note b{ color:#ffffff; }
 
   /* ===== Scalabilité ===== */
 /* 14/09 : la rangee porte desormais des PHOTOS, plus des grilles de petits carres. Les trois sont recadrees au carre, donc de
@@ -609,7 +615,7 @@
   .cadeau{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; }
   @media (max-width:700px){ .cadeau{ grid-template-columns:1fr; } }
   .gift{
-    background:#fff; border:1px solid var(--border); border-radius:var(--tess); padding:26px 24px;
+    background:#dedede; border:1px solid var(--border); border-radius:var(--tess); padding:26px 24px;   /* 15/09, fondateur : gris et non blanc */
   }
   .gift h3{ font-size:17.5px; font-weight:700; margin-bottom:8px; }
   .gift p{ font-size:14.5px; color:#4a5158; }
@@ -617,11 +623,31 @@
      le jeton texte, calcule par le panneau, donne 6,28. Toujours de l orange, juste assez fonce pour etre un mot. */
   .gift .tagline{ margin-top:12px; font-weight:700; color:var(--qz-terracotta-texte,#9c4514); font-size:14.5px; }
 
+  /* 15/09 : les cartes ci-dessus sont CLAIRES et vivent sur des sections SOMBRES. Le prefixe est .blk.sombre et non .sombre :
+     .sombre .trust-card h3 fait DEUX classes, exactement comme .blk.sombre h3 — a egalite, la feuille injectee, lue apres,
+     l emporte. Il en faut une de plus, pas une de moins. Les regles de section sombre injectees
+     par le panneau (`.blk.sombre p{color:#aab2ba!important}`) y deposaient un gris clair sur un fond clair — ~2,2, c est
+     le defaut que le fondateur a photographie. Trois selecteurs contre deux : a !important egal, c est la specificite qui
+     tranche, pas l ordre des feuilles. */
+  .blk.sombre .trust-card h3, .blk.sombre .gift h3, .blk.sombre .trust-card b, .blk.sombre .gift b{ color:#1e2b35!important; }
+  .blk.sombre .trust-card p, .blk.sombre .gift p, .blk.sombre .trust-card li{ color:#4F5A65!important; }   /* 5,23 sur le gris de la carte */
+  .blk.sombre .gift .tagline{ color:var(--qz-terracotta-texte,#9c4514)!important; }   /* l orange FONCE : la carte est claire, 4,77 */
+
+  /* 15/09 : TROIS regles injectees par le panneau reprenaient la main, toutes calculees quand ces cartes etaient BLANCHES :
+       .step,.reason,.c-form-compact,.gift,.premium,.trust-card{background:#ffffff!important}
+       .mode p{color:#1e2b35!important}   et   .color-note b{color:#1e2b35!important}
+     Elles tiennent en une classe ; on passe devant avec deux. Le panneau garde la main sur tout le reste — c est bien lui
+     la source des couleurs, on ne lui retire que les quatre cartes dont le fond a ete decide ici, a contre-sens de leur
+     section. */
+  .blk .gift, .blk .trust-card{ background:#dedede!important; }
+  .blk .mode p{ color:#aab2ba!important; }        /* 6,74 sur le navy de la carte */
+  .blk .color-note b{ color:#ffffff!important; }  /* 14,46 sur le navy de la bande */
+
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
   @media (max-width:700px){ .trust{ grid-template-columns:1fr; } }
   .trust-card{
-    background:#fff; border:1px solid var(--border); border-radius:var(--tess);
+    background:#dedede; border:1px solid var(--border); border-radius:var(--tess);   /* 15/09, fondateur : gris et non blanc */
     padding:26px 24px 22px; display:flex; flex-direction:column; gap:14px;
   }
   .trust-head{ display:flex; align-items:center; gap:13px; }
