@@ -96,10 +96,9 @@ var QZ_BANDEAU_HTML = (
       '</span>') +
       '<img class="qz-logo-perso" id="qzLogoPerso" alt="Quadreti">' +
     '</a>' +
-    /* 14/09 : le retour vers l espace du client. Uniquement en app — sur le site, le menu suffit. */
-    (qzApp ? '<a class="qz-espace" href="/mon-espace/" aria-label="Mon Espace Client">' +
-      '<span class="qz-espace-plaque" aria-hidden="true"><i></i><i></i><i></i><i class="qz-espace-o"></i></span>' +
-      '<span class="qz-espace-mot">Mon Espace</span></a>' : '') +
+    /* 14/09 : un bouton « Mon Espace » avait ete pose ici, en dur, pour les apps. 15/09 : RETIRE. « Mon Espace » est
+       devenu une rubrique du menu, que les apps affichent aussi — il y en avait donc deux cote a cote. Un objet, une
+       definition : la rubrique, qui vit dans la base et s inverse selon la barre qui la porte. */
     '<button class="qz-burger" id="qzMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="qzNavPanel">' +
       '<span></span><span></span><span></span>' +
     '</button>' +

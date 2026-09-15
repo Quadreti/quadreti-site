@@ -67,6 +67,24 @@
 
   .icon{ width:20px; height:20px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
+  /* ---- 15/09 : le bandeau « Mon Espace », sous le prisme ----
+     Un filet et de l air, pas une carte : c est une suite de la page, pas un sixieme outil. */
+  #outils-espace{ padding-top:4px; }
+  .espace-bandeau{
+    display:flex; align-items:center; justify-content:space-between; gap:clamp(16px,3vw,40px);
+    border-top:1px solid #33404b; padding-top:24px;
+  }
+  #outils-espace h2{ font-size:clamp(17px,2vw,21px); font-weight:700; margin:0 0 6px; color:#dedede; }   /* 10,75 sur le navy — et un identifiant, sinon le h2,h3{color:#1e2b35} injecte par le panneau le peindrait en navy sur du navy */
+  #outils-espace p{ margin:0; font-size:14px; line-height:1.55; color:#aab2ba; max-width:58ch; }          /* 6,74 */
+  /* « bouton gris sur arriere-plan bleu » : la regle du fondateur, et le meme objet que la pastille des barres. */
+  .espace-bouton{
+    flex:none; background:#dedede; color:#1e2b35; text-decoration:none;
+    font-family:'Jura',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:.04em;
+    padding:11px 20px; border-radius:999px; white-space:nowrap;
+  }
+  .espace-bouton:hover, .espace-bouton:focus-visible{ color:#9c4514; }   /* 4,77 sur le gris — l orange de marque n y passe pas (2,54) */
+  @media (max-width:700px){ .espace-bandeau{ flex-direction:column; align-items:flex-start; } }
+
   /* 14/09 : l habillage du prisme vit desormais dans /prisme-outils.css — l accueil s en sert aussi (« le prisme remplace la
      presentation ancienne »), il ne peut pas exister en deux exemplaires. Seuls les jetons propres a CETTE page restent ici. */
 
@@ -100,6 +118,19 @@
            ecrit au fil de la lecture, exactement ici. -->
       <script src="/prisme-outils.js"></script>
 
+  </div>
+</section>
+
+<!-- ===== 15/09 : ce que les cinq outils fabriquent se range au meme endroit =====
+     Demande du fondateur. Un bandeau et non une sixieme face : « Mon Espace » n est pas un outil, et le prisme est
+     pentagonal. La page s arretait net apres les cartes. -->
+<section class="blk" id="outils-espace">
+  <div class="wrap espace-bandeau rv">
+    <div>
+      <h2>Vos créations vous attendent.</h2>
+      <p>Ce que vous fabriquez ici — un QR, une mosaïque, une photo préparée — se range au même endroit, quel que soit l'outil qui l'a fait.</p>
+    </div>
+    <a class="espace-bouton" href="/mon-espace/">Ouvrir mon espace</a>
   </div>
 </section>
 
