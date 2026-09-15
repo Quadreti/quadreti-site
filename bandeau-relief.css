@@ -304,3 +304,9 @@
 .qz-marche-haut{bottom:100%}
 .qz-marche-bas{top:100%}
 .qz-marche.qb-bord-ligne{z-index:5;overflow:visible}
+/* 15/09 : le calque du FOND deborde lui aussi. Son chemin est ferme bien au-dela de la boite ; en le laissant depasser, la
+   matiere entre DANS la section — navy sur navy, invisible — au lieu de s arreter pile sur son bord. Sans cela les deux
+   fonds se rejoignent sur une frontiere qui ne tombe pas sur un pixel entier et le melange dessine un cheveu : c est la
+   ligne que le fondateur a entouree, apparue quand j ai retire les 4 px de recouvrement pour caler le lisere.
+   Le lisere, lui, ne bouge pas : il reste sur le bord exact. */
+.qz-marche:not(.qb-bord-ligne){overflow:visible}
