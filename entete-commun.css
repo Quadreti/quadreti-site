@@ -125,3 +125,20 @@
 @media (min-width:901px) and (max-width:1100px){
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{padding:6px 9px;margin-left:7px}
 }
+/* 15/09, fondateur (« on ne lui change pas la couleur ? ») : le filet seul ne suffisait pas — meme couleur de texte que les
+   autres rubriques, ca faisait une rubrique encadree, pas une porte. La pastille devient PLEINE, navy, texte gris.
+   C est l inversion que la charte definit deja : barre du site grise a lettres navy, barre des apps navy a lettres grises.
+   Une pastille navy sur la barre grise est cette meme inversion sur un seul element — et le miroir exact du bouton
+   « Mon Espace » dans les apps, ou il est gris sur navy. Les deux bouts du chemin se reconnaissent.
+   Toujours PAS D ORANGE au repos : c est la couleur de « Ouvrir Quadreti Designer », le seul vrai appel a l action.
+   Texte gris sur navy 10,75 ; la pastille se detache de la barre grise a 10,75 aussi.
+   !important sur la couleur : la regle generale du menu en pose un, il faut le meme calibre pour passer devant.
+   Le SURVOL ne peut pas prendre l orange de marque — 4,23 sur le navy, sous le seuil des textes. Il prend l orange eclairci
+   (6,36), le meme que le tiroir mobile sur ce meme fond navy. */
+@media (min-width:901px){
+  .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
+    background:#1e2b35;border-color:#1e2b35;color:#dedede!important
+  }
+  .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
+  .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{color:#e89a63!important}
+}
