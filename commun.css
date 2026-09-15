@@ -264,3 +264,10 @@ footer.qz-footer .qz-copy{
    (Ecwid) force elle-meme ses boutons en pilule avec !important. */
 .cta, .c-submit, .btn-imprimer, .cta-boutique-btn, .tour-btn, .finale button, .pop-nav button, .nav-cta, .mm-cta, .btn,
 #my-store-139886004 .form-control__button, #my-store-139886004 .ec-cart__button button, #my-store-139886004 button.form-control__button{ border-radius:4px !important; }
+
+/* ---- 15/09 : liseré de frontiere entre deux sections CLAIRES ----
+   Demande du fondateur. Les frontieres claire/sombre sont deja portees par un decroche et son liseré ; il ne restait que les
+   frontieres claire/claire, invisibles. Meme trait, meme epaisseur, meme couleur que le liseré du decroche — c est le meme
+   objet, simplement droit.
+   Pas entre `app` et `designer` : le fondateur les lit comme un seul bloc a deux titres, et une ligne les couperait en deux. */
+.blk.frontiere{ border-top:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); }
