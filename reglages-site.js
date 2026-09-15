@@ -507,7 +507,7 @@
       '\n.blk.sombre b,.blk.sombre strong{color:' + couleurLisibleSur(SOMBRE, fond) + '!important}' +
       /* L accent EN TEXTE sur un fond sombre : teinteLisibleSur l ECLAIRCIT au lieu de le foncer — meme geste dans
          l autre sens, et l orange reste de l orange. */
-      '\n.blk.sombre .eyebrow,.blk.sombre a:not([class]){color:' + teinteLisibleSur(SOMBRE, accent) + '!important}';
+      '\n.blk.sombre .eyebrow,.blk.sombre .tagline,.blk.sombre a:not([class]){color:' + teinteLisibleSur(SOMBRE, accent) + '!important}';
 
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
