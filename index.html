@@ -643,6 +643,24 @@
   .blk .mode p{ color:#aab2ba!important; }        /* 6,74 sur le navy de la carte */
   .blk .color-note b{ color:#ffffff!important; }  /* 14,46 sur le navy de la bande */
 
+  /* ---- 15/09 : un titre en carte navy, liseré orange (demande du fondateur) ----
+     La carte sort du bord GAUCHE de la page et s arrete apres le titre. Le liseré ne court que sur les bords LIBRES —
+     haut, droite, bas : a gauche il n y a pas de bord, la carte sort du cadre. Meme grammaire que l onglet de l en-tete.
+     La distance jusqu au bord de la fenetre est reprise en marge negative et rendue en remplissage : le texte ne bouge
+     pas d un pixel. Un debordement a gauche n allonge pas la page, contrairement a un debordement a droite. */
+  .titre-carte{
+    width:fit-content; max-width:100%; box-sizing:border-box;
+    background:#1e2b35; border-radius:0 6px 6px 0;
+    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;
+    padding:18px 30px 20px calc(max(0px, (100vw - 1340px) / 2) + 26px);   /* 26 px et non 34 : le titre doit tomber exactement sur la marge du chapo en dessous */
+    margin:0 0 20px calc(-1 * (max(0px, (100vw - 1340px) / 2) + 26px));
+  }
+  .titre-carte .eyebrow{ color:#f0a06a!important; margin-bottom:8px; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
+  .titre-carte h2{ color:#dedede!important; margin-bottom:0; }           /* 10,75 */
+  /* Sous 820 px la colonne fait toute la largeur : la carte garde son debord mais le texte respire moins, le
+     remplissage se resserre. */
+  @media (max-width:820px){ .titre-carte{ padding-right:20px; padding-left:calc(max(0px, (100vw - 1340px) / 2) + 26px); } }
+
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
   @media (max-width:700px){ .trust{ grid-template-columns:1fr; } }
@@ -925,10 +943,14 @@ document.addEventListener('DOMContentLoaded', function(){
   <div class="wrap">
     <div class="quoi-deux">
       <div>
-    <div class="eyebrow rv">C'est quoi</div>
+    <!-- 15/09, fondateur : le titre passe en carte navy a liseré orange. Le surtitre et le titre forment un seul bloc — la
+         carte les tient ensemble et sort du bord gauche de la page. -->
+    <div class="titre-carte rv">
+    <div class="eyebrow">C'est quoi</div>
     <!-- 14/09, mots du fondateur : « chaque tesselle est un mini cadre ». C est l image qui porte tout le reste — le pele-mele,
          l extension, et le fait qu un logo ou une photo unique y aient leur place autant qu une mosaique. -->
-    <h2 class="rv">Chaque tesselle est un mini cadre.</h2>   <!-- 14/09 : titre repris de la maquette de presentation. L ancien (« Tout ce que le marche vend separement ») etait une comparaison, pas une reponse — or c est la premiere section, elle doit dire ce que c est. La comparaison reste juste en dessous, dans le chapo. -->
+    <h2>Chaque tesselle est un mini cadre.</h2>   <!-- 14/09 : titre repris de la maquette de presentation. L ancien (« Tout ce que le marche vend separement ») etait une comparaison, pas une reponse — or c est la premiere section, elle doit dire ce que c est. La comparaison reste juste en dessous, dans le chapo. -->
+    </div>
     <p class="lead rv">Un multi-cadre qui se clipse au mur : un pêle-mêle qui commence petit et peut devenir très grand. Photos, compositions artistiques, logo, mosaïque à double lecture — <b>tout s'y affiche, et tout se change.</b></p>
     <!-- 14/09 : « chaque tesselle est un mini cadre » etait affirme, puis abandonne aussitot. Ce paragraphe le rend concret — la
          taille, le nombre, et ce que ca permet. Sans lui, l image la plus forte de la page reste une formule. -->
