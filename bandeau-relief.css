@@ -282,3 +282,19 @@
 .qb-diapo-point.qb-actif{background:var(--qz-terracotta,#d96c2f);opacity:1}
 @media (max-width:900px){.qb.qb-dispo-droite .qb-mur.qb-mur-diapo{width:100%}}
 @media (prefers-reduced-motion:reduce){.qb-diapo-img{transition:none}}
+
+/* ---- 15/09 : sections sombres et marches entre sections ----
+   Demande du fondateur : « une section grise, une section bleue, decroche et lisere orange, et ne pas toujours le mettre
+   au meme endroit ». Les tracés sont les siens (BORD 1-2-3) ; seuls le miroir et le choix du tracé changent la position.
+   Le texte suit le fond : sur le navy, gris pour le courant, #aab2ba pour le secondaire, orange eclairci pour l accent —
+   l orange de marque n y passe pas (3,97). Tout est mesure section par section, jamais suppose. */
+.blk.sombre{position:relative;background:#1e2b35;color:#dedede;z-index:0}
+.blk.sombre h2,.blk.sombre h3{color:#dedede!important}
+.blk.sombre p,.blk.sombre li{color:#aab2ba}
+.blk.sombre .eyebrow{color:#f0a06a!important}   /* 6,85 sur le navy ; le #d96c2f de marque n y donne que 3,97 */
+.blk.sombre b,.blk.sombre strong{color:#dedede}
+/* Les marches : meme mecanique que les bords du bandeau, posees sur la section elle-meme. */
+.qz-marche{position:absolute;left:0;width:100%;display:block;pointer-events:none;height:var(--marche-h,26px)}
+.qz-marche-haut{bottom:calc(100% - 4px)}
+.qz-marche-bas{top:calc(100% - 4px)}
+.qz-marche.qb-bord-ligne{z-index:5;overflow:visible}

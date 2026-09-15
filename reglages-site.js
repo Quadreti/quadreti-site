@@ -498,6 +498,17 @@
       css += '\n.mockbtn{border-color:' + hexEnRgba(couleurLisibleSur('#ffffff', texte), 0.3) + '!important}';
     }
 
+    /* 15/09 : les sections sombres de l accueil (.blk.sombre). Ce bloc vient EN DERNIER et porte deux classes : il passe
+       donc devant toutes les regles ci-dessus, calculees pour un fond clair et posees en !important.
+       SOMBRE doit rester egal au fond de .blk.sombre dans bandeau-relief.css — les deux vont ensemble. */
+    var SOMBRE = '#1e2b35';
+    css += '\n.blk.sombre h2,.blk.sombre h3{color:' + couleurLisibleSur(SOMBRE, fond) + '!important}' +
+      '\n.blk.sombre p,.blk.sombre li,.blk.sombre .lead,.blk.sombre figcaption{color:' + grisLisibleSur(SOMBRE) + '!important}' +
+      '\n.blk.sombre b,.blk.sombre strong{color:' + couleurLisibleSur(SOMBRE, fond) + '!important}' +
+      /* L accent EN TEXTE sur un fond sombre : teinteLisibleSur l ECLAIRCIT au lieu de le foncer — meme geste dans
+         l autre sens, et l orange reste de l orange. */
+      '\n.blk.sombre .eyebrow,.blk.sombre a:not([class]){color:' + teinteLisibleSur(SOMBRE, accent) + '!important}';
+
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
   }

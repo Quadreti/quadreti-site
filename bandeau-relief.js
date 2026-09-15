@@ -68,6 +68,29 @@
     if (R.actif) { var ref = trait.cloneNode(false); ref.setAttribute('class', 'qb-bord-reflet'); ref.setAttribute('pathLength', '1000'); var tiret = Math.round((R.longueur || 6) * 10); ref.setAttribute('stroke-dasharray', tiret + ' 2000'); ref.style.setProperty('--reflet-tiret', tiret); ref.style.setProperty('--reflet-duree', (R.duree || 7) + 's'); ref.style.stroke = R.couleur || 'rgba(255,255,255,.75)'; if (R.mode !== 'changement') ref.classList.add('qb-reflet-boucle'); svg.appendChild(ref); }
     return svg;
   }
+  /* 15/09 : les marches entre sections. Une section qui porte `data-marche-haut` / `data-marche-bas` recoit le tracé
+     demandé, peint de SA couleur, avec le lisere sur le bord libre. Valeur attendue : « tracé:cote », ou tracé vaut
+     haut|bas|defile (marche a ~30 %, ~42 %, ~15 % de la largeur) et cote vaut gauche|droite. */
+  function poserMarches() {
+    document.querySelectorAll('[data-marche-haut],[data-marche-bas]').forEach(function (sec) {
+      var fond = getComputedStyle(sec).backgroundColor;
+      ['haut', 'bas'].forEach(function (bord) {
+        var v = sec.getAttribute('data-marche-' + bord); if (!v) return;
+        if (sec.querySelector('.qz-marche-' + bord)) return;
+        var p = v.split(':'), trace = p[0], cote = p[1] || 'gauche';
+        if (!BORDS[trace]) return;
+        /* Le fond d abord, la ligne ensuite et par-dessus : la ligne doit pouvoir deborder du rognage. */
+        [false, true].forEach(function (seulLigne) {
+          var svg = bordElement(trace, 'qz-marche qz-marche-' + bord + (seulLigne ? ' qb-bord-ligne' : ''), fond, seulLigne);
+          /* Miroir : vertical pour la marche du HAUT (le tracé est dessine pour un bord bas), horizontal pour le cote droit. */
+          var sx = (cote === 'droite') ? -1 : 1, sy = (bord === 'haut') ? -1 : 1;
+          if (sx < 0 || sy < 0) svg.style.transform = 'scale(' + sx + ',' + sy + ')';
+          sec.appendChild(svg);
+        });
+      });
+    });
+  }
+
   function poserBords() {
     var L = (REGLAGES.bords && REGLAGES.bords.lisere) || {}; var accent = '#d96c2f';
     try { accent = getComputedStyle(document.documentElement).getPropertyValue('--qz-terracotta').trim() || accent; } catch (e) {}
@@ -77,6 +100,7 @@
     /* 12/09 : l onglet du haut (BORD 1) est dessine par l en-tete commune (commun-bandeau.js), plus par le bandeau */
     var bande = document.querySelector('.qb-gestes'), defile = document.querySelector('.qb-defile');
     poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', navy); poser(defile, 'defile', 'qb-bord-defile-bas', navy);
+    poserMarches();   /* 15/09 : les marches entre sections, memes tracés */
     var dec = (L.reflet && L.reflet.mode !== 'changement' && L.reflet.decalage) || 0; ['qb-bord-haut', 'qb-bord-bas', 'qb-bord-defile-haut', 'qb-bord-defile-bas'].forEach(function (k, i) { var r = document.querySelector('.qb-bord-ligne.' + k + ' .qb-bord-reflet'); if (r) r.style.animationDelay = (i * dec) + 's'; });
   }  var root = document.getElementById('qbBandeau'); if (!root) return;
   /* 12/09 fondateur : au rafraichissement, le navigateur remettait la page a l ancienne position de defilement (milieu de page) ;
