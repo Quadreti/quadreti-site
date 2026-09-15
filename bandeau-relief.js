@@ -427,3 +427,14 @@
     } else setTimeout(partir, 15000);
   });
 })();
+
+/* 15/09 — la vraie largeur VISIBLE de la page, publiee en variable CSS.
+   `100vw` inclut la barre de defilement : tout element qu on veut poser pile au bord gauche de la page en partant du
+   centre (marge negative calculee depuis 100vw) atterrit une demi-barre trop a gauche — mesure a -7,5 px sur un 1600.
+   Invisible tant que l element SORT du cadre ; visible des qu il a un bord dessine, comme la carte de titre. */
+(function () {
+  var r = document.documentElement;
+  var poser = function () { r.style.setProperty('--qz-larg-ecran', r.clientWidth + 'px'); };
+  poser();
+  addEventListener('resize', poser);
+})();
