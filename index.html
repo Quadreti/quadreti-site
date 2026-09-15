@@ -512,7 +512,14 @@
   /* align-items:center et non start : les deux colonnes n auront jamais exactement la meme hauteur — le texte se reflow avec la
      largeur, pas les photos. Centrees, la difference se lit comme une respiration en haut et en bas ; calees en haut, elle se
      lisait comme un trou sous le texte. */
-  .quoi-deux{ display:grid; grid-template-columns:1fr .78fr; gap:clamp(26px,4vw,54px); align-items:center; text-align:left; }
+  /* 15/09, fondateur : « remonte la carte titre a la hauteur de la ligne rouge ainsi que le texte ». En
+     `align-items:center`, la colonne la plus courte se centrait sur la plus longue — 42 px de decalage mesures. Les
+     deux partent maintenant du meme haut. */
+  .quoi-deux{ display:grid; grid-template-columns:1fr .78fr; gap:clamp(26px,4vw,54px); align-items:start; text-align:left; }
+  /* Sans ca, le titre insecable de la carte gonfle sa colonne (mesure : +20 px pris a l image). Un element de grille a
+     une largeur minimale automatique egale a son contenu ; min-width:0 la leve, la colonne garde sa part et la carte
+     deborde proprement dans sa marge de gauche, comme prevu. */
+  .quoi-deux > *{ min-width:0; }
   .quoi-deux .eyebrow, .quoi-deux h2, .quoi-deux .lead{ text-align:left; margin-left:0; margin-right:0; }
   .quoi-deux h2{ max-width:none; }
   .kit{ display:flex; flex-direction:column; gap:22px; margin-top:6px; }
@@ -644,28 +651,38 @@
   .blk .color-note b{ color:#ffffff!important; }  /* 14,46 sur le navy de la bande */
 
   /* ---- 15/09 : un titre en carte navy, liseré orange (demande du fondateur) ----
-     Elle vient se poser CONTRE le bord gauche de la page, bord gauche en demi-cercle (son essai du 15/09), liseré tout
-     autour. La distance du texte jusqu au bord de la fenetre est reprise en marge negative et rendue en remplissage :
+     Elle part du bord gauche de la page, franche et sans liseré de ce cote (ce bord n est pas libre, il sort de la page),
+     et se ferme a l INTERIEUR par un demi-cercle — il n y a donc aucun liseré vertical droit a voir.
+     La distance du texte jusqu au bord de la fenetre est reprise en marge negative et rendue en remplissage :
      le titre tombe exactement sur la marge du chapo en dessous, mesure a 390 / 1280 / 1600. Un debordement a gauche
      n allonge pas la page ; a droite il ajouterait une barre de defilement — d ou les precautions ci-dessous. */
   .titre-carte{
     /* 15/09, essai demande par le fondateur : « bord gauche semi arrondi ». La carte ne sort plus du cadre — elle vient
        se poser CONTRE le bord de la page, coins gauches en demi-cercle. Le liseré fait donc le tour complet : le bord
        gauche est devenu un vrai bord. C est un autre objet que l onglet, qui lui sortait de la page. */
-    width:max-content; max-width:100%; box-sizing:border-box;
-    background:#1e2b35; border-radius:999px 6px 6px 999px;
-    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f);
-    padding:34px 90px 38px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px - var(--qz-lisere-ep,3px));   /* 15/09 : « la carte doit etre plus grande que le texte » — de l air, surtout a droite. A GAUCHE, 26 px et rien d autre : c est ce qui fait tomber le titre exactement sur la marge du chapo en dessous. */
+    width:max-content; box-sizing:border-box;
+    /* Le plafond n est plus 100% (la largeur de la colonne) : c est la colonne, PLUS le debord de gauche, PLUS 40 px des
+       54 px de gouttiere. Sans ces 40 px le compte ne tombe pas : le remplissage gauche et le debord s annulent, il ne
+       reste que la colonne (693 px) pour un titre de 635 px + 3 px de liseré — soit 55 px a droite, quand le demi-cercle
+       en creuse 70. Le titre entrait dans la courbe. La carte s arrete malgre tout a ~24 px de l image. */
+    max-width:calc(100% + max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px + 40px);
+    background:#1e2b35; border-radius:0 999px 999px 0;
+    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;   /* le demi-cercle est passe a l INTERIEUR : plus de liseré vertical droit, c est la courbe qui ferme. A gauche la carte est contre le bord de page : pas de bord libre, pas de liseré. */
+    padding:30px 85px 34px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px);   /* 85 px a droite, et la carte s aplatit un peu : le demi-cercle creuse d une demi-hauteur, moins la carte est haute moins il mange. A GAUCHE, 26 px et rien d autre (plus de bord a retrancher) : c est ce qui fait tomber le titre exactement sur la marge du chapo. */   /* 15/09 : « la carte doit etre plus grande que le texte » — de l air, surtout a droite. A GAUCHE, 26 px et rien d autre : c est ce qui fait tomber le titre exactement sur la marge du chapo en dessous. */
     margin:0 0 20px calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px));
   }
   /* « Tout sur une meme ligne » : le titre cessait de tenir et se cassait en deux. `max-content` sur la carte la laisse
      suivre le titre. Mesure a 1280 et 1600 : elle reste a l interieur de sa colonne, elle n empiete pas sur l image. */
-  @media (min-width:901px){ .titre-carte h2{ white-space:nowrap; } }
+  @media (min-width:1100px){ .titre-carte h2{ white-space:nowrap; } }   /* pas 901 px : c est la que la page passe a deux colonnes, donc la ou la colonne est la plus etroite — mesure, la carte mordait alors sur l image */
   .titre-carte .eyebrow{ color:#f0a06a!important; margin-bottom:8px; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
-  .titre-carte h2{ color:#dedede!important; margin-bottom:0; }           /* 10,75 */
-  /* Sous 820 px : remplissage resserre, et la carte reprend la largeur disponible plutot que celle de son titre — une
-     ligne insecable deborderait a DROITE, et un debordement a droite, lui, ajoute une barre de defilement. */
-  @media (max-width:820px){ .titre-carte{ width:auto; max-width:none; padding:24px 22px 26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px - var(--qz-lisere-ep,3px)); border-radius:60px 6px 6px 60px; } }
+  /* Mesure a 1280 : a 36 px le titre entrait de 12 px dans le demi-cercle — l ecran n est pas assez large pour une seule
+     ligne a cette taille. Le titre de la carte suit donc l ecran un peu plus tot que les autres (2,55vw au lieu de 3,4vw)
+     et retrouve ses 36 px des 1410 px. Ecart invisible a l oeil, et la ligne tient partout au-dessus de 900 px. */
+  .titre-carte h2{ color:#dedede!important; margin-bottom:0; font-size:clamp(24px,2.55vw,36px); }           /* 10,75 */
+  /* Sous 1100 px : remplissage resserre, et la carte reprend la largeur disponible plutot que celle de son titre — le
+     titre n est plus insecable a ces largeurs, et une ligne insecable deborderait a DROITE, ce qui ajoute une barre de
+     defilement (un debordement a gauche, lui, n allonge pas la page). */
+  @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); border-radius:0 60px 60px 0; } }
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
