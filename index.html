@@ -660,7 +660,7 @@
      bloc tombe exactement sur la marge du chapo en dessous. Un debordement a gauche n allonge pas la page ; a droite il
      ajouterait une barre de defilement — d ou les precautions ci-dessous. */
   .titre-carte{
-    width:max-content; box-sizing:border-box;
+    width:max-content; box-sizing:border-box; text-align:left;   /* sept sections sont en .center : la carte ne suit pas leur centrage */
     /* Le plafond n est pas 100% (la largeur de la colonne) : c est la colonne, PLUS le debord de gauche, PLUS 40 px des
        54 px de gouttiere. Sans ces 40 px le compte ne tombe pas : le remplissage gauche et le debord s annulent, il ne
        reste que la largeur de la colonne pour tout tenir. La carte s arrete malgre tout a distance de l image. */
@@ -685,6 +685,27 @@
   /* Sous 1100 px : surtitre et titre reempiles, remplissage resserre, et la carte reprend la largeur disponible plutot que
      celle de son titre — une ligne insecable deborderait a DROITE, ce qui ajoute une barre de defilement. */
   @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); border-radius:0 60px 60px 0; } }
+
+  /* 15/09, fondateur : « on alterne a partir de la 1ere gauche droite gauche droite ». Le miroir exact de la carte :
+     le demi-cercle, le debord et l ordre surtitre/titre basculent ensemble. La carte vient buter EXACTEMENT sur le bord
+     droit de la page — pas un pixel au-dela : un debordement a droite, lui, ajoute une barre de defilement. C est pour
+     ce genre de calcul que la vraie largeur visible est publiee dans --qz-larg-ecran (100vw compte la barre). */
+  .titre-carte.droite{
+    margin:0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)) 20px auto;
+    padding:26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 28px 70px;
+    border-radius:999px 0 0 999px;
+    border-left:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-right:none;
+    text-align:right;
+  }
+  @media (min-width:1100px){ .titre-carte.droite{ flex-direction:row-reverse; } }   /* le surtitre au bord de page, le titre contre la courbe : le miroir jusqu au bout */
+  @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 26px 40px; border-radius:60px 0 0 60px; } }
+
+  /* Sur une section navy, la carte s inverse — sa regle a lui : bouton bleu sur fond gris, bouton gris sur fond bleu.
+     Trois classes contre deux : le panneau injecte `.blk.sombre h2{...!important}`, il faut le battre a la specificite.
+     10,75 dans les deux sens ; le surtitre prend l orange FONCE, celui des fonds clairs (4,77). */
+  .blk.sombre .titre-carte{ background:#dedede; }
+  .blk.sombre .titre-carte h2{ color:#1e2b35!important; }
+  .blk.sombre .titre-carte .eyebrow{ color:var(--qz-terracotta-texte,#9c4514)!important; }
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
@@ -1033,8 +1054,10 @@ document.addEventListener('DOMContentLoaded', function(){
      L alternance gris / navy des sections reste : la frontiere, c est le changement de couleur, sans ligne. -->
 <section class="blk" id="comment">
   <div class="wrap">
-    <div class="eyebrow rv">Comment ça marche</div>
-    <h2 class="rv">Trois gestes. Pas de colle, pas d'outils, pas d'attente.</h2>
+    <div class="titre-carte droite rv">
+    <div class="eyebrow">Comment ça marche</div>
+    <h2>Trois gestes. Pas de colle, pas d'outils, pas d'attente.</h2>
+    </div>
     <!-- 14/09 : ce chapo redisait le contenu du kit, montre en photo dans la section juste au-dessus. Il dit maintenant ce que les
          trois gestes PRODUISENT — c est la question que pose la section precedente. -->
     <p class="lead rv">De l'écran au mur en trois gestes, sans colle et sans temps de séchage. Ce qui prend le plus de temps, c'est de choisir le visuel.</p>
@@ -1111,8 +1134,10 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Avec quoi on compose : le Designer, puis les quatre autres outils du Studio. -->
 <section class="blk alt" id="app">
   <div class="wrap center">
-    <div class="eyebrow rv">L'écosystème Quadreti</div>
-    <h2 class="rv">Cinq outils, un seul mur.</h2>
+    <div class="titre-carte rv">
+    <div class="eyebrow">L'écosystème Quadreti</div>
+    <h2>Cinq outils, un seul mur.</h2>
+    </div>
     <p class="lead rv">Le visuel se compose à l'écran, chez vous, gratuitement. Chaque outil fait une chose et la fait bien — et tout finit sur la même grille.</p>
 
     <!-- 14/09, demande du fondateur : « le prisme remplace la presentation ancienne ». Les cartes qui detaillaient les cinq MODES
@@ -1131,8 +1156,10 @@ document.addEventListener('DOMContentLoaded', function(){
      les cinq modes. Placee juste apres l ecosysteme : on dit d abord qu il y a cinq outils, puis on ouvre le principal. -->
 <section class="blk" id="designer">
   <div class="wrap center">
-    <div class="eyebrow rv">Quadreti Designer</div>
-    <h2 class="rv">Tout ce que vous pouvez en faire.</h2>
+    <div class="titre-carte droite rv">
+    <div class="eyebrow">Quadreti Designer</div>
+    <h2>Tout ce que vous pouvez en faire.</h2>
+    </div>
     <p class="lead rv">Cinq façons de composer, du motif de couleurs à la photo mosaïque à double lecture. Vous choisissez, Quadreti Designer compose — aucun talent requis.</p>
 
     <div class="app-grid">
@@ -1199,8 +1226,10 @@ document.addEventListener('DOMContentLoaded', function(){
   <div class="wrap">
     <div class="deux-col">
       <div>
-        <div class="eyebrow rv">Le résultat</div>
-        <h2 class="rv">Le même mur, transformé.</h2>
+        <div class="titre-carte rv">
+        <div class="eyebrow">Le résultat</div>
+        <h2>Le même mur, transformé.</h2>
+        </div>
         <!-- 14/09 : ce chapo n etait qu un mode d emploi du curseur. Il dit maintenant ce que la demonstration prouve ; le mode d
              emploi tient en quatre mots a la fin. -->
         <p class="lead rv" style="margin:0 0 22px">La grille ne bouge plus. C'est ce qu'on y affiche qui change — en quelques minutes, autant de fois que vous voulez. <b>Faites glisser le curseur.</b></p>
@@ -1253,8 +1282,10 @@ document.addEventListener('DOMContentLoaded', function(){
      differents et deux cotes opposes — c est la variation demandee (« un coup a gauche, un coup a droite »). -->
 <section class="blk sombre" id="grandir">
   <div class="wrap center">
-    <div class="eyebrow rv">Votre mur grandit avec vous</div>
-    <h2 class="rv">Commencez petit. Le mur suivra.</h2>
+    <div class="titre-carte droite rv">
+    <div class="eyebrow">Votre mur grandit avec vous</div>
+    <h2>Commencez petit. Le mur suivra.</h2>
+    </div>
     <!-- 14/09 : le mot du fondateur — « un pele-mele qui peut devenir tres grand ». C est exactement ce que cette section raconte. -->
     <p class="lead rv">Un carreau aujourd'hui, un pêle-mêle entier quand vous voudrez : les carreaux s'accolent sans rupture visible, de 20 × 20 cm à 100 × 100 cm et au-delà.</p>
 
@@ -1286,8 +1317,10 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Le prix. Il arrive en 6e position au lieu de la 8e. -->
 <section class="blk alt" id="gamme">
   <div class="wrap center">
-    <div class="eyebrow rv">La gamme</div>
-    <h2 class="rv">La seule décision qui n'est pas définitive : la taille.</h2>
+    <div class="titre-carte rv">
+    <div class="eyebrow">La gamme</div>
+    <h2>La seule décision qui n'est pas définitive : la taille.</h2>
+    </div>
     <p class="lead rv">Chaque kit contient la grille, les tesselles, les étuis et la feuille prédécoupée à imprimer chez vous.</p>
 
     <div class="gamme">
@@ -1337,8 +1370,10 @@ document.addEventListener('DOMContentLoaded', function(){
      43 % depuis la gauche en bas. -->
 <section class="blk sombre" id="cadeau">
   <div class="wrap center">
-    <div class="eyebrow rv">À offrir</div>
-    <h2 class="rv">Un cadeau qui continue.</h2>
+    <div class="titre-carte droite rv">
+    <div class="eyebrow">À offrir</div>
+    <h2>Un cadeau qui continue.</h2>
+    </div>
     <div class="cadeau">
       <div class="gift rv">
         <h3>Offrez le kit</h3>
@@ -1358,8 +1393,10 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Les questions qui restent. -->
 <section class="blk alt" id="faq">
   <div class="wrap center">
-    <div class="eyebrow rv">Questions fréquentes</div>
-    <h2 class="rv">Tout ce que vous vous demandez.</h2>
+    <div class="titre-carte rv">
+    <div class="eyebrow">Questions fréquentes</div>
+    <h2>Tout ce que vous vous demandez.</h2>
+    </div>
     <div class="faq rv">
       <div class="qa">
         <button class="q">Je n'ai pas d'imprimante, je fais comment ?</button>
@@ -1392,8 +1429,10 @@ document.addEventListener('DOMContentLoaded', function(){
      la droite en haut, 32 % depuis la gauche en bas. -->
 <section class="blk sombre" id="livraison">
   <div class="wrap center">
-    <div class="eyebrow rv">Livraison &amp; paiement</div>
-    <h2 class="rv">Commandez en confiance.</h2>
+    <div class="titre-carte droite rv">
+    <div class="eyebrow">Livraison &amp; paiement</div>
+    <h2>Commandez en confiance.</h2>
+    </div>
     <p class="lead rv" style="margin:0 auto;">Préparé dans notre atelier, expédié en point relais près de chez vous, réglé en toute sécurité.</p>
 
     <div class="trust rv">
