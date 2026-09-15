@@ -137,6 +137,12 @@ footer.qz-footer{
    fonce sur gris. --qz-pied-titre porte cette bascule a lui seul : il sert aux titres de colonnes, au naming, aux tesselles du Q,
    aux liens et au copyright. */
 :root{--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:#9c4514;--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:22px}
+/* 15/09, fondateur : le pied passe au NAVY, mais sur l ACCUEIL SEULEMENT. Ailleurs il reste gris — la decision du 14/09
+   « pour tous les bas de page » tient partout ailleurs. La page d accueil porte deja html.qz-accueil (pose par
+   qzEnteteInit) : trois jetons suffisent a basculer la feuille, le panneau recalcule le reste de son cote.
+   L orange en TEXTE change avec le fond : #9c4514 est fait pour le gris (4,77) et ne vaut que 2,3 sur le navy ; #e89a63
+   y donne 6,36. */
+html.qz-accueil{--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:#e89a63}
 .qz-pied3{
   width:100%; box-sizing:border-box;
   padding:30px 36px 38px;

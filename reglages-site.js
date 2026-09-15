@@ -509,6 +509,19 @@
          l autre sens, et l orange reste de l orange. */
       '\n.blk.sombre .eyebrow,.blk.sombre .tagline,.blk.sombre a:not([class]){color:' + teinteLisibleSur(SOMBRE, accent) + '!important}';
 
+    /* 15/09 : le pied de l ACCUEIL est navy (voir html.qz-accueil dans commun.css). Les dix couleurs de pied calculees
+       plus haut le sont contre `fondBandeau`, c est-a-dire le gris : elles seraient fausses ici. On les recalcule contre
+       le navy et on les porte par html.qz-accueil, qui bat les precedentes a specificite superieure. */
+    var PIED_ACCUEIL = '#1e2b35';
+    var texteSurPiedAccueil = couleurLisibleSur(PIED_ACCUEIL, fond);
+    css += '\nhtml.qz-accueil .qz-basdepage .qz-wordmark-img,html.qz-accueil .qz-baseline{color:' + texteSurPiedAccueil + '}' +
+      '\nhtml.qz-accueil .qz-basdepage .qz-qlogo i.t{background:' + texteSurPiedAccueil + '}' +
+      '\nhtml.qz-accueil .qz-coltitre{color:' + texteSurPiedAccueil + '}' +
+      '\nhtml.qz-accueil .qz-pied-infos a{color:' + texteSurPiedAccueil + '}' +
+      '\nhtml.qz-accueil .qz-pied-infos a:hover,html.qz-accueil .qz-pied-infos a:focus-visible{color:' + teinteLisibleSur(PIED_ACCUEIL, accent) + '}' +
+      '\nhtml.qz-accueil .qz-reseaux .qz-sub,html.qz-accueil .qz-copy{color:' + grisLisibleSur(PIED_ACCUEIL) + '}' +
+      '\nhtml.qz-accueil .qz-baseline-accent{color:' + teinteLisibleSur(PIED_ACCUEIL, accent) + '}';
+
     injecterStyle('qz-reglages-couleurs', css);
     return palette;
   }
