@@ -80,7 +80,11 @@
         var p = v.split(':'), trace = p[0], cote = p[1] || 'gauche';
         if (!BORDS[trace]) return;
         /* Le fond d abord, la ligne ensuite et par-dessus : la ligne doit pouvoir deborder du rognage. */
-        [false, true].forEach(function (seulLigne) {
+        /* 15/09 : fond peint pour les sections SOMBRES uniquement — ailleurs la marche est une ligne, et rien d autre.
+           La couleur etait lue avant que reglages-site.js ne rende `.blk.alt` transparent : la marche de « app » avait
+           pris un #F5F5F5 qui n existe plus a l ecran. Une couleur lue trop tot est une couleur fausse. */
+        var calques = sec.classList.contains('sombre') ? [false, true] : [true];
+        calques.forEach(function (seulLigne) {
           var svg = bordElement(trace, 'qz-marche qz-marche-' + bord + (seulLigne ? ' qb-bord-ligne' : ''), fond, seulLigne);
           /* 15/09 : SANS le chemin `extra`. Le trace « haut » en porte un — une barre pleine largeur au sommet de sa boite,
              qui sert a peindre le gris de l en-tete au-dessus de l onglet. Peinte ici dans la couleur de la section, elle
