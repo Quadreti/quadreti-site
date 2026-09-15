@@ -94,7 +94,9 @@
           if (!seulLigne) {
             var vb = BORDS[trace].vb, basY = vb[1] + vb[3], gX = vb[0], dX = vb[0] + vb[2];
             var d = svg.querySelector(".qb-bord-fond");
-            if (d) d.setAttribute("d", BORDS[trace].trait + " L" + dX + " " + basY + " L" + gX + " " + basY + " Z");
+            /* On ferme BIEN AU-DELA du bas de la boite : le rognage de la viewBox coupe net et la derniere rangee de
+               pixels reste pleine. Fermer pile sur le bord laisserait un liseré adouci par l anticrenelage. */
+            if (d) d.setAttribute("d", BORDS[trace].trait + " L" + dX + " " + (basY + vb[3]) + " L" + gX + " " + (basY + vb[3]) + " Z");
           }
           /* Miroir : vertical pour la marche du HAUT (le tracé est dessine pour un bord bas), horizontal pour le cote droit. */
           /* 15/09 : le miroir vertical etait a l ENVERS. Le trace porte sa matiere SOUS la ligne — il sert normalement de

@@ -298,6 +298,9 @@
    (preserveAspectRatio=none) : la pente devient plus franche en meme temps que la marche se creuse — c est bien la meme
    main, juste plus affirmee. La valeur reste une variable : elle se regle d un seul endroit pour toutes les sections. */
 .qz-marche{position:absolute;left:0;width:100%;display:block;pointer-events:none;height:var(--marche-h,44px)}
-.qz-marche-haut{bottom:calc(100% - 4px)}
-.qz-marche-bas{top:calc(100% - 4px)}
+/* 15/09 : cale EXACTEMENT sur le bord de la section, sans les 4 px de recouvrement copies des bords du bandeau.
+   Ce debord mettait le lisere 4 px DANS le navy : sur la partie basse du trace il restait une lame de bleu au-dessus de la
+   ligne. Le lisere doit etre le bord, pas une ligne posee dedans. */
+.qz-marche-haut{bottom:100%}
+.qz-marche-bas{top:100%}
 .qz-marche.qb-bord-ligne{z-index:5;overflow:visible}
