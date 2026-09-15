@@ -82,6 +82,20 @@
         /* Le fond d abord, la ligne ensuite et par-dessus : la ligne doit pouvoir deborder du rognage. */
         [false, true].forEach(function (seulLigne) {
           var svg = bordElement(trace, 'qz-marche qz-marche-' + bord + (seulLigne ? ' qb-bord-ligne' : ''), fond, seulLigne);
+          /* 15/09 : SANS le chemin `extra`. Le trace « haut » en porte un — une barre pleine largeur au sommet de sa boite,
+             qui sert a peindre le gris de l en-tete au-dessus de l onglet. Peinte ici dans la couleur de la section, elle
+             posait un liséré de navy AU-DESSUS de la ligne orange. Constate par le fondateur en haut de la section. */
+          /* 15/09 : le remplissage est RECONSTRUIT a partir de la LIGNE, ferme vers le bas de la boite.
+             Les chemins d origine portent, en plus de la marche, les bandes pleines de leur usage d origine — le trace
+             « haut » contient la barre grise de l en-tete, et un chemin `extra` par-dessus. Peintes dans la couleur de la
+             section, elles posaient du navy AU-DESSUS de la ligne orange : c est ce que le fondateur a vu, en bas d abord,
+             puis en haut. Fermer la ligne vers le bas ne garde que la matiere qui touche la section. Vrai pour les trois
+             traces, sans cas particulier. */
+          if (!seulLigne) {
+            var vb = BORDS[trace].vb, basY = vb[1] + vb[3], gX = vb[0], dX = vb[0] + vb[2];
+            var d = svg.querySelector(".qb-bord-fond");
+            if (d) d.setAttribute("d", BORDS[trace].trait + " L" + dX + " " + basY + " L" + gX + " " + basY + " Z");
+          }
           /* Miroir : vertical pour la marche du HAUT (le tracé est dessine pour un bord bas), horizontal pour le cote droit. */
           /* 15/09 : le miroir vertical etait a l ENVERS. Le trace porte sa matiere SOUS la ligne — il sert normalement de
              bord HAUT d une bande. Au bas d une section, il faut donc le retourner pour que la couleur se tienne au-dessus
