@@ -122,25 +122,19 @@ var QZ_BANDEAU_HTML = (
           /* 13/09 fondateur : menu reduit de 8 a 6 rubriques -- FAQ et Livraison rejoignent le sous-menu (a synchroniser avec menu_liens en base) */
           '<li><a href="/index.html#faq">FAQ</a></li>' +
           '<li><a href="/index.html#livraison">Livraison &amp; paiement</a></li>' +
+          /* 15/09, fondateur : Contact quitte la ligne du haut et rejoint ce volet — le groupe exact de la colonne « Aide »
+             du pied de page. Quelqu un qui hesite avant d acheter cherche la, pas dans la barre. */
+          '<li><a href="/contact.html">Contact</a></li>' +
         '</ul>' +
       '</li>' +
       '<li><a href="/boutique/">Boutique</a></li>' +
       /* 13/09, fondateur : la rubrique s appelle « Studio », plus « Nos outils ». L adresse ne change pas — renommer le fichier
          casserait les liens deja publies ; c est le libelle qui change, pas la porte.
-         14/09, fondateur (« et les disposer dans le menu ? ») : les cinq apps sont nommees dans un volet, au lieu d un lien
-         unique vers la page Studio. « Tous les outils » garde l acces a cette page — un item a sous-menu devient un bouton et
-         perd son href, la page serait sinon sortie du menu. Les cinq sont en ligne depuis le 14/09 (QR en dernier). */
-      '<li class="qz-hassub">' +
-        '<button class="qz-subtoggle" aria-expanded="false">Studio <span class="qz-chev">▾</span></button>' +
-          '<ul class="qz-sublist">' +
-            '<li><a href="/outils.html">Tous les outils</a></li>' +
-            '<li><a href="https://designer.quadreti.fr">Quadreti Designer</a></li>' +
-            '<li><a href="/editeur-creatif/">Éditeur Créatif</a></li>' +
-            '<li><a href="/mosaique-creative/">Mosaïque Créative</a></li>' +
-            '<li><a href="https://qr.quadreti.fr">QR Quadreti</a></li>' +
-            '<li><a href="/photo-quadreti/">Photo Quadreti</a></li>' +
-          '</ul>' +
-      '</li>' +
+         15/09 : le volet des cinq apps, ouvert la veille, est REFERME. Il venait d une analogie fausse avec « Detente ».
+         Detente a un sous-menu parce qu aucune page ne reunit les jeux ; Studio A sa page, et le prisme y montre les cinq
+         outils avec image, phrase et statut. Le volet la dupliquait en moins bien et imposait une entree « Tous les outils »
+         qui n existait que pour contourner un detail technique — un item a sous-menu perd son href. */
+      '<li><a href="/outils.html">Studio</a></li>' +
       /* 13/09, demande du fondateur : les jeux et les coloriages quittent la page des outils (« elle n a pas sa place ici ») et
          deviennent une rubrique a part. Ce ne sont pas des outils — ils ne doivent donc pas vivre sous « Studio ».
          Un sous-menu plutot qu un lien : il n existe pas de page qui les reunisse, ils sont chacun a leur adresse. Et un libelle
@@ -158,7 +152,6 @@ var QZ_BANDEAU_HTML = (
           '</ul>' +
       '</li>' +
       '<li><a href="/blog/">Blog</a></li>' +
-      '<li><a href="/contact.html">Contact</a></li>' +
       /* 15/09, fondateur : l espace du client en derniere rubrique — la place ou on le cherche. La page existait depuis la
          veille mais aucun lien du site n y menait : on n y entrait que par le bouton pose dans les apps. */
       '<li><a href="/mon-espace/">Mon Espace</a></li>' +
