@@ -192,7 +192,9 @@
 }
 .bandeau-piste .face::after{ display:none; }   /* le voile qui assombrit les faces de cote n a pas d objet a plat */
 .bandeau-piste .face-visuel{ height:150px; flex:none; min-height:0; }
-.bandeau-piste .face-corps{ padding:16px 18px 18px; }
+/* 15/09, fondateur : « que le texte respire ». Le mode bandeau etait la version SERREE du composant — 16/18/18 contre
+   18/20/20 sur le prisme. Il passe au-dessus : 20/20/22, et la gouttiere de 9 a 12 px. C est de la que vient la hauteur. */
+.bandeau-piste .face-corps{ padding:20px 20px 22px; gap:12px; }
 .bandeau-piste .face-corps h2{ font-size:16px; }
 .bandeau-piste .face-corps p{ font-size:13px; }
 
