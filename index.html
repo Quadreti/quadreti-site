@@ -1026,9 +1026,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ============ 3. COMMENT ============
      14/09 : Comment on s en sert — les trois gestes, une fois qu on sait de quoi il s agit. -->
-<!-- 15/09, fondateur : « un liseré en decroche TOUJOURS ». Le trait droit est abandonne. Sur une section claire le fond de
-     la marche est transparent : seule la LIGNE se dessine, et elle marche. Marche a 43 % depuis la gauche. -->
-<section class="blk" id="comment" data-marche-haut="bas:gauche">
+<!-- 15/09, fondateur : « 2 styles cohabitent graphiquement et la ca risque d etre surcharge. Du coup le style decroche
+     uniquement pour haut et bas de page, et titrage dans carte pour creer des sections visuellement distinctives. »
+     Les sept frontieres decrochees du milieu de page sont donc retirees. Il en reste deux, qui existaient deja : celle
+     du bandeau d accueil (avec sa bande defilante) et celle du pied commun (`.qz-pied-bord-haut`).
+     L alternance gris / navy des sections reste : la frontiere, c est le changement de couleur, sans ligne. -->
+<section class="blk" id="comment">
   <div class="wrap">
     <div class="eyebrow rv">Comment ça marche</div>
     <h2 class="rv">Trois gestes. Pas de colle, pas d'outils, pas d'attente.</h2>
@@ -1108,7 +1111,6 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Avec quoi on compose : le Designer, puis les quatre autres outils du Studio. -->
 <!-- 15/09 : meme frontiere en decroche, mais a 32 % depuis la DROITE — la precedente part de la gauche, les deux voisines
      ne se ressemblent pas. -->
-<section class="blk alt" id="app" data-marche-haut="bas:droite:inverse">   <!-- 15/09 : le MIROIR exact de la frontiere precedente — meme trace, autre cote, et a l envers -->
   <div class="wrap center">
     <div class="eyebrow rv">L'écosystème Quadreti</div>
     <h2 class="rv">Cinq outils, un seul mur.</h2>
@@ -1128,9 +1130,7 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09, demande du fondateur : une section dediee a l outil principal, « pour expliquer l etendue artistique disponible ».
      Elle recupere ce qui decrivait l APP et se trouvait par erreur dans « C est quoi » : les rendus, la note sur la couleur, et
      les cinq modes. Placee juste apres l ecosysteme : on dit d abord qu il y a cinq outils, puis on ouvre le principal. -->
-<!-- 15/09, fondateur : il revient sur sa consigne d une heure plus tot (« ne la sectionne pas ») et demande une frontiere
-     ici. A l endroit, comme celle de « comment » : endroit / envers / endroit sur les trois frontieres claires. -->
-<section class="blk" id="designer" data-marche-haut="haut:gauche">
+<section class="blk" id="designer">
   <div class="wrap center">
     <div class="eyebrow rv">Quadreti Designer</div>
     <h2 class="rv">Tout ce que vous pouvez en faire.</h2>
@@ -1196,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', function(){
      c est la demonstration la plus courte de ce que fait le produit. -->
 <!-- 15/09 : section sombre. 53 mots et trois images — c est le moment ou l on REGARDE. Marches : 43 % depuis la droite en
      haut, 32 % depuis la droite en bas. Les six combinaisons de la page sont toutes differentes. -->
-<section class="blk sombre" id="resultat" data-marche-haut="bas:droite" data-marche-bas="haut:droite">
+<section class="blk sombre" id="resultat">
   <div class="wrap">
     <div class="deux-col">
       <div>
@@ -1252,7 +1252,7 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Quelle taille — la question qui vient juste avant le prix. -->
 <!-- 15/09 : PREMIERE section sombre, posee en demonstration avant d habiller le reste de la page. Deux marches, deux tracés
      differents et deux cotes opposes — c est la variation demandee (« un coup a gauche, un coup a droite »). -->
-<section class="blk sombre" id="grandir" data-marche-haut="haut:gauche" data-marche-bas="defile:droite">
+<section class="blk sombre" id="grandir">
   <div class="wrap center">
     <div class="eyebrow rv">Votre mur grandit avec vous</div>
     <h2 class="rv">Commencez petit. Le mur suivra.</h2>
@@ -1336,7 +1336,7 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : A offrir. -->
 <!-- 15/09 : section sombre. 86 mots, aucune image — une phrase qu on prononce. Marches : 17 % depuis la gauche en haut,
      43 % depuis la gauche en bas. -->
-<section class="blk sombre" id="cadeau" data-marche-haut="defile:gauche" data-marche-bas="bas:gauche">
+<section class="blk sombre" id="cadeau">
   <div class="wrap center">
     <div class="eyebrow rv">À offrir</div>
     <h2 class="rv">Un cadeau qui continue.</h2>
@@ -1391,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- 15/09, fondateur : « Commandez en confiance » passe en navy. Ses deux cartes de reassurance restent blanches — elles
      flottent alors sur le bleu, et leurs textes gardent les couleurs calculees pour un fond blanc. Marches : 17 % depuis
      la droite en haut, 32 % depuis la gauche en bas. -->
-<section class="blk sombre" id="livraison" data-marche-haut="defile:droite" data-marche-bas="haut:gauche">
+<section class="blk sombre" id="livraison">
   <div class="wrap center">
     <div class="eyebrow rv">Livraison &amp; paiement</div>
     <h2 class="rv">Commandez en confiance.</h2>
