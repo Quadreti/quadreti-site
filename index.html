@@ -783,11 +783,11 @@
      La bande n est placee QUE par son numero de colonne ; tout le reste se range tout seul dans la colonne de droite,
      dans l ordre du document (une grille place d abord ce qui est designe, puis le reste dans les cases libres). */
   @media (min-width:1100px){
-    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,.95fr); grid-template-rows:auto auto;
+    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,.95fr);   /* une seule rangee : le duo s arrete apres le titre, la suite reprend toute la largeur */
       gap:18px clamp(24px,4vw,54px); align-items:start; }
     .designer-duo > *{ min-width:0; }
     .designer-duo > .designer-txt{ grid-column:2; }   /* les deux blocs de texte se suivent dans la colonne de droite */
-    .designer-duo > .app-grid{ grid-column:1; grid-row:1 / -1; }   /* la bande tient toute la hauteur, a cote du titre */
+    .designer-duo > .app-grid{ grid-column:1; grid-row:1; }   /* la bande, a cote du titre */
     .designer-duo .lead{ max-width:none; }
     /* La bande : les modes cessent de retomber a la ligne, ils defilent. Elle part du bord GAUCHE de la page et s y
        fait couper net — comme la bande de « L ecosysteme » a droite. */
@@ -1303,7 +1303,7 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
       </div>
     </div>
-    <div class="designer-txt">
+    </div>
 
     <!-- 14/09 : rien ne reliait les cinq modes aux sept rendus annonces juste apres — le lecteur sautait d une liste a l autre.
          Cette phrase fait le pont : ce sont les MEMES modes, regles autrement. -->
@@ -1329,8 +1329,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <p class="app-reassure rv"><b>Vous ne dessinez rien, vous décidez.</b> Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
     <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
-    </div>
-    </div>
   </div>
 
     <!-- 16/09, fondateur : « ca ne tourne pas ». La bande des modes tourne comme celle du Studio, et pour que la boucle
