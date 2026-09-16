@@ -1219,10 +1219,18 @@
          Contrastes sur le kraft : encre 9,59, navy 7,74 — un aplat kraft porte le texte mieux que le gris de page. --- */
   /* body en plus : le panneau pose .finale{background:transparent!important} et sa feuille est lue APRES la notre.
      Troisieme fois aujourd hui que ce piege se referme — a force egale, c est toujours lui qui gagne. */
-  #histoire, #resultat{ background:#CBBD93!important; }
+  /* CHOIX DES SECTIONS, deuxieme correction. « Le resultat » etait un mauvais hote : ses deux photos et son comparateur
+     couvrent 73 % de sa surface, il ne restait du kraft qu un lisere autour — le fondateur ne le voyait pas, et il avait
+     raison. Classement mesure des sections par surface NUE, cartes grises exclues : questions frequentes 91 %, C est quoi
+     89 %, Pour qui 85 %, Comment ca marche 82 %, A propos 81 %, Le resultat 49 %.
+     Retenues : « C est quoi », premiere section et 1014 px de haut, et « A propos », douzieme. Le kraft ouvre et ferme la
+     page, avec dix sections de gris entre les deux. */
+  #histoire, #styles{ background:#CBBD93!important; }
   /* Les legendes sous les photos etaient a #4F5A65 : 3,77 sur le kraft, sous le seuil. Elles suivent les autres textes.
      C est la regle de la journee — un fond change, TOUS les textes poses dessus se recalculent, pas seulement les gros. */
-  #histoire p, #histoire .reinvente, #resultat p, #resultat .lead, #resultat figcaption, #resultat .comparateur-note{ color:#1e2b35!important; }
+  /* Tous les textes poses sur le kraft, pas seulement les gros : dans « C est quoi » les textes du kit sont a #5a636b,
+     soit 3,77 sur ce fond — sous le seuil. Regle de la journee : un fond change, TOUS ses textes se recalculent. */
+  #histoire p, #histoire .reinvente, #styles p, #styles .lead, #styles .kit p, #styles .kit h3{ color:#1e2b35!important; }
 
 
   /* ================= FIN DE L ESSAI 2 ================= */
