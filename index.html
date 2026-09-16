@@ -799,10 +799,18 @@
      La bande n est placee QUE par son numero de colonne ; tout le reste se range tout seul dans la colonne de droite,
      dans l ordre du document (une grille place d abord ce qui est designe, puis le reste dans les cases libres). */
   @media (min-width:1100px){
-    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,1.06fr);   /* une seule rangee : le duo s arrete apres le titre, la suite reprend toute la largeur */
+    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,1.06fr); grid-template-rows:auto auto;   /* deux rangees : la bande et le titre en haut, les deux paragraphes sous la bande */
       gap:18px clamp(24px,4vw,54px); align-items:start; }
     .designer-duo > *{ min-width:0; }
-    .designer-duo > .designer-txt{ grid-column:2; }   /* les deux blocs de texte se suivent dans la colonne de droite */
+    .designer-duo > .designer-txt{ grid-column:2; grid-row:1; }
+    /* ROUGE : les deux paragraphes sous la bande, dans sa colonne, sur l axe de gauche. */
+    .designer-duo > .designer-sous{ grid-column:1; grid-row:2; text-align:left; }
+    .designer-duo > .designer-sous .lead{ margin:0 0 14px; max-width:none; text-align:left; }
+    /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
+       `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
+       droite, comme le titre et le chapo de cette colonne. */
+    .designer-duo .chips{ display:grid; grid-template-columns:max-content; justify-content:end; gap:8px; margin:22px 0 0; }
+    .designer-duo .chip{ text-align:center; }
     .designer-duo > .app-grid{ grid-column:1; grid-row:1; }   /* la bande, a cote du titre */
     .designer-duo .lead{ max-width:none; }
     /* La bande : les modes cessent de retomber a la ligne, ils defilent. Elle part du bord GAUCHE de la page et s y
@@ -1006,7 +1014,12 @@
   }
 
   /* ===== Palette infinie (arrière-plan de l'encart couleur, pleine largeur du site) ===== */
-  .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:38px; width:100%; }
+  /* 16/09, plan du fondateur (jaune) : cet encart passe PLEINE PAGE, coupe par les deux bords. Il vit dans le cadre de
+     texte (1340 px au plus, 26 px de marge) : on lui rend la distance jusqu a chaque bord en marge negative. Un
+     debordement des DEUX cotes ne peut pas allonger la page tant qu il s arrete pile au bord — d ou --qz-larg-ecran,
+     la vraie largeur visible, et non 100vw qui compte la barre de defilement. */
+  .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:38px;
+    width:auto; margin-left:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); margin-right:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }
   /* Retire (28/08, demande fondateur) : le defilement fatiguait les yeux a
      la longue. display:none plutot que suppression du HTML/JS qui le
      peuple -- garde la possibilite de le rallumer facilement plus tard. */
@@ -1318,6 +1331,16 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <p class="lead rv">Cinq façons de composer, du motif de couleurs à la photo mosaïque à double lecture. Vous choisissez, Quadreti Designer compose — aucun talent requis.</p>
 
+      <!-- 16/09, plan du fondateur (bleu) : les pastilles montent ici, sous le chapo, l une en dessous de l autre. -->
+    <div class="chips rv">
+      <span class="chip">Pixel art</span>
+      <span class="chip">Mosaïque</span>
+      <span class="chip">Photo mosaïque</span>
+      <span class="chip">Composition libre</span>
+      <span class="chip">Pointillisme</span>
+      <span class="chip">Peinture</span>
+      <span class="chip">Gravure</span>
+    </div>
     </div>
     <div class="app-grid">
       <div class="modes-piste">
@@ -1348,21 +1371,15 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
       </div>
     </div>
+      <!-- 16/09, plan du fondateur (rouge) : ces deux paragraphes viennent sous la bande des modes, dans sa colonne. -->
+      <div class="designer-sous">
+    <p class="lead rv" style="margin-top:44px">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
+    <p class="lead rv" style="margin-top:10px">Chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
+      </div>
     </div>
 
     <!-- 14/09 : rien ne reliait les cinq modes aux sept rendus annonces juste apres — le lecteur sautait d une liste a l autre.
          Cette phrase fait le pont : ce sont les MEMES modes, regles autrement. -->
-    <p class="lead rv" style="margin-top:44px">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
-    <p class="lead rv" style="margin-top:10px">Chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
-    <div class="chips rv">
-      <span class="chip">Pixel art</span>
-      <span class="chip">Mosaïque</span>
-      <span class="chip">Photo mosaïque</span>
-      <span class="chip">Composition libre</span>
-      <span class="chip">Pointillisme</span>
-      <span class="chip">Peinture</span>
-      <span class="chip">Gravure</span>
-    </div>
 
   <div class="color-note rv">
     <div class="palette-band" aria-hidden="true">
