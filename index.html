@@ -494,6 +494,11 @@
   .app-grid{ margin-top:34px; }
   /* 16/09 : les cinq modes vivent dans une PISTE. Par defaut elle est la grille d avant ; au-dessus de 1100 px elle
      devient une bande qui tourne, comme celle du Studio. */
+  /* 16/09, fondateur : « carte navy » sur le paragraphe qui ferme « Votre mur grandit ». Meme habit que les autres
+     cartes de la page : navy, texte gris, gras en blanc, arrondi leger. Les couleurs sont posees en force parce que
+     le panneau calcule les siennes contre le fond de PAGE, qui est clair. */
+  .note-navy{ background:#1e2b35!important; color:#dedede!important; border-radius:4px; padding:22px clamp(20px,4vw,40px); }
+  .blk .note-navy b{ color:#ffffff!important; }   /* 14,46. Deux classes : le panneau pose un gras calcule contre le fond de PAGE, qui est clair — navy sur navy, le gras disparaissait. */
   .modes-piste{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
   /* 16/09 : la meme mecanique sur « A offrir » et « Livraison & paiement ». Par defaut la piste est la grille d avant ;
      au-dessus de 1100 px elle devient une bande qui tourne. */
@@ -807,6 +812,9 @@
     .duo-bande .bande-piste{ display:flex; gap:var(--bande-gap,18px); width:max-content; padding-right:var(--bande-gap,18px);   /* la gouttiere de plus : la moitie de la piste tombe alors PILE sur la premiere copie */
       animation:bandeau-defile var(--bande-duree,30s) linear infinite; }
     .duo-bande > .bande-fenetre:hover .bande-piste, .duo-bande .bande-piste:focus-within{ animation-play-state:paused; }
+    /* Ces pistes portent encore la marge haute de leur grille d origine — 38, 34 et 36 px, du temps ou elles etaient
+       posees sous un chapo. Dans une bande, elles doivent partir du meme haut que la carte de titre. */
+    .duo-bande .bande-piste, .designer-duo .modes-piste{ margin-top:0; }
     .duo-bande .bande-piste > *{ flex:0 0 auto; }   /* par defaut chaque element garde sa largeur ; les sections a cartes la fixent ci-dessous */
     .duo-bande .cadeau > *, .duo-bande .trust > *{ flex-basis:360px; }   /* seules ces deux bandes ont des cartes de largeur egale */
     .duo-bande .bande-piste > .qz-copie{ display:block; }
@@ -1471,7 +1479,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     </div>
 
-    <p class="scal-foot rv"><b>Une imprimante de salon. Un mur XXL.</b> La grande composition naît de petits visuels imprimés chez vous, un par un — pas besoin de matériel professionnel. La taille de départ n'est jamais une décision définitive.</p>
+    <p class="scal-foot note-navy rv"><b>Une imprimante de salon. Un mur XXL.</b> La grande composition naît de petits visuels imprimés chez vous, un par un — pas besoin de matériel professionnel. La taille de départ n'est jamais une décision définitive.</p>
   </div>
 </section>
 
