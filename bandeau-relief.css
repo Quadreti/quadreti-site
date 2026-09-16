@@ -254,7 +254,13 @@
 /* 15/09, fondateur : « que le texte respire au passage des decroches ». Mesure : les deux decroches mordent 4 px dans les
    bords de la bande, qui n avait que 9 px de marge — il restait CINQ pixels entre le texte et la marche, en haut comme en
    bas. Marges a 18 px : la bande passe de 37 a 55 px et le texte garde 14 px de chaque cote, morsure deduite. */
-.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:18px 0;font-family:'Jura',sans-serif}
+/* 16/09, fondateur : le decroche du bas retire, il reste un lisere orange DROIT « de meme epaisseur que les autres ».
+   OMBRE INTERNE et non bordure : une bordure est arrondie au pixel ECRAN (3 px demandes, 2,4 px rendus mesures sur un
+   ecran a 1,25) alors que les autres liseres sont des traits SVG qui gardent leur epaisseur exacte — les deux bords de la
+   bande n auraient pas eu la meme grosseur. L ombre ne change pas non plus la hauteur de la bande.
+   --lisere-ep est publie SANS UNITE par bandeau-relief.js (stroke-width l accepte tel quel), d ou le calc. Le panneau qui
+   met le lisere a 0 eteint donc aussi celui-ci. */
+.qb-defile{position:relative;z-index:2;background:#1e2b35;color:#f4f1ea;padding:18px 0;font-family:'Jura',sans-serif;box-shadow:inset 0 calc(var(--lisere-ep,3) * -1px) 0 var(--lisere-couleur,#d96c2f)}
 .qb-defile-fenetre{overflow:hidden} /* 12/09 : le rognage passe sur une fenetre interieure pour laisser deborder le decroche du bas */
 /* 12/09 fondateur : decroche en miroir en bas a droite du bandeau defilant (navy qui descend sous le bandeau, pente vers 13,4 % depuis la droite) ; lisere orange essaye puis retire le 12/09 */
 .qb-bord-defile-bas{top:calc(100% - 4px);height:calc(var(--decroche-h,22px) + 4px);transform:scale(-1,-1)}
