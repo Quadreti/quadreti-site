@@ -55,6 +55,12 @@
        26 px reste, sinon un telephone se retrouverait avec 13 px de gouttiere.
        On mesure sur --qz-larg-ecran (publie par bandeau-relief.js) et non 100vw : 100vw compte la barre de defilement. */
     --qz-bord: max(26px, (var(--qz-larg-ecran, 100vw) - 1340px) / 4 + 13px);
+    /* 16/09, fondateur : « alignement ou une frontiere visuelle commune ». Il avait trace des pointilles verticaux entre
+       deux sections dont les colonnes ne tombaient pas au meme endroit. Mesure : NEUF blocs a deux colonnes, neuf
+       frontieres, de 643 a 887 — 244 px de derive. Ils partagent desormais ce decoupage, et la frontiere tombe au milieu
+       du cadre de texte. minmax(0,·) et non 1fr seul : sans lui, un titre insecable gonfle sa piste et decale la
+       frontiere de la section, ce qui est exactement la derive qu on corrige. */
+    --qz-duo-cols: minmax(0,1fr) minmax(0,1fr);
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
     /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
@@ -449,7 +455,7 @@
   #app{ --prisme-encre:#1e2b35; --prisme-ombre:#1e2b3540; --bandeau-fond:#dedede; }   /* le fondu des bords prend la couleur reelle du fond de la section, sinon il se voit */
 
   /* ===== Le resultat + Pour qui (14/09, sections reprises de la maquette de presentation) ===== */
-  .deux-col{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:start; text-align:left; }
+  .deux-col{ display:grid; grid-template-columns:var(--qz-duo-cols); gap:44px clamp(24px,4vw,54px); align-items:start; text-align:left; }   /* 16/09 : la gouttiere suit la MEME formule que les autres blocs. Fixee a 54 px elle tombait juste a 1600 et 5 px a cote a 1100, ou la formule rend 44 : une frontiere commune exige la meme gouttiere partout, pas seulement la meme largeur de colonnes. */
   @media (max-width:860px){ .deux-col{ grid-template-columns:1fr; gap:30px; } }
   .deux-col h2{ text-align:left; }
   /* 16/09, fondateur : « aligne l animation au trait rouge » — son trait passe par le haut de la photo du salon. Le titre
@@ -465,7 +471,7 @@
   /* 16/09, trait rouge du fondateur : sa ligne passe par le haut de la carte ET par la premiere ligne de la colonne
      de droite. `center` les centrait l une sur l autre — le texte demarrait 56 px au-dessus de la carte. `start` les
      fait partir du meme bord, quelle que soit la hauteur de chacune. */
-  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,54px); align-items:start; }
+  .duo{ display:grid; grid-template-columns:var(--qz-duo-cols); gap:clamp(24px,4vw,54px); align-items:start; }
   .duo > *{ min-width:0; }   /* sinon le titre de la carte impose sa largeur a la colonne */
   .duo.duo-droite > .titre-carte{ grid-column:2; grid-row:1; }
   .duo.duo-droite > .duo-txt{ grid-column:1; grid-row:1; }
@@ -524,7 +530,7 @@
      rapport des deux colonnes) : les deux images tombent alors a la meme hauteur quelle que soit la largeur d ecran.
      La photo est carree, il en reste 60,3 % centres — l oeuvre au mur (a partir de 22 %) et le canape (53,5 a 74,5 %)
      sont dedans ; ce qui part, c est le plafond et le bas du sol. */
-  .mur-situation img{ width:100%; border-radius:6px; display:block; aspect-ratio:1.658; object-fit:cover; }
+  .mur-situation img{ width:100%; border-radius:6px; display:block; aspect-ratio:1.5; object-fit:cover; }   /* 16/09 : 1,5 et non 1,658 — les deux colonnes sont desormais egales, la correction 1,05/0,95 n a plus lieu d etre */
   /* Sous 860 px la section passe a une colonne : la photo n a plus rien a egaler, elle reprend son cadrage entier. */
   @media (max-width:860px){ .mur-situation img{ aspect-ratio:auto; } }
   .mur-situation figcaption{ font-size:13px; color:#4F5A65; margin-top:10px; font-weight:600; }
@@ -613,7 +619,7 @@
   /* 15/09, fondateur : « remonte la carte titre a la hauteur de la ligne rouge ainsi que le texte ». En
      `align-items:center`, la colonne la plus courte se centrait sur la plus longue — 42 px de decalage mesures. Les
      deux partent maintenant du meme haut. */
-  .quoi-deux{ display:grid; grid-template-columns:1fr .78fr; gap:clamp(26px,4vw,54px); align-items:start; text-align:left; }
+  .quoi-deux{ display:grid; grid-template-columns:var(--qz-duo-cols); gap:clamp(26px,4vw,54px); align-items:start; text-align:left; }
   /* Sans ca, le titre insecable de la carte gonfle sa colonne (mesure : +20 px pris a l image). Un element de grille a
      une largeur minimale automatique egale a son contenu ; min-width:0 la leve, la colonne garde sa part et la carte
      deborde proprement dans sa marge de gauche, comme prevu. */
@@ -839,7 +845,7 @@
     /* 16/09, plan du fondateur : la colonne de gauche se resserre (.34 au lieu de .42), le bouton vient se coller au
        chapo (ecart de rangee a 22 px, la ou la gouttiere entre colonnes reste large), et tout part du HAUT — le bandeau
        commence donc juste sous la carte de titre, comme sa fleche le demande. */
-    .app-duo{ display:grid; grid-template-columns:minmax(0,.70fr) 1fr; grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
+    .app-duo{ display:grid; grid-template-columns:var(--qz-duo-cols); grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
     .app-duo > *{ min-width:0; }
     .app-duo > .titre-carte{ grid-column:1; grid-row:1; }
     .app-duo > .lead{ grid-column:1; grid-row:2; margin:0; max-width:none; }   /* dans sa colonne, il occupe toute la largeur disponible */
@@ -855,7 +861,7 @@
      La bande n est placee QUE par son numero de colonne ; tout le reste se range tout seul dans la colonne de droite,
      dans l ordre du document (une grille place d abord ce qui est designe, puis le reste dans les cases libres). */
   @media (min-width:1100px){
-    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,1.06fr);   /* une seule rangee : la bande et ses paragraphes tiennent ensemble dans la case de gauche */
+    .designer-duo{ display:grid; grid-template-columns:var(--qz-duo-cols);   /* une seule rangee : la bande et ses paragraphes tiennent ensemble dans la case de gauche */
       gap:18px clamp(24px,4vw,54px); align-items:start; }
     .designer-duo > *{ min-width:0; }
     .designer-duo > .designer-txt{ grid-column:2; }
@@ -896,7 +902,7 @@
     .duo-bande .bande-fenetre{ overflow:hidden;   /* descendant et non enfant direct : la bande de Designer vit dans un sous-bloc */ margin:0 0 0 calc(-1 * (var(--qz-bord))); }
     /* Le duo generique : texte a droite, bande a gauche. Chaque section n apporte que la part de sa colonne de texte
        (calculee sur la largeur de son titre) et la duree de son tour. */
-    .duo-bande{ display:grid; grid-template-columns:1fr minmax(0,var(--duo-col,.8fr)); gap:18px clamp(24px,4vw,54px); align-items:start; }
+    .duo-bande{ display:grid; grid-template-columns:var(--qz-duo-cols); gap:18px clamp(24px,4vw,54px); align-items:start; }
     .duo-bande > *{ min-width:0; }
     .duo-bande > .duo-txt{ grid-column:2; }
     .duo-bande > .bande-fenetre{ grid-column:1; grid-row:1; }
@@ -923,12 +929,13 @@
     }
   }
 
-  /* Les deux chiffres de chaque bande. La colonne de texte doit valoir le titre a 30 px + 73 px de remplissage et de
-     lisere, avec de la marge a 1100 px : « Un cadeau qui continue. » mesure 371 px, « Commandez en confiance. » 399.
-     La duree tient un defilement d environ 27 px par seconde, comme la bande du Studio. */
-  #cadeau .duo-bande{ --duo-col:.70fr; --bande-duree:28s; }
-  #livraison .duo-bande{ --duo-col:.78fr; --bande-duree:28s; }
-  #grandir .duo-bande{ --duo-col:1.02fr; --bande-duree:40s; --bande-gap:26px; }   /* « Commencez petit. Le mur suivra. » : 493 px a 30 px, le titre le plus long des quatre bandes */
+  /* 16/09 : --duo-col est retire. Chaque bande avait sa propre largeur de colonne, calculee sur la longueur de son
+     titre — c est ce qui faisait deriver la frontiere d une section a l autre. La frontiere commune l emporte, et les
+     quatre titres ont ete verifies : aucun ne passe a la ligne. Seules les durees restent propres a chaque bande
+     (defilement d environ 27 px par seconde, comme la bande du Studio). */
+  #cadeau .duo-bande{ --bande-duree:28s; }
+  #livraison .duo-bande{ --bande-duree:28s; }
+  #grandir .duo-bande{ --bande-duree:40s; --bande-gap:26px; }
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
