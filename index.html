@@ -436,17 +436,17 @@
   .duo.duo-droite > .duo-txt{ grid-column:1; grid-row:1; }
   /* Une colonne fait la moitie de la page : la ligne insecable n y tient pas. Deux classes contre une, la regle passe
      donc devant celle des cartes pleine largeur, media query ou pas. */
-  .duo .titre-carte h2, .app-duo .titre-carte h2{ white-space:normal; }
+  .duo .titre-carte h2, .app-duo .titre-carte h2, .designer-duo .titre-carte h2{ white-space:normal; }
   /* Dans une colonne, le surtitre n a plus la place de partager la ligne du titre : il repasse au-dessus, comme sur
      telephone. (« Pour qui » garde la ligne partagee : ses titres sont courts.) */
-  .app-duo .titre-carte{ display:block; }
-  .app-duo .titre-carte .eyebrow{ margin-bottom:8px; white-space:normal; }
+  .app-duo .titre-carte, .designer-duo .titre-carte{ display:block; }
+  .app-duo .titre-carte .eyebrow, .designer-duo .titre-carte .eyebrow{ margin-bottom:8px; white-space:normal; }
   /* Et des que la carte fait plusieurs lignes, le demi-cercle — qui creuse d une demi-hauteur — finirait par manger le
      texte. Rayon borne a 48 px : les 70 px de remplissage le laissent respirer quelle que soit la hauteur. */
   /* La carte prend sa colonne au lieu de sa largeur de texte : une largeur au contenu gonflait la piste de grille —
      mesure, 1110 px pour la carte contre 123 px pour le texte. Les deux colonnes sont a nouveau egales, et les deuxe
      cartes d une meme page ont la meme largeur, ce qui se voit. */
-  .duo .titre-carte, .app-duo .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }
+  .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }
   .duo .titre-carte.droite{ border-radius:48px 0 0 48px; margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
   @media (max-width:860px){ .duo{ grid-template-columns:1fr; } .duo.duo-droite > .titre-carte,.duo.duo-droite > .duo-txt{ grid-column:auto; grid-row:auto; } }
   .empile{ display:grid; gap:clamp(40px,6vw,72px); text-align:left; }
@@ -765,13 +765,30 @@
     /* 16/09, plan du fondateur : la colonne de gauche se resserre (.34 au lieu de .42), le bouton vient se coller au
        chapo (ecart de rangee a 22 px, la ou la gouttiere entre colonnes reste large), et tout part du HAUT — le bandeau
        commence donc juste sous la carte de titre, comme sa fleche le demande. */
-    .app-duo{ display:grid; grid-template-columns:minmax(0,.40fr) 1fr; grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
+    .app-duo{ display:grid; grid-template-columns:minmax(0,.60fr) 1fr; grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
     .app-duo > *{ min-width:0; }
     .app-duo > .titre-carte{ grid-column:1; grid-row:1; }
     .app-duo > .lead{ grid-column:1; grid-row:2; margin:0; max-width:none; }   /* dans sa colonne, il occupe toute la largeur disponible */
     .app-duo > .app-cta{ grid-column:1; grid-row:3; margin-top:0; text-align:left; }   /* sous le chapo, sur le meme axe que lui */
     .app-duo > .bandeau-outils{ grid-column:2; grid-row:1 / -1; }   /* toute la hauteur, a cote du titre */
     .app-duo .bandeau-outils{ margin-top:0; margin-right:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }   /* jusqu au bord droit de la page */
+  }
+
+  /* 16/09 : le duo de « Quadreti Designer », miroir de celui de « L ecosysteme ». La carte vient de la DROITE : le texte
+     occupe donc la colonne de droite et la bande de modes celle de gauche, jusqu au bord gauche de la page.
+     La bande n est placee QUE par son numero de colonne ; tout le reste se range tout seul dans la colonne de droite,
+     dans l ordre du document (une grille place d abord ce qui est designe, puis le reste dans les cases libres). */
+  @media (min-width:1100px){
+    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,.95fr); grid-template-rows:auto auto;
+      gap:18px clamp(24px,4vw,54px); align-items:start; }
+    .designer-duo > *{ min-width:0; }
+    .designer-duo > .designer-txt{ grid-column:2; }   /* les deux blocs de texte se suivent dans la colonne de droite */
+    .designer-duo > .app-grid{ grid-column:1; grid-row:1 / -1; }   /* la bande tient toute la hauteur, a cote du titre */
+    .designer-duo .lead{ max-width:none; }
+    /* La bande : les modes cessent de retomber a la ligne, ils defilent. Elle part du bord GAUCHE de la page et s y
+       fait couper net — comme la bande de « L ecosysteme » a droite. */
+    .designer-duo > .app-grid{ display:flex; gap:14px; margin:0 0 0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); overflow-x:auto; overscroll-behavior-x:contain; padding-bottom:6px; }
+    .designer-duo > .app-grid > .mode{ flex:0 0 210px; }
   }
 
   /* ===== Livraison & paiement ===== */
@@ -1228,12 +1245,18 @@ document.addEventListener('DOMContentLoaded', function(){
      les cinq modes. Placee juste apres l ecosysteme : on dit d abord qu il y a cinq outils, puis on ouvre le principal. -->
 <section class="blk" id="designer">
   <div class="wrap center">
+    <!-- 16/09, fondateur : « fait la meme chose mais espace de defilement moins grand pour que le titre reste sur une
+         ligne ». Meme duo que « L ecosysteme », en miroir : la carte vient de la droite, donc le texte est a droite et
+         la bande de modes a gauche, jusqu au bord gauche de la page. -->
+    <div class="designer-duo">
+    <div class="designer-txt">
     <div class="titre-carte droite rv">
     <div class="eyebrow">Quadreti Designer</div>
     <h2>Tout ce que vous pouvez en faire.</h2>
     </div>
     <p class="lead rv">Cinq façons de composer, du motif de couleurs à la photo mosaïque à double lecture. Vous choisissez, Quadreti Designer compose — aucun talent requis.</p>
 
+    </div>
     <div class="app-grid">
       <div class="mode rv">
         <div class="sw"><i style="background:#E2725B"></i><i style="background:#556B2F"></i><i style="background:#CBBD93"></i></div>
@@ -1261,6 +1284,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <p>« Derrière chacune de ces petites photos s'en cache une grande. Des dizaines de souvenirs, assemblés en un seul visage. »</p>
       </div>
     </div>
+    <div class="designer-txt">
 
     <!-- 14/09 : rien ne reliait les cinq modes aux sept rendus annonces juste apres — le lecteur sautait d une liste a l autre.
          Cette phrase fait le pont : ce sont les MEMES modes, regles autrement. -->
@@ -1286,6 +1310,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <p class="app-reassure rv"><b>Vous ne dessinez rien, vous décidez.</b> Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
     <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
+    </div>
+    </div>
   </div>
 </section>
 
