@@ -731,7 +731,7 @@
     max-width:calc(100% + max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px + 40px);
     background:#1e2b35; border-radius:0 999px 999px 0;
     border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;   /* le demi-cercle ferme la carte a l INTERIEUR ; a gauche elle est contre le bord de page, pas de bord libre donc pas de liseré */
-    padding:26px 100px 28px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px);   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
+    padding:26px 100px 28px calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2);   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
     margin:0 0 20px calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px));
   }
   .titre-carte .eyebrow{ color:#f0a06a!important; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
@@ -748,7 +748,7 @@
   }
   /* Sous 1100 px : surtitre et titre reempiles, remplissage resserre, et la carte reprend la largeur disponible plutot que
      celle de son titre — une ligne insecable deborderait a DROITE, ce qui ajoute une barre de defilement. */
-  @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); border-radius:0 60px 60px 0; } }
+  @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2); border-radius:0 60px 60px 0; } }
 
   /* 15/09, fondateur : « on alterne a partir de la 1ere gauche droite gauche droite ». Le miroir exact de la carte :
      le demi-cercle, le debord et l ordre surtitre/titre basculent ensemble. La carte vient buter EXACTEMENT sur le bord
@@ -756,13 +756,13 @@
      ce genre de calcul que la vraie largeur visible est publiee dans --qz-larg-ecran (100vw compte la barre). */
   .titre-carte.droite{
     margin:0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)) 20px auto;
-    padding:26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 28px 100px;
+    padding:26px calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2) 28px 100px;
     border-radius:999px 0 0 999px;
     border-left:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-right:none;
     text-align:right;
   }
   @media (min-width:1100px){ .titre-carte.droite{ flex-direction:row-reverse; } }   /* le surtitre au bord de page, le titre contre la courbe : le miroir jusqu au bout */
-  @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 26px 40px; border-radius:60px 0 0 60px; } }
+  @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2) 26px 40px; border-radius:60px 0 0 60px; } }
 
   /* 16/09, fondateur : « on unifie carte titre navy et arriere-plan gris sur toutes les sections ». Il n y a donc plus
      de variante claire de la carte de titre : une seule regle, la carte navy, partout. */
