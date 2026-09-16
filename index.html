@@ -1047,8 +1047,11 @@
 
   /* ===== Final ===== */
   .finale{ background:var(--charbon); color:#fff; text-align:center; padding:clamp(64px,9vw,110px) 22px; }
-  .finale .clic{ font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:#8a939c; margin-bottom:14px; }
-  .finale p.phrase{ font-size:clamp(24px,4.6vw,40px); font-weight:700; line-height:1.2; }
+  /* 16/09, fondateur : « · clic · » retire — ni lui ni moi ne savions expliquer a quoi il servait. Sa regle part avec
+     lui, pour ne pas laisser un selecteur orphelin dans la feuille. */
+  /* La signature passe de clamp(24,4.6vw,40) a l echelle des titres de la page. A 1600 elle faisait 40 px, soit DIX de
+     plus que les treize titres de section : la derniere ligne de la page criait plus fort que tout ce qui la precede. */
+  .finale p.phrase{ font-size:clamp(20px,2.05vw,30px); font-weight:700; line-height:1.2; }
   .finale p.phrase span{ color:var(--terracotta); }
   .finale .cta{ margin-top:var(--qz-espace-bloc); background:var(--terracotta); box-shadow:0 10px 26px rgba(226,114,91,.4); }
 
@@ -1879,7 +1882,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ============ FINALE ============ -->
 <section class="finale">
-  <div class="clic">· clic ·</div>
   <p class="phrase">Composez, imprimez, clipsez,<br><span>changez à volonté.</span></p>
   <a class="cta" href="/boutique/" data-bouton-zone="boutique_cta">Commander mon kit</a>
 </section>
