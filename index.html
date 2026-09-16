@@ -806,6 +806,10 @@
     .designer-duo > .designer-gauche{ grid-column:1; grid-row:1; }   /* la RANGEE aussi : sans elle, le placement automatique envoie ce bloc en rangee 2, puisqu il est ecrit apres celui de droite et qu une grille ne revient jamais en arriere */
     /* ROUGE : les deux paragraphes sous la bande, dans sa colonne, sur l axe de gauche. */
     .designer-duo .designer-sous{ margin-top:26px; text-align:left; }   /* colle sous la bande : plus rien ne peut s intercaler */
+    /* Meme marge des deux cotes, dans l empreinte de la BANDE et non de la colonne : la bande va du bord de page au
+       bord de la colonne, le texte s en retire de 74 px de chaque cote — la moitie du debord de page, la meme valeur
+       qu a droite. */
+    .designer-duo .designer-sous{ margin-left:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); margin-right:calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2); }
     .designer-duo .designer-sous .lead{ margin:0 0 14px; max-width:none; text-align:left; }
     /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
        `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
