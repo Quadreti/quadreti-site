@@ -710,9 +710,9 @@
     background:var(--qz-gris-photo); border:1.5px solid var(--qz-gris-photo); border-radius:var(--tess);   /* 16/09 : le gris de la photo */
     padding:22px 18px 18px; text-align:center; position:relative;
   }
-  /* 16/09 : !important ici aussi. La regle de fond des cartes en pose un sur border-color pour passer devant le panneau ;
-     sans lui, la carte « le plus choisi » perdait le seul trait qui la distinguait des quatre autres. */
-  .blk .offer.pop{ border-color:#10181f!important; }
+  /* 16/09 : la carte « le plus choisi » porte le meme lisere orange que les quatre autres — c est la demande du fondateur,
+     « toutes les cartes ». Ce qui la distingue redevient sa pastille « LE PLUS CHOISI », qui est faite pour ca. Un bord
+     d une autre couleur ici casserait la regle du lisere unique. */
   .offer .flag{
     position:absolute; top:-11px; left:50%; transform:translateX(-50%);
     background:var(--charbon); color:#fff; font-size:10.5px; font-weight:700;
@@ -728,8 +728,23 @@
   /* 16/09 : les cartes du Studio passent au meme gris. Elles vivent dans prisme-outils.css, feuille PARTAGEE avec la page
      Studio : la regle est donc portee par #app, pour ne repeindre que la bande de l accueil. Leur titre est deja en
      #1e2b35 (5,12) ; seul le paragraphe, a #5a636b, tombait a 2,49. */
-  #app .face{ background:var(--qz-gris-photo); border-color:#10181f22; }
+  #app .face{ background:var(--qz-gris-photo); }
   #app .face-corps p{ color:#1e2b35; }
+
+  /* 16/09, fondateur : « rajoute lisere orange quadreti a toutes les cartes et bandeaux de l accueil ». Memes jetons que
+     les cartes de titre (--qz-lisere, --qz-lisere-ep) : le panneau les eteint ou les epaissit toutes ensemble, cartes de
+     titre comprises. !important et deux classes parce que le panneau injecte ses propres bordures sur ces memes cartes. */
+  .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, #app .face{
+    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
+  }
+  /* Les bandeaux vont d un bord de page a l autre : un cadre complet poserait deux traits verticaux contre les bords de
+     l ecran, ce qui ne se lit pas comme un lisere mais comme un defaut. Ils ne prennent donc que le haut et le bas,
+     exactement comme la bande defilante de l accueil. */
+  .blk .color-note, .blk .premium, .blk .note-navy{
+    border:none!important;
+    border-top:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
+    border-bottom:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
+  }
   .gamme-notes{ margin-top:26px; text-align:center; font-size:14px; color:#4F5A65; max-width:640px; margin-left:auto; margin-right:auto; }
 
   /* 16/09, regle validee par le fondateur : un bloc de texte se ferre vers le bord de page le plus proche de lui. Pour
@@ -796,7 +811,7 @@
      Elles tiennent en une classe ; on passe devant avec deux. Le panneau garde la main sur tout le reste — c est bien lui
      la source des couleurs, on ne lui retire que les quatre cartes dont le fond a ete decide ici, a contre-sens de leur
      section. */
-  .blk .gift, .blk .trust-card, .blk .premium, .blk .offer{ background:var(--qz-gris-photo)!important; border-color:var(--qz-gris-photo)!important; }   /* 16/09 : le gris de la photo, comme les cartes de modes. .offer est ici et non dans sa propre regle : le panneau injecte .offer{background:#fff}, une classe, lue apres la notre — il faut deux classes pour passer devant. */
+  .blk .gift, .blk .trust-card, .blk .premium, .blk .offer{ background:var(--qz-gris-photo)!important; }   /* 16/09 : le gris de la photo, comme les cartes de modes. .offer est ici et non dans sa propre regle : le panneau injecte .offer{background:#fff}, une classe, lue apres la notre — il faut deux classes pour passer devant. La COULEUR de bordure n est plus posee ici : c est le lisere orange, plus bas, qui la donne. */
   .blk .mode p{ color:#1e2b35!important; }        /* 5,12 sur le gris de la photo */
   .blk .color-note b{ color:#10181f!important; }  /* 6,34 sur le gris de la photo */
 
