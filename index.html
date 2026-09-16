@@ -497,7 +497,8 @@
   .modes-piste{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
   /* 16/09 : la meme mecanique sur « A offrir » et « Livraison & paiement ». Par defaut la piste est la grille d avant ;
      au-dessus de 1100 px elle devient une bande qui tourne. */
-  .bande-piste{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  /* La piste generique n impose RIEN hors de la bande : chaque section garde sa disposition d origine en dessous de
+     1100 px. « A offrir » et « Livraison » avaient deux colonnes ; « Votre mur grandit » a sa rangee de photos. */
   .modes-piste > .qz-copie, .bande-piste > .qz-copie{ display:none; }   /* la copie ne sert qu a la boucle : ailleurs elle n existe pas */
   /* 15/09, fondateur : « carte rectangulaire arrondi leger, navy + texte gris, tesselles en orange Quadreti ».
      Le rayon quitte la forme tesselle (8/8/8/22) pour les 4 px des boutons du site. */
@@ -805,10 +806,11 @@
     .duo-bande > *{ min-width:0; }
     .duo-bande > .duo-txt{ grid-column:2; }
     .duo-bande > .bande-fenetre{ grid-column:1; grid-row:1; }
-    .duo-bande .bande-piste{ display:flex; gap:18px; width:max-content; padding-right:18px;   /* la gouttiere de plus : la moitie de la piste tombe alors PILE sur la premiere copie */
+    .duo-bande .bande-piste{ display:flex; gap:var(--bande-gap,18px); width:max-content; padding-right:var(--bande-gap,18px);   /* la gouttiere de plus : la moitie de la piste tombe alors PILE sur la premiere copie */
       animation:bandeau-defile var(--bande-duree,30s) linear infinite; }
     .duo-bande > .bande-fenetre:hover .bande-piste, .duo-bande .bande-piste:focus-within{ animation-play-state:paused; }
-    .duo-bande .bande-piste > *{ flex:0 0 360px; }
+    .duo-bande .bande-piste > *{ flex:0 0 auto; }   /* par defaut chaque element garde sa largeur ; les sections a cartes la fixent ci-dessous */
+    .duo-bande .cadeau > *, .duo-bande .trust > *{ flex-basis:360px; }   /* seules ces deux bandes ont des cartes de largeur egale */
     .duo-bande .bande-piste > .qz-copie{ display:block; }
     .duo-bande .lead{ max-width:none; }
     .designer-duo .modes-piste{ display:flex; gap:14px; width:max-content; padding-right:14px;   /* cette gouttiere de plus est ce qui fait tomber la moitie de la piste PILE sur la sixieme carte : dix cartes, dix gouttieres */
@@ -829,6 +831,7 @@
      La duree tient un defilement d environ 27 px par seconde, comme la bande du Studio. */
   #cadeau .duo-bande{ --duo-col:.65fr; --bande-duree:28s; }
   #livraison .duo-bande{ --duo-col:.72fr; --bande-duree:28s; }
+  #grandir .duo-bande{ --duo-col:.92fr; --bande-duree:40s; --bande-gap:26px; }   /* « Commencez petit. Le mur suivra. » : 493 px a 30 px, le titre le plus long des quatre bandes */
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
@@ -1437,17 +1440,21 @@ document.addEventListener('DOMContentLoaded', function(){
      differents et deux cotes opposes — c est la variation demandee (« un coup a gauche, un coup a droite »). -->
 <section class="blk sombre" id="grandir">
   <div class="wrap center">
+    <div class="duo-bande">
+    <div class="duo-txt">
     <div class="titre-carte droite rv">
     <div class="eyebrow">Votre mur grandit avec vous</div>
     <h2>Commencez petit. Le mur suivra.</h2>
     </div>
     <!-- 14/09 : le mot du fondateur — « un pele-mele qui peut devenir tres grand ». C est exactement ce que cette section raconte. -->
     <p class="lead rv">Un carreau aujourd'hui, un pêle-mêle entier quand vous voudrez : les carreaux s'accolent sans rupture visible, de 20 × 20 cm à 100 × 100 cm et au-delà.</p>
+    </div>
 
     <!-- 14/09, demande du fondateur : ses photos remplacent le schema en petits carres. Elles montrent les vraies grilles au mur,
          meme cadrage et meme lumiere — la progression se lit d un coup d oeil. Formats verifies un par un avant d etre nommes :
          7x7 tesselles pour un carreau, 2x2 carreaux pour le ×4, 3x3 pour le ×9. -->
-    <div class="scal rv">
+    <div class="bande-fenetre rv">
+    <div class="scal bande-piste">
       <figure class="scal-etape">
         <img src="img/mur-x1.jpg" alt="Un carreau Quadreti seul au mur, 49 cases" loading="lazy">
         <figcaption class="lbl">×1 · 20 × 20 cm</figcaption>
@@ -1462,6 +1469,8 @@ document.addEventListener('DOMContentLoaded', function(){
         <img src="img/mur-x9.jpg" alt="Neuf carreaux accolés, formant un mur continu" loading="lazy">
         <figcaption class="lbl">×9 · 60 × 60 cm</figcaption>
       </figure>
+    </div>
+    </div>
     </div>
 
     <p class="scal-foot rv"><b>Une imprimante de salon. Un mur XXL.</b> La grande composition naît de petits visuels imprimés chez vous, un par un — pas besoin de matériel professionnel. La taille de départ n'est jamais une décision définitive.</p>
@@ -1533,7 +1542,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     </div>
     <div class="bande-fenetre">
-    <div class="bande-piste">
+    <div class="cadeau bande-piste">
       <div class="gift rv">
         <h3>Offrez le kit</h3>
         <p>Anniversaire, fête des mères, Noël, crémaillère : offrez une expérience à créer. Le destinataire compose lui-même — le cadeau, c'est le geste. Un après-midi ensemble, un mur en commun.</p>
@@ -1600,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
 
     <div class="bande-fenetre rv">
-    <div class="bande-piste">
+    <div class="trust bande-piste">
 
       <div class="trust-card">
         <div class="trust-head">
