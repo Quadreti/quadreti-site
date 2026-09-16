@@ -420,6 +420,10 @@
   .deux-col{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:start; text-align:left; }
   @media (max-width:860px){ .deux-col{ grid-template-columns:1fr; gap:30px; } }
   .deux-col h2{ text-align:left; }
+  /* 16/09, fondateur : « aligne l animation au trait rouge » — son trait passe par le haut de la photo du salon. Le titre
+     et son chapo prennent donc toute la largeur, et les deux colonnes ne commencent qu en dessous : la photo et le
+     comparateur demarrent sur la meme ligne. */
+  .deux-col > .tete{ grid-column:1 / -1; }
   /* 16/09 : « Pour qui » empile ses DEUX RANGEES ; a l interieur de chacune, la carte et le texte sont cote a cote
      (voir .duo ci-dessus). L ecart reprend celui qui separait les colonnes, en plus genereux : ce sont deux temps de
      lecture l un apres l autre, plus deux colonnes qu on embrasse d un coup d oeil. */
@@ -448,7 +452,16 @@
      ce qu un glisser maison ne serait pas. */
   .comparateur{ position:relative; width:100%; aspect-ratio:3/2; overflow:hidden; border-radius:6px; --pos:50%; }
   .comparateur img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
-  .comparateur .apres{ clip-path:inset(0 calc(100% - var(--pos)) 0 0); }
+  /* 16/09 : c est la grille VIDE qui est decoupee, parce que c est elle qu on tire — le resultat est dessous, entier.
+     Avant ce jour la pleine etait au-dessus : le cote marque AVANT montrait le resultat et le cote APRES la grille vide. */
+  .comparateur .avant{ clip-path:inset(0 calc(100% - var(--pos)) 0 0); }
+  /* 2 — « que la grille vide et la grille pleine correspondent en disposition ». Calage obtenu par CORRELATION des deux
+     images, et non en lisant des bords a la main : mes reperes se contredisaient selon que je mesurais l arete d une
+     barre de la grille vide ou le joint entre deux tesselles de la pleine. La ressemblance passe de 0,28 a 0,53 : elle
+     double. La photo du dessus laisse a decouvert une bande de 4,5 % en bas — c est du mur gris sur les deux photos, le
+     raccord ne se voit pas. On ne les agrandit surtout PAS : la grille occupe 91 % de la hauteur, le moindre
+     agrandissement lui couperait sa premiere rangee. */
+  .comparateur .avant{ transform:translate(-1.31%,-4.11%) scale(0.9925); }
   .comparateur .cote{
     position:absolute; top:12px; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; letter-spacing:.08em;
     text-transform:uppercase; padding:5px 10px; border-radius:4px; pointer-events:none;
@@ -1255,23 +1268,25 @@ document.addEventListener('DOMContentLoaded', function(){
 <section class="blk sombre" id="resultat">
   <div class="wrap">
     <div class="deux-col">
-      <div>
+      <div class="tete">
         <div class="titre-carte rv">
         <div class="eyebrow">Le résultat</div>
         <h2>Le même mur, transformé.</h2>
         </div>
         <!-- 14/09 : ce chapo n etait qu un mode d emploi du curseur. Il dit maintenant ce que la demonstration prouve ; le mode d
              emploi tient en quatre mots a la fin. -->
-        <p class="lead rv" style="margin:0 0 22px">La grille ne bouge plus. C'est ce qu'on y affiche qui change — en quelques minutes, autant de fois que vous voulez. <b>Faites glisser le curseur.</b></p>
-        <figure class="mur-situation rv">
-          <img src="img/mur-salon.jpg" alt="Une composition Quadreti accrochée dans un salon, au-dessus d'un canapé" loading="lazy">
-          <figcaption>Et chez vous, ça donne ça.</figcaption>
-        </figure>
+        <p class="lead rv" style="margin:0">La grille ne bouge plus. C'est ce qu'on y affiche qui change — en quelques minutes, autant de fois que vous voulez. <b>Faites glisser le curseur.</b></p>
       </div>
+      <figure class="mur-situation rv">
+        <img src="img/mur-salon.jpg" alt="Une composition Quadreti accrochée dans un salon, au-dessus d'un canapé" loading="lazy">
+        <figcaption>Et chez vous, ça donne ça.</figcaption>
+      </figure>
       <div class="rv">
         <div class="comparateur" id="comparateur">
-          <img class="avant" src="img/kit-grille.jpg" alt="La grille Quadreti vide, ses 49 cases">
+          <!-- 16/09, fondateur : « la photo qui se tire, c est la grille vide ; le resultat en dessous ». Le resultat est
+               donc pose le premier, la grille vide par-dessus : on tire la vide et le mur fini apparait. -->
           <img class="apres" src="img/mur-apres.jpg" alt="La même grille, composée d'un motif en tesselles orange et bleues">
+          <img class="avant" src="img/kit-grille.jpg" alt="La grille Quadreti vide, ses 49 cases">
           <span class="cote a">Avant</span>
           <span class="cote b">Après</span>
           <div class="ligne"></div>
