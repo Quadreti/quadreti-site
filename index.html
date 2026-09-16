@@ -320,6 +320,8 @@
     /* 16/09, fondateur : « alignement droite ». Toute la colonne de texte finit sur le meme axe que la carte de titre.
        Le numero passe derriere le titre du geste — « inverse puce et titre » — pour finir a droite lui aussi, et le
        liseré de l encart change de bord avec le texte : a gauche, il aurait coupe le paragraphe au milieu du vide. */
+    #comment .geste{ align-items:start; }
+    #comment .geste-texte .tete{ margin-top:0; }
     #comment .geste-texte{ text-align:right; }
     #comment .geste-texte .tete{ flex-direction:row-reverse; justify-content:flex-start; }
     #comment .geste-texte .hint{ border-left:none; border-right:3px solid #d96c2f; padding:2px 14px 2px 0; }
