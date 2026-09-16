@@ -462,7 +462,10 @@
   /* 16/09, fondateur : « ou colonne titre et colonne texte cote a cote ». Deux rangees, chacune une carte de titre
      d un cote et son texte de l autre. La carte est ecrite AVANT son texte — l ordre de lecture ; c est la grille qui
      la place a droite quand c est son tour. */
-  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,54px); align-items:center; }
+  /* 16/09, trait rouge du fondateur : sa ligne passe par le haut de la carte ET par la premiere ligne de la colonne
+     de droite. `center` les centrait l une sur l autre — le texte demarrait 56 px au-dessus de la carte. `start` les
+     fait partir du meme bord, quelle que soit la hauteur de chacune. */
+  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,54px); align-items:start; }
   .duo > *{ min-width:0; }   /* sinon le titre de la carte impose sa largeur a la colonne */
   .duo.duo-droite > .titre-carte{ grid-column:2; grid-row:1; }
   .duo.duo-droite > .duo-txt{ grid-column:1; grid-row:1; }
@@ -528,6 +531,7 @@
 
   /* Les trois arguments de « Et demain ? », resserres — dans la maquette ils occupent la colonne droite de « Pour qui ». */
   .arg{ border-left:3px solid #d96c2f; padding:2px 0 2px 16px; margin-top:16px; }
+  .arg:first-child{ margin-top:0; }   /* 16/09 : sans ca, le premier argument retombe 16 px sous le haut de la carte, et la ligne rouge ne serait pas tenue */
   .arg b{ display:block; font-size:15px; margin-bottom:4px; }
   .arg p{ margin:0; font-size:13.5px; color:#5a636b; line-height:1.55; }
 
@@ -1534,12 +1538,12 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="duo rv">
         <div class="titre-carte rv">
         <div class="eyebrow">Et demain ?</div>
-        <h2>Changer d'avis n'est plus un défaut. C'est une fonctionnalité.</h2>   <!-- 16/09 : la taille en ligne (23 px) disait « titre de second rang dans une colonne ». Ce bloc n en est plus une : le titre suit l echelle des autres cartes. -->
+        <h2>Changez l'image, pas le mur.</h2>   <!-- 16/09 : « Changer d'avis n'est plus un défaut. C'est une fonctionnalité. » tenait sur trois lignes, et le fondateur a tranché sur le fond : « changer d'avis » se perçoit négativement. Le nouveau titre garde le verbe et dit ce qu'on ne change PAS. -->
         </div>
         <div class="duo-txt">
         <div class="arg"><b>Une tesselle</b><p>se déclipse et se remplace en secondes : une photo remplace un souvenir, une couleur corrige une envie.</p></div>
         <div class="arg"><b>Le mur entier</b><p>change d'image pour le prix d'une feuille imprimée. Vos compositions se gardent et se reclipsent quand vous voulez.</p></div>
-        <div class="arg"><b>Rien ne s'abîme</b><p>ni le support, ni la tesselle, ni le visuel. Achetez le support une fois, changez l'œuvre pour toujours.</p></div>
+        <div class="arg"><b>Tout se réutilise</b><p>le support, la tesselle, le visuel. Achetez le support une fois, changez l'œuvre pour toujours.</p></div>
         </div>
       </div>
     </div>
