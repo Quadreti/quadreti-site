@@ -875,9 +875,9 @@
   /* #cadeau rejoint la regle sans toucher a son texte : « A offrir » + « Un cadeau qui continue. » font 438 px pour 520
      de place a 1360 — 81 px de marge. Il etait le seul des cinq a tenir deja. */
   @media (min-width:1360px){
-    #app .titre-carte, #cadeau .titre-carte{ display:flex; align-items:baseline; gap:20px; }
-    #app .titre-carte .eyebrow, #cadeau .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
-    #app .titre-carte h2, #cadeau .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
+    #app .titre-carte, #cadeau .titre-carte, #grandir .titre-carte{ display:flex; align-items:baseline; gap:20px; }
+    #app .titre-carte .eyebrow, #cadeau .titre-carte .eyebrow, #grandir .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
+    #app .titre-carte h2, #cadeau .titre-carte h2, #grandir .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
   }
 
   /* 16/09 : le duo de « Quadreti Designer », miroir de celui de « L ecosysteme ». La carte vient de la DROITE : le texte
@@ -1591,8 +1591,11 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="duo-bande">
     <div class="duo-txt">
     <div class="titre-carte droite rv">
-    <div class="eyebrow">Votre mur grandit avec vous</div>
-    <h2>Commencez petit. Le mur suivra.</h2>
+    <!-- 16/09, fondateur : « Le mur suivra > ok ». La phrase n est PAS raccourcie, elle est repartie : sa premiere
+         moitie devient le surtitre, la seconde le titre. Rien n est perdu, et le bloc tient sur une ligne (372 px pour
+         520 de place a 1360 — 148 px de marge, la plus confortable des cinq cartes en colonne). -->
+    <div class="eyebrow">Commencez petit</div>
+    <h2>Le mur suivra.</h2>
     </div>
     <!-- 14/09 : le mot du fondateur — « un pele-mele qui peut devenir tres grand ». C est exactement ce que cette section raconte. -->
     <p class="lead rv">Un carreau aujourd'hui, un pêle-mêle entier quand vous voudrez : les carreaux s'accolent sans rupture visible, de 20 × 20 cm à 100 × 100 cm et au-delà.</p>
