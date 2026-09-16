@@ -872,10 +872,12 @@
      autres cartes en colonne — et c est pourquoi les quatre autres n ont PAS recu cette regle : il leur manque de 18 a
      190 px, elles ne tiendraient a aucune largeur sans etre charcutees.
      #app est un ID : il passe devant `.app-duo .titre-carte{display:block}` sans avoir besoin de !important. */
+  /* #cadeau rejoint la regle sans toucher a son texte : « A offrir » + « Un cadeau qui continue. » font 438 px pour 520
+     de place a 1360 — 81 px de marge. Il etait le seul des cinq a tenir deja. */
   @media (min-width:1360px){
-    #app .titre-carte{ display:flex; align-items:baseline; gap:20px; }
-    #app .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
-    #app .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
+    #app .titre-carte, #cadeau .titre-carte{ display:flex; align-items:baseline; gap:20px; }
+    #app .titre-carte .eyebrow, #cadeau .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
+    #app .titre-carte h2, #cadeau .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
   }
 
   /* 16/09 : le duo de « Quadreti Designer », miroir de celui de « L ecosysteme ». La carte vient de la DROITE : le texte
