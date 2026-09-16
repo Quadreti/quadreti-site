@@ -66,6 +66,11 @@
        il porte de l encre foncee (6,34) et refuse le texte clair (2,83). Toutes les cartes qui passent a ce fond ont donc
        leur texte retourne. Le navy ne reste que sur les cartes de titre. */
     --qz-gris-photo:#9d9996;
+    /* 16/09, fondateur : « homogenise l espacement entre section ». Les sections etaient deja regulieres (56 px de
+       remplissage de chaque cote, 112 entre deux). C est l espace entre deux BLOCS d une meme section qui derivait :
+       24, 26, 28, 30, 34, 36, 38, 40 et 44 px cohabitaient. Une seule valeur desormais, 34, la plus employee des neuf.
+       Ce jeton ne concerne QUE la separation de deux blocs : le rythme interne d un composant garde ses propres valeurs. */
+    --qz-espace-bloc:34px;
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
     /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
@@ -430,7 +435,7 @@
     .geste-petite img{ max-width:100%; }
   }
 
-  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:38px; }
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:var(--qz-espace-bloc); }   /* 38 -> 34 */
   @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
   .step{
     background:#fff; border:1px solid var(--border); border-radius:var(--tess);
@@ -452,7 +457,7 @@
     margin-top:14px; font-size:13px; color:#5a636b; font-weight:600;
     border-left:3px solid #d96c2f; padding:2px 0 2px 14px; background:none;
   }
-  .how-foot{ margin-top:26px; font-size:14px; color:#4F5A65; text-align:right; }   /* 16/09 : dernier bloc centre de la section — il rejoint l axe du chapo */
+  .how-foot{ margin-top:var(--qz-espace-bloc); font-size:14px; color:#4F5A65; text-align:right; }   /* 16/09 : dernier bloc centre de la section — il rejoint l axe du chapo */
   .how-foot a{ color:var(--charbon); font-weight:700; }
 
   /* 14/09 : le prisme est pose sur fond CLAIR ici, alors qu il a ete dessine sur le bleu du Studio. Seules les couleurs qui
@@ -547,7 +552,7 @@
   .arg p{ margin:0; font-size:13.5px; color:#5a636b; line-height:1.55; }
 
   /* ===== App / modes ===== */
-  .app-grid{ margin-top:34px; }
+  .app-grid{ margin-top:var(--qz-espace-bloc); }
   /* 16/09 : les cinq modes vivent dans une PISTE. Par defaut elle est la grille d avant ; au-dessus de 1100 px elle
      devient une bande qui tourne, comme celle du Studio. */
   /* 16/09, fondateur : « carte navy » sur le paragraphe qui ferme « Votre mur grandit ». Meme habit que les autres
@@ -575,14 +580,14 @@
   .mode .sw i{ width:14px; height:14px; border-radius:3px; display:block; background:#d96c2f!important; box-shadow:0 0 0 1px #10181f; }
   .mode h3{ font-size:15.5px; font-weight:700; margin-bottom:6px; color:#10181f; }   /* 6,34 sur le gris de la photo */
   .mode p{ font-size:13.5px; color:#1e2b35; font-style:italic; }   /* 5,12 sur le gris de la photo */
-  .app-cta{ text-align:center; margin-top:34px; }
+  .app-cta{ text-align:center; margin-top:var(--qz-espace-bloc); }
   .app-reassure{ text-align:center; margin-top:18px; font-size:14.5px; color:#4F5A65; }
   .app-reassure b{ color:var(--charbon); }
 
   /* ===== Le Studio : les quatre autres outils (14/09) =====
      Volontairement COMPACT : une ligne par outil, pas de carte. La page est deja longue, et ces outils ne vendent pas le kit —
      ils disent que l ecosysteme ne s arrete pas au Designer. Le detail est sur la page du Studio. */
-  .studio-bande{ margin-top:40px; padding-top:30px; border-top:1px solid var(--border); }
+  .studio-bande{ margin-top:var(--qz-espace-bloc); padding-top:30px; border-top:1px solid var(--border); }   /* 40 -> 34 ; le remplissage de 30 reste, il appartient au filet qui separe */
   .studio-intro{ text-align:center; font-size:14.5px; color:#4F5A65; margin-bottom:22px; }
   .studio-intro b{ color:var(--charbon); }
   /* DEUX colonnes, pas un remplissage automatique : a quatre outils, auto-fit en posait trois en haut et laissait le quatrieme
@@ -601,7 +606,7 @@
   .studio-outil .nom a:hover{ color:#9c4514; border-bottom-color:#9c4514; }
   .studio-outil .quoi{ font-size:13px; color:#5a636b; line-height:1.5; margin-top:2px; }
   .studio-outil .bientot{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#4F5A65; }
-  .studio-cta{ text-align:center; margin-top:26px; }
+  .studio-cta{ text-align:center; margin-top:var(--qz-espace-bloc); }   /* 26 -> 34 */
   /* Ce bouton ne porte PAS la classe .cta, expres : la feuille injectee par le panneau pose `.cta{background:...!important}`,
      et un !important ne se contourne par aucune specificite — la classe .cta.light du site, faite pour les boutons secondaires,
      est donc sans effet partout. Ici le bouton s habille lui-meme et reste secondaire, comme voulu. */
@@ -640,7 +645,7 @@
   .kit > div{ text-align:center; max-width:none; margin:0; }
   @media (max-width:900px){
     .quoi-deux{ grid-template-columns:1fr; }
-    .kit{ margin-top:24px; }
+    .kit{ margin-top:var(--qz-espace-bloc); }   /* 24 -> 34 */
   }
   /* 14/09 : la vignette n est plus en tete de colonne mais a cote de son texte — largeur fixe, plus de marge sous elle. */
   /* 14/09 : 260 px et non plus toute la largeur de la colonne. A 413 px la colonne de droite faisait deux fois la hauteur de celle
@@ -657,7 +662,7 @@
   .kit p{ font-size:13.5px; color:#5a636b; line-height:1.55; margin:0 auto; max-width:330px; }   /* le texte ne s etale pas plus large que sa photo n en a besoin */
   @media (max-width:760px){ .kit{ grid-template-columns:1fr; gap:30px; } }
 
-  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:28px 0 8px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:var(--qz-espace-bloc) 0 8px; }   /* 28 -> 34 */
   .chip{
     font-size:14px; font-weight:700; background:#fff; border:1.5px solid var(--border); color:var(--charbon);
     border-radius:99px; padding:8px 18px;
@@ -672,7 +677,7 @@
   /* ===== Scalabilité ===== */
 /* 14/09 : la rangee porte desormais des PHOTOS, plus des grilles de petits carres. Les trois sont recadrees au carre, donc de
      meme hauteur ; la fleche se centre sur l image, pas sur le bloc entier — sinon elle descend au niveau des libelles. */
-  .scal{ display:flex; align-items:flex-start; justify-content:center; gap:clamp(10px,2.4vw,26px); margin-top:38px; flex-wrap:wrap; }
+  .scal{ display:flex; align-items:flex-start; justify-content:center; gap:clamp(10px,2.4vw,26px); margin-top:var(--qz-espace-bloc); flex-wrap:wrap; }   /* 38 -> 34 */
   .scal-etape{ margin:0; max-width:300px; flex:1 1 200px; }   /* plus large qu au format carre : une photo paysage a besoin de sa longueur */
   /* 14/09, fondateur : « garde un format paysage pour que le ×9 s exprime ». Le carre coupait la photo du ×9 — la grille
      remplissait le cadre et on perdait le mur autour, donc l echelle. En 3:2, le ×1 parait petit dans son cadre et le ×9 le
@@ -705,7 +710,7 @@
   /* 14/09 : .swap-visu retire — plus aucun element de la page ne portait cette classe. */
 
   /* ===== Gamme ===== */
-  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:36px; }
+  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:var(--qz-espace-bloc); }   /* 36 -> 34 */
   .offer{
     background:var(--qz-gris-photo); border:1.5px solid var(--qz-gris-photo); border-radius:var(--tess);   /* 16/09 : le gris de la photo */
     padding:22px 18px 18px; text-align:center; position:relative;
@@ -731,7 +736,7 @@
   #app .face{ background:var(--qz-gris-photo); border-color:#10181f22; }
   #app .face-corps p{ color:#1e2b35; }
 
-  .gamme-notes{ margin-top:26px; text-align:center; font-size:14px; color:#4F5A65; max-width:640px; margin-left:auto; margin-right:auto; }
+  .gamme-notes{ margin-top:var(--qz-espace-bloc); text-align:center; font-size:14px; color:#4F5A65; max-width:640px; margin-left:auto; margin-right:auto; }
 
   /* 16/09, regle validee par le fondateur : un bloc de texte se ferre vers le bord de page le plus proche de lui. Pour
      un bloc de pleine largeur, ou aucun bord n est plus proche, c est le cote de la carte de titre qui tranche. */
@@ -744,7 +749,7 @@
        devient un bandeau d un bord de page a l autre, comme la bande de photos au-dessus. Son remplissage vaut le debord,
        donc son texte retombe exactement sur la marge de la page, ferre a droite comme sa carte de titre. */
     #grandir .scal-foot{ text-align:center; max-width:none; width:auto; border-radius:0;
-      margin:26px calc(-1 * (var(--qz-bord))) 0; padding:24px calc(var(--qz-bord)); }
+      margin:var(--qz-espace-bloc) calc(-1 * (var(--qz-bord))) 0; padding:24px calc(var(--qz-bord)); }   /* 26 -> 34 */
     /* 16/09, capture orange du fondateur : cette phrase et le bandeau navy juste au-dessus vont ensemble. Elle cesse
        donc d etre ferree du cote de sa carte et se centre, comme le texte du bandeau. */
     #designer .app-reassure{ text-align:center; }
@@ -759,13 +764,13 @@
      par son fond, il n a plus besoin d une puce pour le faire. */
   .premium{
     max-width:none; width:auto; border:none; border-radius:0; display:block; text-align:center;
-    margin:34px calc(-1 * var(--qz-bord)) 0; padding:24px var(--qz-bord);
+    margin:var(--qz-espace-bloc) calc(-1 * var(--qz-bord)) 0; padding:24px var(--qz-bord);
   }
   .premium h3{ font-size:16px; font-weight:700; margin-bottom:4px; }
   .premium p{ font-size:14px; color:#4a5158; }
 
   /* ===== Cadeau ===== */
-  .cadeau{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; }
+  .cadeau{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:var(--qz-espace-bloc); }
   @media (max-width:700px){ .cadeau{ grid-template-columns:1fr; } }
   .gift{
     background:#dedede; border:1px solid var(--border); border-radius:var(--tess); padding:26px 24px;   /* 15/09, fondateur : gris et non blanc */
@@ -912,7 +917,7 @@
     /* Comme dans « Comment ca marche » : le remplissage de la carte reprend sa valeur entiere, pour que son contenu
        finisse exactement ou finit le texte de la colonne. */
     /* ROUGE : les deux paragraphes sous la bande, dans sa colonne, sur l axe de gauche. */
-    .designer-duo .designer-sous{ margin-top:26px; text-align:left; }   /* colle sous la bande : plus rien ne peut s intercaler */
+    .designer-duo .designer-sous{ margin-top:var(--qz-espace-bloc); text-align:left; }   /* 26 -> 34, comme partout ailleurs */
     /* Meme marge des deux cotes, dans l empreinte de la BANDE et non de la colonne : la bande va du bord de page au
        bord de la colonne, le texte s en retire de 74 px de chaque cote — la moitie du debord de page, la meme valeur
        qu a droite. */
@@ -922,7 +927,7 @@
        colonne de gauche sous ses deux paragraphes. Il comble du meme coup le vide que la croix rouge barrait : la colonne
        de gauche s arretait 83 px avant celle de droite. Trois classes pour battre le `text-align:center` pose sur .app-cta,
        qui l emporterait sur un alignement seulement herite. */
-    .designer-duo .designer-sous .app-cta{ text-align:left; margin-top:30px; }
+    .designer-duo .designer-sous .app-cta{ text-align:left; margin-top:var(--qz-espace-bloc); }   /* 30 -> 34 */
     /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
        `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
        droite, comme le titre et le chapo de cette colonne. */
@@ -981,7 +986,7 @@
   #grandir .duo-bande{ --bande-duree:40s; --bande-gap:26px; }
 
   /* ===== Livraison & paiement ===== */
-  .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
+  .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:var(--qz-espace-bloc); text-align:left; }   /* 36 -> 34 */
   @media (max-width:700px){ .trust{ grid-template-columns:1fr; } }
   .trust-card{
     background:#dedede; border:1px solid var(--border); border-radius:var(--tess);   /* 15/09, fondateur : gris et non blanc */
@@ -1015,7 +1020,7 @@
   }
 
   /* ===== FAQ ===== */
-  .faq{ max-width:720px; margin:34px auto 0; }
+  .faq{ max-width:720px; margin:var(--qz-espace-bloc) auto 0; }
   .qa{ border-bottom:1px solid var(--border); }
   .qa button.q{
     width:100%; text-align:left; background:none; border:none;
@@ -1036,7 +1041,7 @@
   .finale .clic{ font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:#8a939c; margin-bottom:14px; }
   .finale p.phrase{ font-size:clamp(24px,4.6vw,40px); font-weight:700; line-height:1.2; }
   .finale p.phrase span{ color:var(--terracotta); }
-  .finale .cta{ margin-top:30px; background:var(--terracotta); box-shadow:0 10px 26px rgba(226,114,91,.4); }
+  .finale .cta{ margin-top:var(--qz-espace-bloc); background:var(--terracotta); box-shadow:0 10px 26px rgba(226,114,91,.4); }
 
   /* ===== Réseaux sociaux (pleine largeur, avant le footer) =====
      Harmonisé le 20/08/2026 : même fond que .foot-legal et footer (#1f272e) pour que les
@@ -1142,7 +1147,7 @@
      texte (1340 px au plus, 26 px de marge) : on lui rend la distance jusqu a chaque bord en marge negative. Un
      debordement des DEUX cotes ne peut pas allonger la page tant qu il s arrete pile au bord — d ou --qz-larg-ecran,
      la vraie largeur visible, et non 100vw qui compte la barre de defilement. */
-  .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:38px;
+  .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:var(--qz-espace-bloc);   /* 38 -> 34 */
     width:auto; margin-left:calc(-1 * (var(--qz-bord))); margin-right:calc(-1 * (var(--qz-bord))); }
   /* Retire (28/08, demande fondateur) : le defilement fatiguait les yeux a
      la longue. display:none plutot que suppression du HTML/JS qui le
@@ -1508,7 +1513,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
       <!-- 16/09, plan du fondateur (rouge) : ces deux paragraphes viennent sous la bande des modes, dans sa colonne. -->
       <div class="designer-sous">
-    <p class="lead rv" style="margin-top:44px">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
+    <p class="lead rv" style="margin-top:var(--qz-espace-bloc)">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
     <p class="lead rv" style="margin-top:10px">Chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
     <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
       </div>
