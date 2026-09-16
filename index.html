@@ -1208,19 +1208,23 @@
          plus grosse depense d accent de la page pour zero action. Elles passent au navy. --- */
   body .chip{ background:#1e2b35!important; color:#dedede!important; }
 
-  /* --- 3. Le kraft en SURFACE. Deux sections choisies parce qu elles ne portent aucune carte grise : « D ou vient la
-         tesselle », qui raconte l origine, et la cloture. Elles encadrent la fin de page.
+  /* --- 3. Le kraft en SURFACE. CORRECTION du premier jet : j avais pris « D ou vient la tesselle » et la cloture en
+         disant qu elles encadraient la fin de page. Elles se SUIVENT — les deux aplats se touchaient et n en faisaient
+         qu un seul, tres haut. Le fondateur n a donc vu le kraft qu a un endroit, et il avait raison.
+         Le second aplat descend au milieu de la page, sur « Le resultat » : deux photos et le comparateur, aucune carte
+         grise, et c est le moment ou l on REGARDE — un fond chaud y sert de passe-partout. Entre les deux, sept sections
+         de gris : le kraft revient, il ne s etale pas.
+         Le choix des sections n est pas libre : le kraft et le gris des cartes ne donnent que 1,51 l un contre l autre.
+         Toute section portant des cartes grises est donc exclue — cadeau, livraison, gamme, ecosysteme, designer.
          Contrastes sur le kraft : encre 9,59, navy 7,74 — un aplat kraft porte le texte mieux que le gris de page. --- */
   /* body en plus : le panneau pose .finale{background:transparent!important} et sa feuille est lue APRES la notre.
      Troisieme fois aujourd hui que ce piege se referme — a force egale, c est toujours lui qui gagne. */
-  #histoire, body .finale{ background:#CBBD93!important; }
-  #histoire p, #histoire .reinvente{ color:#1e2b35!important; }
-  /* La signature garde l encre que le panneau lui pose : sur le kraft elle donne 9,59, on ne peut pas faire mieux.
-     Seul son mot accentue doit foncer : l orange TEXTE du panneau (#974b21) ne vaut que 3,36 sur ce kraft. */
-  body .finale .phrase span{ color:#6b3510!important; }
-  /* Le bouton de cloture est le seul objet orange pose sur le kraft : leurs luminosites sont proches (1,83), son bord
-     s y estompait. Un filet d encre le redecoupe, comme pour les pastilles des cartes de modes ce matin. */
-  body .finale .cta{ box-shadow:0 0 0 2px #10181f; }
+  #histoire, #resultat{ background:#CBBD93!important; }
+  /* Les legendes sous les photos etaient a #4F5A65 : 3,77 sur le kraft, sous le seuil. Elles suivent les autres textes.
+     C est la regle de la journee — un fond change, TOUS les textes poses dessus se recalculent, pas seulement les gros. */
+  #histoire p, #histoire .reinvente, #resultat p, #resultat .lead, #resultat figcaption, #resultat .comparateur-note{ color:#1e2b35!important; }
+
+
   /* ================= FIN DE L ESSAI 2 ================= */
 
 
