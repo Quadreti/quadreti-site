@@ -48,6 +48,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
+    /* 16/09, demande du fondateur : « CARTE 74 TEXTE 74 A GAUCHE ET A DROITE ». --qz-bord est LA mesure de la page :
+       la distance du texte jusqu au bord de la fenetre. Carte de titre, bandes defilantes, bandeaux pleine largeur et
+       remplissage du cadre de page en dependent tous, donc tout reste aligne par construction.
+       La valeur vaut la MOITIE de ce qu elle valait : (largeur - 1340) / 4 + 13 au lieu de / 2 + 26. Le plancher de
+       26 px reste, sinon un telephone se retrouverait avec 13 px de gouttiere.
+       On mesure sur --qz-larg-ecran (publie par bandeau-relief.js) et non 100vw : 100vw compte la barre de defilement. */
+    --qz-bord: max(26px, (var(--qz-larg-ecran, 100vw) - 1340px) / 4 + 13px);
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
     /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
@@ -86,7 +93,10 @@
   /* 14/09, fondateur : « occupe la largeur de la page ». 1060 px laissait 300 px de vide de chaque cote sur un grand ecran.
      1340 et pas davantage : au-dela, une ligne de texte passe 90 caracteres et devient penible a suivre — c est la lecture qui
      fixe la limite, pas la taille de l ecran. Les paragraphes centres gardent d ailleurs leur propre plafond, plus bas. */
-  .wrap{ max-width:1340px; margin:0 auto; padding:0 26px; }
+  /* 16/09 : le plafond de 1340 px est retire. C est lui qui fixait la marge — tant qu il tenait, elargir le texte etait
+     impossible sans decaler la carte de titre. Le cadre occupe maintenant la fenetre moins --qz-bord de chaque cote.
+     La longueur de ligne reste protegee la ou elle compte : le chapo garde son propre plafond de 640 px (.blk p.lead). */
+  .wrap{ max-width:none; margin:0 auto; padding:0 var(--qz-bord); }
 
   /* Apparition au scroll */
   .rv{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
@@ -703,7 +713,7 @@
        devient un bandeau d un bord de page a l autre, comme la bande de photos au-dessus. Son remplissage vaut le debord,
        donc son texte retombe exactement sur la marge de la page, ferre a droite comme sa carte de titre. */
     #grandir .scal-foot{ text-align:right; max-width:none; width:auto; border-radius:0;
-      margin:26px calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)) 0; padding:24px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); }
+      margin:26px calc(-1 * (var(--qz-bord))) 0; padding:24px calc(var(--qz-bord)); }
     #designer .app-reassure{ text-align:right; }
     #gamme .gamme-notes{ text-align:left; margin-left:0; margin-right:auto; }
   }
@@ -766,11 +776,11 @@
     /* Le plafond n est pas 100% (la largeur de la colonne) : c est la colonne, PLUS le debord de gauche, PLUS 40 px des
        54 px de gouttiere. Sans ces 40 px le compte ne tombe pas : le remplissage gauche et le debord s annulent, il ne
        reste que la largeur de la colonne pour tout tenir. La carte s arrete malgre tout a distance de l image. */
-    max-width:calc(100% + max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px + 40px);
+    max-width:calc(100% + var(--qz-bord) + 40px);
     background:#1e2b35; border-radius:0 999px 999px 0;
     border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;   /* le demi-cercle ferme la carte a l INTERIEUR ; a gauche elle est contre le bord de page, pas de bord libre donc pas de liseré */
-    padding:26px 100px 28px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px);   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
-    margin:0 0 20px calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px));
+    padding:26px 100px 28px calc(var(--qz-bord));   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
+    margin:0 0 20px calc(-1 * (var(--qz-bord)));
   }
   .titre-carte .eyebrow{ color:#f0a06a!important; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
   .titre-carte h2{ color:#dedede!important; margin-bottom:0; min-width:0; }   /* 10,75 */
@@ -786,21 +796,21 @@
   }
   /* Sous 1100 px : surtitre et titre reempiles, remplissage resserre, et la carte reprend la largeur disponible plutot que
      celle de son titre — une ligne insecable deborderait a DROITE, ce qui ajoute une barre de defilement. */
-  @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); border-radius:0 60px 60px 0; } }
+  @media (max-width:1099px){ .titre-carte{ width:auto; max-width:none; padding:24px 40px 26px calc(var(--qz-bord)); border-radius:0 60px 60px 0; } }
 
   /* 15/09, fondateur : « on alterne a partir de la 1ere gauche droite gauche droite ». Le miroir exact de la carte :
      le demi-cercle, le debord et l ordre surtitre/titre basculent ensemble. La carte vient buter EXACTEMENT sur le bord
      droit de la page — pas un pixel au-dela : un debordement a droite, lui, ajoute une barre de defilement. C est pour
      ce genre de calcul que la vraie largeur visible est publiee dans --qz-larg-ecran (100vw compte la barre). */
   .titre-carte.droite{
-    margin:0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)) 20px auto;
-    padding:26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 28px 100px;
+    margin:0 calc(-1 * (var(--qz-bord))) 20px auto;
+    padding:26px calc(var(--qz-bord)) 28px 100px;
     border-radius:999px 0 0 999px;
     border-left:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-right:none;
     text-align:right;
   }
   @media (min-width:1100px){ .titre-carte.droite{ flex-direction:row-reverse; } }   /* le surtitre au bord de page, le titre contre la courbe : le miroir jusqu au bout */
-  @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 26px 40px; border-radius:60px 0 0 60px; } }
+  @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc(var(--qz-bord)) 26px 40px; border-radius:60px 0 0 60px; } }
 
   /* 16/09, fondateur : « on unifie carte titre navy et arriere-plan gris sur toutes les sections ». Il n y a donc plus
      de variante claire de la carte de titre : une seule regle, la carte navy, partout. */
@@ -831,7 +841,7 @@
     /* 16/09 : le contenu de la carte rejoint l axe du chapo — miroir de ce qui a ete fait sur les sections a carte
        droite. Le remplissage gauche reprend sa valeur entiere : surtitre, titre, chapo et bouton partent du meme point. */
     .app-duo > .bandeau-outils{ grid-column:2; grid-row:1 / -1; }   /* toute la hauteur, a cote du titre */
-    .app-duo .bandeau-outils{ margin-top:0; margin-right:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }   /* jusqu au bord droit de la page */
+    .app-duo .bandeau-outils{ margin-top:0; margin-right:calc(-1 * (var(--qz-bord))); }   /* jusqu au bord droit de la page */
   }
 
   /* 16/09 : le duo de « Quadreti Designer », miroir de celui de « L ecosysteme ». La carte vient de la DROITE : le texte
@@ -851,7 +861,7 @@
     /* Meme marge des deux cotes, dans l empreinte de la BANDE et non de la colonne : la bande va du bord de page au
        bord de la colonne, le texte s en retire de 74 px de chaque cote — la moitie du debord de page, la meme valeur
        qu a droite. */
-    .designer-duo .designer-sous{ margin-left:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); margin-right:calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2); }
+    .designer-duo .designer-sous{ margin-left:calc(-1 * ((var(--qz-bord)) / 2)); margin-right:calc((var(--qz-bord)) / 2); }
     .designer-duo .designer-sous .lead{ margin:0 0 14px; max-width:none; text-align:left; }
     /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
        `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
@@ -872,7 +882,7 @@
        moitie de sa largeur en boucle. Ce n est PAS une zone de defilement — donc aucune barre possible, et c est ce qui
        reglait le probleme. Elle s arrete au survol et des qu une carte prend le focus clavier. */
     .designer-duo .app-grid,
-    .duo-bande .bande-fenetre{ overflow:hidden;   /* descendant et non enfant direct : la bande de Designer vit dans un sous-bloc */ margin:0 0 0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }
+    .duo-bande .bande-fenetre{ overflow:hidden;   /* descendant et non enfant direct : la bande de Designer vit dans un sous-bloc */ margin:0 0 0 calc(-1 * (var(--qz-bord))); }
     /* Le duo generique : texte a droite, bande a gauche. Chaque section n apporte que la part de sa colonne de texte
        (calculee sur la largeur de son titre) et la duree de son tour. */
     .duo-bande{ display:grid; grid-template-columns:1fr minmax(0,var(--duo-col,.8fr)); gap:18px clamp(24px,4vw,54px); align-items:start; }
@@ -1072,7 +1082,7 @@
      debordement des DEUX cotes ne peut pas allonger la page tant qu il s arrete pile au bord — d ou --qz-larg-ecran,
      la vraie largeur visible, et non 100vw qui compte la barre de defilement. */
   .color-note{ position:relative; overflow:hidden; z-index:0; margin-top:38px;
-    width:auto; margin-left:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); margin-right:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }
+    width:auto; margin-left:calc(-1 * (var(--qz-bord))); margin-right:calc(-1 * (var(--qz-bord))); }
   /* Retire (28/08, demande fondateur) : le defilement fatiguait les yeux a
      la longue. display:none plutot que suppression du HTML/JS qui le
      peuple -- garde la possibilite de le rallumer facilement plus tard. */
