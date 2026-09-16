@@ -710,7 +710,12 @@
   /* 14/09 : .swap-visu retire — plus aucun element de la page ne portait cette classe. */
 
   /* ===== Gamme ===== */
-  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:var(--qz-espace-bloc); }   /* 36 -> 34 */
+  /* 16/09 : la rangee est passee de CINQ formats a trois, les cartes s elargissent donc de 270 a 470 px. Essai fait avec
+     un plafond de 340 px et la rangee centree : les cartes gardaient leur proportion d avant, mais la rangee devenait le
+     SEUL bloc de la page a ne pas tomber sur l axe du texte. Pleine largeur retenu — la rangee occupe exactement la meme
+     empreinte que la carte de titre, le chapo et la note en dessous, et le bouton donne aux cartes le corps qui leur
+     manquait. */
+  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:var(--qz-espace-bloc); }
   .offer{
     background:var(--qz-gris-photo); border:1.5px solid var(--qz-gris-photo); border-radius:var(--tess);   /* 16/09 : le gris de la photo */
     padding:22px 18px 18px; text-align:center; position:relative;
@@ -729,6 +734,10 @@
   .offer .miniwall i{ display:block; width:11px; height:11px; border-radius:2px; background:var(--fond); }
   .offer .prix{ font-weight:800; font-size:20px; }
   .offer .pu{ font-size:12px; color:#1e2b35; font-weight:600; }   /* 16/09 : voir .offer .dim */
+  /* 16/09, fondateur : « un bouton achat a chaque colonne ». Il reprend la classe .cta de la page plutot qu un style
+     a lui : les couleurs des boutons sont gerees par le panneau, un bouton peint en dur ici aurait derive des autres
+     au premier changement de theme. Seules la taille et la largeur sont reprises, une carte de tarif etant etroite. */
+  .offer .cta{ display:block; margin-top:16px; padding:11px 14px; font-size:13.5px; box-shadow:none; }
 
   /* 16/09 : les cartes du Studio passent au meme gris. Elles vivent dans prisme-outils.css, feuille PARTAGEE avec la page
      Studio : la regle est donc portee par #app, pour ne repeindre que la bande de l accueil. Leur titre est deja en
@@ -1668,32 +1677,30 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="offer rv">
         <div class="fmt">×1</div><div class="dim">20 × 20 cm · 49 tesselles</div>
         <div class="miniwall" style="grid-template-columns:repeat(1,11px)"><i></i></div>
-        <div class="prix">24,95 €</div><div class="pu">24,95 € / carreau</div>
+        <div class="prix">29,95 €</div><div class="pu">29,95 € / carreau</div>
+        <a class="cta" href="/boutique/" data-bouton-zone="tarif_x1">Commander</a>
       </div>
       <div class="offer rv">
         <div class="fmt">×4</div><div class="dim">40 × 40 cm</div>
         <div class="miniwall" style="grid-template-columns:repeat(2,11px)"><i></i><i></i><i></i><i></i></div>
         <div class="prix">89,95 €</div><div class="pu">22,49 € / carreau</div>
+        <a class="cta" href="/boutique/" data-bouton-zone="tarif_x4">Commander</a>
       </div>
       <div class="offer pop rv">
         <div class="flag">Le plus choisi</div>
         <div class="fmt">×9</div><div class="dim">60 × 60 cm</div>
         <div class="miniwall" style="grid-template-columns:repeat(3,11px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="prix">179,95 €</div><div class="pu">20,00 € / carreau</div>
+        <a class="cta" href="/boutique/" data-bouton-zone="tarif_x9">Commander</a>
       </div>
-      <div class="offer rv">
-        <div class="fmt">×16</div><div class="dim">80 × 80 cm</div>
-        <div class="miniwall" style="grid-template-columns:repeat(4,11px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="prix">279,95 €</div><div class="pu">17,50 € / carreau</div>
-      </div>
-      <div class="offer rv">
-        <div class="fmt">×25</div><div class="dim">100 × 100 cm</div>
-        <div class="miniwall" style="grid-template-columns:repeat(5,11px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="prix">374,95 €</div><div class="pu">15,00 € / carreau</div>
-      </div>
+
     </div>
 
-    <p class="gamme-notes rv">Livraison en point relais offerte dès le format ×4. Au-delà de 25 carreaux ou sur mesure : <b>contactez-nous</b> — chaque carreau supplémentaire à 12,50 €.</p>
+    <!-- 16/09 : « au-dela de 25 carreaux » ne veut plus rien dire, le x25 ayant quitte la rangee. Le seuil devient le
+         plus grand format encore affiche. Le tarif marginal de 12,50 EUR est CONSERVE tel quel : applique a partir du x9
+         il redonne presque exactement les deux prix retires (x16 : 179,95 + 7 x 12,50 = 267,45 pour 279,95 affiches ;
+         x25 : 179,95 + 16 x 12,50 = 379,95 pour 374,95). A confirmer par le fondateur malgre tout. -->
+    <p class="gamme-notes rv">Livraison en point relais offerte dès le format ×4. Au-delà du format ×9 ou sur mesure : <b>contactez-nous</b> — chaque carreau supplémentaire à 12,50 €.</p>
 
     <div class="premium rv">
       <div>
