@@ -420,6 +420,28 @@
   .deux-col{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:start; text-align:left; }
   @media (max-width:860px){ .deux-col{ grid-template-columns:1fr; gap:30px; } }
   .deux-col h2{ text-align:left; }
+  /* 16/09 : « Pour qui » empile ses DEUX RANGEES ; a l interieur de chacune, la carte et le texte sont cote a cote
+     (voir .duo ci-dessus). L ecart reprend celui qui separait les colonnes, en plus genereux : ce sont deux temps de
+     lecture l un apres l autre, plus deux colonnes qu on embrasse d un coup d oeil. */
+  /* 16/09, fondateur : « ou colonne titre et colonne texte cote a cote ». Deux rangees, chacune une carte de titre
+     d un cote et son texte de l autre. La carte est ecrite AVANT son texte — l ordre de lecture ; c est la grille qui
+     la place a droite quand c est son tour. */
+  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,54px); align-items:center; }
+  .duo > *{ min-width:0; }   /* sinon le titre de la carte impose sa largeur a la colonne */
+  .duo.duo-droite > .titre-carte{ grid-column:2; grid-row:1; }
+  .duo.duo-droite > .duo-txt{ grid-column:1; grid-row:1; }
+  /* Une colonne fait la moitie de la page : la ligne insecable n y tient pas. Deux classes contre une, la regle passe
+     donc devant celle des cartes pleine largeur, media query ou pas. */
+  .duo .titre-carte h2{ white-space:normal; }
+  /* Et des que la carte fait plusieurs lignes, le demi-cercle — qui creuse d une demi-hauteur — finirait par manger le
+     texte. Rayon borne a 48 px : les 70 px de remplissage le laissent respirer quelle que soit la hauteur. */
+  /* La carte prend sa colonne au lieu de sa largeur de texte : une largeur au contenu gonflait la piste de grille —
+     mesure, 1110 px pour la carte contre 123 px pour le texte. Les deux colonnes sont a nouveau egales, et les deuxe
+     cartes d une meme page ont la meme largeur, ce qui se voit. */
+  .duo .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }
+  .duo .titre-carte.droite{ border-radius:48px 0 0 48px; margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
+  @media (max-width:860px){ .duo{ grid-template-columns:1fr; } .duo.duo-droite > .titre-carte,.duo.duo-droite > .duo-txt{ grid-column:auto; grid-row:auto; } }
+  .empile{ display:grid; gap:clamp(40px,6vw,72px); text-align:left; }
 
   /* Le comparateur : deux photos du MEME cadrage superposees, la seconde rognee a la position du curseur. Le curseur est un
      <input type="range"> rendu invisible mais bien present — il est deja pilotable au clavier et annonce aux lecteurs d ecran,
@@ -1267,18 +1289,29 @@ document.addEventListener('DOMContentLoaded', function(){
      n en fait pas une section a part, et c est une section de moins sur une page deja longue. -->
 <section class="blk alt" id="pourqui">
   <div class="wrap">
-    <div class="deux-col">
-      <div class="rv">
+    <!-- 16/09, fondateur : « alors ne les dispose pas en colonne ». Les deux titres etaient cote a cote, ce qui
+         interdisait au premier d avoir sa carte — une colonne s arrete au milieu de la page. Empiles, chacun a la
+         sienne, pleine largeur. -->
+    <div class="empile">
+      <div class="duo duo-droite rv">
+        <div class="titre-carte droite rv">
         <div class="eyebrow">Pour qui</div>
         <h2>D'abord vous.</h2>
-        <p class="lead" style="margin:0">Quadreti est fait pour vous : un souvenir personnel qui prend forme sur votre mur, sans compétence créative particulière. <b>Pour offrir, ou pour vous offrir.</b> Les makers et les créateurs y trouvent aussi un terrain de jeu : ils sont nos premiers ambassadeurs.</p>
+        </div>
+        <div class="duo-txt">
+        <p class="lead" style="margin-top:0">Quadreti est fait pour vous : un souvenir personnel qui prend forme sur votre mur, sans compétence créative particulière. <b>Pour offrir, ou pour vous offrir.</b> Les makers et les créateurs y trouvent aussi un terrain de jeu : ils sont nos premiers ambassadeurs.</p>
+        </div>
       </div>
-      <div class="rv">
+      <div class="duo rv">
+        <div class="titre-carte rv">
         <div class="eyebrow">Et demain ?</div>
-        <h2 style="font-size:23px">Changer d'avis n'est plus un défaut. C'est une fonctionnalité.</h2>
+        <h2>Changer d'avis n'est plus un défaut. C'est une fonctionnalité.</h2>   <!-- 16/09 : la taille en ligne (23 px) disait « titre de second rang dans une colonne ». Ce bloc n en est plus une : le titre suit l echelle des autres cartes. -->
+        </div>
+        <div class="duo-txt">
         <div class="arg"><b>Une tesselle</b><p>se déclipse et se remplace en secondes : une photo remplace un souvenir, une couleur corrige une envie.</p></div>
         <div class="arg"><b>Le mur entier</b><p>change d'image pour le prix d'une feuille imprimée. Vos compositions se gardent et se reclipsent quand vous voulez.</p></div>
         <div class="arg"><b>Rien ne s'abîme</b><p>ni le support, ni la tesselle, ni le visuel. Achetez le support une fois, changez l'œuvre pour toujours.</p></div>
+        </div>
       </div>
     </div>
   </div>
