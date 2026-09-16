@@ -1193,34 +1193,41 @@
   }
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 
-  /* ================= ESSAI 3 : DEUX ACCENTS, DEUX TERRITOIRES — 16/09, a retirer en bloc =================
-     Le kraft a une luminosite de 0,512, pile au milieu de l echelle. Contre N IMPORTE QUEL fond clair il plafonne a
-     1,87 — et c est le BLANC PUR — quand il en faut 3 pour qu un element graphique se voie. Aucune couleur claire ne
-     peut le mettre en valeur : c est une propriete de la teinte, pas un defaut de reglage. Les aplats kraft des essais
-     precedents sont donc abandonnes.
-     Contre du sombre, il excelle : 7,74 sur le navy de marque, 9,59 sur l encre.
-     D ou la regle de cet essai : LE KRAFT NE PEINT QUE CE QUI EST POSE SUR DU NAVY, L ORANGE RESTE LA COULEUR DE
-     L ACTION SUR LE CLAIR. Deux accents, deux territoires, chacun lisible chez lui.
-     POUR REVENIR : supprimer ce bloc jusqu au repere de fin. */
+  /* ================= ESSAI 4 : TOUT L ACCENT EN KRAFT — 16/09, a retirer en bloc =================
+     Decision du fondateur, qui veut vivre avec un jour ou deux avant de trancher. L accent devient unique : le kraft
+     #CBBD93 remplace l orange PARTOUT sur l accueil.
+     DEUX ENDROITS OU LA TEINTE EST STRUCTURELLEMENT FAIBLE, et il faut le savoir en regardant :
+       - le BORD des boutons contre le fond de page : 1,39. Le texte dessus reste excellent (9,59 en encre), mais la
+         FORME du bouton se detache mal du gris. Un filet d encre le reglerait en une ligne ; il n est pas pose, pour
+         que le fondateur juge la teinte telle qu elle est.
+       - le DECROCHE, dont le trait longe la frontiere navy / gris : 7,74 du cote navy, 1,39 du cote gris. Il
+         disparaitra sur la moitie de son parcours.
+     Ce n est pas un defaut de reglage : le kraft a une luminosite de 0,512, pile au milieu de l echelle ; contre un fond
+     clair il plafonne a 1,87, et c est le blanc pur.
+     POUR REVENIR A L ORANGE : supprimer ce bloc jusqu au repere de fin. */
 
-  /* --- 1. Territoire du KRAFT : le navy. --- */
-  .blk .titre-carte{ border-color:#CBBD93!important; }        /* les treize liseres : 7,74 sur le navy de la carte, contre 4,23 en orange */
-  .blk .titre-carte .eyebrow{ color:#CBBD93!important; }      /* 7,74, contre 6,85 pour l orange eclairci qu il remplace */
-  .qb-defile{ box-shadow:inset 0 calc(var(--lisere-ep,3) * -1px) 0 #CBBD93!important; }   /* ce lisere est peint DANS la bande navy */
+  /* --- 1. Les jetons. Toute la page les lit depuis le branchement d accent de ce matin. --- */
+  :root{
+    --qz-terracotta:#CBBD93!important; --terracotta:#CBBD93!important;
+    --qz-lisere:#CBBD93!important; --lisere-couleur:#CBBD93!important;
+  }
 
-  /* --- 2. Territoire de l ORANGE : l action sur le clair. Rien a ecrire — boutons, pastille « le plus choisi »,
-         numeros des gestes et pictos de Livraison le gardent par defaut.
-         Le DECROCHE le garde aussi, et c est un choix : son trait longe la FRONTIERE entre le navy et le gris, il
-         n appartient a aucun des deux territoires. L orange y donne 4,23 d un cote et 2,54 de l autre ; le kraft
-         donnerait 7,74 et 1,39 — il disparaitrait sur la moitie de son parcours. --- */
+  /* --- 2. Les litteraux que le panneau injecte lui-meme et qui ne lisent aucun jeton. Un selecteur de plus que lui :
+         il pose .cta et .offer .flag en !important et sa feuille est lue APRES la notre. --- */
+  body .cta, #gamme .offer .flag, body .ticker, body .qb-diapo-point, body .qz-bulle-contact{ background:#CBBD93!important; }
+  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#CBBD93!important; }
+  /* La vignette de Mosaique Creative dans la bande du Studio : ce n est pas l accent du site mais la TEINTE PROPRE de
+     cet outil, ecrite en donnee dans prisme-outils.js. Elle est convertie ici parce que le fondateur a dit « du haut en
+     bas » — mais seulement sur l accueil (#app) : la meme carte vit aussi sur la page Studio, ou elle reste orange.
+     Si l essai est retenu, c est la donnee de l outil qu il faudra changer, pas cette ligne. */
+  #app .face[style*="d96c2f"] .face-visuel{ background:#CBBD93!important; }   /* la teinte est posee en propriete --teinte sur .face : on ne peut pas selectionner sur sa VALEUR, on passe donc par l attribut style. Sans ce filtre, les dix vignettes du Studio y passaient toutes. */
 
-  /* --- 3. Ce qui n est ni accent ni action prend le navy. Un trait de structure n est pas un accent, et sept
-         pastilles orange pleines etaient la plus grosse depense d accent de la page pour zero action. --- */
+  /* --- 3. Ce qui etait deja passe au navy le reste : ce n est plus de l orange, et c est ce qui le rend lisible. --- */
   .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#1e2b35!important; }
-  .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }   /* 5,12 sur le mur gris de la photo, contre 1,21 en orange — c est une poignee qu on attrape */
+  .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }
   .comparateur input:focus-visible{ outline-color:#1e2b35!important; }
   body .chip{ background:#1e2b35!important; color:#dedede!important; }
-  /* ================= FIN DE L ESSAI 3 ================= */
+  /* ================= FIN DE L ESSAI 4 ================= */
 
 
 </style>
