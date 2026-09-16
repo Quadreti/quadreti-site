@@ -803,7 +803,7 @@
       gap:18px clamp(24px,4vw,54px); align-items:start; }
     .designer-duo > *{ min-width:0; }
     .designer-duo > .designer-txt{ grid-column:2; }
-    .designer-duo > .designer-gauche{ grid-column:1; }
+    .designer-duo > .designer-gauche{ grid-column:1; grid-row:1; }   /* la RANGEE aussi : sans elle, le placement automatique envoie ce bloc en rangee 2, puisqu il est ecrit apres celui de droite et qu une grille ne revient jamais en arriere */
     /* ROUGE : les deux paragraphes sous la bande, dans sa colonne, sur l axe de gauche. */
     .designer-duo .designer-sous{ margin-top:26px; text-align:left; }   /* colle sous la bande : plus rien ne peut s intercaler */
     .designer-duo .designer-sous .lead{ margin:0 0 14px; max-width:none; text-align:left; }
