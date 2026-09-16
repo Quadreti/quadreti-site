@@ -1046,14 +1046,19 @@
   .qa .a p{ padding:0 4px 18px; font-size:14.5px; color:#4a5158; }
 
   /* ===== Final ===== */
-  .finale{ background:var(--charbon); color:#fff; text-align:center; padding:clamp(64px,9vw,110px) 22px; }
+  /* 16/09 : plus aucune couleur ici. Le fond et l encre etaient ecrits avec --charbon et --terracotta, jetons de
+     l identite KRAFT abandonnee — et ils ne peignaient rien : le panneau repeint cette section en CLAIR depuis
+     longtemps, avec !important. La feuille decrivait donc une section sombre quand la page en affiche une claire.
+     Le panneau est la source des couleurs du site ; cette section lui rend la main, il ne reste ici que la geometrie. */
+  .finale{ text-align:center; padding:clamp(64px,9vw,110px) 22px; }
   /* 16/09, fondateur : « · clic · » retire — ni lui ni moi ne savions expliquer a quoi il servait. Sa regle part avec
      lui, pour ne pas laisser un selecteur orphelin dans la feuille. */
   /* La signature passe de clamp(24,4.6vw,40) a l echelle des titres de la page. A 1600 elle faisait 40 px, soit DIX de
      plus que les treize titres de section : la derniere ligne de la page criait plus fort que tout ce qui la precede. */
   .finale p.phrase{ font-size:clamp(20px,2.05vw,30px); font-weight:700; line-height:1.2; }
-  .finale p.phrase span{ color:var(--terracotta); }
-  .finale .cta{ margin-top:var(--qz-espace-bloc); background:var(--terracotta); box-shadow:0 10px 26px rgba(226,114,91,.4); }
+  /* 16/09 : le bouton ne repeint plus rien. Il etait le seul de la page a imposer sa couleur ; en le laissant sur la
+     classe .cta, il suit le panneau comme les autres et ne pourra plus deriver. */
+  .finale .cta{ margin-top:var(--qz-espace-bloc); }
 
   /* ===== Réseaux sociaux (pleine largeur, avant le footer) =====
      Harmonisé le 20/08/2026 : même fond que .foot-legal et footer (#1f272e) pour que les
