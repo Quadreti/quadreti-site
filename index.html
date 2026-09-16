@@ -314,7 +314,7 @@
      soit 74 px avant le bord de la carte — la moitie du debord de page. A GAUCHE la photo se retire dans sa colonne
      et retrecit pour commencer sur ce meme axe au lieu de le traverser. */
   @media (min-width:861px){
-    #comment .geste{ margin-right:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); }
+    /* 16/09 : le bloc s arrete sur la fin du CHAPO et non sur le surtitre — un seul axe a droite pour toute la section. */
     #comment .geste-photo{ justify-content:flex-end; }
     #comment .geste-photo > *{ max-width:330px; width:100%; }   /* le geste 2 est un diaporama, pas une image : on contraint ce que la figure contient, pas l image */
     /* 16/09, fondateur : « alignement droite ». Toute la colonne de texte finit sur le meme axe que la carte de titre.
