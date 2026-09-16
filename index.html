@@ -815,7 +815,7 @@
     .app-duo > .app-cta{ grid-column:1; grid-row:3; margin-top:0; text-align:left; }   /* sous le chapo, sur le meme axe que lui */
     /* 16/09 : le contenu de la carte rejoint l axe du chapo — miroir de ce qui a ete fait sur les sections a carte
        droite. Le remplissage gauche reprend sa valeur entiere : surtitre, titre, chapo et bouton partent du meme point. */
-    #app .titre-carte{ padding-left:calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); }
+    #app .titre-carte, #styles .titre-carte{ padding-left:calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); }   /* 16/09 : le contenu de la carte rejoint l axe du texte, sur les deux sections a carte gauche */
     .app-duo > .bandeau-outils{ grid-column:2; grid-row:1 / -1; }   /* toute la hauteur, a cote du titre */
     .app-duo .bandeau-outils{ margin-top:0; margin-right:calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }   /* jusqu au bord droit de la page */
   }
@@ -1210,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <!-- 14/09 : le kit, en trois elements. Texte et decoupage repris de la maquette de presentation validee — la section
          s appelle « C est quoi », elle doit MONTRER l objet avant de le comparer a quoi que ce soit. -->
-    <p class="lead rv" style="margin-bottom:0">Une grille qui se fixe au mur avec des punaises, des tesselles en bois, des étuis transparents, et une feuille prédécoupée à imprimer chez vous. <b>C'est tout le kit.</b></p>
+    <p class="lead rv" style="margin-top:20px;margin-bottom:0">Une grille qui se fixe au mur avec des punaises, des tesselles en bois, des étuis transparents, et une feuille prédécoupée à imprimer chez vous. <b>C'est tout le kit.</b></p>
 
       </div>
       <div>
