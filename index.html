@@ -737,11 +737,14 @@
   .gamme-notes b{ color:var(--charbon); }
   /* 14/09 : l encart etait vert kaki sur vert pale. Il devient une carte, comme les autres de la page, et c est sa
      pastille orange qui porte l accent. */
+  /* 16/09, fondateur : « BANDEAU NAVY pleine largeur (retire la puce etoile) ». La carte blanche de 640 px devient un
+     bandeau d un bord de page a l autre, comme la note de fin de « Votre mur grandit ». Son remplissage vaut le debord,
+     donc son texte retombe sur la marge de la page. La pastille orange est retiree du HTML : le bandeau porte l accent
+     par son fond, il n a plus besoin d une puce pour le faire. */
   .premium{
-    max-width:640px; margin:30px auto 0; background:var(--blanc); border:1px solid var(--border);
-    border-radius:14px; padding:20px 24px; display:flex; gap:16px; align-items:flex-start;
+    max-width:none; width:auto; border:none; border-radius:0; display:block; text-align:center;
+    margin:34px calc(-1 * var(--qz-bord)) 0; padding:24px var(--qz-bord);
   }
-  .premium .ic{ flex:0 0 40px; width:40px; height:40px; border-radius:8px 8px 8px 16px; background:#d96c2f; color:#10181f;   /* encre sur orange : 5,23 */ display:flex; align-items:center; justify-content:center; font-size:18px; }
   .premium h3{ font-size:16px; font-weight:700; margin-bottom:4px; }
   .premium p{ font-size:14px; color:#4a5158; }
 
@@ -765,8 +768,8 @@
      tranche, pas l ordre des feuilles. */
   /* 16/09 : ces cartes sont navy — leurs textes sont poses ici, sinon ils retombent sur les regles d origine, ecrites
      quand elles etaient blanches : du fonce sur du navy. */
-  .blk .gift h3, .blk .trust-card h3, .blk .gift b, .blk .trust-card b{ color:#dedede!important; }   /* 10,75 sur le navy */
-  .blk .gift p, .blk .trust-card p, .blk .trust-card li{ color:#aab2ba!important; }                  /* 6,74 */
+  .blk .gift h3, .blk .trust-card h3, .blk .premium h3, .blk .gift b, .blk .trust-card b{ color:#dedede!important; }   /* 10,75 sur le navy */
+  .blk .gift p, .blk .trust-card p, .blk .premium p, .blk .trust-card li{ color:#aab2ba!important; }                  /* 6,74 */
   .blk .gift .tagline{ color:#f0a06a!important; }   /* l orange ECLAIRCI : sur du navy, celui de marque ne donne que 3,97 */
 
   /* 15/09 : TROIS regles injectees par le panneau reprenaient la main, toutes calculees quand ces cartes etaient BLANCHES :
@@ -775,7 +778,7 @@
      Elles tiennent en une classe ; on passe devant avec deux. Le panneau garde la main sur tout le reste — c est bien lui
      la source des couleurs, on ne lui retire que les quatre cartes dont le fond a ete decide ici, a contre-sens de leur
      section. */
-  .blk .gift, .blk .trust-card{ background:#1e2b35!important; border-color:#1e2b35!important; }   /* 16/09 : navy, comme les cartes de modes */
+  .blk .gift, .blk .trust-card, .blk .premium{ background:#1e2b35!important; border-color:#1e2b35!important; }   /* 16/09 : navy, comme les cartes de modes */
   .blk .mode p{ color:#aab2ba!important; }        /* 6,74 sur le navy de la carte */
   .blk .color-note b{ color:#ffffff!important; }  /* 14,46 sur le navy de la bande */
 
@@ -1648,7 +1651,6 @@ document.addEventListener('DOMContentLoaded', function(){
     <p class="gamme-notes rv">Livraison en point relais offerte dès le format ×4. Au-delà de 25 carreaux ou sur mesure : <b>contactez-nous</b> — chaque carreau supplémentaire à 12,50 €.</p>
 
     <div class="premium rv">
-      <div class="ic">✦</div>
       <div>
         <h3>Pas d'imprimante ? Le service impression s'en charge.</h3>
         <p>Quadreti imprime votre création et vous l'envoie prête à clipser. Vous recevez le tout, vous clipsez, c'est au mur.</p>
