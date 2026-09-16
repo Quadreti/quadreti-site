@@ -320,6 +320,10 @@
     /* 16/09, fondateur : « alignement droite ». Toute la colonne de texte finit sur le meme axe que la carte de titre.
        Le numero passe derriere le titre du geste — « inverse puce et titre » — pour finir a droite lui aussi, et le
        liseré de l encart change de bord avec le texte : a gauche, il aurait coupe le paragraphe au milieu du vide. */
+    /* 16/09, fondateur : « je veux que cela soit aligne a la fin du chapo ». Le contenu de la carte finissait 74 px plus
+       loin que tout le reste — l espace de carte divise par deux ce matin. Ici il reprend sa valeur entiere : le surtitre
+       finit alors exactement ou finit le chapo. Les autres sections gardent le demi espace. */
+    #comment .titre-carte.droite{ padding-right:calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); }
     #comment .geste{ align-items:start; }
     #comment .geste-texte .tete{ margin-top:0; }
     #comment .geste-texte{ text-align:right; }
