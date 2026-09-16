@@ -446,8 +446,11 @@
   /* La carte prend sa colonne au lieu de sa largeur de texte : une largeur au contenu gonflait la piste de grille —
      mesure, 1110 px pour la carte contre 123 px pour le texte. Les deux colonnes sont a nouveau egales, et les deuxe
      cartes d une meme page ont la meme largeur, ce qui se voit. */
-  .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte, .duo-bande .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }   /* width:auto est ce qui empeche la carte de mordre la gouttiere : a droite, ces 40 px sortent de la page */
-  .duo .titre-carte.droite{ border-radius:48px 0 0 48px; margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
+  /* 16/09, fondateur : « la carte titre doit etre arrondie comme toutes les autres ». Le rayon borne a 48 px disparait ;
+     il ne reste ici que la largeur. `width:auto` est ce qui empeche la carte de mordre la gouttiere — a droite, ces
+     40 px sortiraient de la page. */
+  .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte, .duo-bande .titre-carte{ width:auto; max-width:none; }
+  .duo .titre-carte.droite{ margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
   @media (max-width:860px){ .duo{ grid-template-columns:1fr; } .duo.duo-droite > .titre-carte,.duo.duo-droite > .duo-txt{ grid-column:auto; grid-row:auto; } }
   .empile{ display:grid; gap:clamp(40px,6vw,72px); text-align:left; }
 
@@ -728,7 +731,7 @@
     max-width:calc(100% + max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px + 40px);
     background:#1e2b35; border-radius:0 999px 999px 0;
     border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;   /* le demi-cercle ferme la carte a l INTERIEUR ; a gauche elle est contre le bord de page, pas de bord libre donc pas de liseré */
-    padding:26px 70px 28px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px);   /* 70 px a droite : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
+    padding:26px 100px 28px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px);   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
     margin:0 0 20px calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px));
   }
   .titre-carte .eyebrow{ color:#f0a06a!important; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
@@ -753,7 +756,7 @@
      ce genre de calcul que la vraie largeur visible est publiee dans --qz-larg-ecran (100vw compte la barre). */
   .titre-carte.droite{
     margin:0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)) 20px auto;
-    padding:26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 28px 70px;
+    padding:26px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 28px 100px;
     border-radius:999px 0 0 999px;
     border-left:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-right:none;
     text-align:right;
@@ -782,7 +785,7 @@
     /* 16/09, plan du fondateur : la colonne de gauche se resserre (.34 au lieu de .42), le bouton vient se coller au
        chapo (ecart de rangee a 22 px, la ou la gouttiere entre colonnes reste large), et tout part du HAUT — le bandeau
        commence donc juste sous la carte de titre, comme sa fleche le demande. */
-    .app-duo{ display:grid; grid-template-columns:minmax(0,.60fr) 1fr; grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
+    .app-duo{ display:grid; grid-template-columns:minmax(0,.70fr) 1fr; grid-template-rows:auto auto auto; gap:18px clamp(24px,4vw,54px); align-items:start; }   /* les rangees sont DECLAREES : sans elles, le `1 / -1` du bandeau ne designe rien et il ne prend que la premiere */
     .app-duo > *{ min-width:0; }
     .app-duo > .titre-carte{ grid-column:1; grid-row:1; }
     .app-duo > .lead{ grid-column:1; grid-row:2; margin:0; max-width:none; }   /* dans sa colonne, il occupe toute la largeur disponible */
@@ -796,7 +799,7 @@
      La bande n est placee QUE par son numero de colonne ; tout le reste se range tout seul dans la colonne de droite,
      dans l ordre du document (une grille place d abord ce qui est designe, puis le reste dans les cases libres). */
   @media (min-width:1100px){
-    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,.95fr);   /* une seule rangee : le duo s arrete apres le titre, la suite reprend toute la largeur */
+    .designer-duo{ display:grid; grid-template-columns:1fr minmax(0,1.06fr);   /* une seule rangee : le duo s arrete apres le titre, la suite reprend toute la largeur */
       gap:18px clamp(24px,4vw,54px); align-items:start; }
     .designer-duo > *{ min-width:0; }
     .designer-duo > .designer-txt{ grid-column:2; }   /* les deux blocs de texte se suivent dans la colonne de droite */
@@ -841,9 +844,9 @@
   /* Les deux chiffres de chaque bande. La colonne de texte doit valoir le titre a 30 px + 73 px de remplissage et de
      lisere, avec de la marge a 1100 px : « Un cadeau qui continue. » mesure 371 px, « Commandez en confiance. » 399.
      La duree tient un defilement d environ 27 px par seconde, comme la bande du Studio. */
-  #cadeau .duo-bande{ --duo-col:.65fr; --bande-duree:28s; }
-  #livraison .duo-bande{ --duo-col:.72fr; --bande-duree:28s; }
-  #grandir .duo-bande{ --duo-col:.92fr; --bande-duree:40s; --bande-gap:26px; }   /* « Commencez petit. Le mur suivra. » : 493 px a 30 px, le titre le plus long des quatre bandes */
+  #cadeau .duo-bande{ --duo-col:.70fr; --bande-duree:28s; }
+  #livraison .duo-bande{ --duo-col:.78fr; --bande-duree:28s; }
+  #grandir .duo-bande{ --duo-col:1.02fr; --bande-duree:40s; --bande-gap:26px; }   /* « Commencez petit. Le mur suivra. » : 493 px a 30 px, le titre le plus long des quatre bandes */
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
