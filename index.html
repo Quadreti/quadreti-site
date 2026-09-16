@@ -1193,47 +1193,34 @@
   }
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 
-  /* ================= ESSAI 2 : ACCENT RARE + KRAFT EN SURFACE — 16/09, a retirer en bloc =================
-     L accent reste l orange de marque. Ce qui change, c est sa QUANTITE : il ne peint plus que l action et le
-     dispositif de marque. Le kraft, lui, cesse d etre un trait pour devenir un aplat.
+  /* ================= ESSAI 3 : DEUX ACCENTS, DEUX TERRITOIRES — 16/09, a retirer en bloc =================
+     Le kraft a une luminosite de 0,512, pile au milieu de l echelle. Contre N IMPORTE QUEL fond clair il plafonne a
+     1,87 — et c est le BLANC PUR — quand il en faut 3 pour qu un element graphique se voie. Aucune couleur claire ne
+     peut le mettre en valeur : c est une propriete de la teinte, pas un defaut de reglage. Les aplats kraft des essais
+     precedents sont donc abandonnes.
+     Contre du sombre, il excelle : 7,74 sur le navy de marque, 9,59 sur l encre.
+     D ou la regle de cet essai : LE KRAFT NE PEINT QUE CE QUI EST POSE SUR DU NAVY, L ORANGE RESTE LA COULEUR DE
+     L ACTION SUR LE CLAIR. Deux accents, deux territoires, chacun lisible chez lui.
      POUR REVENIR : supprimer ce bloc jusqu au repere de fin. */
 
-  /* --- 1. Les filets rendent l accent et prennent l encre navy. 10,77 sur le gris de page, contre 2,54 en orange :
-         ils se voient mieux ET ils cessent de crier. Un trait de structure n est pas un accent. --- */
+  /* --- 1. Territoire du KRAFT : le navy. --- */
+  .blk .titre-carte{ border-color:#CBBD93!important; }        /* les treize liseres : 7,74 sur le navy de la carte, contre 4,23 en orange */
+  .blk .titre-carte .eyebrow{ color:#CBBD93!important; }      /* 7,74, contre 6,85 pour l orange eclairci qu il remplace */
+  .qb-defile{ box-shadow:inset 0 calc(var(--lisere-ep,3) * -1px) 0 #CBBD93!important; }   /* ce lisere est peint DANS la bande navy */
+
+  /* --- 2. Territoire de l ORANGE : l action sur le clair. Rien a ecrire — boutons, pastille « le plus choisi »,
+         numeros des gestes et pictos de Livraison le gardent par defaut.
+         Le DECROCHE le garde aussi, et c est un choix : son trait longe la FRONTIERE entre le navy et le gris, il
+         n appartient a aucun des deux territoires. L orange y donne 4,23 d un cote et 2,54 de l autre ; le kraft
+         donnerait 7,74 et 1,39 — il disparaitrait sur la moitie de son parcours. --- */
+
+  /* --- 3. Ce qui n est ni accent ni action prend le navy. Un trait de structure n est pas un accent, et sept
+         pastilles orange pleines etaient la plus grosse depense d accent de la page pour zero action. --- */
   .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#1e2b35!important; }
   .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }   /* 5,12 sur le mur gris de la photo, contre 1,21 en orange — c est une poignee qu on attrape */
   .comparateur input:focus-visible{ outline-color:#1e2b35!important; }
-
-  /* --- 2. Les sept pastilles de modes sont des ETIQUETTES, pas des boutons : sept aplats orange pleins etaient la
-         plus grosse depense d accent de la page pour zero action. Elles passent au navy. --- */
   body .chip{ background:#1e2b35!important; color:#dedede!important; }
-
-  /* --- 3. Le kraft en SURFACE. CORRECTION du premier jet : j avais pris « D ou vient la tesselle » et la cloture en
-         disant qu elles encadraient la fin de page. Elles se SUIVENT — les deux aplats se touchaient et n en faisaient
-         qu un seul, tres haut. Le fondateur n a donc vu le kraft qu a un endroit, et il avait raison.
-         Le second aplat descend au milieu de la page, sur « Le resultat » : deux photos et le comparateur, aucune carte
-         grise, et c est le moment ou l on REGARDE — un fond chaud y sert de passe-partout. Entre les deux, sept sections
-         de gris : le kraft revient, il ne s etale pas.
-         Le choix des sections n est pas libre : le kraft et le gris des cartes ne donnent que 1,51 l un contre l autre.
-         Toute section portant des cartes grises est donc exclue — cadeau, livraison, gamme, ecosysteme, designer.
-         Contrastes sur le kraft : encre 9,59, navy 7,74 — un aplat kraft porte le texte mieux que le gris de page. --- */
-  /* body en plus : le panneau pose .finale{background:transparent!important} et sa feuille est lue APRES la notre.
-     Troisieme fois aujourd hui que ce piege se referme — a force egale, c est toujours lui qui gagne. */
-  /* CHOIX DES SECTIONS, deuxieme correction. « Le resultat » etait un mauvais hote : ses deux photos et son comparateur
-     couvrent 73 % de sa surface, il ne restait du kraft qu un lisere autour — le fondateur ne le voyait pas, et il avait
-     raison. Classement mesure des sections par surface NUE, cartes grises exclues : questions frequentes 91 %, C est quoi
-     89 %, Pour qui 85 %, Comment ca marche 82 %, A propos 81 %, Le resultat 49 %.
-     Retenues : « C est quoi », premiere section et 1014 px de haut, et « A propos », douzieme. Le kraft ouvre et ferme la
-     page, avec dix sections de gris entre les deux. */
-  #histoire, #styles{ background:#CBBD93!important; }
-  /* Les legendes sous les photos etaient a #4F5A65 : 3,77 sur le kraft, sous le seuil. Elles suivent les autres textes.
-     C est la regle de la journee — un fond change, TOUS les textes poses dessus se recalculent, pas seulement les gros. */
-  /* Tous les textes poses sur le kraft, pas seulement les gros : dans « C est quoi » les textes du kit sont a #5a636b,
-     soit 3,77 sur ce fond — sous le seuil. Regle de la journee : un fond change, TOUS ses textes se recalculent. */
-  #histoire p, #histoire .reinvente, #styles p, #styles .lead, #styles .kit p, #styles .kit h3{ color:#1e2b35!important; }
-
-
-  /* ================= FIN DE L ESSAI 2 ================= */
+  /* ================= FIN DE L ESSAI 3 ================= */
 
 
 </style>
