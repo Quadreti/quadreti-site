@@ -814,7 +814,12 @@
     .designer-duo .chip{ text-align:center; }
 
     .designer-duo .lead{ max-width:none; }
-    .designer-duo .designer-txt .lead{ text-align:center; }   /* 16/09, fondateur : centre dans sa colonne, comme les pastilles. Trois classes : la regle qui l alignait a droite en pese autant, et c est la derniere ecrite qui tranche. */
+    .designer-duo .designer-txt .lead{ text-align:center; max-width:none; }   /* max-width ici et pas plus haut : le plafond de 640 px du chapo pese une classe et un element, il battait la regle a deux classes — le chapo restait etroit et son centre tombait 35 px a cote de celui des pastilles */   /* 16/09, fondateur : centre dans sa colonne, comme les pastilles. Trois classes : la regle qui l alignait a droite en pese autant, et c est la derniere ecrite qui tranche. */
+    /* 16/09 : le chapo et les pastilles vont jusqu au bord droit du TITRE, et non jusqu au bord de la colonne. L ecart
+       vaut la moitie du debord de page — la meme moitie que le remplissage de la carte. Le texte reste centre dedans et
+       ne peut pas depasser la carte : il s arrete ou le titre s arrete, a 74 px de son bord. */
+    .designer-duo .designer-txt .lead,
+    .designer-duo .designer-txt .chips{ margin-right:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); }
     /* La bande : les modes cessent de retomber a la ligne, ils defilent. Elle part du bord GAUCHE de la page et s y
        fait couper net — comme la bande de « L ecosysteme » a droite. */
     /* La bande qui tourne, meme mecanique que celle du Studio : une piste portant les cartes deux fois, decalee de la
