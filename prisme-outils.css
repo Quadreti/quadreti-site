@@ -85,7 +85,7 @@
   .face-lien{
     position:relative; overflow:hidden; margin-top:auto; align-self:flex-start; text-decoration:none;
     font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; line-height:1.15;
-    background:#d96c2f; color:#10181f; border-radius:8px; padding:9px 18px;   /* 14/09 : etait #dedede, 2,54. L encre donne 5,23. */
+    background:var(--qz-terracotta,#d96c2f); color:#10181f; border-radius:8px; padding:9px 18px;   /* 14/09 : etait #dedede, 2,54. L encre donne 5,23. */
     box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000026;
     transition:box-shadow .18s ease, transform .18s ease;
   }
@@ -116,7 +116,7 @@
     transition:box-shadow .18s ease, transform .18s ease, background .15s ease;
   }
   /* Les fleches gardent l orange plein : ce sont des COMMANDES, pas des etiquettes. */
-  .prisme-fleche{ background:#d96c2f; color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
+  .prisme-fleche{ background:var(--qz-terracotta,#d96c2f); color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
   .prisme-fleche:hover, .prisme-fleche:focus-visible{ background:#df824e; }   /* 15/09 : meme surbrillance que partout ailleurs */
   .prisme-fleche::after, .prisme-puces button::after{
     content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
@@ -142,12 +142,12 @@
   }
   /* « Surbrillance au contact orange » : un cerne orange, l eclat teinte d orange, et le bouton se souleve. */
   .prisme-puces button:hover, .prisme-puces button:focus-visible{
-    box-shadow:inset 1px 1px 0 #ffffff9e, inset -1px -1px 0 #00000029, 0 0 0 2px #d96c2f, 0 7px 16px #00000040;
+    box-shadow:inset 1px 1px 0 #ffffff9e, inset -1px -1px 0 #00000029, 0 0 0 2px var(--qz-terracotta,#d96c2f), 0 7px 16px #00000040;
   }
-  .prisme-puces button::after{ background:linear-gradient(105deg, #d96c2f00 0%, #d96c2f8c 50%, #d96c2f00 100%); }
+  .prisme-puces button::after{ background:linear-gradient(105deg, var(--qz-terracotta,#d96c2f)00 0%, var(--qz-terracotta,#d96c2f)8c 50%, var(--qz-terracotta,#d96c2f)00 100%); }
   /* L outil choisi prend l orange plein, texte gris : sur une rangee de pastilles grises, c est lui qui dit ou l on est.
      Il ne se souleve pas au survol — il est deja en place. */
-  .prisme-puces button[aria-current="true"]{ background:#d96c2f; color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
+  .prisme-puces button[aria-current="true"]{ background:var(--qz-terracotta,#d96c2f); color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
   .prisme-puces button[aria-current="true"]:hover, .prisme-puces button[aria-current="true"]:focus-visible{
     transform:none; box-shadow:inset 1px 1px 0 #ffffff61, inset -1px -1px 0 #00000047, 0 5px 12px #00000033;
   }

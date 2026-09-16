@@ -353,7 +353,7 @@
     #comment .geste-texte .tete{ margin-top:0; }
     #comment .geste-texte{ text-align:right; }
     #comment .geste-texte .tete{ flex-direction:row-reverse; justify-content:flex-start; }
-    #comment .geste-texte .hint{ border-left:none; border-right:3px solid #d96c2f; padding:2px 14px 2px 0; }
+    #comment .geste-texte .hint{ border-left:none; border-right:3px solid var(--qz-terracotta,#d96c2f); padding:2px 14px 2px 0; }
   }
   .geste-droite{ grid-template-columns:1fr 1.15fr; }
   .geste-gauche{ grid-template-columns:1.15fr 1fr; }   /* le miroir exact de geste-droite : meme place a la photo des deux cotes */
@@ -399,28 +399,28 @@
        3:1 demandes a la limite d un element de commande. */
     border:1px solid #5A6672;
   }
-  .diapo-puces label:hover{ border-color:#d96c2f; }
+  .diapo-puces label:hover{ border-color:var(--qz-terracotta,#d96c2f); }
   /* Sur l orange, l encre — 5,23. Jamais du blanc ni du gris (la charte, et la regle que je m etais inventee le 14). */
   /* Une vue, sa legende et sa puce s allument ensemble. Le selecteur passe par ~ : les radios sont declarees AVANT les vues. */
   #etui1:checked ~ .diapo-vues img:nth-of-type(1),
   #etui1:checked ~ .diapo-legendes span:nth-of-type(1){ opacity:1; }
-  #etui1:checked ~ .diapo-puces label[for="etui1"]{ background:#d96c2f; border-color:#d96c2f; color:#10181f; }
+  #etui1:checked ~ .diapo-puces label[for="etui1"]{ background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f); color:#10181f; }
   #etui1:focus-visible ~ .diapo-puces label[for="etui1"]{ outline:2px solid #1e2b35; outline-offset:2px; }
   #etui2:checked ~ .diapo-vues img:nth-of-type(2),
   #etui2:checked ~ .diapo-legendes span:nth-of-type(2){ opacity:1; }
-  #etui2:checked ~ .diapo-puces label[for="etui2"]{ background:#d96c2f; border-color:#d96c2f; color:#10181f; }
+  #etui2:checked ~ .diapo-puces label[for="etui2"]{ background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f); color:#10181f; }
   #etui2:focus-visible ~ .diapo-puces label[for="etui2"]{ outline:2px solid #1e2b35; outline-offset:2px; }
   #etui3:checked ~ .diapo-vues img:nth-of-type(3),
   #etui3:checked ~ .diapo-legendes span:nth-of-type(3){ opacity:1; }
-  #etui3:checked ~ .diapo-puces label[for="etui3"]{ background:#d96c2f; border-color:#d96c2f; color:#10181f; }
+  #etui3:checked ~ .diapo-puces label[for="etui3"]{ background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f); color:#10181f; }
   #etui3:focus-visible ~ .diapo-puces label[for="etui3"]{ outline:2px solid #1e2b35; outline-offset:2px; }
   #etui4:checked ~ .diapo-vues img:nth-of-type(4),
   #etui4:checked ~ .diapo-legendes span:nth-of-type(4){ opacity:1; }
-  #etui4:checked ~ .diapo-puces label[for="etui4"]{ background:#d96c2f; border-color:#d96c2f; color:#10181f; }
+  #etui4:checked ~ .diapo-puces label[for="etui4"]{ background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f); color:#10181f; }
   #etui4:focus-visible ~ .diapo-puces label[for="etui4"]{ outline:2px solid #1e2b35; outline-offset:2px; }
   #etui5:checked ~ .diapo-vues img:nth-of-type(5),
   #etui5:checked ~ .diapo-legendes span:nth-of-type(5){ opacity:1; }
-  #etui5:checked ~ .diapo-puces label[for="etui5"]{ background:#d96c2f; border-color:#d96c2f; color:#10181f; }
+  #etui5:checked ~ .diapo-puces label[for="etui5"]{ background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f); color:#10181f; }
   #etui5:focus-visible ~ .diapo-puces label[for="etui5"]{ outline:2px solid #1e2b35; outline-offset:2px; }
 
   /* Sur telephone, une bande a deux colonnes n a aucun sens : tout repasse en colonne, photo au-dessus du texte. */
@@ -445,7 +445,7 @@
   /* 14/09, fondateur : « enumeration en orange ». Le numero passe a l orange de marque, texte en gris — la regle posee pour tout
      texte sur un fond orange. Coins egalises, comme les boutons du site. */
   .geste-texte .num, .step .num{
-    width:42px; height:42px; border-radius:8px; background:#d96c2f; color:#10181f;   /* 14/09 : etait #dedede, soit 2,54 sur l orange — sous le seuil, et pire que du blanc. L encre donne 5,23. */
+    width:42px; height:42px; border-radius:8px; background:var(--qz-terracotta,#d96c2f); color:#10181f;   /* 14/09 : etait #dedede, soit 2,54 sur l orange — sous le seuil, et pire que du blanc. L encre donne 5,23. */
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; margin-bottom:14px;
   }
   .step h3{ font-size:18.5px; font-weight:700; margin-bottom:8px; }
@@ -455,7 +455,7 @@
      qui » : un filet orange a gauche, pas de cadre. Une seule facon de poser une precision sur toute la page. */
   .geste-texte .hint, .step .hint{
     margin-top:14px; font-size:13px; color:#5a636b; font-weight:600;
-    border-left:3px solid #d96c2f; padding:2px 0 2px 14px; background:none;
+    border-left:3px solid var(--qz-terracotta,#d96c2f); padding:2px 0 2px 14px; background:none;
   }
   .how-foot{ margin-top:var(--qz-espace-bloc); font-size:14px; color:#4F5A65; text-align:right; }   /* 16/09 : dernier bloc centre de la section — il rejoint l axe du chapo */
   .how-foot a{ color:var(--charbon); font-weight:700; }
@@ -525,14 +525,14 @@
     text-transform:uppercase; padding:5px 10px; border-radius:4px; pointer-events:none;
   }
   .comparateur .cote.a{ left:12px; background:#1e2b35; color:#dedede; }
-  .comparateur .cote.b{ right:12px; background:#d96c2f; color:#10181f; }   /* 14/09 : etait #dedede, 2,54 sur l orange. L encre donne 5,23 — le dernier survivant de la regle que j avais inventee ce matin. */
-  .comparateur .ligne{ position:absolute; top:0; bottom:0; left:var(--pos); width:3px; background:#d96c2f; transform:translateX(-1.5px); pointer-events:none; }
+  .comparateur .cote.b{ right:12px; background:var(--qz-terracotta,#d96c2f); color:#10181f; }   /* 14/09 : etait #dedede, 2,54 sur l orange. L encre donne 5,23 — le dernier survivant de la regle que j avais inventee ce matin. */
+  .comparateur .ligne{ position:absolute; top:0; bottom:0; left:var(--pos); width:3px; background:var(--qz-terracotta,#d96c2f); transform:translateX(-1.5px); pointer-events:none; }
   .comparateur .poignee{
-    position:absolute; top:50%; left:var(--pos); width:36px; height:36px; border-radius:5px; background:#d96c2f;
+    position:absolute; top:50%; left:var(--pos); width:36px; height:36px; border-radius:5px; background:var(--qz-terracotta,#d96c2f);
     transform:translate(-50%,-50%) rotate(45deg); box-shadow:0 4px 14px #00000040; pointer-events:none;
   }
   .comparateur input{ position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; -webkit-appearance:none; appearance:none; }
-  .comparateur input:focus-visible{ outline:3px solid #d96c2f; outline-offset:3px; opacity:1; }
+  .comparateur input:focus-visible{ outline:3px solid var(--qz-terracotta,#d96c2f); outline-offset:3px; opacity:1; }
   .comparateur-note{ font-size:13px; color:#4F5A65; margin:10px 0 0; text-align:center; }   /* 16/09, fondateur : « centre sous photo » */
 
   .mur-situation{ margin:0; }
@@ -546,7 +546,7 @@
   .mur-situation figcaption{ font-size:13px; color:#4F5A65; margin-top:10px; font-weight:600; text-align:center; }   /* 16/09, fondateur : « centre sous photo » */
 
   /* Les trois arguments de « Et demain ? », resserres — dans la maquette ils occupent la colonne droite de « Pour qui ». */
-  .arg{ border-left:3px solid #d96c2f; padding:2px 0 2px 16px; margin-top:16px; }
+  .arg{ border-left:3px solid var(--qz-terracotta,#d96c2f); padding:2px 0 2px 16px; margin-top:16px; }
   .arg:first-child{ margin-top:0; }   /* 16/09 : sans ca, le premier argument retombe 16 px sous le haut de la carte, et la ligne rouge ne serait pas tenue */
   .arg b{ display:block; font-size:15px; margin-bottom:4px; }
   .arg p{ margin:0; font-size:13.5px; color:#5a636b; line-height:1.55; }
@@ -577,7 +577,7 @@
      !important peut les reprendre. Orange de marque sur le navy : 4,23 — au-dessus du 3:1 des objets graphiques. */
   /* 16/09 : contre le gris de la photo, l orange de marque ne vaut que 1,21 — les pastilles s y effacaient. Le filet
      d encre leur rend un bord franc sans toucher a la couleur elle-meme. */
-  .mode .sw i{ width:14px; height:14px; border-radius:3px; display:block; background:#d96c2f!important; box-shadow:0 0 0 1px #10181f; }
+  .mode .sw i{ width:14px; height:14px; border-radius:3px; display:block; background:var(--qz-terracotta,#d96c2f)!important; box-shadow:0 0 0 1px #10181f; }
   .mode h3{ font-size:15.5px; font-weight:700; margin-bottom:6px; color:#10181f; }   /* 6,34 sur le gris de la photo */
   .mode p{ font-size:13.5px; color:#1e2b35; font-style:italic; }   /* 5,12 sur le gris de la photo */
   .app-cta{ text-align:center; margin-top:var(--qz-espace-bloc); }
@@ -752,7 +752,7 @@
   @media (min-width:861px){
     /* « Pour qui » : les trois arguments sont dans la colonne de DROITE et etaient ferres a gauche. Le liseré change de
        bord avec le texte — a gauche, il aurait coupe le paragraphe au milieu du vide. */
-    #pourqui .arg{ text-align:right; border-left:none; border-right:3px solid #d96c2f; padding:2px 16px 2px 0; }
+    #pourqui .arg{ text-align:right; border-left:none; border-right:3px solid var(--qz-terracotta,#d96c2f); padding:2px 16px 2px 0; }
     /* Blocs pleine largeur : ils suivent la carte de leur section. */
     /* 16/09, capture du fondateur : « pleine largeur ». La note de fin cesse d etre une carte posee au milieu — elle
        devient un bandeau d un bord de page a l autre, comme la bande de photos au-dessus. Son remplissage vaut le debord,
@@ -1005,7 +1005,7 @@
   /* 14/09 : meme famille que la pastille des gestes et celle de l encart — fond orange, trait en encre (5,23). */
   .trust-ic{
     flex:0 0 42px; width:42px; height:42px; border-radius:8px 8px 8px 16px;
-    background:#d96c2f; color:#10181f;
+    background:var(--qz-terracotta,#d96c2f); color:#10181f;
     display:flex; align-items:center; justify-content:center;
   }
   .trust-ic svg{ width:24px; height:24px; }
