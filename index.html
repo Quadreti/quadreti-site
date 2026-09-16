@@ -66,6 +66,10 @@
        il porte de l encre foncee (6,34) et refuse le texte clair (2,83). Toutes les cartes qui passent a ce fond ont donc
        leur texte retourne. Le navy ne reste que sur les cartes de titre. */
     --qz-gris-photo:#9d9996;
+    /* 16/09, ESSAI demande par le fondateur : « on va tester bleu navy plutot pour couleur lisere ». Un jeton A PART et
+       non --qz-lisere : celui-la sert aussi aux cartes de titre et a la bande defilante, qui sont NAVY — un lisere navy y
+       serait invisible. Ce jeton ne concerne que les objets poses sur le gris de la photo. Se defait en un mot. */
+    --qz-lisere-carte:#1e2b35;
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
     /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
@@ -735,15 +739,15 @@
      les cartes de titre (--qz-lisere, --qz-lisere-ep) : le panneau les eteint ou les epaissit toutes ensemble, cartes de
      titre comprises. !important et deux classes parce que le panneau injecte ses propres bordures sur ces memes cartes. */
   .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, #app .face{
-    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
+    border:var(--qz-lisere-ep,3px) solid var(--qz-lisere-carte,#d96c2f)!important;
   }
   /* Les bandeaux vont d un bord de page a l autre : un cadre complet poserait deux traits verticaux contre les bords de
      l ecran, ce qui ne se lit pas comme un lisere mais comme un defaut. Ils ne prennent donc que le haut et le bas,
      exactement comme la bande defilante de l accueil. */
   .blk .color-note, .blk .premium, .blk .note-navy{
     border:none!important;
-    border-top:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
-    border-bottom:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f)!important;
+    border-top:var(--qz-lisere-ep,3px) solid var(--qz-lisere-carte,#d96c2f)!important;
+    border-bottom:var(--qz-lisere-ep,3px) solid var(--qz-lisere-carte,#d96c2f)!important;
   }
   .gamme-notes{ margin-top:26px; text-align:center; font-size:14px; color:#4F5A65; max-width:640px; margin-left:auto; margin-right:auto; }
 
