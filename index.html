@@ -436,17 +436,17 @@
   .duo.duo-droite > .duo-txt{ grid-column:1; grid-row:1; }
   /* Une colonne fait la moitie de la page : la ligne insecable n y tient pas. Deux classes contre une, la regle passe
      donc devant celle des cartes pleine largeur, media query ou pas. */
-  .duo .titre-carte h2, .app-duo .titre-carte h2, .designer-duo .titre-carte h2{ white-space:normal; }
+  .duo .titre-carte h2, .app-duo .titre-carte h2, .designer-duo .titre-carte h2, .duo-bande .titre-carte h2{ white-space:normal; }
   /* Dans une colonne, le surtitre n a plus la place de partager la ligne du titre : il repasse au-dessus, comme sur
      telephone. (« Pour qui » garde la ligne partagee : ses titres sont courts.) */
-  .app-duo .titre-carte, .designer-duo .titre-carte{ display:block; }
-  .app-duo .titre-carte .eyebrow, .designer-duo .titre-carte .eyebrow{ margin-bottom:8px; white-space:normal; }
+  .app-duo .titre-carte, .designer-duo .titre-carte, .duo-bande .titre-carte{ display:block; }
+  .app-duo .titre-carte .eyebrow, .designer-duo .titre-carte .eyebrow, .duo-bande .titre-carte .eyebrow{ margin-bottom:8px; white-space:normal; }
   /* Et des que la carte fait plusieurs lignes, le demi-cercle — qui creuse d une demi-hauteur — finirait par manger le
      texte. Rayon borne a 48 px : les 70 px de remplissage le laissent respirer quelle que soit la hauteur. */
   /* La carte prend sa colonne au lieu de sa largeur de texte : une largeur au contenu gonflait la piste de grille —
      mesure, 1110 px pour la carte contre 123 px pour le texte. Les deux colonnes sont a nouveau egales, et les deuxe
      cartes d une meme page ont la meme largeur, ce qui se voit. */
-  .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }
+  .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte, .duo-bande .titre-carte{ border-radius:0 48px 48px 0; width:auto; max-width:none; }   /* width:auto est ce qui empeche la carte de mordre la gouttiere : a droite, ces 40 px sortent de la page */
   .duo .titre-carte.droite{ border-radius:48px 0 0 48px; margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
   @media (max-width:860px){ .duo{ grid-template-columns:1fr; } .duo.duo-droite > .titre-carte,.duo.duo-droite > .duo-txt{ grid-column:auto; grid-row:auto; } }
   .empile{ display:grid; gap:clamp(40px,6vw,72px); text-align:left; }
@@ -495,7 +495,10 @@
   /* 16/09 : les cinq modes vivent dans une PISTE. Par defaut elle est la grille d avant ; au-dessus de 1100 px elle
      devient une bande qui tourne, comme celle du Studio. */
   .modes-piste{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
-  .modes-piste > .qz-copie{ display:none; }   /* la copie ne sert qu a la boucle : ailleurs elle n existe pas */
+  /* 16/09 : la meme mecanique sur « A offrir » et « Livraison & paiement ». Par defaut la piste est la grille d avant ;
+     au-dessus de 1100 px elle devient une bande qui tourne. */
+  .bande-piste{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .modes-piste > .qz-copie, .bande-piste > .qz-copie{ display:none; }   /* la copie ne sert qu a la boucle : ailleurs elle n existe pas */
   /* 15/09, fondateur : « carte rectangulaire arrondi leger, navy + texte gris, tesselles en orange Quadreti ».
      Le rayon quitte la forme tesselle (8/8/8/22) pour les 4 px des boutons du site. */
   .mode{
@@ -794,7 +797,20 @@
     /* La bande qui tourne, meme mecanique que celle du Studio : une piste portant les cartes deux fois, decalee de la
        moitie de sa largeur en boucle. Ce n est PAS une zone de defilement — donc aucune barre possible, et c est ce qui
        reglait le probleme. Elle s arrete au survol et des qu une carte prend le focus clavier. */
-    .designer-duo > .app-grid{ overflow:hidden; margin:0 0 0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }
+    .designer-duo > .app-grid,
+    .duo-bande > .bande-fenetre{ overflow:hidden; margin:0 0 0 calc(-1 * (max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px)); }
+    /* Le duo generique : texte a droite, bande a gauche. Chaque section n apporte que la part de sa colonne de texte
+       (calculee sur la largeur de son titre) et la duree de son tour. */
+    .duo-bande{ display:grid; grid-template-columns:1fr minmax(0,var(--duo-col,.8fr)); gap:18px clamp(24px,4vw,54px); align-items:start; }
+    .duo-bande > *{ min-width:0; }
+    .duo-bande > .duo-txt{ grid-column:2; }
+    .duo-bande > .bande-fenetre{ grid-column:1; grid-row:1; }
+    .duo-bande .bande-piste{ display:flex; gap:18px; width:max-content; padding-right:18px;   /* la gouttiere de plus : la moitie de la piste tombe alors PILE sur la premiere copie */
+      animation:bandeau-defile var(--bande-duree,30s) linear infinite; }
+    .duo-bande > .bande-fenetre:hover .bande-piste, .duo-bande .bande-piste:focus-within{ animation-play-state:paused; }
+    .duo-bande .bande-piste > *{ flex:0 0 360px; }
+    .duo-bande .bande-piste > .qz-copie{ display:block; }
+    .duo-bande .lead{ max-width:none; }
     .designer-duo .modes-piste{ display:flex; gap:14px; width:max-content; padding-right:14px;   /* cette gouttiere de plus est ce qui fait tomber la moitie de la piste PILE sur la sixieme carte : dix cartes, dix gouttieres */
       animation:bandeau-defile 42s linear infinite; }
     .designer-duo > .app-grid:hover .modes-piste, .designer-duo .modes-piste:focus-within{ animation-play-state:paused; }
@@ -802,11 +818,17 @@
     .designer-duo .modes-piste > .qz-copie{ display:block; }
     /* Pour qui demande moins d animation : la bande ne bouge plus, on la fait glisser soi-meme, sans barre apparente. */
     @media (prefers-reduced-motion:reduce){
-      .designer-duo .modes-piste{ animation:none; }
-      .designer-duo > .app-grid{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; padding-bottom:24px; margin-bottom:-24px; }
-      .designer-duo > .app-grid::-webkit-scrollbar{ display:none; }
+      .designer-duo .modes-piste, .duo-bande .bande-piste{ animation:none; }
+      .designer-duo > .app-grid, .duo-bande > .bande-fenetre{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; padding-bottom:24px; margin-bottom:-24px; }
+      .designer-duo > .app-grid::-webkit-scrollbar, .duo-bande > .bande-fenetre::-webkit-scrollbar{ display:none; }
     }
   }
+
+  /* Les deux chiffres de chaque bande. La colonne de texte doit valoir le titre a 30 px + 73 px de remplissage et de
+     lisere, avec de la marge a 1100 px : « Un cadeau qui continue. » mesure 371 px, « Commandez en confiance. » 399.
+     La duree tient un defilement d environ 27 px par seconde, comme la bande du Studio. */
+  #cadeau .duo-bande{ --duo-col:.65fr; --bande-duree:28s; }
+  #livraison .duo-bande{ --duo-col:.72fr; --bande-duree:28s; }
 
   /* ===== Livraison & paiement ===== */
   .trust{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; text-align:left; }
@@ -1335,23 +1357,6 @@ document.addEventListener('DOMContentLoaded', function(){
     <p class="app-reassure rv"><b>Vous ne dessinez rien, vous décidez.</b> Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
     <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
   </div>
-
-    <!-- 16/09, fondateur : « ca ne tourne pas ». La bande des modes tourne comme celle du Studio, et pour que la boucle
-         soit continue la piste porte les cinq cartes DEUX fois. La copie est clonee ici plutot qu ecrite dans la page :
-         une seule version a maintenir. Elle est masquee aux lecteurs d ecran, et elle ne rejoue pas l apparition. -->
-    <script>
-    (function () {
-      var piste = document.querySelector('.designer-duo .modes-piste');
-      if (!piste) return;
-      Array.prototype.slice.call(piste.children).forEach(function (carte) {
-        var copie = carte.cloneNode(true);
-        copie.classList.add('qz-copie');
-        copie.classList.remove('rv');
-        copie.setAttribute('aria-hidden', 'true');
-        piste.appendChild(copie);
-      });
-    })();
-    </script>
 </section>
 
 <!-- ============ LE RESULTAT ============
@@ -1520,11 +1525,15 @@ document.addEventListener('DOMContentLoaded', function(){
      43 % depuis la gauche en bas. -->
 <section class="blk sombre" id="cadeau">
   <div class="wrap center">
+    <div class="duo-bande">
+    <div class="duo-txt">
     <div class="titre-carte droite rv">
     <div class="eyebrow">À offrir</div>
     <h2>Un cadeau qui continue.</h2>
     </div>
-    <div class="cadeau">
+    </div>
+    <div class="bande-fenetre">
+    <div class="bande-piste">
       <div class="gift rv">
         <h3>Offrez le kit</h3>
         <p>Anniversaire, fête des mères, Noël, crémaillère : offrez une expérience à créer. Le destinataire compose lui-même — le cadeau, c'est le geste. Un après-midi ensemble, un mur en commun.</p>
@@ -1534,6 +1543,8 @@ document.addEventListener('DOMContentLoaded', function(){
         <h3>Offrez le résultat</h3>
         <p>Une création déjà composée, imprimée par Quadreti, prête à clipser. Le cadeau, c'est l'émotion à la réception — et il pourra évoluer : celui qui le reçoit peut le faire vivre.</p>
         <p class="tagline">Le cadeau qui se regarde deux fois.</p>
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -1579,13 +1590,17 @@ document.addEventListener('DOMContentLoaded', function(){
      la droite en haut, 32 % depuis la gauche en bas. -->
 <section class="blk sombre" id="livraison">
   <div class="wrap center">
+    <div class="duo-bande">
+    <div class="duo-txt">
     <div class="titre-carte droite rv">
     <div class="eyebrow">Livraison &amp; paiement</div>
     <h2>Commandez en confiance.</h2>
     </div>
     <p class="lead rv">Préparé dans notre atelier, expédié en point relais près de chez vous, réglé en toute sécurité.</p>
+    </div>
 
-    <div class="trust rv">
+    <div class="bande-fenetre rv">
+    <div class="bande-piste">
 
       <div class="trust-card">
         <div class="trust-head">
@@ -1639,6 +1654,8 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
 
     </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1672,6 +1689,24 @@ document.addEventListener('DOMContentLoaded', function(){
   <p class="phrase">Composez, imprimez, clipsez,<br><span>changez à volonté.</span></p>
   <a class="cta" href="/boutique/" data-bouton-zone="boutique_cta">Commander mon kit</a>
 </section>
+
+<!-- 16/09 : les bandes qui tournent (les cinq modes, les deux cadeaux, la livraison et le paiement) portent leurs cartes
+     DEUX fois, pour que la boucle soit continue. La copie est clonee ici plutot qu ecrite dans la page : une seule
+     version a maintenir. Elle est masquee aux lecteurs d ecran et ne rejoue pas l apparition.
+     Ce script vient APRES toutes les sections : place dans l une d elles, il ignorerait les suivantes. -->
+<script>
+(function () {
+  document.querySelectorAll('.modes-piste, .bande-piste').forEach(function (piste) {
+    Array.prototype.slice.call(piste.children).forEach(function (carte) {
+      var copie = carte.cloneNode(true);
+      copie.classList.add('qz-copie');
+      copie.classList.remove('rv');
+      copie.setAttribute('aria-hidden', 'true');
+      piste.appendChild(copie);
+    });
+  });
+})();
+</script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <script src="/commun-pied.js"></script>
