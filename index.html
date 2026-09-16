@@ -827,6 +827,9 @@
     .designer-duo > *{ min-width:0; }
     .designer-duo > .designer-txt{ grid-column:2; }
     .designer-duo > .designer-gauche{ grid-column:1; grid-row:1; }   /* la RANGEE aussi : sans elle, le placement automatique envoie ce bloc en rangee 2, puisqu il est ecrit apres celui de droite et qu une grille ne revient jamais en arriere */
+    /* Comme dans « Comment ca marche » : le remplissage de la carte reprend sa valeur entiere, pour que son contenu
+       finisse exactement ou finit le texte de la colonne. */
+    #designer .titre-carte.droite{ padding-right:calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px); }
     /* ROUGE : les deux paragraphes sous la bande, dans sa colonne, sur l axe de gauche. */
     .designer-duo .designer-sous{ margin-top:26px; text-align:left; }   /* colle sous la bande : plus rien ne peut s intercaler */
     /* Meme marge des deux cotes, dans l empreinte de la BANDE et non de la colonne : la bande va du bord de page au
@@ -837,17 +840,16 @@
     /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
        `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
        droite, comme le titre et le chapo de cette colonne. */
-    .designer-duo .chips{ display:grid; grid-template-columns:max-content; justify-content:center; gap:8px; margin:22px 0 0; }   /* 16/09, fondateur : « centré » */
+    .designer-duo .chips{ display:grid; grid-template-columns:max-content; justify-content:end; gap:8px; margin:22px 0 0; }   /* 16/09 : rangees a droite, sur l axe de la section */
     .designer-duo .chip{ text-align:center; }
 
     .designer-duo .lead{ max-width:none; }
-    .designer-duo .designer-txt .lead{ text-align:left; max-width:none; }   /* 16/09, fondateur : a gauche, plus centre */
+    .designer-duo .designer-txt .lead{ text-align:right; max-width:none; }   /* 16/09 : ferre a droite, du cote de sa carte */
     /* 16/09 : le bloc de texte s inscrit dans l EMPREINTE DE LA CARTE, meme marge des deux cotes. Le titre laisse 74 px
        avant le bord droit de la carte ; le texte laisse les memes 74 px apres son bord gauche. Cette marge vaut la
        moitie du debord de page, celle-la meme qui sert de remplissage a la carte. Le centre du bloc tombe alors sur
        celui de la carte — c est ce qui recentre les pastilles, qui penchaient de 37 px vers la gauche. */
-    .designer-duo .designer-txt .lead,
-    .designer-duo .designer-txt .chips{ margin-right:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); margin-left:calc((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2); }
+    /* 16/09 : les marges miroir n ont plus d objet — le bloc reprend sa colonne et se ferre a droite. */
     /* La bande : les modes cessent de retomber a la ligne, ils defilent. Elle part du bord GAUCHE de la page et s y
        fait couper net — comme la bande de « L ecosysteme » a droite. */
     /* La bande qui tourne, meme mecanique que celle du Studio : une piste portant les cartes deux fois, decalee de la
