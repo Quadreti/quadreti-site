@@ -875,9 +875,9 @@
   /* #cadeau rejoint la regle sans toucher a son texte : « A offrir » + « Un cadeau qui continue. » font 438 px pour 520
      de place a 1360 — 81 px de marge. Il etait le seul des cinq a tenir deja. */
   @media (min-width:1360px){
-    #app .titre-carte, #cadeau .titre-carte, #grandir .titre-carte{ display:flex; align-items:baseline; gap:20px; }
-    #app .titre-carte .eyebrow, #cadeau .titre-carte .eyebrow, #grandir .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
-    #app .titre-carte h2, #cadeau .titre-carte h2, #grandir .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
+    #app .titre-carte, #cadeau .titre-carte, #grandir .titre-carte, #designer .titre-carte, #livraison .titre-carte{ display:flex; align-items:baseline; gap:20px; }
+    #app .titre-carte .eyebrow, #cadeau .titre-carte .eyebrow, #grandir .titre-carte .eyebrow, #designer .titre-carte .eyebrow, #livraison .titre-carte .eyebrow{ margin-bottom:0; white-space:nowrap; }
+    #app .titre-carte h2, #cadeau .titre-carte h2, #grandir .titre-carte h2, #designer .titre-carte h2, #livraison .titre-carte h2{ white-space:nowrap; }   /* le titre ne doit pas se couper en deux a cote du surtitre */
   }
 
   /* 16/09 : le duo de « Quadreti Designer », miroir de celui de « L ecosysteme ». La carte vient de la DROITE : le texte
@@ -1437,8 +1437,10 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="designer-duo">
     <div class="designer-txt">
     <div class="titre-carte droite rv">
-    <div class="eyebrow">Quadreti Designer</div>
-    <h2>Tout ce que vous pouvez en faire.</h2>
+    <!-- 16/09 : surtitre et titre raccourcis pour tenir la ligne. « Quadreti Designer » ne passait avec AUCUN titre,
+         meme le plus court ; le nom reste dans le chapo et sur le bouton, il ne disparait pas de la section. -->
+    <div class="eyebrow">Designer</div>
+    <h2>Tout ce qu’on peut en faire.</h2>
     </div>
     <p class="lead rv">Cinq façons de composer, du motif de couleurs à la photo mosaïque à double lecture. Vous choisissez, Quadreti Designer compose — aucun talent requis.</p>
 
@@ -1569,7 +1571,7 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
       <div class="duo rv">
         <div class="titre-carte rv">
-        <div class="eyebrow">Et demain ?</div>
+        <div class="eyebrow">Demain ?</div>   <!-- 16/09 : « Et » retire. Avec lui le bloc faisait 525 px pour 519,5 de place a 1360 — il manquait CINQ pixels et la carte repassait a deux lignes entre 1360 et 1420. -->
         <h2>Changez l'image, pas le mur.</h2>   <!-- 16/09 : « Changer d'avis n'est plus un défaut. C'est une fonctionnalité. » tenait sur trois lignes, et le fondateur a tranché sur le fond : « changer d'avis » se perçoit négativement. Le nouveau titre garde le verbe et dit ce qu'on ne change PAS. -->
         </div>
         <div class="duo-txt">
@@ -1752,7 +1754,9 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="duo-bande">
     <div class="duo-txt">
     <div class="titre-carte droite rv">
-    <div class="eyebrow">Livraison &amp; paiement</div>
+    <!-- 16/09 : « &amp; paiement » retire du surtitre, il manquait 18 px. « Commander » implique le paiement, et les
+         trois cartes en dessous le detaillent. -->
+    <div class="eyebrow">Livraison</div>
     <h2>Commandez en confiance.</h2>
     </div>
     <p class="lead rv">Préparé dans notre atelier, expédié en point relais près de chez vous, réglé en toute sécurité.</p>
