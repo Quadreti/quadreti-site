@@ -310,12 +310,23 @@
      Les trois photos n ont pas la meme largeur : l imprimante est large (geste banal, il passe vite), l etui petit (un detail de
      main), le clipsage le plus grand (le geste qui definit le produit). */
   .geste{ display:grid; align-items:center; gap:clamp(22px,4vw,56px); margin-top:34px; }   /* 34 et non 44 : les bandes etant plus basses, l ecart d origine les faisait flotter */
+  /* 16/09, fondateur : le bloc se range dans l empreinte de la carte de titre. A DROITE il va jusqu a l axe du titre,
+     soit 74 px avant le bord de la carte — la moitie du debord de page. A GAUCHE la photo se retire dans sa colonne
+     et retrecit pour commencer sur ce meme axe au lieu de le traverser. */
+  @media (min-width:861px){
+    #comment .geste{ margin-right:calc(-1 * ((max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) / 2)); }
+    #comment .geste-photo{ justify-content:flex-end; }
+    #comment .geste-photo > *{ max-width:330px; width:100%; }   /* le geste 2 est un diaporama, pas une image : on contraint ce que la figure contient, pas l image */
+  }
   .geste-droite{ grid-template-columns:1fr 1.15fr; }
   .geste-gauche{ grid-template-columns:1.15fr 1fr; }   /* le miroir exact de geste-droite : meme place a la photo des deux cotes */
   .geste-gauche .geste-texte{ order:2; }
   .geste-gauche .geste-photo{ order:1; }
   .geste-texte{ text-align:left; }
-  .geste-texte h3{ font-size:19px; font-weight:700; margin:10px 0 8px; }
+  /* 16/09, fondateur : « titre photo et enumeration sur la meme ligne ». Le numero et le titre partagent une ligne,
+     poses sur la meme ligne de base. */
+  .geste-texte .tete{ display:flex; align-items:baseline; gap:14px; margin:10px 0 8px; }
+  .geste-texte h3{ font-size:19px; font-weight:700; margin:0; }
   .geste-texte p{ font-size:14.5px; color:#5a636b; line-height:1.6; margin:0; }
   .geste-photo{ margin:0; }
   .geste-photo img{ width:100%; border-radius:6px; display:block; }
@@ -1238,8 +1249,10 @@ document.addEventListener('DOMContentLoaded', function(){
          l oeil cesse de la voir ; la cassure fait regarder le clipsage, le geste qui definit le produit. -->
     <div class="geste geste-gauche rv">
       <div class="geste-texte">
+        <div class="tete">
         <div class="num">1</div>
         <h3>Imprimez</h3>
+        </div>
         <p>Composez votre création dans Quadreti Designer, puis imprimez-la chez vous sur la feuille prédécoupée fournie. Détachez : aucune découpe à faire. Toute imprimante jet d'encre convient.</p>
         <div class="hint">Au dos de chaque visuel : son code de position (B2 · D5). Votre plan de montage est intégré — <a href="quadreti-guide-codification.html">comment se lit un code</a>.</div>
       </div>
@@ -1249,8 +1262,10 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div class="geste geste-gauche rv">
       <div class="geste-texte">
+        <div class="tete">
         <div class="num">2</div>
         <h3>Glissez</h3>
+        </div>
         <p>L'étui se plie une fois, sans un point de colle : les volets se rabattent et il tient seul. Chaque visuel se glisse dedans et reste parfaitement à plat.</p>
         <div class="hint">Le même étui servira à tous vos visuels futurs.</div>
       </div>
@@ -1287,8 +1302,10 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div class="geste geste-gauche rv">
       <div class="geste-texte">
+        <div class="tete">
         <div class="num">3</div>
         <h3>Clipsez</h3>
+        </div>
         <p>L'étui se clipse dans la grille — clic. Le clipsage verrouille l'ensemble, naturellement. Pour changer : déclipsez, remplacez, reclipsez. Quelques secondes.</p>
         <div class="hint">Fixation murale par punaises, recouvertes par les tesselles d'angle : rien d'apparent, trous minimes.</div>
       </div>
