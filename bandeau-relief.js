@@ -125,7 +125,10 @@
     var poser = function (parent, nom, classe, fill) { if (!parent || parent.querySelector('.' + classe)) return; parent.insertBefore(bordElement(nom, classe, fill), parent.firstChild); parent.appendChild(bordElement(nom, classe + ' qb-bord-ligne', fill, true)); };
     /* 12/09 : l onglet du haut (BORD 1) est dessine par l en-tete commune (commun-bandeau.js), plus par le bandeau */
     var bande = document.querySelector('.qb-gestes'), defile = document.querySelector('.qb-defile');
-    poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', navy); poser(defile, 'defile', 'qb-bord-defile-bas', navy);
+    /* 16/09, fondateur : « decroche bas retire ». Le bord BAS de la bande defilante n est plus pose du tout : la bande
+       s arrete sur une horizontale franche. Les trois listes de minutage qui citent encore 'qb-bord-defile-bas' plus bas
+       cherchent l element avec querySelector et sortent si elles ne le trouvent pas — rien a y toucher. */
+    poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', navy);
     poserMarches();   /* 15/09 : les marches entre sections, memes tracés */
     var dec = (L.reflet && L.reflet.mode !== 'changement' && L.reflet.decalage) || 0; ['qb-bord-haut', 'qb-bord-bas', 'qb-bord-defile-haut', 'qb-bord-defile-bas'].forEach(function (k, i) { var r = document.querySelector('.qb-bord-ligne.' + k + ' .qb-bord-reflet'); if (r) r.style.animationDelay = (i * dec) + 's'; });
   }  var root = document.getElementById('qbBandeau'); if (!root) return;
