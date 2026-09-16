@@ -482,7 +482,13 @@
   .comparateur-note{ font-size:13px; color:#4F5A65; margin:10px 0 0; text-align:left; }
 
   .mur-situation{ margin:0; }
-  .mur-situation img{ width:100%; border-radius:6px; display:block; }
+  /* 16/09, fondateur : « meme hauteur qu image avant apres ». 1,658 = 3/2 (le rapport du comparateur) x 1,05/0,95 (le
+     rapport des deux colonnes) : les deux images tombent alors a la meme hauteur quelle que soit la largeur d ecran.
+     La photo est carree, il en reste 60,3 % centres — l oeuvre au mur (a partir de 22 %) et le canape (53,5 a 74,5 %)
+     sont dedans ; ce qui part, c est le plafond et le bas du sol. */
+  .mur-situation img{ width:100%; border-radius:6px; display:block; aspect-ratio:1.658; object-fit:cover; }
+  /* Sous 860 px la section passe a une colonne : la photo n a plus rien a egaler, elle reprend son cadrage entier. */
+  @media (max-width:860px){ .mur-situation img{ aspect-ratio:auto; } }
   .mur-situation figcaption{ font-size:13px; color:#4F5A65; margin-top:10px; font-weight:600; }
 
   /* Les trois arguments de « Et demain ? », resserres — dans la maquette ils occupent la colonne droite de « Pour qui ». */
