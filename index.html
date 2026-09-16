@@ -692,6 +692,18 @@
   .offer .prix{ font-weight:800; font-size:20px; }
   .offer .pu{ font-size:12px; color:#4F5A65; font-weight:600; }
   .gamme-notes{ margin-top:26px; text-align:center; font-size:14px; color:#4F5A65; max-width:640px; margin-left:auto; margin-right:auto; }
+
+  /* 16/09, regle validee par le fondateur : un bloc de texte se ferre vers le bord de page le plus proche de lui. Pour
+     un bloc de pleine largeur, ou aucun bord n est plus proche, c est le cote de la carte de titre qui tranche. */
+  @media (min-width:861px){
+    /* « Pour qui » : les trois arguments sont dans la colonne de DROITE et etaient ferres a gauche. Le liseré change de
+       bord avec le texte — a gauche, il aurait coupe le paragraphe au milieu du vide. */
+    #pourqui .arg{ text-align:right; border-left:none; border-right:3px solid #d96c2f; padding:2px 16px 2px 0; }
+    /* Blocs pleine largeur : ils suivent la carte de leur section. */
+    #grandir .scal-foot{ text-align:right; margin-left:auto; margin-right:0; }
+    #designer .app-reassure{ text-align:right; }
+    #gamme .gamme-notes{ text-align:left; margin-left:0; margin-right:auto; }
+  }
   .gamme-notes b{ color:var(--charbon); }
   /* 14/09 : l encart etait vert kaki sur vert pale. Il devient une carte, comme les autres de la page, et c est sa
      pastille orange qui porte l accent. */
