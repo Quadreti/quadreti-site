@@ -1193,37 +1193,37 @@
   }
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 
-  /* ================= ESSAI KRAFT DORE — 16/09, a retirer en bloc =================
-     Demande du fondateur : voir la page avec un kraft dore a la place de l orange, sans avoir a manoeuvrer le panneau.
-     La teinte : #CBBD93, le kraft d origine (jeton --kraft de la page). Mesuree dans ses roles reels — encre par-dessus
-     9,59 (contre 5,23 pour l orange), sur le navy des cartes de titre 7,74 (contre 4,23), sur le gris de page 1,39
-     (contre 2,54) — c est la ou il perd, voir le compte-rendu.
-     Deux etages, parce que l orange arrive par deux chemins :
-       1. les jetons, que toute la page lit depuis le branchement d aujourd hui ;
-       2. six litteraux que le panneau injecte lui-meme et qui ne lisent aucun jeton. Ceux-la suivront tout seuls le
-          jour ou l accent changera DANS le panneau — ils sont forces ici uniquement pour que l essai soit complet.
-     Non touche : .face-visuel, la teinte propre de la carte Mosaique Creative, qui est une donnee de contenu et non
-     l accent du site.
-     POUR REVENIR A L ORANGE : supprimer ce bloc jusqu au repere de fin. */
-  :root{
-    --qz-terracotta:#CBBD93!important; --terracotta:#CBBD93!important;
-    --qz-lisere:#CBBD93!important; --lisere-couleur:#CBBD93!important;
-  }
-  /* Un selecteur de plus que le panneau : il injecte .cta et .offer .flag avec !important, et sa feuille est lue
-     APRES la notre — a force egale, c est lui qui gagnait. body et #gamme suffisent a passer devant. */
-  body .cta, body .chip, #gamme .offer .flag, body .ticker, body .qb-diapo-point, body .qz-bulle-contact{ background:#CBBD93!important; }
-  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#CBBD93!important; }
-  /* LES FILETS. Le fondateur : « c est vrai qu en lisere il est tres discret ». Mesure : ce kraft et le gris de la
-     page ont presque la meme luminosite — 1,39, aucune epaisseur n y aurait rien change. Les traits poses sur du CLAIR
-     prennent donc un kraft ASSOMBRI a 55 % : #706851, soit 4,12 sur le gris de page, au-dessus du 3:1 exige d un objet
-     graphique, et toujours de la meme famille de teinte.
-     Les FONDS gardent le kraft clair : c est sur eux qu on pose de l encre, et ils y gagnent (9,59).
-     Le lisere des cartes de titre reste clair lui aussi : il est pose sur du navy, ou il donne 7,74. */
-  .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#706851!important; }
-  .comparateur .ligne, .comparateur .poignee{ background:#706851!important; }
-  .comparateur input:focus-visible{ outline-color:#706851!important; }
-  .diapo-puces label:hover{ border-color:#706851!important; }
-  /* ================= FIN DE L ESSAI KRAFT DORE ================= */
+  /* ================= ESSAI 2 : ACCENT RARE + KRAFT EN SURFACE — 16/09, a retirer en bloc =================
+     L accent reste l orange de marque. Ce qui change, c est sa QUANTITE : il ne peint plus que l action et le
+     dispositif de marque. Le kraft, lui, cesse d etre un trait pour devenir un aplat.
+     POUR REVENIR : supprimer ce bloc jusqu au repere de fin. */
+
+  /* --- 1. Les filets rendent l accent et prennent l encre navy. 10,77 sur le gris de page, contre 2,54 en orange :
+         ils se voient mieux ET ils cessent de crier. Un trait de structure n est pas un accent. --- */
+  .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#1e2b35!important; }
+  .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }   /* 5,12 sur le mur gris de la photo, contre 1,21 en orange — c est une poignee qu on attrape */
+  .comparateur input:focus-visible{ outline-color:#1e2b35!important; }
+
+  /* --- 2. Les sept pastilles de modes sont des ETIQUETTES, pas des boutons : sept aplats orange pleins etaient la
+         plus grosse depense d accent de la page pour zero action. Elles passent au navy. --- */
+  body .chip{ background:#1e2b35!important; color:#dedede!important; }
+
+  /* --- 3. Le kraft en SURFACE. Deux sections choisies parce qu elles ne portent aucune carte grise : « D ou vient la
+         tesselle », qui raconte l origine, et la cloture. Elles encadrent la fin de page.
+         Contrastes sur le kraft : encre 9,59, navy 7,74 — un aplat kraft porte le texte mieux que le gris de page. --- */
+  /* body en plus : le panneau pose .finale{background:transparent!important} et sa feuille est lue APRES la notre.
+     Troisieme fois aujourd hui que ce piege se referme — a force egale, c est toujours lui qui gagne. */
+  #histoire, body .finale{ background:#CBBD93!important; }
+  #histoire p, #histoire .reinvente{ color:#1e2b35!important; }
+  /* La signature garde l encre que le panneau lui pose : sur le kraft elle donne 9,59, on ne peut pas faire mieux.
+     Seul son mot accentue doit foncer : l orange TEXTE du panneau (#974b21) ne vaut que 3,36 sur ce kraft. */
+  body .finale .phrase span{ color:#6b3510!important; }
+  /* Le bouton de cloture est le seul objet orange pose sur le kraft : leurs luminosites sont proches (1,83), son bord
+     s y estompait. Un filet d encre le redecoupe, comme pour les pastilles des cartes de modes ce matin. */
+  body .finale .cta{ box-shadow:0 0 0 2px #10181f; }
+  /* ================= FIN DE L ESSAI 2 ================= */
+
+
 </style>
 <link rel="stylesheet" href="/commun.css">
 <link rel="stylesheet" href="/prisme-outils.css">
