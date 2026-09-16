@@ -714,7 +714,9 @@
        donc son texte retombe exactement sur la marge de la page, ferre a droite comme sa carte de titre. */
     #grandir .scal-foot{ text-align:right; max-width:none; width:auto; border-radius:0;
       margin:26px calc(-1 * (var(--qz-bord))) 0; padding:24px calc(var(--qz-bord)); }
-    #designer .app-reassure{ text-align:right; }
+    /* 16/09, capture orange du fondateur : cette phrase et le bandeau navy juste au-dessus vont ensemble. Elle cesse
+       donc d etre ferree du cote de sa carte et se centre, comme le texte du bandeau. */
+    #designer .app-reassure{ text-align:center; }
     #gamme .gamme-notes{ text-align:left; margin-left:0; margin-right:auto; }
   }
   .gamme-notes b{ color:var(--charbon); }
@@ -861,8 +863,13 @@
     /* Meme marge des deux cotes, dans l empreinte de la BANDE et non de la colonne : la bande va du bord de page au
        bord de la colonne, le texte s en retire de 74 px de chaque cote — la moitie du debord de page, la meme valeur
        qu a droite. */
-    .designer-duo .designer-sous{ margin-left:calc(-1 * ((var(--qz-bord)) / 2)); margin-right:calc((var(--qz-bord)) / 2); }
+    .designer-duo .designer-sous{ margin-left:0; margin-right:var(--qz-bord); }
     .designer-duo .designer-sous .lead{ margin:0 0 14px; max-width:none; text-align:left; }
+    /* 16/09, capture rouge du fondateur : le bouton quitte le bas de section, ou il etait centre, et remonte dans la
+       colonne de gauche sous ses deux paragraphes. Il comble du meme coup le vide que la croix rouge barrait : la colonne
+       de gauche s arretait 83 px avant celle de droite. Trois classes pour battre le `text-align:center` pose sur .app-cta,
+       qui l emporterait sur un alignement seulement herite. */
+    .designer-duo .designer-sous .app-cta{ text-align:left; margin-top:30px; }
     /* BLEU : les pastilles l une sous l autre, toutes de la largeur de la plus large — c est ce que fait une colonne
        `max-content` : elle se dimensionne sur le contenu le plus large et les autres s y etirent. Le bloc se range a
        droite, comme le titre et le chapo de cette colonne. */
@@ -1447,6 +1454,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="designer-sous">
     <p class="lead rv" style="margin-top:44px">Ces cinq modes ne sont pas cinq produits : ce sont cinq façons de régler le même outil. Changez le nombre de teintes, la finesse de la trame, le contraste — et le même visuel devient un pixel art franc, un pointillisme en demi-teintes ou une gravure en deux couleurs.</p>
     <p class="lead rv" style="margin-top:10px">Chacun de ces rendus est ailleurs un produit à part entière. Ici, c'est le même support.</p>
+    <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
       </div>
       </div>
     </div>
@@ -1463,7 +1471,6 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 
     <p class="app-reassure rv"><b>Vous ne dessinez rien, vous décidez.</b> Et si une tesselle déplaît, elle se remplace en secondes : il n'y a pas d'erreurs, que des versions.</p>
-    <div class="app-cta rv"><a class="cta" href="https://designer.quadreti.fr" target="_blank" rel="noopener" data-bouton-zone="app_cta">Ouvrir Quadreti Designer — c'est gratuit</a></div>
   </div>
 </section>
 
