@@ -1227,6 +1227,26 @@
   .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }
   .comparateur input:focus-visible{ outline-color:#1e2b35!important; }
   body .chip{ background:#1e2b35!important; color:#dedede!important; }
+  /* --- 4. LES VARIANTES CALCULEES. Le panneau ne pose pas que l orange de marque : il en DERIVE deux autres teintes
+         pour la lisibilite — une claire pour le texte sur fond sombre (#f0a06a), une foncee pour le texte sur fond clair
+         (#9c4514, #974b21). Elles ne valent pas #d96c2f, donc ma premiere chasse les a toutes manquees. Le fondateur les
+         a vues, lui : baseline du logo, surtitres, icones des trois gestes, mot accentue de la signature.
+         Le kraft a besoin des memes deux variantes, pour la meme raison. --- */
+
+  /* Sur du NAVY : le kraft clair suffit, 7,74. */
+  .blk .titre-carte .eyebrow{ color:#CBBD93!important; }
+  .qz-coltitre::before, .qz-col ul li a::after{ background:#CBBD93!important; }
+
+  /* Sur du CLAIR : le kraft clair donnerait 1,39, illisible. Il faut sa variante assombrie a 55 %, #706851, qui donne
+     4,12 sur le gris de page — exactement ce que le panneau fait pour l orange quand il en tire #9c4514. */
+  .qz-cat{ color:#706851!important; }
+  /* Le panneau peint le BLOC entier des trois gestes dans la teinte d accent, pas seulement son icone : le titre, le
+     texte et le trait du picto en heritent. On prend donc le bloc et sa descendance. */
+  .qb-gestes .qb-geste, .qb-gestes .qb-geste *{ color:#706851!important; }
+  /* Le trait des trois pictos est pose en stroke DIRECTEMENT, pas herite de color : le reglage ci-dessus ne le touchait
+     pas. C est la sixieme et derniere poche d orange de la page. */
+  .qb-gestes .qb-geste-icone, .qb-gestes .qb-geste-icone *{ stroke:#706851!important; }
+  body .finale .phrase span{ color:#706851!important; }
   /* ================= FIN DE L ESSAI 4 ================= */
 
 
