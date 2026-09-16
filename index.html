@@ -684,9 +684,11 @@
      par le panneau (`.blk.sombre p{color:#aab2ba!important}`) y deposaient un gris clair sur un fond clair — ~2,2, c est
      le defaut que le fondateur a photographie. Trois selecteurs contre deux : a !important egal, c est la specificite qui
      tranche, pas l ordre des feuilles. */
-  .blk.sombre .trust-card h3, .blk.sombre .gift h3, .blk.sombre .trust-card b, .blk.sombre .gift b{ color:#1e2b35!important; }
-  .blk.sombre .trust-card p, .blk.sombre .gift p, .blk.sombre .trust-card li{ color:#4F5A65!important; }   /* 5,23 sur le gris de la carte */
-  .blk.sombre .gift .tagline{ color:var(--qz-terracotta-texte,#9c4514)!important; }   /* l orange FONCE : la carte est claire, 4,77 */
+  /* 16/09 : ces cartes sont navy — leurs textes sont poses ici, sinon ils retombent sur les regles d origine, ecrites
+     quand elles etaient blanches : du fonce sur du navy. */
+  .blk .gift h3, .blk .trust-card h3, .blk .gift b, .blk .trust-card b{ color:#dedede!important; }   /* 10,75 sur le navy */
+  .blk .gift p, .blk .trust-card p, .blk .trust-card li{ color:#aab2ba!important; }                  /* 6,74 */
+  .blk .gift .tagline{ color:#f0a06a!important; }   /* l orange ECLAIRCI : sur du navy, celui de marque ne donne que 3,97 */
 
   /* 15/09 : TROIS regles injectees par le panneau reprenaient la main, toutes calculees quand ces cartes etaient BLANCHES :
        .step,.reason,.c-form-compact,.gift,.premium,.trust-card{background:#ffffff!important}
@@ -694,7 +696,7 @@
      Elles tiennent en une classe ; on passe devant avec deux. Le panneau garde la main sur tout le reste — c est bien lui
      la source des couleurs, on ne lui retire que les quatre cartes dont le fond a ete decide ici, a contre-sens de leur
      section. */
-  .blk .gift, .blk .trust-card{ background:#dedede!important; }
+  .blk .gift, .blk .trust-card{ background:#1e2b35!important; border-color:#1e2b35!important; }   /* 16/09 : navy, comme les cartes de modes */
   .blk .mode p{ color:#aab2ba!important; }        /* 6,74 sur le navy de la carte */
   .blk .color-note b{ color:#ffffff!important; }  /* 14,46 sur le navy de la bande */
 
@@ -748,12 +750,8 @@
   @media (min-width:1100px){ .titre-carte.droite{ flex-direction:row-reverse; } }   /* le surtitre au bord de page, le titre contre la courbe : le miroir jusqu au bout */
   @media (max-width:1099px){ .titre-carte.droite{ padding:24px calc(max(0px, (var(--qz-larg-ecran, 100vw) - 1340px) / 2) + 26px) 26px 40px; border-radius:60px 0 0 60px; } }
 
-  /* Sur une section navy, la carte s inverse — sa regle a lui : bouton bleu sur fond gris, bouton gris sur fond bleu.
-     Trois classes contre deux : le panneau injecte `.blk.sombre h2{...!important}`, il faut le battre a la specificite.
-     10,75 dans les deux sens ; le surtitre prend l orange FONCE, celui des fonds clairs (4,77). */
-  .blk.sombre .titre-carte{ background:#dedede; }
-  .blk.sombre .titre-carte h2{ color:#1e2b35!important; }
-  .blk.sombre .titre-carte .eyebrow{ color:var(--qz-terracotta-texte,#9c4514)!important; }
+  /* 16/09, fondateur : « on unifie carte titre navy et arriere-plan gris sur toutes les sections ». Il n y a donc plus
+     de variante claire de la carte de titre : une seule regle, la carte navy, partout. */
 
   /* 16/09, fondateur : « met les paratexte aligne a gauche ou a droite sous le titre », « et pour tous ». Le chapo se
      cale du meme cote que la carte qui le surmonte. Le lien passe par la FRATRIE et non par une classe sur la section :
@@ -1367,7 +1365,7 @@ document.addEventListener('DOMContentLoaded', function(){
      c est la demonstration la plus courte de ce que fait le produit. -->
 <!-- 15/09 : section sombre. 53 mots et trois images — c est le moment ou l on REGARDE. Marches : 43 % depuis la droite en
      haut, 32 % depuis la droite en bas. Les six combinaisons de la page sont toutes differentes. -->
-<section class="blk sombre" id="resultat">
+<section class="blk" id="resultat">
   <div class="wrap">
     <div class="deux-col">
       <div class="tete">
@@ -1438,7 +1436,7 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : Quelle taille — la question qui vient juste avant le prix. -->
 <!-- 15/09 : PREMIERE section sombre, posee en demonstration avant d habiller le reste de la page. Deux marches, deux tracés
      differents et deux cotes opposes — c est la variation demandee (« un coup a gauche, un coup a droite »). -->
-<section class="blk sombre" id="grandir">
+<section class="blk" id="grandir">
   <div class="wrap center">
     <div class="duo-bande">
     <div class="duo-txt">
@@ -1532,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', function(){
      14/09 : A offrir. -->
 <!-- 15/09 : section sombre. 86 mots, aucune image — une phrase qu on prononce. Marches : 17 % depuis la gauche en haut,
      43 % depuis la gauche en bas. -->
-<section class="blk sombre" id="cadeau">
+<section class="blk" id="cadeau">
   <div class="wrap center">
     <div class="duo-bande">
     <div class="duo-txt">
@@ -1597,7 +1595,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- 15/09, fondateur : « Commandez en confiance » passe en navy. Ses deux cartes de reassurance restent blanches — elles
      flottent alors sur le bleu, et leurs textes gardent les couleurs calculees pour un fond blanc. Marches : 17 % depuis
      la droite en haut, 32 % depuis la gauche en bas. -->
-<section class="blk sombre" id="livraison">
+<section class="blk" id="livraison">
   <div class="wrap center">
     <div class="duo-bande">
     <div class="duo-txt">
