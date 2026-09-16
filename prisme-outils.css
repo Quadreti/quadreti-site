@@ -174,12 +174,9 @@
    Le defilement s arrete au survol ET au focus clavier — un bandeau qui fuit sous le curseur est une animation contre son
    utilisateur. Et pour qui demande moins d animation, il ne bouge pas : il devient une rangee qu on fait defiler soi-meme. */
 .bandeau-outils{ position:relative; overflow:hidden; margin-top:34px; }
-/* les deux fondus sur les bords : les cartes entrent et sortent du champ au lieu d etre coupees net */
-.bandeau-outils::before, .bandeau-outils::after{
-  content:""; position:absolute; top:0; bottom:0; width:70px; z-index:2; pointer-events:none;
-}
-.bandeau-outils::before{ left:0; background:linear-gradient(90deg, var(--bandeau-fond,#dedede), transparent); }
-.bandeau-outils::after{ right:0; background:linear-gradient(270deg, var(--bandeau-fond,#dedede), transparent); }
+/* 16/09, fondateur : « sans fondu de bordure ». Les deux degrades qui faisaient disparaitre les cartes en douceur sur
+   les bords sont retires : la coupure franche est la grammaire de la page depuis ce matin — les cartes de titre sont
+   coupees pareil par le bord de la fenetre. */
 
 .bandeau-piste{ display:flex; gap:22px; width:max-content; animation:bandeau-defile 60s linear infinite; }
 .bandeau-outils:hover .bandeau-piste, .bandeau-piste:focus-within{ animation-play-state:paused; }
@@ -200,5 +197,4 @@
 
 @media (prefers-reduced-motion:reduce){
   .bandeau-piste{ animation:none; width:auto; overflow-x:auto; padding-bottom:8px; }
-  .bandeau-outils::before, .bandeau-outils::after{ display:none; }
 }
