@@ -1195,8 +1195,9 @@
 
   /* ================= ESSAI KRAFT DORE — 16/09, a retirer en bloc =================
      Demande du fondateur : voir la page avec un kraft dore a la place de l orange, sans avoir a manoeuvrer le panneau.
-     La teinte : #C8A44A. Mesuree dans ses roles reels — encre par-dessus 7,56 (contre 5,23 pour l orange), sur le navy
-     des cartes de titre 6,10 (contre 4,23), sur le gris de page 1,76 (contre 2,54).
+     La teinte : #CBBD93, le kraft d origine (jeton --kraft de la page). Mesuree dans ses roles reels — encre par-dessus
+     9,59 (contre 5,23 pour l orange), sur le navy des cartes de titre 7,74 (contre 4,23), sur le gris de page 1,39
+     (contre 2,54) — c est la ou il perd, voir le compte-rendu.
      Deux etages, parce que l orange arrive par deux chemins :
        1. les jetons, que toute la page lit depuis le branchement d aujourd hui ;
        2. six litteraux que le panneau injecte lui-meme et qui ne lisent aucun jeton. Ceux-la suivront tout seuls le
@@ -1205,13 +1206,13 @@
      l accent du site.
      POUR REVENIR A L ORANGE : supprimer ce bloc jusqu au repere de fin. */
   :root{
-    --qz-terracotta:#C8A44A!important; --terracotta:#C8A44A!important;
-    --qz-lisere:#C8A44A!important; --lisere-couleur:#C8A44A!important;
+    --qz-terracotta:#CBBD93!important; --terracotta:#CBBD93!important;
+    --qz-lisere:#CBBD93!important; --lisere-couleur:#CBBD93!important;
   }
   /* Un selecteur de plus que le panneau : il injecte .cta et .offer .flag avec !important, et sa feuille est lue
      APRES la notre — a force egale, c est lui qui gagnait. body et #gamme suffisent a passer devant. */
-  body .cta, body .chip, #gamme .offer .flag, body .ticker, body .qb-diapo-point, body .qz-bulle-contact{ background:#C8A44A!important; }
-  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#C8A44A!important; }
+  body .cta, body .chip, #gamme .offer .flag, body .ticker, body .qb-diapo-point, body .qz-bulle-contact{ background:#CBBD93!important; }
+  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#CBBD93!important; }
   /* ================= FIN DE L ESSAI KRAFT DORE ================= */
 </style>
 <link rel="stylesheet" href="/commun.css">
