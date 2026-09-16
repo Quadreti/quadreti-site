@@ -983,9 +983,14 @@
   @keyframes paletteScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
   @media (prefers-reduced-motion: reduce){ .palette-track{ animation:none; } }
 
+  /* 16/09 : ce voile adoucissait la palette qui defilait derriere le texte. La palette est eteinte depuis le 28/08
+     (`.palette-band{display:none}` juste au-dessus) et le voile est reste : un degrade de creme #F1ECDD monte a 82 %,
+     pose sur toute la carte. Il n avait plus rien a voiler — il repeignait la carte en kraft, l identite abandonnee, et
+     noyait le texte (blanc sur creme a 82 %, illisible en bas). Il prend la couleur de la carte : invisible tant que la
+     palette est eteinte, et juste le jour ou on la rallume. */
   .styles-veil{
     position:absolute; inset:0; z-index:1; pointer-events:none;
-    background:linear-gradient(180deg, rgba(241,236,221,.35) 0%, rgba(241,236,221,.55) 45%, rgba(241,236,221,.82) 100%);
+    background:linear-gradient(180deg, rgba(30,43,53,.35) 0%, rgba(30,43,53,.55) 45%, rgba(30,43,53,.82) 100%);
   }
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 </style>
