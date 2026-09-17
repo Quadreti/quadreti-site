@@ -1071,7 +1071,13 @@
      au-dessous de deux lignes et d un bouton — 370 px de haut pour 150 px de contenu. Le reste de la page respire a
      --qz-espace-bloc ; cette section n avait aucune raison d etre trois fois plus aeree que les autres.
      `position:relative` : le decroche du haut se pose CONTRE elle, en dehors de son flux. */
-  .finale{ text-align:center; padding:clamp(34px,3vw,46px) 22px; position:relative; }
+  /* 18/09, fondateur : « garde le meme espacement dans la zone inferieure de l avant-derniere section au-dessus du
+     decroche superieur ». Le decroche est pose HORS du flux, contre le haut de la section : il tombait donc dans le
+     remplissage bas de la section precedente et lui en mangeait 22 — il restait 26 px au-dessus de la ligne quand
+     toutes les autres frontieres en ont 48. Celui du PIED ne fait pas cela : il est dans le flux et occupe sa propre
+     bande. La section se decale donc de la hauteur du decroche, qui reprend sa bande a lui et rend l espace entier. */
+  .finale{ text-align:center; padding:clamp(34px,3vw,46px) 22px; position:relative;
+    margin-top:var(--qz-pied-decroche,22px); }
   /* Pose en dehors de la section (bottom:100%) et non dans son flux : dans le flux, le fond de la section aurait
      deja peint la marche a plat, et le trace n aurait plus rien a dessiner. `z-index:0` le tient sous le texte —
      le remplissage deborde volontairement vers le bas, pour qu aucune rangee de pixels ne reste adoucie. */
