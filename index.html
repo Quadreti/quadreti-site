@@ -1290,6 +1290,13 @@
      Sur la carte devenue sombre elle ne vaut plus que 1,75 : la colonne perdait sa marque. Elle prend le kraft, qui
      vaut 5,47 sur la carte et la relie a son propre badge. */
   .blk .offer.pop{ border-color:var(--qz-terracotta,#CBBD93)!important; }
+  /* 18/09, fondateur : « pareil pour ce bandeau (je pense qu il a un fondu) ». Il a vu juste. `.styles-veil` est un
+     degrade pose PAR-DESSUS la bande « Et la couleur n est pas un stock », a z-index 1 : il repeignait donc le navy
+     que la carte venait de prendre. Il portait encore le gris des photos, de 35 % a 82 %.
+     Ce voile servait a adoucir une palette qui defilait derriere le texte ; elle est ETEINTE depuis le 28/08 et il n a
+     plus rien a voiler. Il est garde pour le jour ou on la rallume, mais il doit TOUJOURS porter la couleur de la
+     carte — c est la deuxieme fois qu il derive derriere elle. Il prend donc le navy des cartes. */
+  .styles-veil{ background:linear-gradient(180deg, rgba(51,67,79,.35) 0%, rgba(51,67,79,.55) 45%, rgba(51,67,79,.82) 100%)!important; }
   /* Le seul lien sans classe de la page prenait le bleu par defaut du navigateur (1,54 sur le navy). */
   .blk a:not([class]){ color:#dedede!important; text-decoration-color:#dedede!important; }
   /* Quatre derniers textes que le balayage a trouves : les .hint des gestes sont des DIV, que la liste des textes de
