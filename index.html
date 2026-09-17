@@ -1205,29 +1205,6 @@
   body .chip{ background:#1e2b35!important; color:#dedede!important; }   /* sept etiquettes, pas sept boutons : elles ne depensent plus d accent */
   /* ===== fin ===== */
 
-  /* ================= ESSAI 5 : FOND KRAFT, LISERE BLANC, LOGO ORANGE — 17/09, a retirer en bloc =================
-     Accueil seulement. Les trois valeurs a garder en tete en regardant :
-       carte photo-grise sur kraft  1,51   les cartes se fondent dans le fond
-       blanc sur kraft              1,87   le lisere blanc disparait des qu il touche le fond
-       orange de marque sur kraft   1,83   d ou une baseline en orange FONCE, seul lisible
-     POUR REVENIR : supprimer ce bloc jusqu au repere de fin. */
-
-  /* --- Le fond de page. Les sections sont transparentes : c est le corps qui porte la couleur. --- */
-  html body{ background:#CBBD93!important; }
-
-  /* --- Les liseres en blanc. Sur les cartes de titre, qui sont navy, c est 14,46 — le meilleur contraste de la page.
-         Sur le decroche, dont le trait longe la frontiere navy / fond, la moitie basse disparaitra. --- */
-  .blk .titre-carte{ border-color:#ffffff!important; }
-  .qb-defile{ box-shadow:inset 0 calc(var(--lisere-ep,3) * -1px) 0 #ffffff!important; }
-  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#ffffff!important; }
-
-  /* --- Le logo et sa baseline reviennent a l orange. Les deux tesselles d accent du Q sont les .qz-case.qz-o ; les
-         trente autres gardent leurs navy et leurs gris. La baseline, elle, est du TEXTE : l orange de marque n y vaut
-         que 1,83 sur le kraft, il lui faut sa version foncee. --- */
-  .qz-case.qz-o .qz-tuile{ --c:#d96c2f!important; }
-  .qz-cat{ color:#6E300E!important; }
-  /* ================= FIN DE L ESSAI 5 ================= */
-
 
 </style>
 <link rel="stylesheet" href="/commun.css">
