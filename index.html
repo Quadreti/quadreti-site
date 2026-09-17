@@ -1269,6 +1269,22 @@
   .qb-gestes .qb-geste-changez p{ color:#1e2b35!important; font-weight:600!important; }
   .qb-gestes .qb-geste-changez .qb-geste-icone{ color:#1e2b35!important; stroke:#1e2b35!important; }
 
+  /* --- CAPTURES 1, 2, 3 : « arrondi rectangle unifie comme les images de l accueil ». Les images et le comparateur
+         sont a 6 px ; les cartes portaient 8px 8px 8px 22px — le coin marque de la charte — et les cartes de modes 4 px.
+         Toutes les cartes de contenu passent a 6 px, quatre coins egaux, comme les images.
+         La carte de TITRE garde son demi-cercle : ce n est pas un arrondi de coin, c est sa forme. --- */
+  .blk .trust-card, .blk .gift, .blk .offer, .blk .mode, .blk .premium, #app .face{ border-radius:6px!important; }
+
+  /* --- CAPTURE 4 : le lisere du bas de la bande defilante et les traits verticaux entre ses mentions sont retires. --- */
+  .qb-defile{ box-shadow:none!important; }
+  .qb-defile span{ border-right:none!important; }
+
+  /* --- CAPTURES 5 et 6 : deux textes etaient restes en encre sur le fond navy — les questions de la FAQ a 1,00 et la
+         signature de cloture a 1,17, c est-a-dire invisibles. Ni l une ni l autre n etait couverte : les questions sont
+         des BUTTON, et la cloture n est pas une section .blk. Elles prennent la couleur de texte du reste de la page. --- */
+  .qa .q, .qa .a, .qa .a p, .qa button{ color:#dedede!important; }
+  .finale .phrase, .finale p{ color:#dedede!important; }
+
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
   .blk .titre-carte .eyebrow{ color:var(--qz-terracotta-texte,#6a624d)!important; }
