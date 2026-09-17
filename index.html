@@ -1324,6 +1324,27 @@
      porte deja le sien, en 2,4 px. Lui en imposer un l epaissirait. */
   .qb-gestes .qb-geste-fleche{ color:#dedede!important; }
 
+  /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
+         et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
+         Celle qu on voit est la baseline ANIMEE du bandeau — une suite de lettres, `p.qb-li.qb-l1 > span.qb-mot >
+         span.qb-l` — et chaque lettre portait le navy : 1,00 sur l onglet devenu navy, invisible.
+         Lecon : avant de peindre un texte, verifier que c est bien CELUI QUI S AFFICHE. Blanc : 14,46. --- */
+  html.qz-accueil .qb-li.qb-l1, html.qz-accueil .qb-li.qb-l1 .qb-mot,
+  html.qz-accueil .qb-li.qb-l1 .qb-l{ color:#ffffff!important; }
+
+  /* --- 18/09, fondateur : « Changez a volonte » en orange de marque. C est le titre du hero, 40 px — donc du GRAND
+         texte, dont le seuil est 3,0 et non 4,5. L orange y vaut 4,23 : il passe largement.
+         C est la premiere fois que l orange de marque porte du texte sur ce site, et c est la seule place ou il le
+         peut : il faut cette taille-la. --- */
+  html.qz-accueil .qb-textes.qb-l4, html.qz-accueil .qb-textes.qb-l4 .qb-mot,
+  html.qz-accueil .qb-textes.qb-l4 .qb-l{ color:var(--qz-orange-marque,#d96c2f)!important; }
+
+  /* --- Et l icone du geste « Changez » prend le meme orange (4,23, une forme). Son TITRE garde le gris et son ecart
+         de graisse : le fondateur avait tranche que c est la graisse qui le distingue, pas la couleur. L icone, elle,
+         n est pas du texte — elle peut porter la couleur sans rien perdre en lisibilite. --- */
+  .qb-gestes .qb-geste-changez .qb-geste-icone{ color:var(--qz-orange-marque,#d96c2f)!important;
+    stroke:var(--qz-orange-marque,#d96c2f)!important; }
+
   /* --- « Changez » se distinguait par la COULEUR : la variante foncee de l accent. Sur ce bandeau clair, le kraft de
          marque ne vaut que 1,39 — la teinte pure y est illisible, et sa variante foncee etait deja au seuil exact (4,50),
          sans un pixel de marge. Le fondateur tranche : navy, et c est la GRAISSE qui portera l ecart.
