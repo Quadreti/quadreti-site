@@ -178,9 +178,16 @@
   html.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#f2ae7e!important}
   /* Le naming reprend le gris : c est le mot de la marque, il se lit, il ne decore pas. 7,59. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#dedede!important}
-  /* Les tesselles du Q passent a l ORANGE DE MARQUE. Ce sont des surfaces, pas du texte : 2,98 y est une forme qu on
-     voit. C est la seule place de l en-tete ou l orange pur a sa place. */
-  html.qz-accueil .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:var(--qz-orange-marque,#d96c2f)!important}
+  /* La plaque du Q reprend le CLAIR (7,59). J avais peint tout le bloc en orange : cela effacait la grammaire du logo,
+     qui distingue deja ses tesselles ordinaires (.qz-b, sur currentColor) de sa SIGNATURE (.qz-o). Seule celle-la
+     porte la couleur — voir la regle de la signature dans commun.css, commune a l en-tete et au pied. */
+  html.qz-accueil .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#dedede!important}
   /* La baseline : elle portait la variante FONCEE de l accent, calculee pour la barre grise — 1,33 ici, invisible. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-cat{color:#f0a06a!important}
+  /* Les SOUS-MENUS deroulants prennent le navy 2 eux aussi. Ils etaient peints avec l accent et portaient du texte
+     BLANC : la regle avait ete ecrite pour l orange de marque, ou le blanc vaut 3,24. L essai kraft les a fait tomber
+     a 1,87 — leurs libelles etaient devenus illisibles, sur toutes les pages du site. Ici : 7,59.
+     Leur cadre gris clair reste : il est ce qui detache le tiroir de la barre, qui porte le meme navy. */
+  html.qz-accueil .qz-header.qz-menu-visible .qz-sublist{background:#33434f!important}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-sublist a{color:#dedede!important}
 }
