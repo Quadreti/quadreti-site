@@ -1318,6 +1318,11 @@
   .qb-gestes{ background:#1e2b35!important; }
   .qb-gestes h3, .qb-gestes p{ color:#dedede!important; }
   .qb-gestes .qb-geste-icone{ color:#dedede!important; stroke:#dedede!important; }
+  /* 18/09, fondateur : « meme couleur que les icones ». Les trois fleches entre les gestes sont tracees en
+     `stroke="currentColor"` et ce currentColor etait reste au navy : 1,00 sur la bande devenue navy, elles avaient
+     disparu. Une seule propriete suffit donc — la couleur du conteneur — et surtout PAS de stroke ici : le trace
+     porte deja le sien, en 2,4 px. Lui en imposer un l epaissirait. */
+  .qb-gestes .qb-geste-fleche{ color:#dedede!important; }
 
   /* --- « Changez » se distinguait par la COULEUR : la variante foncee de l accent. Sur ce bandeau clair, le kraft de
          marque ne vaut que 1,39 — la teinte pure y est illisible, et sa variante foncee etait deja au seuil exact (4,50),
