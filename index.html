@@ -1348,24 +1348,28 @@
   body .finale .phrase span{ color:var(--qz-terracotta-texte,#6a624d)!important; }
   /* 18/09, fondateur : « retire lisere ». L anneau d encre que j avais pose autour de ce bouton part. */
 
-  /* --- Les QUATRE appels a l action de la page passent a l ORANGE DE MARQUE. Le fondateur les a nommes un par un :
-         « Commander mon kit », « Ouvrir Quadreti Designer — c est gratuit », « Voir le Studio », et celui du hero.
-         Les trois « Commander » des colonnes de prix n en sont PAS : ils sont poses sur des cartes, ou l orange ne
-         vaudrait que 2,98 contre 5,47 au kraft. Ils restent kraft. Le meme mot, deux teintes — c est la POSITION qui
-         decide, pas le libelle.
+  /* --- TOUS les appels a l action de la page passent a l ORANGE DE MARQUE : les quatre que le fondateur avait nommes
+         (le hero, « Ouvrir Quadreti Designer — c est gratuit », « Voir le Studio », « Commander mon kit ») et, sur sa
+         demande suivante, les trois « Commander » des colonnes de prix.
+         J avais d abord laisse ces trois-la en kraft parce qu ils sont poses sur des cartes, ou l orange ne vaut que
+         2,98 contre 5,47 au kraft. Le fondateur a tranche pour l unite, et il a une bonne raison : le meme mot ne peut
+         pas porter deux teintes selon l endroit. 2,98 reste un APLAT qu on voit — la charte reserve le seuil de 4,5 au
+         texte, pas a une surface.
          Encre dessus, jamais de blanc : regle de la charte pour tout texte pose sur l orange. 5,23 au repos. --- */
-  body .hero-cta.cta, body #designer .cta, body .finale .cta, body .btn-studio{
+  body .hero-cta.cta, body #designer .cta, body .finale .cta, body .btn-studio, body .blk .offer .cta{
     background:var(--qz-orange-marque,#d96c2f)!important; border-color:var(--qz-orange-marque,#d96c2f)!important;
     color:#10181f!important;
   }
   /* Le survol du site eclaircit le fond : #d96c2f -> #df824e, l ecart deja en usage partout ailleurs. Encre : 6,35. */
   body .hero-cta.cta:hover, body .hero-cta.cta:focus-visible, body #designer .cta:hover, body #designer .cta:focus-visible,
-  body .finale .cta:hover, body .finale .cta:focus-visible, body .btn-studio:hover, body .btn-studio:focus-visible{
+  body .finale .cta:hover, body .finale .cta:focus-visible, body .btn-studio:hover, body .btn-studio:focus-visible,
+  body .blk .offer .cta:hover, body .blk .offer .cta:focus-visible{
     background:#df824e!important; border-color:#df824e!important; color:#10181f!important;
   }
   /* Et leur eclat repasse au BLANC. Un eclat orange sur un bouton orange balaie sa propre couleur : ecart de luminance
      nul, on ne verrait rien. Le blanc s en detache de 0,743. L eclat orange reste sur les boutons kraft (0,255). */
-  body .hero-cta.cta::after, body #designer .cta::after, body .finale .cta::after, body .btn-studio::after{
+  body .hero-cta.cta::after, body #designer .cta::after, body .finale .cta::after, body .btn-studio::after,
+  body .blk .offer .cta::after{
     background:linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%)!important;
   }
   /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
