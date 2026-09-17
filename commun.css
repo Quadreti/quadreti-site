@@ -177,6 +177,14 @@ footer.qz-footer .qz-basdepage .qz-plaque{ --t:66px; --qz-prof:1px; }
    passer a la ligne sur un ecran de cette taille. Borne a 374 px : a 375 (largeur de reference) elle tient, rien ne bouge. */
 @media (max-width:374px){ .qz-basdepage .qz-pied-accroche{ white-space:normal; } }
 footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:var(--qz-pied-titre); } /* 13/09 : naming, tesselles du Q et accroche au BLEU — le pied est passe au gris */
+/* 18/09, essai du fondateur : « tesselle logo vers orange ainsi que baseline, autant haut que bas de page ».
+   Les TESSELLES prennent l orange de marque (4,23 sur le navy du pied) — une surface, pas du texte. La BASELINE et la
+   categorie prennent l orange eclairci (6,85) : ce sont des mots, et l orange pur n y vaut que 4,23, sous le seuil.
+   Le naming reste gris : il porte le nom de la marque, il se lit avant de decorer.
+   ACCUEIL SEULEMENT, comme l en-tete : ailleurs le pied est clair et ces teintes y seraient fausses. */
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-plaque.qz-wordmark-img{ color:var(--qz-orange-marque,#d96c2f); }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche,
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#f0a06a!important; }
 .qz-basdepage .qz-cat{ display:inline-block; width:auto; opacity:1; animation:none; overflow:visible; font-family:'Jura',sans-serif!important; font-weight:700; font-size:14.5px; line-height:19.5px; letter-spacing:.02em!important; text-transform:none; color:var(--qz-pied-orange-texte); margin:0; white-space:nowrap; } /* 13/09 : sur gris, l orange de marque ne donne que 2,9 de contraste — c est sa version foncee qui s ecrit */
 /* titres de colonnes : capitales Jura, sans tesselle */
 .qz-coltitre{
