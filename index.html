@@ -1282,6 +1282,14 @@
   .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b,
   .blk .note-navy, .blk .note-navy b,
   #app .face-corps h2, #app .face-corps p{ color:#dedede!important; }
+  /* Le balayage a trouve le badge « Le plus choisi » a 1,39 : `.blk .offer div` l avait repeint en clair alors qu il
+     a son PROPRE fond kraft. Meme piege que la lettre decorative des vignettes du Studio — une carte ne contient pas
+     que du texte pose sur elle. Il reprend l encre : 7,74 sur son kraft. */
+  .blk .offer .flag{ color:#1e2b35!important; }
+  /* La colonne « le plus choisi » se distinguait par une bordure d encre, calculee quand la carte etait GRISE (9,59).
+     Sur la carte devenue sombre elle ne vaut plus que 1,75 : la colonne perdait sa marque. Elle prend le kraft, qui
+     vaut 5,47 sur la carte et la relie a son propre badge. */
+  .blk .offer.pop{ border-color:var(--qz-terracotta,#CBBD93)!important; }
   /* Le seul lien sans classe de la page prenait le bleu par defaut du navigateur (1,54 sur le navy). */
   .blk a:not([class]){ color:#dedede!important; text-decoration-color:#dedede!important; }
   /* Quatre derniers textes que le balayage a trouves : les .hint des gestes sont des DIV, que la liste des textes de
