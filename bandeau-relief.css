@@ -135,8 +135,10 @@
    et animation « reflet » : au survol, un eclat clair balaie le bouton de gauche a droite, comme une lumiere sur une tesselle brillante. */
 .qb.qb-dispo-droite .qb-ctas .cta{position:relative;top:auto;right:auto;bottom:auto;left:auto;overflow:hidden;box-shadow:inset 1px 1px 0 rgba(255,255,255,.38),inset -1px -1px 0 rgba(0,0,0,.28),0 5px 12px rgba(0,0,0,.4);transition:box-shadow .2s}
 .qb.qb-dispo-droite .qb-ctas .cta::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-45%;width:38%;pointer-events:none;
-  /* 18/09, fondateur : l eclat passe du blanc a l ORANGE DE MARQUE, comme sur tous les boutons du site. */
-  background:linear-gradient(105deg,rgba(217,108,47,0) 0%,rgba(217,108,47,.55) 50%,rgba(217,108,47,0) 100%);transform:translateX(-120%) skewX(-18deg);opacity:0}
+  /* 18/09 : l eclat RESTE BLANC ici. Ce bouton est lui-meme passe a l orange de marque — un eclat orange y balaierait
+     sa propre couleur, ecart de luminance nul, donc rien de visible. Le blanc s en detache de 0,743.
+     La regle generale est la meme : l eclat doit se detacher de ce qu il balaie, pas etre d une teinte decidee. */
+  background:linear-gradient(105deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,0) 100%);transform:translateX(-120%) skewX(-18deg);opacity:0}
 .qb.qb-dispo-droite .qb-ctas .cta:hover::after{animation:qb-reflet .75s cubic-bezier(.4,0,.2,1) forwards}
 .qb.qb-dispo-droite .qb-ctas .cta:hover{transform:none;box-shadow:inset 1px 1px 0 rgba(255,255,255,.5),inset -1px -1px 0 rgba(0,0,0,.28),0 7px 16px rgba(0,0,0,.45)}
 .qb.qb-dispo-droite .qb-ctas .cta:active{transform:none;box-shadow:inset 2px 2px 4px rgba(0,0,0,.35),0 0 0 rgba(0,0,0,0)}
