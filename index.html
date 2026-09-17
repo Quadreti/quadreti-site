@@ -1057,7 +1057,21 @@
      l identite KRAFT abandonnee — et ils ne peignaient rien : le panneau repeint cette section en CLAIR depuis
      longtemps, avec !important. La feuille decrivait donc une section sombre quand la page en affiche une claire.
      Le panneau est la source des couleurs du site ; cette section lui rend la main, il ne reste ici que la geometrie. */
-  .finale{ text-align:center; padding:clamp(64px,9vw,110px) 22px; }
+  /* 18/09, fondateur : « reduit cette section a sa taille utilisee ». Elle tenait 110 px de blanc au-dessus et
+     au-dessous de deux lignes et d un bouton — 370 px de haut pour 150 px de contenu. Le reste de la page respire a
+     --qz-espace-bloc ; cette section n avait aucune raison d etre trois fois plus aeree que les autres.
+     `position:relative` : le decroche du haut se pose CONTRE elle, en dehors de son flux. */
+  .finale{ text-align:center; padding:clamp(34px,3vw,46px) 22px; position:relative; }
+  /* Pose en dehors de la section (bottom:100%) et non dans son flux : dans le flux, le fond de la section aurait
+     deja peint la marche a plat, et le trace n aurait plus rien a dessiner. `z-index:0` le tient sous le texte —
+     le remplissage deborde volontairement vers le bas, pour qu aucune rangee de pixels ne reste adoucie. */
+  .finale-bord{ position:absolute; left:0; width:100%; bottom:100%; height:var(--qz-pied-decroche,22px);
+    overflow:visible; pointer-events:none; transform:scaleX(-1); z-index:0; }
+  .finale-bord svg{ position:absolute; left:0; bottom:0; width:100%; height:100%; display:block; overflow:visible; }
+  /* Sans couleur ici : sur la page claire d origine, une marche entre deux clairs ne dessine rien. Elle ne prend ses
+     couleurs que dans l essai inverse, ou la section devient claire sur un fond navy. */
+  .finale-bord-fond{ fill:none; }
+  .finale-bord-trait{ fill:none; stroke:none; stroke-width:var(--qz-lisere-ep,3px); stroke-linejoin:round; stroke-linecap:round; }
   /* 16/09, fondateur : « · clic · » retire — ni lui ni moi ne savions expliquer a quoi il servait. Sa regle part avec
      lui, pour ne pas laisser un selecteur orphelin dans la feuille. */
   /* La signature passe de clamp(24,4.6vw,40) a l echelle des titres de la page. A 1600 elle faisait 40 px, soit DIX de
@@ -1286,10 +1300,22 @@
      !important, et sa feuille est lue APRES la notre. A force egale c est lui qui gagne : il faut donc etre PLUS
      SPECIFIQUE que lui, pas seulement insistant. Quatrieme fois de la journee que ce piege se referme. */
   #faq .qa button.q, #faq .qa .a, #faq .qa .a p{ color:#dedede!important; }
-  body .finale .phrase, body .finale p{ color:#dedede!important; }
-  /* Le mot accentue de la signature portait la variante FONCEE de l accent, calculee pour un fond clair : 2,39 sur le
-     navy. La teinte pure y donne 7,74. Un selecteur de plus que le panneau, qui tient ce span en !important. */
-  body .finale .phrase span{ color:var(--qz-terracotta,#CBBD93)!important; }
+  /* 18/09 : la section de cloture passe au GRIS. Elle etait sur le navy depuis l inversion — ses trois textes avaient
+     ete calcules contre le navy et doivent tous repartir en sens inverse. Le decroche du haut devient la frontiere
+     entre le corps navy de la page et ce pied clair : 10,75 entre les deux fonds, la marche se lit seule.
+     Plus specifique que le panneau, qui tient `.finale` en transparent et `.finale .phrase` en #10181f. */
+  body .finale{ background:#dedede!important; }
+  body .finale .phrase, body .finale p{ color:#1e2b35!important; }
+  /* Le mot accentue reprend la variante FONCEE de l accent : sur ce gris, la teinte pure ne vaudrait que 1,39 — c est
+     exactement le calcul du lisere des cartes, pris dans l autre sens. La variante foncee y donne 4,50. */
+  body .finale .phrase span{ color:var(--qz-terracotta-texte,#6a624d)!important; }
+  /* Le bouton garde son encre sur kraft (9,59), mais son BORD contre ce gris ne vaut que 1,39 : pose tel quel, il
+     flotterait sans contour. Un anneau d encre lui redonne son arete, sans changer sa boite. */
+  body .finale .cta{ box-shadow:0 0 0 2px #1e2b35!important; }
+  /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
+     qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
+  .finale-bord-fond{ fill:#dedede; }
+  .finale-bord-trait{ stroke:var(--qz-terracotta,#CBBD93); }
 
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
@@ -2007,6 +2033,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ============ FINALE ============ -->
 <section class="finale">
+  <!-- 18/09 : le decroche du haut. Meme dessin que celui du pied de page, RETOURNE dans son horizontale (demande du
+       fondateur) : la marche tombe a droite au lieu de gauche. Le trace est recopie de commun-pied.js et retourne par
+       scaleX(-1) plutot que redessine — un seul dessin a maintenir, et le miroir est exact par construction. -->
+  <div class="finale-bord" aria-hidden="true"><svg viewBox="9.000000774792966 220.7203897267749 479.9999948669969 6.7" preserveAspectRatio="none" aria-hidden="true"><path class="finale-bord-fond" d="M489 222.28 L489 220.72 L487.02 220.72 L102.14 220.72 L102.03 220.73 Q101.71 220.74 101.35 220.76 Q100.91 220.79 100.52 220.83 Q100.01 220.89 99.65 220.94 Q99.13 221.01 98.76 221.08 Q98.26 221.17 97.86 221.26 Q97.49 221.35 97.14 221.44 Q96.69 221.57 96.32 221.69 Q96.05 221.79 95.73 221.92 L89.22 224.63 Q88.74 224.84 88.26 225 Q87.73 225.18 87.11 225.35 Q86.58 225.5 86.03 225.63 Q85.45 225.76 84.76 225.89 Q84.21 225.99 83.52 226.09 Q82.96 226.16 82.28 226.23 Q81.71 226.29 81.1 226.33 Q80.45 226.38 79.88 226.4 Q79.21 226.42 78.54 226.42 L9 226.42 L9 234.72 L489 234.72 L489 222.28 L489 222.28 Z"/><path class="finale-bord-trait" vector-effect="non-scaling-stroke" d="M9 226.42 L78.54 226.42 Q79.21 226.42 79.88 226.4 Q80.45 226.38 81.1 226.33 Q81.71 226.29 82.28 226.23 Q82.96 226.16 83.52 226.09 Q84.21 225.99 84.76 225.89 Q85.45 225.76 86.03 225.63 Q86.58 225.5 87.11 225.35 Q87.73 225.18 88.26 225 Q88.74 224.84 89.22 224.63 L95.73 221.92 Q96.05 221.79 96.32 221.69 Q96.69 221.57 97.14 221.44 Q97.49 221.35 97.86 221.26 Q98.26 221.17 98.76 221.08 Q99.13 221.01 99.65 220.94 Q100.01 220.89 100.52 220.83 Q100.91 220.79 101.35 220.76 Q101.71 220.74 102.03 220.73 L102.14 220.72 L487.02 220.72 L489 220.72"/></svg></div>
   <p class="phrase">Composez, imprimez, clipsez,<br><span>changez à volonté.</span></p>
   <a class="cta" href="/boutique/" data-bouton-zone="boutique_cta">Commander mon kit</a>
 </section>
