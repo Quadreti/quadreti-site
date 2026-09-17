@@ -136,7 +136,10 @@ footer.qz-footer{
 /* 13/09, demande du fondateur : le pied passe au GRIS du site, sur toutes les pages. Ce qui etait clair sur navy devient donc
    fonce sur gris. --qz-pied-titre porte cette bascule a lui seul : il sert aux titres de colonnes, au naming, aux tesselles du Q,
    aux liens et au copyright. */
-:root{--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:var(--qz-terracotta-texte,#9c4514);--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:22px}
+/* 18/09, fondateur : « orange quadreti brillance reflet au passage souris ». L eclat des boutons garde l ORANGE DE
+   MARQUE meme quand l accent du site change — c est une touche de couleur voulue, pas un derive de l accent. D ou un
+   jeton a lui, et non var(--qz-terracotta). */
+:root{--qz-reflet:#d96c2f;--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:var(--qz-terracotta-texte,#9c4514);--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:22px}
 /* 15/09, fondateur : le pied passe au NAVY, mais sur l ACCUEIL SEULEMENT. Ailleurs il reste gris — la decision du 14/09
    « pour tous les bas de page » tient partout ailleurs. La page d accueil porte deja html.qz-accueil (pose par
    qzEnteteInit) : trois jetons suffisent a basculer la feuille, le panneau recalcule le reste de son cote.
@@ -230,6 +233,24 @@ footer.qz-footer .qz-pied-infos a:hover, footer.qz-footer .qz-pied-infos a:focus
 .qz-reseaux .qz-grid a:active{ transform:none; box-shadow:inset 2px 2px 4px rgba(0,0,0,.35); }
 @keyframes qz-reflet{ 0%{ transform:translateX(-120%) skewX(-18deg); opacity:0 } 15%{ opacity:1 } 100%{ transform:translateX(420%) skewX(-18deg); opacity:0 } }
 @media (prefers-reduced-motion:reduce){ .qz-reseaux .qz-grid a:hover::after, .qz-reseaux .qz-grid a:focus-visible::after{ animation:none } }
+
+/* 18/09, fondateur : le meme reflet sur les BOUTONS du site, en orange de marque. Rien de nouveau n est dessine — c est
+   le dessin des icones reseaux ci-dessus (biais a 105 degres, bande de 38 %, cisaillement de 18 degres) et son keyframe
+   qz-reflet, deja dans cette feuille. Seule la couleur change.
+   `:not(.hero-cta)` : le bouton du hero est positionne en absolu et porte DEJA ce reflet (bandeau-relief.css). Lui
+   imposer position:relative ici lui ferait perdre son centrage. */
+.cta:not(.hero-cta), .btn-studio{ position:relative; overflow:hidden; }
+.cta:not(.hero-cta)::after, .btn-studio::after{
+  content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
+  background:linear-gradient(105deg, rgba(217,108,47,0) 0%, rgba(217,108,47,.55) 50%, rgba(217,108,47,0) 100%);
+  transform:translateX(-120%) skewX(-18deg); opacity:0;
+}
+.cta:not(.hero-cta):hover::after, .cta:not(.hero-cta):focus-visible::after,
+.btn-studio:hover::after, .btn-studio:focus-visible::after{ animation:qz-reflet .75s cubic-bezier(.4,0,.2,1) forwards; }
+@media (prefers-reduced-motion:reduce){
+  .cta:not(.hero-cta):hover::after, .cta:not(.hero-cta):focus-visible::after,
+  .btn-studio:hover::after, .btn-studio:focus-visible::after{ animation:none }
+}
 .qz-reseaux .qz-ico{ width:18px; height:18px; display:block; fill:currentColor; }
 /* barre grise du copyright, centre : la bulle contact et le bouton Remonter occupent gauche et droite */
 /* 13/09 : le copyright est INTEGRE au pied, il n a plus de barre a lui. Il prend toute la largeur sous les quatre colonnes,

@@ -147,3 +147,16 @@
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
   .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#2f4150;border-color:#2f4150}
 }
+/* 18/09, fondateur : « capture 5 kraft ». La pastille navy avait ete calculee contre la barre GRISE du site (10,75).
+   L accueil etant passe au navy, elle s y retrouve navy sur navy : 1,0 — le bouton n existait plus que par son texte.
+   Le kraft le rend visible (7,74 sur le navy), avec l encre dessus (9,59).
+   SUR L ACCUEIL SEULEMENT. Sur les autres pages la barre est grise, et le kraft n y vaudrait que 1,39 : ce serait
+   remplacer un bouton invisible par un autre. La pastille navy reste donc la regle partout ailleurs. */
+@media (min-width:901px){
+  html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
+    background:var(--qz-terracotta,#CBBD93);border-color:var(--qz-terracotta,#CBBD93);color:#10181f!important
+  }
+  /* Le survol du site eclaircit le fond ; sur du kraft, cela veut dire monter vers #D8CCA9 (encre dessus : 11,20). */
+  html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
+  html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#D8CCA9;border-color:#D8CCA9}
+}

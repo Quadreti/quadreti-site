@@ -1346,9 +1346,9 @@
   /* Le mot accentue reprend la variante FONCEE de l accent : sur ce gris, la teinte pure ne vaudrait que 1,39 — c est
      exactement le calcul du lisere des cartes, pris dans l autre sens. La variante foncee y donne 4,50. */
   body .finale .phrase span{ color:var(--qz-terracotta-texte,#6a624d)!important; }
-  /* Le bouton garde son encre sur kraft (9,59), mais son BORD contre ce gris ne vaut que 1,39 : pose tel quel, il
-     flotterait sans contour. Un anneau d encre lui redonne son arete, sans changer sa boite. */
-  body .finale .cta{ box-shadow:0 0 0 2px #1e2b35!important; }
+  /* 18/09, fondateur : « retire lisere ». L anneau d encre que j avais pose autour de ce bouton part. Son bord contre
+     le gris ne vaut donc plus que 1,39 — c est un choix assume : le bouton se lit par sa masse et son texte (9,59),
+     pas par son contour. Le reflet au survol lui donne desormais sa presence. */
   /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
      qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
   .finale-bord-fond{ fill:#dedede; }
