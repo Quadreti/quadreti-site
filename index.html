@@ -1272,7 +1272,13 @@
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
   .blk .titre-carte .eyebrow{ color:var(--qz-terracotta-texte,#6a624d)!important; }
-  .blk .titre-carte{ border-color:var(--qz-terracotta-texte,#6a624d)!important; }
+  /* 17/09, remarque du fondateur, et elle est juste : ce lisere est dessine ENTRE la carte claire et le fond navy.
+     L oeil voit la transition navy -> lisere -> clair, et c est donc le cote NAVY qui decide de sa visibilite. Le kraft
+     de marque y donne 7,74 ; sa variante foncee n en donnait que 2,39 contre ce meme navy — elle etait calculee pour un
+     fond clair, qui n est plus celui qui l entoure. Le lisere reprend donc la teinte pure.
+     Le SURTITRE, lui, est pose SUR la carte claire : il garde la variante foncee, 4,50. Meme accent, deux valeurs, selon
+     ce que chacun a derriere lui. */
+  .blk .titre-carte{ border-color:var(--qz-terracotta,#CBBD93)!important; }
 
   /* --- Les filets de structure etaient en navy pour se detacher du gris : sur un fond navy ils disparaitraient. Ils
          prennent le clair. --- */
