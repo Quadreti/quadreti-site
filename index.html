@@ -1316,6 +1316,11 @@
      qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
   .finale-bord-fond{ fill:#dedede; }
   .finale-bord-trait{ stroke:var(--qz-terracotta,#CBBD93); }
+  /* La marche du PIED prolonge desormais cette bande grise. Elle peint le navy SOUS sa ligne et laisse le dessus
+     transparent : c etait le navy de la page, donc invisible. La cloture etant passee au gris, ce dessus doit l etre
+     aussi — sans quoi la ligne kraft flotte dans le navy, seule, au lieu de border une matiere. Constate par le
+     fondateur. Le fond de la bande reprend donc le gris de la section qu elle prolonge. */
+  body footer.qz-footer .qz-pied-bord-haut{ background:#dedede!important; }
 
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
