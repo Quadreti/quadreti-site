@@ -779,7 +779,11 @@
     /* 16/09, capture orange du fondateur : cette phrase et le bandeau navy juste au-dessus vont ensemble. Elle cesse
        donc d etre ferree du cote de sa carte et se centre, comme le texte du bandeau. */
     #designer .app-reassure{ text-align:center; }
-    #gamme .gamme-notes{ text-align:left; margin-left:0; margin-right:auto; }
+    /* 18/09, fondateur : « centre texte ». Cette note etait ferree a gauche par la regle de ferrage — un bloc de texte
+       va vers le bord de page le plus proche. Mais elle n appartient pas a la carte de titre : c est la NOTE DE BAS des
+       trois colonnes de prix, qui sont centrees et occupent toute la largeur. Ferree a gauche, elle pendait sous un bloc
+       centre. Meme cas que la phrase de reassurance du Designer juste au-dessus : quand un texte commente un bloc
+       centre, il se centre avec lui. Elle reprend donc le centrage de la regle generale, et cette surcharge disparait. */
   }
   .gamme-notes b{ color:var(--charbon); }
   /* 14/09 : l encart etait vert kaki sur vert pale. Il devient une carte, comme les autres de la page, et c est sa
