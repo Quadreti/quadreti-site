@@ -71,6 +71,12 @@
        24, 26, 28, 30, 34, 36, 38, 40 et 44 px cohabitaient. Une seule valeur desormais, 34, la plus employee des neuf.
        Ce jeton ne concerne QUE la separation de deux blocs : le rythme interne d un composant garde ses propres valeurs. */
     --qz-espace-bloc:34px;
+    /* 18/09, fondateur : « divise par 2 l espace entre section ». Les sections portaient clamp(56,8vw,96) de chaque
+       cote, soit 192 px entre deux a partir de 1200 px de large. Moitie moins desormais.
+       Ce jeton vaut l espace d UN cote ; l ecart entre deux sections en vaut donc le double. Il est nomme pour que le
+       bloc « Et demain ? », qui vit a l interieur de « Pour qui » et doit se lire comme une section a part entiere,
+       puisse reprendre exactement cet ecart sans qu on ait a recopier une valeur qui derivera. */
+    --qz-espace-section:clamp(28px,4vw,48px);
     --terracotta:#E2725B;
     --terracotta-soft:#F6DED8;
     /* 14/09 : --olive et --olive-soft retires. Vert kaki de l identite KRAFT abandonnee, listes comme jetons morts par la charte. */
@@ -307,7 +313,7 @@
   .cta.light{ background:#fff; color:var(--charbon); border:1.5px solid var(--charbon); box-shadow:none; }
 
   /* ===== Sections communes ===== */
-  section.blk{ padding:clamp(56px,8vw,96px) 0; }
+  section.blk{ padding:var(--qz-espace-section) 0; }
   section.blk.alt{ background:var(--fond); }
   .eyebrow{ font-weight:700; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--terracotta); margin-bottom:10px; }
   .blk h2{ font-size:clamp(24px,3.4vw,36px); font-weight:700; letter-spacing:-.01em; line-height:1.15; margin-bottom:14px; }
@@ -503,7 +509,11 @@
   .duo .titre-carte, .app-duo .titre-carte, .designer-duo .titre-carte, .duo-bande .titre-carte{ width:auto; max-width:none; }
   .duo .titre-carte.droite{ margin-left:0; }   /* une marge gauche automatique absorbe l espace libre de la grille et empeche l etirement : la carte retombait a 441 px au lieu des 685 de sa colonne */
   @media (max-width:860px){ .duo{ grid-template-columns:1fr; } .duo.duo-droite > .titre-carte,.duo.duo-droite > .duo-txt{ grid-column:auto; grid-row:auto; } }
-  .empile{ display:grid; gap:clamp(40px,6vw,72px); text-align:left; }
+  /* 18/09, fondateur : « x2 espacement, ou du moins que cette section soit egale aux espacements des autres sections ».
+     Cet empilement porte les deux rangees de « Pour qui » — dont « Et demain ? », qui se lit comme une section a part.
+     Son ecart valait 72 px quand deux sections en mettaient 192 : il etait deux fois et demie trop serre. Il vaut
+     desormais l ecart de deux sections, ecrit comme tel et non recopie. */
+  .empile{ display:grid; gap:calc(var(--qz-espace-section) * 2); text-align:left; }
 
   /* Le comparateur : deux photos du MEME cadrage superposees, la seconde rognee a la position du curseur. Le curseur est un
      <input type="range"> rendu invisible mais bien present — il est deja pilotable au clavier et annonce aux lecteurs d ecran,
