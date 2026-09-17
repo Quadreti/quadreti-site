@@ -716,9 +716,13 @@
      empreinte que la carte de titre, le chapo et la note en dessous, et le bouton donne aux cartes le corps qui leur
      manquait. */
   .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:var(--qz-espace-bloc); }
+  /* 17/09 : la carte devient une COLONNE. Ses trois formats n ont pas la meme quantite de texte — le x1 porte une ligne
+     de plus que les autres — et leurs boutons se retrouvaient a trois hauteurs differentes. En colonne, le bouton se
+     pousse au bas de la carte (margin-top:auto) et les trois se posent sur la meme ligne, quoi que contienne la carte. */
   .offer{
     background:var(--qz-gris-photo); border:1.5px solid var(--qz-gris-photo); border-radius:var(--tess);   /* 16/09 : le gris de la photo */
     padding:22px 18px 18px; text-align:center; position:relative;
+    display:flex; flex-direction:column;
   }
   /* 16/09 : la regle de fond des cartes pose un !important sur border-color pour passer devant le panneau ; sans celui-ci,
      la carte « le plus choisi » perdrait le seul trait qui la distingue des quatre autres. */
@@ -737,7 +741,10 @@
   /* 16/09, fondateur : « un bouton achat a chaque colonne ». Il reprend la classe .cta de la page plutot qu un style
      a lui : les couleurs des boutons sont gerees par le panneau, un bouton peint en dur ici aurait derive des autres
      au premier changement de theme. Seules la taille et la largeur sont reprises, une carte de tarif etant etroite. */
-  .offer .cta{ display:block; margin-top:16px; padding:11px 14px; font-size:13.5px; box-shadow:none; }
+  /* Le bouton descend au bas de la carte et cesse d en occuper toute la largeur : il ne fait plus que la place de son
+     mot, plus de quoi etre attrape. 44 px de haut, la cible minimale recommandee pour le doigt — on ne descend pas en
+     dessous, un bouton plus petit serait plus joli et moins cliquable. */
+  .offer .cta{ display:inline-block; align-self:center; margin-top:auto; padding:12px 26px; font-size:13.5px; box-shadow:none; }
 
   /* 16/09 : les cartes du Studio passent au meme gris. Elles vivent dans prisme-outils.css, feuille PARTAGEE avec la page
      Studio : la regle est donc portee par #app, pour ne repeindre que la bande de l accueil. Leur titre est deja en
