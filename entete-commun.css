@@ -174,9 +174,14 @@
   /* C est L ONGLET qui porte le navy 2, pas l en-tete. L en-tete ne fait que 58 px de haut et l onglet, 98, le
      recouvre : peindre l en-tete ne se voyait pas. `.qz-onglet` est le SVG en forme d onglet pose au sommet de la
      page, celui dont le contour dessine le lisere. Les apps le font deja pour leur propre inversion. */
-  html.qz-accueil .qz-onglet-fond{fill:#33434f}
-  /* L accroche du logo etait en navy, ecrite pour l onglet gris : 1,45 sur le navy 2, invisible. */
-  html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{color:#dedede!important}
+  /* 18/09, fondateur : du navy 2 vers le NAVY DE MARQUE. L onglet prend donc la meme couleur que le bandeau qui le
+     suit : ce n est plus le fond qui le dessine, c est son LISERE, et la forme d onglet se lit a son seul contour.
+     Tout ce que la barre porte etait calcule contre le navy 2 ; le navy 1 etant plus sombre, tout y gagne. */
+  html.qz-accueil .qz-onglet-fond{fill:#1e2b35}
+  /* 18/09, fondateur : « baseline logo en blanc car on ne le voit pas ». Elle etait en #dedede, soit 7,59 sur le
+     navy 2 — lisible en theorie, mais posee a cote d un naming du meme gris, elle n avait plus de rang a elle.
+     Le blanc pur la detache : 14,46. C est le seul texte de l en-tete a le prendre, et c est ce qui le distingue. */
+  html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{color:#ffffff!important}
   /* Les rubriques en orange, demande du fondateur. PAS l orange de marque : 2,98 sur ce navy, sous le seuil du texte.
      18/09, fondateur : « le orange en texte est fade ». Il l etait, et pour une raison mesurable — l orange eclairci
      #f0a06a n a que 82 % de saturation : on l avait monte en clarte vers le BLANC, ce qui delave. On peut monter la

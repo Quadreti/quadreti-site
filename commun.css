@@ -181,7 +181,10 @@ footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage 
    prennent l orange ECLAIRCI (6,85 sur le navy du pied) : ce sont des mots, et l orange de marque n y vaut que 4,23,
    sous le seuil du texte. Le naming et les tesselles ordinaires restent clairs — le nom de la marque se lit avant de
    decorer. ACCUEIL SEULEMENT : ailleurs le pied est clair et ces teintes y seraient fausses. */
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche,
+/* 18/09, fondateur : « baseline logo en blanc ». La baseline du pied est la MEME que celle de l en-tete — c est le
+   meme bloc de logo. Elle prend donc le blanc elle aussi (14,46 sur le navy du pied), et la CATEGORIE garde
+   l orange : le bloc se lit alors sur trois rangs, nom en clair, baseline en blanc, categorie en couleur. */
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
 html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
 /* 18/09, fondateur : « tesselle blanche habituelle, seulement la derniere en signature ». Le logo distingue deja
    .qz-b (les ordinaires, sur currentColor) de .qz-o (la SIGNATURE, derniere tesselle) — voir logo-v5.css. Seule la
