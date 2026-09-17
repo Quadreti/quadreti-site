@@ -1193,76 +1193,17 @@
   }
   .cn-text{ position:relative; z-index:2; max-width:760px; margin:0 auto; }
 
-  /* ================= ESSAI 4 : TOUT L ACCENT EN KRAFT — 16/09, a retirer en bloc =================
-     Decision du fondateur, qui veut vivre avec un jour ou deux avant de trancher. L accent devient unique : le kraft
-     #CBBD93 remplace l orange PARTOUT sur l accueil.
-     DEUX ENDROITS OU LA TEINTE EST STRUCTURELLEMENT FAIBLE, et il faut le savoir en regardant :
-       - le BORD des boutons contre le fond de page : 1,39. Le texte dessus reste excellent (9,59 en encre), mais la
-         FORME du bouton se detache mal du gris. Un filet d encre le reglerait en une ligne ; il n est pas pose, pour
-         que le fondateur juge la teinte telle qu elle est.
-       - le DECROCHE, dont le trait longe la frontiere navy / gris : 7,74 du cote navy, 1,39 du cote gris. Il
-         disparaitra sur la moitie de son parcours.
-     Ce n est pas un defaut de reglage : le kraft a une luminosite de 0,512, pile au milieu de l echelle ; contre un fond
-     clair il plafonne a 1,87, et c est le blanc pur.
-     POUR REVENIR A L ORANGE : supprimer ce bloc jusqu au repere de fin. */
-
-  /* --- 1. Les jetons. Toute la page les lit depuis le branchement d accent de ce matin. --- */
-  :root{
-    --qz-terracotta:#CBBD93!important; --terracotta:#CBBD93!important;
-    --qz-lisere:#CBBD93!important; --lisere-couleur:#CBBD93!important;
-  }
-
-  /* --- 2. Les litteraux que le panneau injecte lui-meme et qui ne lisent aucun jeton. Un selecteur de plus que lui :
-         il pose .cta et .offer .flag en !important et sa feuille est lue APRES la notre. --- */
-  body .cta, #gamme .offer .flag, body .ticker, body .qb-diapo-point, body .qz-bulle-contact{ background:#CBBD93!important; }
-  .qb-bord-trait, .qz-marche .qb-bord-trait{ stroke:#CBBD93!important; }
-  /* La vignette de Mosaique Creative dans la bande du Studio : ce n est pas l accent du site mais la TEINTE PROPRE de
-     cet outil, ecrite en donnee dans prisme-outils.js. Elle est convertie ici parce que le fondateur a dit « du haut en
-     bas » — mais seulement sur l accueil (#app) : la meme carte vit aussi sur la page Studio, ou elle reste orange.
-     Si l essai est retenu, c est la donnee de l outil qu il faudra changer, pas cette ligne. */
-  #app .face[style*="d96c2f"] .face-visuel{ background:#CBBD93!important; }   /* la teinte est posee en propriete --teinte sur .face : on ne peut pas selectionner sur sa VALEUR, on passe donc par l attribut style. Sans ce filtre, les dix vignettes du Studio y passaient toutes. */
-
-  /* --- 3. Ce qui etait deja passe au navy le reste : ce n est plus de l orange, et c est ce qui le rend lisible. --- */
-  .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#1e2b35!important; }
-  .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }
+  /* ===== Role des couleurs sur l accueil (17/09) =====
+     L accent du site est pose dans les reglages (Supabase, cle « couleurs ») et lu par toutes les pages : il n est plus
+     ecrit nulle part ici, pour qu un changement de teinte depuis le panneau emporte l accueil comme le reste.
+     Ne restent ci-dessous que des choix de ROLE, pas de teinte : ce qui n est ni un accent ni une action prend le navy.
+     Ils comptent d autant plus avec un accent clair — un filet peint dans l accent donnerait 1,39 sur le gris de page,
+     c est-a-dire rien. */
+  .arg, #pourqui .arg, .geste-texte .hint, #comment .geste-texte .hint{ border-color:#1e2b35!important; }   /* filets de structure : 10,75 */
+  .comparateur .ligne, .comparateur .poignee{ background:#1e2b35!important; }   /* 5,12 sur le mur gris de la photo — c est une poignee qu on attrape */
   .comparateur input:focus-visible{ outline-color:#1e2b35!important; }
-  body .chip{ background:#1e2b35!important; color:#dedede!important; }
-  /* --- 4. LES VARIANTES CALCULEES. Le panneau ne pose pas que l orange de marque : il en DERIVE deux autres teintes
-         pour la lisibilite — une claire pour le texte sur fond sombre (#f0a06a), une foncee pour le texte sur fond clair
-         (#9c4514, #974b21). Elles ne valent pas #d96c2f, donc ma premiere chasse les a toutes manquees. Le fondateur les
-         a vues, lui : baseline du logo, surtitres, icones des trois gestes, mot accentue de la signature.
-         Le kraft a besoin des memes deux variantes, pour la meme raison. --- */
-
-  /* Sur du NAVY : le kraft clair suffit, 7,74. */
-  .blk .titre-carte .eyebrow{ color:#CBBD93!important; }
-  .qz-coltitre::before, .qz-col ul li a::after{ background:#CBBD93!important; }
-
-  /* Sur du CLAIR : le kraft clair donnerait 1,39, illisible. Il faut sa variante assombrie a 55 %, #706851, qui donne
-     4,12 sur le gris de page — exactement ce que le panneau fait pour l orange quand il en tire #9c4514. */
-  .qz-cat{ color:#706851!important; }
-  /* Le panneau peint le BLOC entier des trois gestes dans la teinte d accent, pas seulement son icone : le titre, le
-     texte et le trait du picto en heritent. On prend donc le bloc et sa descendance. */
-  .qb-gestes .qb-geste, .qb-gestes .qb-geste *{ color:#706851!important; }
-  /* Le trait des trois pictos est pose en stroke DIRECTEMENT, pas herite de color : le reglage ci-dessus ne le touchait
-     pas. C est la sixieme et derniere poche d orange de la page. */
-  .qb-gestes .qb-geste-icone, .qb-gestes .qb-geste-icone *{ stroke:#706851!important; }
-  body .finale .phrase span{ color:#706851!important; }
-  /* --- 5. TOUTES LES REGLES DU PANNEAU, lues dans reglages-site.js et non devinees a l ecran.
-         POURQUOI CE BLOC EXISTE : le panneau ne tourne pas dans le navigateur de verification, qui n a aucun reglage
-         enregistre. Mes trois balayages precedents annonçaient donc « zero orange » sur une page a laquelle il manquait
-         exactement la couche qui peint les oranges du fondateur. C est lui qui avait raison a chaque fois.
-         DEUX REGLAGES SEPARES A CONNAITRE : le panneau a un champ BOUTON et un champ ENUMERATIONS distincts de l accent
-         (var bouton = c.bouton || accent ; var enumerations = c.enumerations || bouton). S ils ont ete poses a la main,
-         ils ne suivent PAS un changement d accent — d ou des boutons restes orange sur une page devenue kraft.
-         Un selecteur de plus que le panneau partout : ses regles sont en !important et sa feuille est lue apres la notre. */
-  body .cta, body .c-submit, body .btn-imprimer, body .qz-burger,
-  body .step .num, body .offer .flag,
-  body .qz-reseaux .qz-grid a{ background:#CBBD93!important; color:#10181f!important; }   /* encre sur kraft : 9,59 */
-  body .qz-reseaux .qz-grid a:hover, body .qz-reseaux .qz-grid a:focus-visible{ background:#b9a877!important; }
-  body .cta.light:hover, body .cta.light:focus-visible, body .btn-studio:hover, body .btn-studio:focus-visible{ border-color:#CBBD93!important; color:#706851!important; }
-  body .qz-pied-infos a:hover, body .qz-pied-infos a:focus-visible{ color:#CBBD93!important; }   /* le pied est navy : 7,74 */
-  body .qz-baseline-accent{ color:#706851!important; }   /* l en-tete est clair : il faut la variante assombrie, 4,12 */
-  /* ================= FIN DE L ESSAI 4 ================= */
+  body .chip{ background:#1e2b35!important; color:#dedede!important; }   /* sept etiquettes, pas sept boutons : elles ne depensent plus d accent */
+  /* ===== fin ===== */
 
 
 </style>
