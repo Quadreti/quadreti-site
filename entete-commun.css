@@ -5,7 +5,7 @@
    - menu en boutons Jura sur la ligne du naming, sous-menu orange a cadre gris qui s ouvre en rideau ; sous 900 px : burger + panneau.
    Calage (hauteur, marges) : qzEnteteInit dans commun-bandeau.js. Jetons : --qz-lisere, --qz-lisere-ep (commun.css), --qz-onglet (JS).
    !important : le panneau du site (reglages-site.js) injecte ses propres couleurs et regles de menu, l en-tete commune doit passer devant. */
-.qz-header{--qz-onglet:98px;--qz-terracotta-texte:#9c4514} /* orange en TEXTE sur la barre grise : version foncee lisible (audit 12/09, contraste 4,8) ; l orange de marque reste sur les fonds */
+.qz-header{--qz-onglet:98px} /* 17/09 : --qz-terracotta-texte n est plus REECRIT ici. Il l etait en dur (#9c4514), ce qui figeait en orange tout le texte accentue de l en-tete — la baseline du logo notamment — quel que soit l accent choisi dans le panneau. Le jeton vient desormais de :root, ou le panneau le CALCULE pour le fond en cours ; la barre de l en-tete a le meme gris que la page, la valeur y est donc juste. Repli #9c4514 conserve dans commun.css si le panneau ne tourne pas. */
 /* onglet : dessin entier etire en largeur et en hauteur, sous le contenu de la barre (z-index -1 dans le contexte de la barre) */
 .qz-onglet{position:absolute;left:0;top:0;width:100%;height:var(--qz-onglet,98px);z-index:-1;display:block;overflow:visible;pointer-events:none}
 .qz-onglet-fond{fill:#dedede}
