@@ -1261,9 +1261,12 @@
 
   /* --- Les cartes redeviennent claires, et tout ce qu elles portent repasse en encre. Les cartes de titre etaient
          navy a texte clair : elles s inversent exactement. --- */
-  .blk .titre-carte, .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, .blk .premium, .blk .color-note, .blk .note-navy, #app .face{
+  .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, .blk .premium, .blk .color-note, .blk .note-navy, #app .face{
     background:#dedede!important; border-color:#dedede!important;
   }
+  /* 18/09, fondateur : « carte titre en kraft ». Elle quitte le groupe des cartes claires. Contre le navy de la page
+     elle vaut 7,74 — elle se detache seule, son lisere n a plus rien a ajouter puisqu il est de la meme teinte. */
+  .blk .titre-carte{ background:var(--qz-terracotta,#CBBD93)!important; border-color:var(--qz-terracotta,#CBBD93)!important; }
   .blk .titre-carte h2, .blk .mode h3, .blk .mode p, .blk .gift h3, .blk .gift p, .blk .gift .tagline,
   .blk .trust-card h3, .blk .trust-card p, .blk .trust-card li, .blk .trust-card b, .blk .offer div,
   .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b, .blk .note-navy, .blk .note-navy b,
@@ -1340,7 +1343,11 @@
 
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
-  .blk .titre-carte .eyebrow{ color:var(--qz-terracotta-texte,#6a624d)!important; }
+  /* Le surtitre portait la variante FONCEE de l accent. Sur une carte devenue l accent elle-meme, elle ne vaut plus que
+     3,24 ; et un kraft assez sombre pour atteindre 4,5 (#514729) ne se lit plus comme du kraft. Sur sa propre couleur,
+     l accent n a pas de place : le surtitre prend l encre (7,74) et reste distingue par sa taille, ses capitales et son
+     interlettrage — ce qui a toujours ete sa vraie grammaire, la couleur n en etait qu un renfort. */
+  .blk .titre-carte .eyebrow{ color:#1e2b35!important; }
   /* 17/09, remarque du fondateur, et elle est juste : ce lisere est dessine ENTRE la carte claire et le fond navy.
      L oeil voit la transition navy -> lisere -> clair, et c est donc le cote NAVY qui decide de sa visibilite. Le kraft
      de marque y donne 7,74 ; sa variante foncee n en donnait que 2,39 contre ce meme navy — elle etait calculee pour un
