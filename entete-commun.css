@@ -178,13 +178,18 @@
   /* L accroche du logo etait en navy, ecrite pour l onglet gris : 1,45 sur le navy 2, invisible. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{color:#dedede!important}
   /* Les rubriques en orange, demande du fondateur. PAS l orange de marque : 2,98 sur ce navy, sous le seuil du texte.
-     L orange eclairci #f0a06a y vaut 4,83 — c est celui que le tiroir mobile emploie deja pour la meme raison. */
+     18/09, fondateur : « le orange en texte est fade ». Il l etait, et pour une raison mesurable — l orange eclairci
+     #f0a06a n a que 82 % de saturation : on l avait monte en clarte vers le BLANC, ce qui delave. On peut monter la
+     clarte sans y perdre : #ff9147 garde la teinte de la marque (24 degres, la meme que #D96C2F) et pousse la
+     saturation a 100 %. Il vaut 4,57 sur le navy 2 et 6,47 sur le navy 1 — il passe le seuil en etant franchement
+     plus orange que le precedent. En dessous, #ff7214 serait encore plus vif mais tombe a 3,73 : illisible.
+     REGLE : sur un fond sombre, on eclaircit en SATURANT, jamais en blanchissant. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,
-  html.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle{color:#f0a06a!important}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle{color:#ff9147!important}
   /* Le survol eclaircit, comme partout sur le site : 5,41. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,
   html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
-  html.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#f2ae7e!important}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#ffa366!important}
   /* Le naming reprend le gris : c est le mot de la marque, il se lit, il ne decore pas. 7,59. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{color:#dedede!important}
   /* La plaque du Q reprend le CLAIR (7,59). J avais peint tout le bloc en orange : cela effacait la grammaire du logo,
@@ -192,7 +197,7 @@
      porte la couleur — voir la regle de la signature dans commun.css, commune a l en-tete et au pied. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#dedede!important}
   /* La baseline : elle portait la variante FONCEE de l accent, calculee pour la barre grise — 1,33 ici, invisible. */
-  html.qz-accueil .qz-header.qz-menu-visible .qz-cat{color:#f0a06a!important}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-cat{color:#ff9147!important}
   /* 18/09, fondateur : « non, sous-menu kraft rendait bien ». Le tiroir GARDE donc l accent — c est son fond de
      toujours. Ce qui n allait pas n etait pas sa couleur mais son texte, corrige plus haut : le blanc y valait 1,87,
      l encre y vaut 9,59. Et sur l onglet devenu navy 2, un tiroir kraft se detache a 5,47. */

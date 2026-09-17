@@ -182,7 +182,7 @@ footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage 
    sous le seuil du texte. Le naming et les tesselles ordinaires restent clairs — le nom de la marque se lit avant de
    decorer. ACCUEIL SEULEMENT : ailleurs le pied est clair et ces teintes y seraient fausses. */
 html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche,
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#f0a06a!important; }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
 /* 18/09, fondateur : « tesselle blanche habituelle, seulement la derniere en signature ». Le logo distingue deja
    .qz-b (les ordinaires, sur currentColor) de .qz-o (la SIGNATURE, derniere tesselle) — voir logo-v5.css. Seule la
    signature porte la couleur, et elle prend l orange de marque plutot que l accent en essai.
