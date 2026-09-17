@@ -2163,10 +2163,20 @@ document.addEventListener('DOMContentLoaded', function(){
   var piedDePage = document.querySelector('footer.qz-footer');
   if (!champ || !entete || !piedDePage) return;
 
+  /* 17/09 : la palette du champ de tesselles est refaite. Elle portait #2B353E (l ANCIEN navy) et #E2725B (terracotta),
+     deux jetons que la charte range parmi les morts : le decor du site etait encore peint dans l identite abandonnee, et
+     comme il est ecrit ici en dur, aucun reglage du panneau ne l avait jamais atteint.
+     Rendu compose mesure sur le gris de page, aux deux bouts de la plage d opacite :
+       navy de marque   1,70 -> 3,59
+       kraft fonce      1,40 -> 2,17
+       orange de marque 1,30 -> 1,76
+     Le kraft PUR est ecarte : il plafonnait a 1,22 meme pousse, et a 1,39 en opaque. Trois tesselles sur dix ne se
+     voyaient donc pas du tout. C est le kraft FONCE qui rend le chaud visible. Les poids sont conserves : le navy porte
+     le champ, le chaud le ponctue. */
   var COULEURS = [
-    { hex:'#2B353E', poids:5 },
-    { hex:'#E2725B', poids:2 },
-    { hex:'#CBBD93', poids:3 }
+    { hex:'#1E2B35', poids:5 },
+    { hex:'#D96C2F', poids:2 },
+    { hex:'#706851', poids:3 }
   ];
   var PALETTE_PONDEREE = [];
   function recalculerPalette(){
@@ -2213,7 +2223,7 @@ document.addEventListener('DOMContentLoaded', function(){
       el.style.width = taille + 'px';
       el.style.height = taille + 'px';
       el.style.background = PALETTE_PONDEREE[Math.floor(Math.random() * PALETTE_PONDEREE.length)];
-      el.style.opacity = (0.18 + Math.random() * 0.3).toFixed(2);
+      el.style.opacity = (0.28 + Math.random() * 0.32).toFixed(2);   /* 17/09 : 0,28 a 0,60 au lieu de 0,18 a 0,48 — « une teinte un peu plus marquee ». Le navy passe de 2,49 a 3,59 au plus fort. */
       champ.appendChild(el);
       tesselles.push({
         el: el, taille: taille,
