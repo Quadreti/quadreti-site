@@ -157,12 +157,15 @@
    SUR L ACCUEIL SEULEMENT. Sur les autres pages la barre est grise, et le kraft n y vaudrait que 1,39 : ce serait
    remplacer un bouton invisible par un autre. La pastille navy reste donc la regle partout ailleurs. */
 @media (min-width:901px){
+  /* 18/09, fondateur : « bouton mon espace couleur #dedede ». Il etait kraft. Le gris clair le detache davantage de
+     l onglet navy (10,75 contre 7,74) et le sort de la famille de l accent : c est une PORTE, pas un appel a l action
+     — les appels a l action de la page sont tous orange depuis ce matin. Encre dessus : 13,31. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]{
-    background:var(--qz-terracotta,#CBBD93);border-color:var(--qz-terracotta,#CBBD93);color:#10181f!important
+    background:#dedede;border-color:#dedede;color:#10181f!important
   }
-  /* Le survol du site eclaircit le fond ; sur du kraft, cela veut dire monter vers #D8CCA9 (encre dessus : 11,20). */
+  /* Le survol du site eclaircit le fond ; sur ce gris, cela veut dire monter au blanc (encre dessus : 17,74). */
   html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:hover,
-  html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#D8CCA9;border-color:#D8CCA9}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-navpanel a[href$="/mon-espace/"]:focus-visible{background:#ffffff;border-color:#ffffff}
 }
 /* ---- 18/09, essai du fondateur : la barre du menu prend le NAVY 2 sur l accueil. ----
    La barre est transparente par construction : son gris etait peint par le bord haut du bandeau, jusque sous le menu.
