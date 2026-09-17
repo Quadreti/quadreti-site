@@ -1259,26 +1259,29 @@
   .blk .reinvente, .blk .app-reassure, .blk .app-reassure b, .blk .gamme-notes, .blk .gamme-notes b,
   .blk .how-foot, .blk .comparateur-note, .blk p a, .blk li a{ color:#dedede!important; }
 
-  /* --- Les cartes redeviennent claires, et tout ce qu elles portent repasse en encre. Les cartes de titre etaient
-         navy a texte clair : elles s inversent exactement. --- */
+  /* --- 18/09, fondateur : les grandes cartes passent du gris au NAVY CLAIR. En gris elles valaient 10,75 contre le
+         fond, soit PLUS que les cartes de titre (7,74) : le decor gagnait contre les titres, la hierarchie etait a
+         l envers. A 1,42 elles redeviennent des panneaux et laissent la carte de titre etre le point clair.
+         Pourquoi vers le clair et non vers le sombre : le fond est deja a 0,025 de luminance — une carte poussee
+         jusqu au quasi-noir ne s en detacherait que de 1,32. Sous le fond il ne reste rien a depenser. --- */
   .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, .blk .premium, .blk .color-note, .blk .note-navy, #app .face{
-    background:#dedede!important; border-color:#dedede!important;
+    background:#33434f!important; border-color:#33434f!important;
   }
   /* 18/09, fondateur : « carte titre en kraft ». Elle quitte le groupe des cartes claires. Contre le navy de la page
      elle vaut 7,74 — elle se detache seule, son lisere n a plus rien a ajouter puisqu il est de la meme teinte. */
   .blk .titre-carte{ background:var(--qz-terracotta,#CBBD93)!important; border-color:var(--qz-terracotta,#CBBD93)!important; }
-  .blk .titre-carte h2, .blk .mode h3, .blk .mode p, .blk .gift h3, .blk .gift p, .blk .gift .tagline,
-  .blk .trust-card h3, .blk .trust-card p, .blk .trust-card li, .blk .trust-card b, .blk .offer div,
-  .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b, .blk .note-navy, .blk .note-navy b,
-  #app .face-corps h2, #app .face-corps p{ color:#1e2b35!important; }
-  /* Pose APRES la regle des textes de page : les gras et les liens ECRITS DANS les cartes doivent garder l encre, les
-     cartes etant claires. Enumere et non en `*` : une carte ne contient pas que du texte — les vignettes du Studio
-     portent une lettre decorative sur leur propre fond colore, qu un `*` repeignait a tort. */
-  .blk .titre-carte h2, .blk .mode h3, .blk .mode p, .blk .gift h3, .blk .gift p, .blk .gift .tagline,
+  /* Les deux listes d encre (celle de l essai d origine et celle du rattrapage) fusionnent ici en une seule paire.
+     Une seule carte reste CLAIRE : celle du titre, en kraft. Son titre garde donc l encre (7,74). */
+  .blk .titre-carte h2{ color:#1e2b35!important; }
+  /* Tout le reste etait ecrit en encre POUR DU GRIS. Les cartes etant devenues sombres, tout repasse en clair : 7,59
+     sur le navy des cartes. Enumere et non en `*` : une carte ne contient pas que du texte — les vignettes du Studio
+     portent une lettre decorative sur leur propre fond colore, qu un `*` repeindrait a tort. */
+  .blk .mode h3, .blk .mode p, .blk .gift h3, .blk .gift p, .blk .gift .tagline,
   .blk .trust-card h3, .blk .trust-card p, .blk .trust-card li, .blk .trust-card b,
-  .blk .offer .fmt, .blk .offer .dim, .blk .offer .prix, .blk .offer .pu,
+  .blk .offer div, .blk .offer .fmt, .blk .offer .dim, .blk .offer .prix, .blk .offer .pu,
   .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b,
-  .blk .note-navy, .blk .note-navy b{ color:#1e2b35!important; }
+  .blk .note-navy, .blk .note-navy b,
+  #app .face-corps h2, #app .face-corps p{ color:#dedede!important; }
   /* Le seul lien sans classe de la page prenait le bleu par defaut du navigateur (1,54 sur le navy). */
   .blk a:not([class]){ color:#dedede!important; text-decoration-color:#dedede!important; }
   /* Quatre derniers textes que le balayage a trouves : les .hint des gestes sont des DIV, que la liste des textes de
