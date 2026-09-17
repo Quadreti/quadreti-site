@@ -1248,6 +1248,11 @@
   .blk .note-navy, .blk .note-navy b{ color:#1e2b35!important; }
   /* Le seul lien sans classe de la page prenait le bleu par defaut du navigateur (1,54 sur le navy). */
   .blk a:not([class]){ color:#dedede!important; text-decoration-color:#dedede!important; }
+  /* Quatre derniers textes que le balayage a trouves : les .hint des gestes sont des DIV, que la liste des textes de
+     page ne visait pas ; ceux d A propos etaient tenus par une regle plus forte que la mienne. L identifiant de section
+     l emporte sur n importe quelle classe. */
+  .geste-texte .hint{ color:#dedede!important; }
+  #histoire .txt p, #histoire .txt p b, #histoire .reinvente{ color:#dedede!important; }
 
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
