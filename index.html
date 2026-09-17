@@ -1223,8 +1223,11 @@
   html body{ background:#1e2b35!important; }
 
   /* --- Les textes POSES SUR LE FOND passent en clair. --- */
-  .blk p, .blk li, .blk h2, .blk h3, .blk figcaption, .blk b, .blk a, .blk .lead, .blk .arg b,
-  .blk .reinvente, .blk .app-reassure, .blk .gamme-notes, .blk .how-foot, .blk .comparateur-note{ color:#dedede!important; }
+  /* Les LIENS ne sont pas tous du texte de page : .cta et .btn-studio sont des boutons poses sur l accent. Seuls les
+     liens ecrits dans une phrase passent en clair. */
+  .blk p, .blk li, .blk h2, .blk h3, .blk figcaption, .blk b, .blk .lead, .blk .arg b,
+  .blk .reinvente, .blk .app-reassure, .blk .app-reassure b, .blk .gamme-notes, .blk .gamme-notes b,
+  .blk .how-foot, .blk .comparateur-note, .blk p a, .blk li a{ color:#dedede!important; }
 
   /* --- Les cartes redeviennent claires, et tout ce qu elles portent repasse en encre. Les cartes de titre etaient
          navy a texte clair : elles s inversent exactement. --- */
@@ -1235,11 +1238,14 @@
   .blk .trust-card h3, .blk .trust-card p, .blk .trust-card li, .blk .trust-card b, .blk .offer div,
   .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b, .blk .note-navy, .blk .note-navy b,
   #app .face-corps h2, #app .face-corps p{ color:#1e2b35!important; }
-  /* Un selecteur de plus, pose APRES : la regle des textes de page ci-dessus attrapait aussi les gras et les liens
-     ECRITS DANS les cartes, qui sont claires — ils s y retrouvaient en clair sur clair. Sept textes etaient tombes a
-     1,00, dont quatre gras et deux liens. La descendance des cartes reprend donc l encre en bloc. */
-  .blk .titre-carte *, .blk .mode *, .blk .gift *, .blk .trust-card *, .blk .offer *, .blk .premium *,
-  .blk .color-note *, #app .face *{ color:#1e2b35!important; }
+  /* Pose APRES la regle des textes de page : les gras et les liens ECRITS DANS les cartes doivent garder l encre, les
+     cartes etant claires. Enumere et non en `*` : une carte ne contient pas que du texte — les vignettes du Studio
+     portent une lettre decorative sur leur propre fond colore, qu un `*` repeignait a tort. */
+  .blk .titre-carte h2, .blk .mode h3, .blk .mode p, .blk .gift h3, .blk .gift p, .blk .gift .tagline,
+  .blk .trust-card h3, .blk .trust-card p, .blk .trust-card li, .blk .trust-card b,
+  .blk .offer .fmt, .blk .offer .dim, .blk .offer .prix, .blk .offer .pu,
+  .blk .premium h3, .blk .premium p, .blk .color-note .cn-text, .blk .color-note b,
+  .blk .note-navy, .blk .note-navy b{ color:#1e2b35!important; }
   /* Le seul lien sans classe de la page prenait le bleu par defaut du navigateur (1,54 sur le navy). */
   .blk a:not([class]){ color:#dedede!important; text-decoration-color:#dedede!important; }
 
