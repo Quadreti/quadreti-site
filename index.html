@@ -1247,6 +1247,21 @@
      pas. C est la sixieme et derniere poche d orange de la page. */
   .qb-gestes .qb-geste-icone, .qb-gestes .qb-geste-icone *{ stroke:#706851!important; }
   body .finale .phrase span{ color:#706851!important; }
+  /* --- 5. TOUTES LES REGLES DU PANNEAU, lues dans reglages-site.js et non devinees a l ecran.
+         POURQUOI CE BLOC EXISTE : le panneau ne tourne pas dans le navigateur de verification, qui n a aucun reglage
+         enregistre. Mes trois balayages precedents annonçaient donc « zero orange » sur une page a laquelle il manquait
+         exactement la couche qui peint les oranges du fondateur. C est lui qui avait raison a chaque fois.
+         DEUX REGLAGES SEPARES A CONNAITRE : le panneau a un champ BOUTON et un champ ENUMERATIONS distincts de l accent
+         (var bouton = c.bouton || accent ; var enumerations = c.enumerations || bouton). S ils ont ete poses a la main,
+         ils ne suivent PAS un changement d accent — d ou des boutons restes orange sur une page devenue kraft.
+         Un selecteur de plus que le panneau partout : ses regles sont en !important et sa feuille est lue apres la notre. */
+  body .cta, body .c-submit, body .btn-imprimer, body .qz-burger,
+  body .step .num, body .offer .flag,
+  body .qz-reseaux .qz-grid a{ background:#CBBD93!important; color:#10181f!important; }   /* encre sur kraft : 9,59 */
+  body .qz-reseaux .qz-grid a:hover, body .qz-reseaux .qz-grid a:focus-visible{ background:#b9a877!important; }
+  body .cta.light:hover, body .cta.light:focus-visible, body .btn-studio:hover, body .btn-studio:focus-visible{ border-color:#CBBD93!important; color:#706851!important; }
+  body .qz-pied-infos a:hover, body .qz-pied-infos a:focus-visible{ color:#CBBD93!important; }   /* le pied est navy : 7,74 */
+  body .qz-baseline-accent{ color:#706851!important; }   /* l en-tete est clair : il faut la variante assombrie, 4,12 */
   /* ================= FIN DE L ESSAI 4 ================= */
 
 
