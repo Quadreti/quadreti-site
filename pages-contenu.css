@@ -231,5 +231,8 @@ html.qz-fond-sombre body.qz-guide-produit .lecture .lc{ color:#dedede !important
    plus precis qu elle — sinon la regle generale, posee plus haut, le repeindrait en clair. */
 html.qz-fond-sombre body.qz-guide-produit .onglets .onglet.actif{ color:#10181f !important; }
 
-/* Le point du dos de visuel est une marque IMPRIMEE sur du papier clair : il reste sombre. */
-html.qz-fond-sombre body.qz-guide-produit .visuel-verso .dot{ background:#10181f !important; color:#10181f !important; }
+/* Le separateur du dos de visuel est une marque IMPRIMEE sur du papier clair : il reste sombre.
+   CORRIGE : je lui avais aussi donne un FOND. C est un point median de TEXTE, le « · » entre B2 et D5 — pas une
+   pastille. Un fond en faisait un petit bloc d encre de 5 sur 13 pixels. Regarder ce qu est reellement un element
+   avant de lui poser une surface. */
+html.qz-fond-sombre body.qz-guide-produit .visuel-verso .dot{ color:#10181f !important; }
