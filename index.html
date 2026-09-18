@@ -1361,6 +1361,19 @@
   html.qb-attente .qb-b2{ opacity:1!important; animation:none!important; }
   html.qb-attente-icones .qb-gestes-liste>li{ opacity:1!important; animation:none!important; }
 
+  /* --- 18/09, fondateur : « ils apparaissent TOUJOURS avec le changement de photo ». Les regles ci-dessus ne
+         couvraient que la sequence d ENTREE. Le titre et le geste « Changez » portent DEUX AUTRES rideaux, dans
+         bandeau-relief.css, cales sur --t-changement : le cycle du mur. Ce sont eux qui les rejouent a chaque photo.
+         `!important` suffit : bandeau-relief.css est lue APRES cette feuille, mais ses regles, elles, n en ont pas.
+         La feuille donne d ailleurs la preuve que c est le bon etat d arrivee — sa regle prefers-reduced-motion fait
+         exactement cela pour le geste : opacity:1, animation:none. --- */
+  .qb.qb-dispo-droite .qb-b2,
+  .qb.qb-dispo-droite.qb-joue .qb-b2,
+  .qb-gestes .qb-geste-changez,
+  .qb-gestes .qb-gestes-liste > li:nth-last-child(2),
+  .qb-gestes.qb-changement .qb-geste-changez,
+  .qb-gestes.qb-changement .qb-gestes-liste > li:nth-last-child(2){ opacity:1!important; animation:none!important; }
+
   /* --- 18/09, fondateur : les icones des reseaux et la ligne de copyright. --- */
   /* Les icones sont des pastilles : une SURFACE, donc l orange de marque, avec l ENCRE dessus — regle de la charte
      pour tout texte pose sur l orange, et 5,23 de contraste. Le survol eclaircit vers #df824e, comme les boutons. */
