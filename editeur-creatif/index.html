@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- 18/09 : qz-fond-sombre = le theme sombre partage. Ici il ne change que la TETE et le PIED communs
+     (lisere gris a 2 px au lieu d orange a 3, pied navy) : le corps de l app a sa propre palette, ci-dessous. -->
+<html lang="fr" class="qz-fond-sombre">
 <head>
 <meta charset="UTF-8">
 <!-- GARDE-ACCES-DEBUT -->
@@ -42,9 +44,18 @@
      l interface, elles sont proposees au CLIENT dans le selecteur de police de ses propres textes (voir la liste plus bas). Les retirer
      aurait casse deux choix du selecteur en silence. -->
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19g">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19h">
 <style>
-  :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --doux-sombre:#b9c0c7; --teinte-actif:#e2725b12;
+  /* 18/09 : les cinq jetons morts de la charte prennent leurs valeurs du site. Les NOMS ne changent pas —
+     les renommer par leur role toucherait quarante regles pour zero gain visible, et cette app tourne.
+     Ce qu ils valent desormais :
+       --charbon  le navy de marque, en texte sur clair comme en surface sombre — les deux roles restent justes
+       --creme    le gris du site : il ne sert que POSE SUR du sombre (13,31 la ou il compte)
+       --kraft    le meme gris (il n avait plus qu un usage)
+       --papier   un blanc casse neutre, sans la teinte creme de l ancienne identite
+     --accent-texte est NOUVEAU : l orange de marque ne se lit pas en petit texte sur du clair (3,1).
+     Partout ou l orange etait ECRIT, c est lui qui sert : 5,6. Meme regle que --qz-terracotta-texte ailleurs. */
+  :root{ --charbon:#1e2b35; --creme:#dedede; --terracotta:#d96c2f; --kraft:#dedede; --papier:#f2f2f2; --surface:#FFFFFF; --bord:#1e2b351c; --texte:#1e2b35; --doux:#5c646c; --doux-sombre:#b9c0c7; --teinte-actif:#d96c2f14; --accent-texte:#9c4514;
     /* Palette rail/page (30/08, portee depuis Mosaique Creative -- meme
        principe, meme demande fondateur : fond de page en gris clair, rail en
        bleu marine dedie, accent orange brule. --charbon/--terracotta gardent
@@ -62,7 +73,10 @@
      30/08 : le fond de PAGE bascule a son tour en gris clair (--gris), meme
      principe que Mosaique le meme soir -- suite directe de l'harmonisation
      ci-dessus, pas une rupture avec elle. */
-  body{ margin:0; background:var(--gris); color:var(--charbon); font-family:'Jura',sans-serif; }
+  /* 18/09 : le PLAN DE TRAVAIL (le fond autour du canevas) passe au navy, comme le fond de tout le site.
+     Le CANEVAS, lui, reste blanc plus bas : c est le document, pas l interface. Tous les editeurs font ce
+     partage, et pour une bonne raison — on juge une image sur ce qu elle est, pas sur ce qui l entoure. */
+  body{ margin:0; background:var(--marine); color:#dedede; font-family:'Jura',sans-serif; }
   h1,h2,h3{ font-family:'Jura',sans-serif; }
 
 
@@ -80,7 +94,7 @@
   .atelier{ margin:0; padding:0; }
   .rangee-atelier{
     display:grid; grid-template-columns:92px 1fr 56px; align-items:stretch; min-height:calc(100vh - 90px);
-    background:var(--gris);
+    background:var(--marine);
   }
   @media (max-width:760px){ .rangee-atelier{ grid-template-columns:76px 1fr 48px; } }
 
@@ -132,7 +146,7 @@
   .icone-outil{
     width:34px; height:34px; border-radius:9px; border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center; transition:transform .12s ease, opacity .12s ease;
-    background:var(--terracotta); color:#fff;
+    background:var(--terracotta); color:#10181f;   /* 18/09 : l encre sur l orange (5,23). Le blanc n y valait que 2,8 — regle aujourd hui neutralisee par le fond transparent des rails, corrigee quand meme : une regle fausse qui dort reste fausse. */
   }
   .icone-outil:hover{ opacity:.9; }
   .icone-outil:active{ transform:scale(.94); }
@@ -227,7 +241,7 @@
   .btn.principal{ background:var(--charbon); color:var(--creme); }
   .btn.principal:hover{ background:#1c232a; }
   .btn.secondaire{ background:var(--papier); color:var(--doux); border:1.5px solid var(--bord); }
-  .btn.secondaire:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn.secondaire:hover{ border-color:var(--terracotta); color:var(--accent-texte); }
   .btn.secondaire:disabled{ opacity:.4; cursor:default; }
   .btn.danger{ background:var(--papier); color:#b04a36; border:1.5px solid #b04a3640; }
   .btn svg{ width:14px; height:14px; flex-shrink:0; }
@@ -236,7 +250,7 @@
 
   .grille-formats{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
   .btn-format{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; }
-  .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .btn-format.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--accent-texte); }
 
   .grille-stickers{ display:none; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:8px; }
   .grille-stickers.ouvert{ display:grid; }
@@ -284,7 +298,7 @@
     width:24px; height:24px;
     background:#ffffffe6; border:1.5px dashed var(--terracotta); border-radius:50%;
     display:flex; align-items:center; justify-content:center; cursor:pointer;
-    color:var(--terracotta); box-shadow:0 1px 3px rgba(0,0,0,.15);
+    color:var(--accent-texte); box-shadow:0 1px 3px rgba(0,0,0,.15);
   }
   .repere-photo-forme:hover{ background:#fff; }
   .repere-photo-forme svg{ width:60%; height:60%; pointer-events:none; }
@@ -328,7 +342,7 @@
   .menu-contextuel{ position:fixed; z-index:220; background:var(--surface); border:1px solid var(--bord); border-radius:10px; box-shadow:0 14px 34px -12px #2b353e66; padding:5px; display:none; min-width:170px; }
   .menu-contextuel.ouvert{ display:block; }
   .menu-contextuel button{ display:flex; align-items:center; gap:8px; width:100%; text-align:left; font:inherit; font-family:'Jura',sans-serif; font-size:12.5px; font-weight:600; color:var(--texte); background:none; border:none; border-radius:7px; padding:8px 10px; cursor:pointer; }
-  .menu-contextuel button:hover{ background:var(--teinte-actif); color:var(--terracotta); }
+  .menu-contextuel button:hover{ background:var(--teinte-actif); color:var(--accent-texte); }
   .menu-contextuel button:disabled{ opacity:.4; cursor:default; background:none; color:var(--texte); }
   .menu-contextuel hr{ border:none; border-top:1px solid var(--bord); margin:4px 2px; }
   .mc-groupe-titre{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--doux); margin:6px 10px 3px; }
@@ -393,11 +407,11 @@
     font-family:'Jura',sans-serif; font-weight:700; font-size:11px; color:var(--doux);
     background:none; border:1px solid var(--bord); border-radius:99px; padding:6px 12px; cursor:pointer; margin-top:14px;
   }
-  .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .mcd-reinit:hover{ border-color:var(--terracotta); color:var(--accent-texte); }
 
   .grille-effets{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
   .btn-effet{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:9.5px; padding:6px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); color:var(--doux); cursor:pointer; text-align:center; }
-  .btn-effet.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--terracotta); }
+  .btn-effet.actif{ border-color:var(--terracotta); background:var(--teinte-actif); color:var(--accent-texte); }
 
   .grille-formes{ display:none; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:8px; }
   .grille-formes.ouvert{ display:grid; }
@@ -427,14 +441,14 @@
   .pastille-couleur-btn::-moz-color-swatch{ border:none; border-radius:6px; }
   .champ-hex{ flex:1; min-width:0; font-family:ui-monospace,monospace; font-size:11.5px; font-weight:600; padding:6px 8px; border:1px solid var(--bord); border-radius:7px; background:var(--papier); color:var(--texte); }
   .btn-pipette-mini{ width:30px; height:30px; border-radius:8px; border:1.5px solid var(--bord); background:var(--papier); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; color:var(--doux); padding:0; }
-  .btn-pipette-mini:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-pipette-mini:hover{ border-color:var(--terracotta); color:var(--accent-texte); }
   .btn-pipette-mini svg{ width:14px; height:14px; }
   .btn-pipette-mini:disabled{ opacity:.35; cursor:not-allowed; }
   .grille-palette-mini{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
   .swatch-mini{ aspect-ratio:1; border-radius:5px; border:1.5px solid var(--bord); cursor:pointer; padding:0; }
   .swatch-mini.actif{ border-color:var(--charbon); box-shadow:0 0 0 1.5px var(--charbon) inset; }
   .swatch-mini.ajouter{ background:var(--papier); color:var(--doux); font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; border-style:dashed; }
-  .swatch-mini.ajouter:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+  .swatch-mini.ajouter:hover{ border-color:var(--terracotta); color:var(--accent-texte); }
   .note-palette{ font-size:9.5px; color:var(--doux); margin:4px 0 0; line-height:1.4; }
 
   /* ===== Grille deployee (30/08) : duplique le calque selectionne en
@@ -461,7 +475,7 @@
 <!-- 13/09, demande fondateur : cette app porte son propre logo dans la barre (initiale en tesselles, orange integree), sans accroche
      ni categorie, sur barre navy -- l inverse du site. A declarer AVANT commun-bandeau.js, qui ecrit au fil de la lecture. -->
 <script>window.qzApp = { lettre: 'C', nom: 'Canevas Quadreti', baseline: 'Posez. Composez. Exportez.' };</script>
-<script src="/commun-bandeau.js?v=2026-09-19g"></script>
+<script src="/commun-bandeau.js?v=2026-09-19h"></script>
 
 <!-- Bandeau titre/accroche retire (28/08, gain de place -- meme esprit que Mosaique
      Creative) : redondant avec le bandeau du site au-dessus, et l'acces au guide
@@ -707,8 +721,8 @@
   </div>
 </div>
 
-<script src="/commun-pied.js?v=2026-09-19g"></script>
-<script src="../reglages-site.js?v=2026-09-19g" defer></script>
+<script src="/commun-pied.js?v=2026-09-19h"></script>
+<script src="../reglages-site.js?v=2026-09-19h" defer></script>
 
 <script>
 (function(){
