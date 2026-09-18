@@ -320,14 +320,16 @@ html.qz-menu-tiroir .qz-header.qz-menu-visible > a.qz-espace-barre{
   margin-left:auto; margin-right:12px; flex:none; align-self:center;
   background:#1e2b35; border-color:#1e2b35; color:#dedede;
 }
-/* Sur l accueil, la pastille est grise a encre, comme decide ce matin : 10,75 contre l onglet navy, 13,31 pour son
-   texte. Ailleurs elle reste navy sur barre claire. */
-html.qz-menu-tiroir.qz-accueil .qz-header.qz-menu-visible > a.qz-espace-barre{
+/* 18/09, corrige : cette pastille grise etait accrochee a `.qz-accueil`. Elle appartient au THEME SOMBRE, pas a une
+   page — sur la Boutique, Contact et le Studio elle sortait donc navy SUR un onglet navy : invisible, sauf son texte.
+   Elle suit maintenant `.qz-fond-sombre` : 10,75 contre l onglet, 13,31 pour son texte. Sur une barre claire (pages
+   pas encore converties) elle reste navy. */
+html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barre{
   background:#dedede; border-color:#dedede; color:#10181f;
 }
 html.qz-menu-tiroir .qz-header.qz-menu-visible > a.qz-espace-barre:hover,
 html.qz-menu-tiroir .qz-header.qz-menu-visible > a.qz-espace-barre:focus-visible{ background:#2f4150; border-color:#2f4150; }
-html.qz-menu-tiroir.qz-accueil .qz-header.qz-menu-visible > a.qz-espace-barre:hover,
-html.qz-menu-tiroir.qz-accueil .qz-header.qz-menu-visible > a.qz-espace-barre:focus-visible{ background:#ffffff; border-color:#ffffff; }
+html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barre:hover,
+html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barre:focus-visible{ background:#ffffff; border-color:#ffffff; }
 /* Sous 900 px la barre est une grille serree : la pastille y prendrait trop de place a cote du burger. */
 @media (max-width:900px){ html.qz-menu-tiroir .qz-header.qz-menu-visible > a.qz-espace-barre{ display:none } }
