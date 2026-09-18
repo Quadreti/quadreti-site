@@ -1,0 +1,95 @@
+/* ============================================================================
+   PAGES DE CONTENU — LE THEME SOMBRE          18/09/2026
+   Blog (2 pages) et Coloriages (14 pages) : seize pages nees du meme moule, qui vivaient encore sur la palette
+   KRAFT ABANDONNEE (--terracotta #e2725b, --charbon #2b353e, --fond #F5F5F5) que la charte liste comme morte.
+
+   POURQUOI UNE FEUILLE ET PAS SEIZE BLOCS COLLES : le fondateur a ecrit noir sur blanc dans CLAUDE.md que « des
+   couches et des surcouches s accumulent au fil des agents ». Seize copies d une meme couleur, c est seize endroits
+   ou la corriger. Ici, une seule. Une couleur est decidee par UNE ligne.
+
+   CE QU ELLE NE TOUCHE PAS, ET C EST LE POINT IMPORTANT :
+   `.page-imprimable` reste BLANCHE, a l encre. C est une feuille destinee au PAPIER — l enfant l imprime et la
+   colorie. Elle n a aucune raison de suivre l ecran, et l assombrir couterait de l encre a l impression pour rien.
+   Meme famille de decision que les champs de saisie de Contact et le magasin de la Boutique : une surface qui a un
+   METIER garde l allure de son metier.
+
+   Elle est lue APRES commun.css et AVANT le style propre de chaque page, mais APRES rien du tout du cote du
+   panneau de controle : celui-ci ecrit sa feuille en dernier. D ou les `!important` la ou il repeint.
+   POUR REVENIR : retirer le lien vers ce fichier dans les seize pages.
+   ============================================================================ */
+
+html.qz-fond-sombre{
+  --qzc-fond:#1e2b35;        /* le fond de page : le navy de marque */
+  --qzc-carte:#33434f;       /* navy 2 — la carte, 1,42 contre le fond : un panneau, pas une surface lumineuse */
+  --qzc-texte:#dedede;       /* 10,75 sur le fond ; 7,59 sur une carte */
+  --qzc-second:#b6c0c8;      /* le secondaire : 7,83 sur le fond ; 5,53 sur une carte */
+  --qzc-orange-ecrit:#ff9147;/* l orange ECRIT : meme teinte 24 deg, saturation a 100 %. Sur fond sombre on
+                                eclaircit en SATURANT, jamais en blanchissant. 6,47 sur le fond. */
+  --qzc-orange:#d96c2f;      /* l orange de marque : pour les surfaces et les traits, jamais pour ecrire */
+  --qzc-encre:#10181f;       /* ce qu on pose SUR l orange (5,23) ou sur le gris (13,31) */
+  --qzc-gris:#dedede;
+  --qzc-filet:#dedede26;
+}
+
+/* ===== Le fond, commun aux seize. Le panneau pose le sien : il faut etre plus precis que lui. ===== */
+html.qz-fond-sombre body{ background:var(--qzc-fond) !important; color:var(--qzc-texte) !important; }
+html.qz-fond-sombre body h1,
+html.qz-fond-sombre body h2,
+html.qz-fond-sombre body h3{ color:var(--qzc-texte) !important; }
+
+/* Le surtitre portait la terracotta morte. En petit texte l orange de marque ne vaut que 4,23 sur ce navy :
+   il prend sa forme ECRITE. */
+html.qz-fond-sombre body .eyebrow{ color:var(--qzc-orange-ecrit) !important; }
+html.qz-fond-sombre body .blk p.lead{ color:var(--qzc-texte) !important; }
+
+/* ===== BLOG ===== */
+html.qz-fond-sombre body .blog-entete p{ color:var(--qzc-second) !important; }
+html.qz-fond-sombre body .blog-carte{
+  background:var(--qzc-carte) !important; border-color:var(--qzc-filet) !important; color:var(--qzc-texte) !important;
+}
+html.qz-fond-sombre body .blog-carte p{ color:var(--qzc-second) !important; }
+html.qz-fond-sombre body .blog-carte .date,
+html.qz-fond-sombre body .blog-article .date{ color:var(--qzc-orange-ecrit) !important; }
+html.qz-fond-sombre body .blog-carte img{ background:var(--qzc-fond) !important; }
+html.qz-fond-sombre body .blog-vide{ color:var(--qzc-second) !important; }
+html.qz-fond-sombre body .blog-article img.couverture{ background:var(--qzc-fond) !important; }
+html.qz-fond-sombre body .blog-article .contenu a{ color:var(--qzc-orange-ecrit) !important; }
+html.qz-fond-sombre body .blog-article .retour{ color:var(--qzc-texte) !important; }
+html.qz-fond-sombre body .blog-article .retour:hover{ color:var(--qzc-orange-ecrit) !important; }
+
+/* ===== COLORIAGES — la bibliotheque ===== */
+html.qz-fond-sombre body .carte-lib{
+  background:var(--qzc-carte) !important; border-color:var(--qzc-filet) !important; color:var(--qzc-texte) !important;
+}
+html.qz-fond-sombre body .carte-lib-diff{ color:var(--qzc-second) !important; }
+
+/* ===== COLORIAGES — une page de coloriage ===== */
+html.qz-fond-sombre body .fil,
+html.qz-fond-sombre body .fil a{ color:var(--qzc-second) !important; }
+html.qz-fond-sombre body .fil a:hover{ color:var(--qzc-orange-ecrit) !important; }
+
+/* La pastille de difficulte etait en creme #F2EEDF, un jeton mort. Elle reprend la pastille grise du site. */
+html.qz-fond-sombre body .badge-diff{ background:var(--qzc-gris) !important; color:var(--qzc-encre) !important; }
+
+/* « Imprimer ce coloriage » : c est L ACTION de la page. Il etait navy sur fond clair — sur le navy il
+   disparaitrait purement et simplement. Il prend l orange de marque et l encre, comme les boutons de l accueil. */
+html.qz-fond-sombre body .btn-imprimer{ background:var(--qzc-orange) !important; color:var(--qzc-encre) !important; }
+html.qz-fond-sombre body .btn-imprimer:hover{ background:#df824e !important; }
+
+/* Le rappel boutique etait une carte navy posee sur une page claire. Sur une page navy elle se confondrait avec
+   le fond : elle passe en navy 2, comme toutes les cartes du site. */
+html.qz-fond-sombre body .cta-boutique{ background:var(--qzc-carte) !important; }
+html.qz-fond-sombre body .cta-boutique h2{ color:var(--qzc-texte) !important; }
+html.qz-fond-sombre body .cta-boutique p{ color:var(--qzc-second) !important; }   /* etait un beige kraft */
+html.qz-fond-sombre body .cta-boutique-btn{ background:var(--qzc-orange) !important; color:var(--qzc-encre) !important; }
+html.qz-fond-sombre body .cta-boutique-btn:hover{ background:#df824e !important; }
+
+/* Les autres coloriages, en bas de page. */
+html.qz-fond-sombre body .carte-autre span{ color:var(--qzc-texte) !important; }
+html.qz-fond-sombre body .carte-autre:hover span{ color:var(--qzc-orange-ecrit) !important; }
+html.qz-fond-sombre body .carte-autre img{ border-color:var(--qzc-filet) !important; }
+
+/* ===== LA FEUILLE A IMPRIMER — on n y touche pas, et on l ecrit pour que personne n y touche plus tard. =====
+   Elle est blanche a l encre parce qu elle finit sur du PAPIER. Sa legende, sa grille, son en-tete et sa baseline
+   vivent dedans et gardent leurs couleurs d origine. Aucune regle de cette feuille ne la vise ; cette ligne est la
+   pour l affirmer, pas pour corriger quoi que ce soit. */
