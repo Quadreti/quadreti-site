@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19p">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19q">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -125,10 +125,21 @@
   html body .onglet-mode.actif{ color:var(--creme); }         /* celui-la est sur du navy 2 : 7,59 */
   html body .btn-taille{ color:var(--creme); }                /* fond navy : 7,59 */
   html body .btn-taille.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
+
+     4. TOUT CE QUI VIT DANS UNE CARTE BLANCHE. C est le meme defaut que le 2, generalise : le panneau
+        recalcule --doux et --creme contre le fond de PAGE, devenu navy — ils en ressortent clairs. Tout ce
+        qui les porte a l interieur d une carte blanche devient donc invisible : les fleches de defilement
+        (1,85), les emplacements memoire vides (1,85), le gras des legendes (1,35).
+        La regle est toujours la meme : on mesure un texte contre LA SURFACE QUI EST DERRIERE LUI, pas contre
+        le fond de la page. */
+  html body .carte .fleche-scroll,
+  html body .carte .memoire-vide{ color:#5a6672; border-color:#5a667255; }   /* 5,87 sur le blanc */
+  html body .carte b{ color:#10181f; }                                       /* 13,31 */
+  html body .btn-jeu, html body .btn-motif{ color:var(--accent-texte); }     /* teinte orange sur blanc : 5,95 */
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19p"></script>
+<script src="/commun-bandeau.js?v=2026-09-19q"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <svg width="0" height="0" style="position:absolute">
@@ -170,8 +181,8 @@
   </div>
 </section>
 
-<script src="/commun-pied.js?v=2026-09-19p"></script>
-<script src="../reglages-site.js?v=2026-09-19p" defer></script>
+<script src="/commun-pied.js?v=2026-09-19q"></script>
+<script src="../reglages-site.js?v=2026-09-19q" defer></script>
 
 <script>
 (function(){
