@@ -853,7 +853,13 @@
     max-width:calc(100% + var(--qz-bord) + 40px);
     background:#1e2b35; border-radius:0 999px 999px 0;
     border:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-left:none;   /* le demi-cercle ferme la carte a l INTERIEUR ; a gauche elle est contre le bord de page, pas de bord libre donc pas de liseré */
-    padding:26px 100px 28px calc(var(--qz-bord));   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
+    /* 18/09, fondateur : « reduit la hauteur des cartes titres a leur volume utile ». La carte faisait 90 px pour une
+       ligne de 30 : deux tiers de vide. 14 et 16 px laissent une demi-hauteur de ligne de chaque cote, ce qui est la
+       respiration juste pour un texte sur une ligne. Hauteur : 90 -> 64.
+       LE REMPLISSAGE DE DROITE SUIT, et ce n est pas cosmetique : le demi-cercle creuse d une DEMI-HAUTEUR. A 90 px il
+       mordait de 45, d ou les 100 px ; a 64 il ne mord plus que de 32, et 86 px gardent le meme degagement de 55 px
+       entre le texte et la courbe. Garder 100 aurait laisse un trou a droite du titre. */
+    padding:14px 86px 16px calc(var(--qz-bord));   /* 100 px a droite (70 jusqu au 16/09) : le demi-cercle creuse d une demi-hauteur, le texte doit le laisser respirer. A GAUCHE, 26 px et rien d autre : c est ce qui aligne le bloc sur la marge du chapo. */
     margin:0 0 20px calc(-1 * (var(--qz-bord)));
   }
   .titre-carte .eyebrow{ color:#f0a06a!important; }   /* 6,85 sur le navy — l orange de marque n y donne que 3,97 */
