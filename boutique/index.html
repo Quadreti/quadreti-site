@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- 18/09 : qz-fond-sombre = le theme sombre partage (voir commun.css et entete-commun.css). Ecrite en dur ici,
+     jamais posee par un script : le fond d une page ne doit pas dependre d un aller-retour reseau. -->
+<html lang="fr" class="qz-fond-sombre">
 <head>
 <meta charset="UTF-8">
 <!-- GARDE-ACCES-DEBUT -->
@@ -224,6 +226,42 @@
   .to-top.show{ opacity:1; pointer-events:auto; transform:none; }
   .to-top:hover{ background:var(--terracotta); }
   .to-top svg{ width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2.2; }
+
+  /* ================= BOUTIQUE DANS LE LANGAGE DE L ACCUEIL — 18/09, a retirer en bloc =================
+     Tout est en !important et prefixe par `html body` : la feuille du panneau de controle est lue APRES celle
+     de la page. A egalite on perd ; il faut etre PLUS PRECIS, pas plus insistant. */
+
+  /* --- Le fond, et le titre pose dessus. --- */
+  html body{ background:#1e2b35 !important; color:#dedede !important; }
+  html body .shop-head h1{ color:#dedede !important; }        /* 10,75 sur le navy */
+  html body .shop-head p{ color:#dedede !important; }         /* le gris #5c646c tombait a 1,9 sur navy */
+  html body .shop-head .rule{ background:var(--qz-orange-marque,#d96c2f) !important; }
+
+  /* --- LA FEUILLE DU MAGASIN. Voir l explication en tete de bloc : claire, et c est un choix. --- */
+  html body main.shop{
+    background:#dedede !important; color:#10181f !important;
+    border-radius:6px; max-width:1320px; padding:30px 26px 44px; margin:26px auto 64px;
+  }
+  html body main.shop a{ color:#9c4514 !important; }   /* l orange ECRIT sur fond clair, charte : 5,6 */
+
+  /* --- Les boutons du magasin : orange de marque, encre dessus, comme les sept de l accueil.
+         Ils portaient la terracotta morte et du texte BLANC dessus — 2,8, sous le seuil. --- */
+  html body #my-store-139886004 .form-control__button,
+  html body #my-store-139886004 .ec-cart__button button,
+  html body #my-store-139886004 button.form-control__button{
+    background:var(--qz-orange-marque,#d96c2f) !important;
+    border-color:var(--qz-orange-marque,#d96c2f) !important;
+    color:#10181f !important; border-radius:6px !important;
+  }
+  html body #my-store-139886004 .form-control__button:hover{ background:#df824e !important; }
+  html body #my-store-139886004 .ec-link,
+  html body #my-store-139886004 a{ color:#9c4514 !important; }
+
+  /* --- Le rythme des sections, repris du jeton de l accueil. --- */
+  html body section.shop-head{ padding:var(--qz-espace-section,clamp(28px,4vw,48px)) 20px 6px !important; }
+
+  @media (max-width:640px){ html body main.shop{ padding:18px 12px 30px; margin:16px auto 40px; border-radius:0; } }
+  /* ================= fin du bloc Boutique ================= */
 
   @media (max-width:640px){
     header.site{ padding:12px 15px; gap:10px; }
