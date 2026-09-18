@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-18p';
+var QZ_VER = '?v=2026-09-18q';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -264,7 +264,7 @@ window.qzEnteteInit = function(){
     var demande = new URLSearchParams(location.search).get('burger');
     if (demande === '1') sessionStorage.setItem('qzBurger', '1');
     if (demande === '0') sessionStorage.removeItem('qzBurger');
-    if (sessionStorage.getItem('qzBurger') === '1') document.documentElement.classList.add('qz-burger');
+    if (sessionStorage.getItem('qzBurger') === '1') document.documentElement.classList.add('qz-menu-tiroir');
   } catch (e) { /* navigation privee stricte : pas d essai, pas de casse */ }
   var MARGE = 16, BLOC = 66, BARRE = 58;
   function caler(){
@@ -276,7 +276,7 @@ window.qzEnteteInit = function(){
       if (logoRow) { logoRow.style.marginTop = MARGE + 'px'; logoRow.style.alignSelf = 'flex-start'; }
       /* 18/09 : pas de centrage du menu sur la ligne du naming en mode burger — le panneau n occupe plus de place,
          la mesure ne veut plus rien dire. */
-      if (nav && naming && !document.documentElement.classList.contains('qz-burger')) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
+      if (nav && naming && !document.documentElement.classList.contains('qz-menu-tiroir')) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
       else if (nav) { nav.style.alignSelf = ''; nav.style.marginTop = ''; }
     } else {
       menu.style.height = ''; menu.style.paddingTop = ''; menu.style.paddingBottom = ''; menu.style.paddingLeft = '';

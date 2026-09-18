@@ -284,7 +284,7 @@
        visent (bord droit cale sur le mur, centrage sur la ligne du naming) n ont plus d objet — et le premier est
        dangereux : il pose sur la barre un remplissage tire du bord du mur, qui vaut n importe quoi tant que le mur
        n est pas place, et emporte toute la page a fond perdu avec lui. */
-    var enBurger = document.documentElement.classList.contains('qz-burger');
+    var enBurger = document.documentElement.classList.contains('qz-menu-tiroir');
     /* bord gauche du logo = bord gauche de la colonne de textes ; bord droit du menu = bord droit du mur (schema fondateur 11/09) */
     /* (11/09 soir : la marge gauche du logo n est plus calee sur la colonne mais sur MARGE, voir plus bas) */
     menu.style.paddingRight = (droite && large && mur && !enBurger) ? Math.max(0, Math.round(document.documentElement.clientWidth - mur.getBoundingClientRect().right)) + 'px' : '';
