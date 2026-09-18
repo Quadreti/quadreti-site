@@ -183,8 +183,11 @@
     guide: document.getElementById('btnModeGuide')
   };
   var FICHIERS = {
-    decoupe: 'decoupe.html',
-    scenes: 'scenes.html',
+    /* 18/09 : ces deux pages etaient les SEULES du site appelees sans numero de version. Le cadre servait donc
+       un outil en cache jusqu a dix minutes apres un depot — un correctif pose ici n arrivait pas. Le numero est
+       celui de tous les autres appels du site, a bumper en meme temps. */
+    decoupe: 'decoupe.html?v=2026-09-19k',
+    scenes: 'scenes.html?v=2026-09-19k',
     guide: 'guide-interactif.html'
   };
 
