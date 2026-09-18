@@ -61,7 +61,8 @@
   .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }
   .eyebrow{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; font-weight:600; }
   h1.titre{ font-size:clamp(22px,4vw,30px); line-height:1.15; margin:0 0 8px; }
-  p.accroche{ font-size:13.5px; color:var(--encre-douce); max-width:60ch; margin:0 auto; line-height:1.55; }
+  /* 18/09 : posee sur le fond de page, devenu navy — le gris secondaire n y valait plus que 2,41. */
+  p.accroche{ font-size:13.5px; color:#b6c0c8; max-width:60ch; margin:0 auto; line-height:1.55; }
 
   .atelier{ max-width:1180px; margin:20px auto 60px; padding:0 20px; display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:start; }
   @media (max-width:800px){ .atelier{ grid-template-columns:1fr; } }
@@ -91,7 +92,9 @@
   .btn{ font-family:'Jura',sans-serif; font-weight:700; font-size:12.5px; border-radius:10px; padding:9px 12px; cursor:pointer; text-align:center; width:100%; background:var(--surface); color:var(--encre-douce); border:1.5px solid var(--bord); }
   .btn:hover{ border-color:var(--accent); color:var(--accent); }
   .btn-format{ font:inherit; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; padding:8px 2px; border-radius:8px; border:1.5px solid var(--bord); background:var(--surface); color:var(--encre-douce); cursor:pointer; }
-  .btn-format.actif{ border-color:var(--accent); background:var(--teinte-actif); color:var(--accent); }
+  /* 18/09 : l orange de marque ECRIT sur une carte claire ne vaut que 3,1. Sur clair, l orange qui s ecrit
+     est #9c4514 : 5,6. La BORDURE garde l orange — un trait n a pas les memes exigences qu un mot. */
+  .btn-format.actif{ border-color:var(--accent); background:var(--teinte-actif); color:#9c4514; }
 
   /* ===== Menu clic droit : palette en tiroir ===== */
   .menu-contextuel{
