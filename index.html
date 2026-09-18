@@ -1263,6 +1263,11 @@
 
   /* --- Le fond. --- */
   html body{ background:#1e2b35!important; }
+  /* 18/09 : et les CINQ sections alternees avec lui. Elles etaient rendues transparentes par la feuille du PANNEAU,
+     qui arrive apres un aller-retour reseau : le fond de l accueil dependait donc d une requete. Une connexion lente,
+     un panneau qui ne repond pas, et ces sections se rallument en #F5F5F5 sous des textes ecrits pour du navy —
+     10,75 qui tombe a 1,3. Constate par le fondateur. L accueil ne le demande plus a personne. */
+  section.blk.alt{ background:transparent!important; }
 
   /* --- Les textes POSES SUR LE FOND passent en clair. --- */
   /* Les LIENS ne sont pas tous du texte de page : .cta et .btn-studio sont des boutons poses sur l accent. Seuls les
