@@ -269,11 +269,13 @@
   }
   /* Le sous-menu redevient un ACCORDEON dans le tiroir, au lieu d une carte flottante au survol. */
   html.qz-burger .qz-header.qz-menu-visible .qz-hassub{position:static}
+  /* Meme regle que pour le tiroir : PAS de max-height. Un sous-menu replie par une hauteur devinee se coupe des qu on
+     lui ajoute une entree. Il ouvre par `display` et garde sa hauteur reelle. */
   html.qz-burger .qz-header.qz-menu-visible .qz-sublist{
-    position:static; display:flex; flex-direction:column; min-width:0; max-height:0; overflow:hidden;
+    position:static; display:none; flex-direction:column; min-width:0; max-height:none!important; overflow:visible;
     padding:0; border:none!important; box-shadow:none; border-radius:6px; animation:none!important;
   }
-  html.qz-burger .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{max-height:400px;margin:0 0 4px}
+  html.qz-burger .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{display:flex;margin:0 0 4px}
   html.qz-burger .qz-header.qz-menu-visible .qz-sublist a{padding:8px 18px;font-size:12.5px}
 }
 /* Les couleurs du tiroir sur BUREAU. Hors accueil la barre est claire, mais le tiroir, lui, est navy : ses libelles
