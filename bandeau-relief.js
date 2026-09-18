@@ -39,7 +39,9 @@
     textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'ouverture', position: 'haut-bas', mode: 'aucun', /* 12/09 : 'clip' pour retrouver le clipsage lettre par lettre */ ln: .3, dn: .1,
       /* 11/09, disposition 'droite' (reference Pixel Corner) : accroche en capitales (baseline 1), gros titre (baseline 2), paragraphe, deux boutons */
       accroche: 1.15, titre: 4.6, /* tailles en cqw (bornees en px dans le CSS) */
-      para: 'Un seul support, mille créations possibles. Imprimez, clipsez, changez de décor quand vous voulez.',
+      /* 18/09, fondateur : la deuxieme phrase retiree (« Imprimez, clipsez, changez de decor quand vous voulez. »).
+         Elle disait ce que les quatre gestes montrent juste en dessous. Ce texte vient du CODE, pas du panneau. */
+      para: 'Un seul support, mille créations possibles.',
       cta2: { texte: 'Galerie', href: '/boutique/' } /* 11/09 soir : libelle Galerie (fondateur) ; pas encore de page galerie, le lien va a la boutique en attendant */ },
     /* 11/09 soir, fondateur : sequence generale de la page (en secondes) -- logo > naming > categorie > accroche > menu > titre > paragraphe > boutons > mur > icones.
        pas = intervalle entre deux tesselles du Q ; naming / cat / accroche / titre = intervalle entre deux lettres ; menu / icones = intervalle entre deux elements ;

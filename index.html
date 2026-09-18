@@ -1419,10 +1419,11 @@
          sans un pixel de marge. Le fondateur tranche : navy, et c est la GRAISSE qui portera l ecart.
          Les trois autres gestes sont en navy 700 pour le titre et 500 a 78 % pour le texte. « Changez » prend 800 et 600
          a pleine opacite : il pese plus lourd sans changer de famille, et passe de 4,50 a 10,75. --- */
-  /* « Changez » garde son ecart de GRAISSE, decide par le fondateur, et rien que lui : la couleur ne le distingue pas.
-     800 pour le titre, 600 pour le texte, contre 700 et 500 a 78 % pour les trois autres. */
-  .qb-gestes .qb-geste-changez h3{ font-weight:800!important; }
-  .qb-gestes .qb-geste-changez p{ font-weight:600!important; opacity:1!important; }
+  /* 18/09, fondateur : « retire la graisse de l icone et du texte Changez ». Son titre etait en 800 contre 700 pour
+     les trois autres, et son icone portait un contour de 16 unites — 1,34 px rendus — quand les autres n en ont aucun.
+     Ce sont des formes PLEINES : ce contour ne faisait qu epaissir le dessin. Les deux reviennent au niveau des autres.
+     Sa COULEUR orange reste : c est elle qui le distingue maintenant, et c est bien ce qui avait ete demande. */
+  .qb-gestes .qb-geste-changez .qb-geste-icone{ stroke:none!important; stroke-width:0!important; }
 
   /* --- CAPTURES 1, 2, 3 : « arrondi rectangle unifie comme les images de l accueil ». Les images et le comparateur
          sont a 6 px ; les cartes portaient 8px 8px 8px 22px — le coin marque de la charte — et les cartes de modes 4 px.
@@ -1513,8 +1514,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-18d">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18d">
+<link rel="stylesheet" href="/commun.css?v=2026-09-18e">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18e">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1574,9 +1575,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-18d"></script>
+<script src="/commun-bandeau.js?v=2026-09-18e"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18d">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18e">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1783,7 +1784,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-18d" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-18e" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2238,7 +2239,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-18d"></script>
+<script src="/commun-pied.js?v=2026-09-18e"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2616,7 +2617,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-18d"></script>
-<script src="/bandeau-gestes.js?v=2026-09-18d"></script>
+<script src="/bandeau-relief.js?v=2026-09-18e"></script>
+<script src="/bandeau-gestes.js?v=2026-09-18e"></script>
 </body>
 </html>
