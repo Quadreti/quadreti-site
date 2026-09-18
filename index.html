@@ -1271,11 +1271,12 @@
   .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, .blk .premium, .blk .color-note, .blk .note-navy, #app .face{
     background:#33434f!important; border-color:#33434f!important;
   }
-  /* 18/09, fondateur : la carte de titre rebascule au GRIS. Elle avait ete kraft une journee ; contre le navy elle
-     passe de 7,74 a 10,75. Son lisere reste de la couleur de la carte : il ne dessine rien, et n a rien a dessiner
-     — une carte a 10,75 se detache seule. Ses textes ne bougent pas : titre et surtitre sont en encre, qui vaut
-     10,75 sur ce gris comme elle valait 7,74 sur le kraft. */
-  .blk .titre-carte{ background:#dedede!important; border-color:#dedede!important; }
+  /* 18/09, fondateur : la carte de titre au GRIS (10,75 contre le navy), avec son lisere en ORANGE DE MARQUE.
+     Un lisere se lit des DEUX cotes, et c est ce qui a decide de la teinte : l orange de marque donne 2,54 contre la
+     carte et 4,23 contre le fond. Les autres oranges ne tiennent qu un cote — #ff9147 disparait dans la carte (1,66),
+     #9C4514 disparait dans le navy (2,26). Celui-la est le seul a exister des deux bords.
+     Les textes de la carte ne bougent pas : encre, 10,75 sur ce gris. */
+  .blk .titre-carte{ background:#dedede!important; border-color:var(--qz-orange-marque,#d96c2f)!important; }
   /* Les deux listes d encre (celle de l essai d origine et celle du rattrapage) fusionnent ici en une seule paire.
      Une seule carte reste CLAIRE : celle du titre, en kraft. Son titre garde donc l encre (7,74). */
   .blk .titre-carte h2{ color:#1e2b35!important; }
