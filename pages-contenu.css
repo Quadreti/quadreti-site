@@ -241,3 +241,13 @@ html.qz-fond-sombre body.qz-guide-produit .visuel-verso .dot{ color:#10181f !imp
    Une regle large attrape toujours un cas qu on n avait pas en tete. Il reprend l encre : 5,23. */
 
 html.qz-fond-sombre body.qz-guide-app .mockbtn.primary{ color:#10181f !important; }
+
+/* ----- 18/09 : la FAQ des guides. Ses questions sont ecrites en --encre, qui garde sa valeur navy (voir plus
+
+   haut : ce jeton sert aussi de surface sombre). Posees sur le fond de page devenu navy, elles valaient 1.
+
+   Le survol, lui, garde son orange fonce pensе pour du clair : il bascule aussi. */
+
+html.qz-fond-sombre body.qz-guide .faq summary{ color:#dedede !important; }
+
+html.qz-fond-sombre body.qz-guide .faq summary:hover{ color:#ff9147 !important; }
