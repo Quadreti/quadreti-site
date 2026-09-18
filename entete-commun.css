@@ -225,6 +225,13 @@
   html.qz-accueil .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{font-size:21.6px}
   html.qz-accueil .qz-header.qz-menu-visible .qz-cat,
   html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{font-size:11.6px;line-height:15.6px}
+  /* 18/09, fondateur : « desalignement de la tesselle du bas et des baselines ». Dans l en-tete, l accroche STATIQUE
+     est masquee (display:none) et remplacee par l accroche ANIMEE du bandeau, .qb-b1, placee dans la colonne par
+     placerAccroche(). J avais donc reduit celle qu on ne voit pas et laisse celle qui s affiche a 14,5/19,5.
+     La colonne demandait 56,7 px pour une plaque de 53 : la derniere ligne tombait 6 px sous la tesselle du bas.
+     Avec 11,6/15,6 : 21,6 + 15,6 + 15,6 = 52,8, la hauteur exacte de la plaque. Le pied, lui, etait deja juste — son
+     accroche n est pas remplacee, elle avait donc suivi la reduction. */
+  html.qz-accueil .qz-header.qz-menu-visible .qb-b1{font-size:11.6px;line-height:15.6px}
 }
 
 /* ================= 18/09, fondateur : LE MENU EN BURGER, SUR TOUT LE SITE (option B) =================
