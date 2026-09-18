@@ -60,7 +60,9 @@
     --clair:#dedede; --encre:#1e2b35; --accent:#d96c2f; --blanc:#ffffff; --rail-doux:#ffffffb3; --rail-survol:#ffffff1a; --rail-filet:#ffffff1f;
   }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--clair); color:var(--encre); font-family:'Jura',sans-serif; }
+  /* 18/09 : le PLAN DE TRAVAIL passe au navy, comme le fond du site. Le SUPPORT (le beige du mortier sur
+     lequel on pose les tesselles) ne bouge pas : c est de la matiere, pas de l interface. */
+  body{ margin:0; background:var(--encre); color:#dedede; font-family:'Jura',sans-serif; }
   h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   /* Titre retire de la page (28/08, demande du fondateur) : sera porte par
@@ -419,9 +421,11 @@
      rail habille en bandeau sombre (charbon), boutons pleins terracotta --
      creme pour l'icone/texte (contraste clair sur fond fonce, meme paire
      deja utilisee ailleurs dans le fichier, ex. .mcd-case.mcd-coche). */
+  /* 18/09 : le rail passe en NAVY 2. Sur un plan de travail navy, un rail navy disparaitrait ; navy 2 en
+     fait un objet POSE sur le fond — la meme decision que pour les tesselles des schemas. */
   .rail-lateral{
     display:flex; flex-direction:column; gap:6px; flex-shrink:0; margin-top:16px;
-    background:var(--encre); border-radius:12px; padding:7px;
+    background:#33434f; border-radius:12px; padding:7px;
   }
   .icone-outil-conteneur{ position:relative; }
   .icone-outil{
@@ -452,7 +456,7 @@
      d'outils. Plus de distinction kraft dans le rail (mockup valide sans --
      les regles .icone-outil-kraft[data-cible] dediees ont ete retirees, ces
      boutons retombent simplement sur le meme style que les autres). */
-  .rail-lateral{ background:var(--encre); border:none; box-shadow:0 16px 34px -18px #00000055; padding:8px 6px; }
+  .rail-lateral{ background:#33434f; border:none; box-shadow:0 16px 34px -18px #00000055; padding:8px 6px; }
   .rail-lateral .icone-outil-conteneur{ width:100%; }
   /* #btnApercu et #btnBoutique (30/08) ajoutes a chaque selecteur : ce sont
      des boutons du rail comme les autres, mais sans data-cible (l'un ouvre

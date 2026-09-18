@@ -53,7 +53,9 @@
   *{ box-sizing:border-box; }
   /* 13/09 : le fond de page prend le gris du site, comme le mode decoupe. Les deux modes du meme outil avaient deux fonds
      differents (gris ici, blanc casse la) — et les controles, blancs, ne se detachaient plus du blanc de la page. */
-  body{ margin:0; background:var(--clair); color:var(--encre); font-family:'Jura',sans-serif; }
+  /* 18/09 : le fond passe au navy. La SCENE elle-meme reste sur sa carte claire : c est le dessin qu on
+     colorie et qu on imprime, pas l interface. */
+  body{ margin:0; background:var(--encre); color:#dedede; font-family:'Jura',sans-serif; }
   h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .hero{ max-width:1000px; margin:0 auto; padding:28px 24px 4px; text-align:center; }

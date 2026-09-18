@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- 18/09 : qz-fond-sombre = le theme sombre partage (onglet navy, lisere gris a 2 px, pied navy). -->
+<html lang="fr" class="qz-fond-sombre">
 <head>
 <meta charset="UTF-8">
 <!-- GARDE-ACCES-DEBUT -->
@@ -81,7 +82,10 @@
     --fond:#DEDEDE;    /* le gris du site */
   }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--fond); color:var(--encre); font-family:'Jura',sans-serif; }
+  /* 18/09 : le fond passe au navy, comme celui de tout le site. `html body` et non `body` : le panneau de
+     controle ecrit sa feuille APRES celle de la page — a egalite on perd, il faut etre PLUS PRECIS. */
+  body{ margin:0; background:var(--encre); color:#dedede; font-family:'Jura',sans-serif; }
+  html body{ background:var(--encre) !important; color:#dedede !important; }
 
 
   /* Bascule de mode -- deux fichiers deja construits/verifies independamment
