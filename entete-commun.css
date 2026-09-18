@@ -212,3 +212,17 @@
      non plus, et il redeviendra utile si le tiroir reprend une couleur un jour. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-sublist{background:#dedede!important}
 }
+/* ---- 18/09, fondateur : le bloc logo de l en-tete reduit de 20 %. ----
+   Toutes les valeurs du bloc suivent, pas seulement la plaque : la colonne de texte doit garder la hauteur de la
+   plaque, sinon le texte ne se cale plus dessus ; et l ecart du rang doit suivre, sinon le bloc parait moins reduit
+   qu il ne l est.
+   BORNE A 641 px : logo-v5.css descend deja la plaque a 42 px sous 640, et cette regle, plus specifique, ecraserait
+   cette reduction — le logo deviendrait PLUS GROS sur telephone qu il ne l est aujourd hui. */
+@media (min-width:641px){
+  html.qz-accueil .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{--t:52.8px}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-wm-col{height:52.8px;margin-top:2.4px}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-logorow{gap:11.2px}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-naming.qz-wordmark-img{font-size:21.6px}
+  html.qz-accueil .qz-header.qz-menu-visible .qz-cat,
+  html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{font-size:11.6px;line-height:15.6px}
+}

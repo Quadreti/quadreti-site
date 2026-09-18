@@ -191,6 +191,14 @@ footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage 
    l orange : le bloc se lit alors sur trois rangs, nom en clair, baseline en blanc, categorie en couleur. */
 html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
 html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
+/* 18/09, fondateur : le bloc logo du pied reduit de 20 %, comme celui de l en-tete. Memes valeurs, meme raison :
+   c est le meme bloc, ecrit deux fois. Pas de borne mobile ici — la regle mobile du pied ne touche pas ces valeurs. */
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-plaque{ --t:52.8px; }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-wm-col{ height:52.8px; margin-top:2.4px; }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-logorow{ gap:11.2px; }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-naming.qz-wordmark-img{ font-size:21.6px; }
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche,
+html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ font-size:11.6px; line-height:15.6px; }
 /* 18/09, fondateur : « tesselle blanche habituelle, seulement la derniere en signature ». Le logo distingue deja
    .qz-b (les ordinaires, sur currentColor) de .qz-o (la SIGNATURE, derniere tesselle) — voir logo-v5.css. Seule la
    signature porte la couleur, et elle prend l orange de marque plutot que l accent en essai.
