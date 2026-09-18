@@ -187,3 +187,33 @@ html.qz-fond-sombre body.qz-guide-app .scene-tabs button.on{ color:#dedede !impo
 html.qz-fond-sombre body.qz-guide-app .hot.second{ background:#dedede !important; box-shadow:0 3px 10px rgba(0,0,0,.45) !important; }
 /* La signature du pied : l orange de marque ne vaut que 4,23 en petit texte sur le navy. Forme ECRITE. */
 html.qz-fond-sombre body.qz-guide-app footer.guide-foot .sig span{ color:#ff9147 !important; }
+
+/* ----- 18/09 : LE GUIDE DE CODIFICATION, repris. Je m etais trompe sur sa structure. -----
+   Je l avais lu comme une page claire portant des cartes. C est en realite une SUITE DE SECTIONS PLEINE LARGEUR
+   en clair. Passer le fond de page au navy n a donc rien fait : les sections sont restees blanches, et le texte,
+   lui, avait bascule en clair. Vingt et une familles illisibles.
+   Le partage est net, et deux regles suffisent a le poser : `section.ecran` et `header.hero` SONT la page, elles
+   passent au sombre. Tout le reste de ce qui est clair ici — le dos d un visuel, une pochette, une page d album,
+   une planche de reperage — EST le produit physique, en papier et en plastique. Ca reste clair, et ca ancre son
+   encre, exactement comme la feuille a imprimer des coloriages. */
+html.qz-fond-sombre body.qz-guide-produit section.ecran{ background:#1e2b35 !important; }
+html.qz-fond-sombre body.qz-guide-produit header.hero{ background:#33434f !important; }
+
+/* Ce qui est pose sur le PRODUIT garde son encre. */
+html.qz-fond-sombre body.qz-guide-produit .album-page,
+html.qz-fond-sombre body.qz-guide-produit .album-page *,
+html.qz-fond-sombre body.qz-guide-produit .onglet.actif{ color:#5a6672 !important; }
+html.qz-fond-sombre body.qz-guide-produit .album-page .page-titre b{ color:#10181f !important; }
+
+/* Ce qui etait ecrit en navy et se retrouve sur le navy. */
+html.qz-fond-sombre body.qz-guide-produit .decompo .bloc.b1 .big,
+html.qz-fond-sombre body.qz-guide-produit .gestes .geste .num,
+html.qz-fond-sombre body.qz-guide-produit .question .q-txt .code-c,
+html.qz-fond-sombre body.qz-guide-produit .onglets .onglet{ color:#dedede !important; }
+
+/* L orange de marque pose sur du CLAIR ne vaut que 2,54. Sur clair, l orange qui s ecrit est #9C4514 : 5,6. */
+html.qz-fond-sombre body.qz-guide-produit .visuel-verso .code-position,
+html.qz-fond-sombre body.qz-guide-produit .visuel-mini .t,
+html.qz-fond-sombre body.qz-guide-produit .mini-bn .mcell.mhit{ color:#9c4514 !important; }
+/* Sur du SOMBRE, c est l inverse : l orange de marque n y vaut que 4,23, il prend sa forme ecrite #ff9147. */
+html.qz-fond-sombre body.qz-guide-produit .bn-caption span.t{ color:#ff9147 !important; }
