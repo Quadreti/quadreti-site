@@ -13,7 +13,7 @@
     var voile = document.createElement('div');
     voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
     voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
-      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#E2725B;color:#fff;font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:#d96c2f;color:#10181f;font-weight:700;cursor:pointer;">Entrer</button></form>' +
       '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
     document.body.appendChild(voile);
     document.documentElement.style.visibility = 'visible';
@@ -42,7 +42,7 @@
      l interface, elles sont proposees au CLIENT dans le selecteur de police de ses propres textes (voir la liste plus bas). Les retirer
      aurait casse deux choix du selecteur en silence. -->
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-18z">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19a">
 <style>
   :root{ --charbon:#2B353E; --creme:#F2EEDF; --terracotta:#E2725B; --kraft:#CBBD93; --papier:#FBF8F1; --surface:#FFFFFF; --bord:#2b353e1c; --texte:#2B353E; --doux:#5c646c; --doux-sombre:#b9c0c7; --teinte-actif:#e2725b12;
     /* Palette rail/page (30/08, portee depuis Mosaique Creative -- meme
@@ -461,7 +461,7 @@
 <!-- 13/09, demande fondateur : cette app porte son propre logo dans la barre (initiale en tesselles, orange integree), sans accroche
      ni categorie, sur barre navy -- l inverse du site. A declarer AVANT commun-bandeau.js, qui ecrit au fil de la lecture. -->
 <script>window.qzApp = { lettre: 'C', nom: 'Canevas Quadreti', baseline: 'Posez. Composez. Exportez.' };</script>
-<script src="/commun-bandeau.js?v=2026-09-18z"></script>
+<script src="/commun-bandeau.js?v=2026-09-19a"></script>
 
 <!-- Bandeau titre/accroche retire (28/08, gain de place -- meme esprit que Mosaique
      Creative) : redondant avec le bandeau du site au-dessus, et l'acces au guide
@@ -707,8 +707,8 @@
   </div>
 </div>
 
-<script src="/commun-pied.js?v=2026-09-18z"></script>
-<script src="../reglages-site.js?v=2026-09-18z" defer></script>
+<script src="/commun-pied.js?v=2026-09-19a"></script>
+<script src="../reglages-site.js?v=2026-09-19a" defer></script>
 
 <script>
 (function(){
