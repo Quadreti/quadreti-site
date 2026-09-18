@@ -1350,7 +1350,16 @@
          La regle du site se stabilise ainsi : l orange de marque pour les surfaces et les traits, #ff9147 des qu il
          faut l ecrire. --- */
   .qb-gestes .qb-geste-changez h3, .qb-gestes .qb-geste-changez p{ color:#ff9147!important; }
-  body .qb-defile span{ color:#ff9147!important; }
+  /* 18/09, fondateur : le bandeau defilant repasse au GRIS. 10,75 sur le navy, contre 6,47 a l orange. */
+  body .qb-defile span{ color:#dedede!important; }
+
+  /* --- 18/09, fondateur : « Changez a volonte, et l icone et le texte, FIXES, aucune animation ». ---
+         Ni l un ni l autre n a d animation propre : ils sont MASQUES par la sequence d entree, qui les revele apres
+         coup. Le titre du hero est deja en mode « aucun » — pas une lettre ne bouge — c est la porte qui le retient.
+         On leve la porte pour ces deux-la, et pour eux seuls : le naming, la categorie, le menu, le paragraphe et les
+         boutons gardent leur entree. --- */
+  html.qb-attente .qb-b2{ opacity:1!important; animation:none!important; }
+  html.qb-attente-icones .qb-gestes-liste>li{ opacity:1!important; animation:none!important; }
 
   /* --- 18/09, fondateur : les icones des reseaux et la ligne de copyright. --- */
   /* Les icones sont des pastilles : une SURFACE, donc l orange de marque, avec l ENCRE dessus — regle de la charte
