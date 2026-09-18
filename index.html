@@ -884,7 +884,9 @@
      ce genre de calcul que la vraie largeur visible est publiee dans --qz-larg-ecran (100vw compte la barre). */
   .titre-carte.droite{
     margin:0 calc(-1 * (var(--qz-bord))) 20px auto;
-    padding:26px calc(var(--qz-bord)) 28px 100px;
+    /* Le miroir porte SON remplissage, il ne suit pas celui de la carte normale : la reduction doit donc etre ecrite
+       deux fois. Memes valeurs, cote inverse. Sans cela, six cartes sur treize seraient restees a 88 et 116 px. */
+    padding:14px calc(var(--qz-bord)) 16px 86px;
     border-radius:999px 0 0 999px;
     border-left:var(--qz-lisere-ep,3px) solid var(--qz-lisere,#d96c2f); border-right:none;
     text-align:right;
