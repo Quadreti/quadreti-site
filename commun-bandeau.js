@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-18n';
+var QZ_VER = '?v=2026-09-18p';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -250,10 +250,22 @@ window.qzEnteteInit = function(){
      et le tiroir lui-meme existe deja dans commun.css, sans media query. Retirer cette ligne ramene le menu en ligne. */
   /* 18/09 : le menu en BURGER sur tout le site. Un premier essai avait eclate la mise en page (toute la page a fond
      perdu deployee a 3250 px) ; la cause est cherchee ci-dessous, mesure de la largeur de page a l appui. */
-  /* 18/09 : le menu en BURGER sur tout le site. Deux essais avaient eclate la page ; la cause etait que trois calculs
-     du JS mesurent le menu pour dimensionner la barre et le bandeau. Ils sont debranches en mode burger, a la source.
-     Pour couper le mode : commenter la ligne ci-dessous. Tout le CSS reste alors en place et inerte. */
-  document.documentElement.classList.add('qz-burger');
+  /* 18/09 : le menu en BURGER. Le mode est ECRIT et sa cause d eclatement corrigee (trois calculs du JS mesuraient le
+     menu pour dimensionner la barre et le bandeau ; ils sont debranches a la source). Mais il reste ETEINT POUR LES
+     VISITEURS, et pour une raison qui n est pas technique : mon volet de verification ne rend pas cette page
+     correctement — il m a donne un `position:fixed; inset:0` quatre fois trop large et un body plus etroit que la
+     fenetre. J ai deja casse le site en production deux fois en me fiant a lui.
+     LE FONDATEUR L ALLUME DONC LUI-MEME, dans SON navigateur :
+        quadreti.fr/?burger=1   -> essai, memorise pour la session
+        quadreti.fr/?burger=0   -> retour au menu en ligne
+     Quand il aura confirme que c est propre chez lui, cette condition disparait et la classe se pose pour tout le
+     monde. Tant qu il n a pas confirme, un visiteur ne voit RIEN changer. */
+  try {
+    var demande = new URLSearchParams(location.search).get('burger');
+    if (demande === '1') sessionStorage.setItem('qzBurger', '1');
+    if (demande === '0') sessionStorage.removeItem('qzBurger');
+    if (sessionStorage.getItem('qzBurger') === '1') document.documentElement.classList.add('qz-burger');
+  } catch (e) { /* navigation privee stricte : pas d essai, pas de casse */ }
   var MARGE = 16, BLOC = 66, BARRE = 58;
   function caler(){
     var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
