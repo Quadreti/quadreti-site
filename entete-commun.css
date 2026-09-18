@@ -240,11 +240,19 @@
      porte deja position:relative et un z-index, le panneau suit donc la barre sans calcul de position en JS. */
   html.qz-burger .qz-header.qz-menu-visible .qz-navpanel{
     position:absolute!important; top:100%; right:0; left:auto; width:min(320px,90vw); margin:0;
-    max-height:0!important; overflow:hidden!important; background:#1e2b35!important;
+    /* PAS de max-height ici. Le tiroir mobile se replie par max-height parce qu il POUSSE la page et lui faut donc
+       une hauteur animable. Celui-ci est en position absolue AU-DESSUS de la page : il n a rien a pousser, et lui
+       imposer 640 px reviendrait a deviner d avance la hauteur du menu — et a le couper le jour ou il gagne une
+       rubrique. Il ouvre par `display`, sa hauteur reste `auto`, et l animation passe par l opacite et un glissement,
+       qui n ont pas besoin de connaitre cette hauteur. */
+    max-height:none!important; height:auto!important; overflow:visible!important; background:#1e2b35!important;
     border-radius:0 0 4px 4px; box-shadow:0 12px 30px rgba(0,0,0,.35); z-index:70;
-    transition:max-height .3s ease;
+    display:none; opacity:0; transform:translateY(-6px); transition:opacity .2s ease, transform .2s ease;
   }
-  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel.open{max-height:640px!important}
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel.open{display:block;opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html.qz-burger .qz-header.qz-menu-visible .qz-navpanel{transition:none}
+  }
   /* Les deux valeurs POSEES EN LIGNE par les scripts, pour le menu en ligne, et qui n ont plus d objet ici :
      - la barre reservait a droite la distance jusqu au bord du mur du hero, pour que la derniere rubrique tombe
        dessus (148 px a 1280). Le burger, lui, doit venir au bord.
