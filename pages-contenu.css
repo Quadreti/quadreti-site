@@ -174,3 +174,16 @@ html.qz-fond-sombre body.qz-guide-produit .decompo,
 html.qz-fond-sombre body.qz-guide-produit .lecture,
 html.qz-fond-sombre body.qz-guide-produit .legende,
 html.qz-fond-sombre body.qz-guide-produit .quiz{ color:var(--encre) !important; }
+
+/* ----- 18/09, mesure : quatre familles du guide de l app restaient ecrites pour un fond clair -----
+   Elles avaient toutes la meme cause : leur SURFACE a change (les panneaux blancs sont devenus navy 2), pas leur
+   texte. C est, pour la quatrieme fois aujourd hui, la meme lecon — changer un fond oblige a regarder tout ce qui
+   est pose dessus. */
+html.qz-fond-sombre body.qz-guide-app .mockbtn{ color:#dedede !important; }                    /* etait navy : 1,42 */
+html.qz-fond-sombre body.qz-guide-app .scene-tabs button{ color:#b6c0c8 !important; }          /* etait #6a727b : 2,09 */
+html.qz-fond-sombre body.qz-guide-app .scene-tabs button.on{ color:#dedede !important; }
+/* Les pastilles numerotees du SECOND reperage etaient navy a l encre — 1,24. Elles prennent la pastille grise du
+   site : 13,31. Les deux familles restent distinctes (orange = premier reperage, gris = second), et lisibles. */
+html.qz-fond-sombre body.qz-guide-app .hot.second{ background:#dedede !important; box-shadow:0 3px 10px rgba(0,0,0,.45) !important; }
+/* La signature du pied : l orange de marque ne vaut que 4,23 en petit texte sur le navy. Forme ECRITE. */
+html.qz-fond-sombre body.qz-guide-app footer.guide-foot .sig span{ color:#ff9147 !important; }
