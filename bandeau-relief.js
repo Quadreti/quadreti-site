@@ -280,9 +280,14 @@
     placerAccroche();
     if (!menu) { R.paddingTop = Math.round(root.offsetWidth * (droite ? .022 : .03)) + 'px'; return; }
     var col = root.querySelector('.qb-col'); var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
+    /* 18/09 : en mode BURGER, le menu n est plus une rangee de rubriques dans la barre. Les deux calages qui le
+       visent (bord droit cale sur le mur, centrage sur la ligne du naming) n ont plus d objet — et le premier est
+       dangereux : il pose sur la barre un remplissage tire du bord du mur, qui vaut n importe quoi tant que le mur
+       n est pas place, et emporte toute la page a fond perdu avec lui. */
+    var enBurger = document.documentElement.classList.contains('qz-burger');
     /* bord gauche du logo = bord gauche de la colonne de textes ; bord droit du menu = bord droit du mur (schema fondateur 11/09) */
     /* (11/09 soir : la marge gauche du logo n est plus calee sur la colonne mais sur MARGE, voir plus bas) */
-    menu.style.paddingRight = (droite && large && mur) ? Math.max(0, Math.round(document.documentElement.clientWidth - mur.getBoundingClientRect().right)) + 'px' : '';
+    menu.style.paddingRight = (droite && large && mur && !enBurger) ? Math.max(0, Math.round(document.documentElement.clientWidth - mur.getBoundingClientRect().right)) + 'px' : '';
     /* 11/09 fondateur : le bloc logo (Q 88 px + trois lignes) vit DANS le decroche de l onglet, avec la marge minimale utile (MARGE) a gauche,
        en haut et en bas. L onglet fait 1.291 x la barre (dessin ONGLET.svg) : la barre est donc forcee a (88 + 2 MARGE) / 1.291 de haut
        (environ 90 px), le bloc logo deborde de la barre dans la partie basse de l onglet, le menu reste centre dans la barre. */
@@ -292,7 +297,8 @@
       menu.style.height = BARRE + 'px'; R.setProperty('--onglet', (BLOC + 2 * MARGE) + 'px'); R.setProperty('--decroche-h', DECROCHE + 'px');
       if (logoRow) { logoRow.style.marginTop = MARGE + 'px'; logoRow.style.alignSelf = 'flex-start'; }
       /* finition (fondateur) : le menu sur la ligne du naming -> centre du menu = centre de la premiere ligne du bloc */
-      if (nav && naming) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
+      if (nav && naming && !enBurger) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
+      else if (nav && enBurger) { nav.style.alignSelf = ''; nav.style.marginTop = ''; }
     } else {
       menu.style.paddingTop = ''; menu.style.paddingBottom = ''; menu.style.paddingLeft = ''; menu.style.height = '';
       if (logoRow) { logoRow.style.marginTop = ''; logoRow.style.alignSelf = ''; }

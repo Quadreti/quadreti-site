@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-18m';
+var QZ_VER = '?v=2026-09-18n';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -250,10 +250,10 @@ window.qzEnteteInit = function(){
      et le tiroir lui-meme existe deja dans commun.css, sans media query. Retirer cette ligne ramene le menu en ligne. */
   /* 18/09 : le menu en BURGER sur tout le site. Un premier essai avait eclate la mise en page (toute la page a fond
      perdu deployee a 3250 px) ; la cause est cherchee ci-dessous, mesure de la largeur de page a l appui. */
-  /* 18/09 : MODE BURGER COUPE. Deuxieme essai, meme resultat : la page casse chez le fondateur alors qu elle
-     mesure propre chez moi. Mon volet de verification ne dit donc PAS la verite sur ce point, et je ne rallumerai pas
-     cette ligne sans une preuve venue de son navigateur a lui. Tout le CSS du mode reste en place et inerte.
-     document.documentElement.classList.add('qz-burger'); */
+  /* 18/09 : le menu en BURGER sur tout le site. Deux essais avaient eclate la page ; la cause etait que trois calculs
+     du JS mesurent le menu pour dimensionner la barre et le bandeau. Ils sont debranches en mode burger, a la source.
+     Pour couper le mode : commenter la ligne ci-dessous. Tout le CSS reste alors en place et inerte. */
+  document.documentElement.classList.add('qz-burger');
   var MARGE = 16, BLOC = 66, BARRE = 58;
   function caler(){
     var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
@@ -262,7 +262,10 @@ window.qzEnteteInit = function(){
     if (large) {
       menu.style.height = BARRE + 'px'; menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px'; menu.style.paddingLeft = MARGE + 'px';
       if (logoRow) { logoRow.style.marginTop = MARGE + 'px'; logoRow.style.alignSelf = 'flex-start'; }
-      if (nav && naming) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
+      /* 18/09 : pas de centrage du menu sur la ligne du naming en mode burger — le panneau n occupe plus de place,
+         la mesure ne veut plus rien dire. */
+      if (nav && naming && !document.documentElement.classList.contains('qz-burger')) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
+      else if (nav) { nav.style.alignSelf = ''; nav.style.marginTop = ''; }
     } else {
       menu.style.height = ''; menu.style.paddingTop = ''; menu.style.paddingBottom = ''; menu.style.paddingLeft = '';
       if (logoRow) { logoRow.style.marginTop = ''; logoRow.style.alignSelf = ''; }
