@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19q">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19r">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -155,20 +155,26 @@
   html body .btn-taille{ color:var(--creme); }                /* fond navy : 7,59 */
   html body .btn-taille.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
 
-     4. TOUT CE QUI VIT DANS UNE CARTE BLANCHE. C est le meme defaut que le 2, generalise : le panneau
-        recalcule --doux et --creme contre le fond de PAGE, devenu navy — ils en ressortent clairs. Tout ce
-        qui les porte a l interieur d une carte blanche devient donc invisible : les fleches de defilement
-        (1,85), les emplacements memoire vides (1,85), le gras des legendes (1,35).
-        La regle est toujours la meme : on mesure un texte contre LA SURFACE QUI EST DERRIERE LUI, pas contre
-        le fond de la page. */
+  /* ===== 18/09, suite : TOUT CE QUI VIT DANS UNE CARTE BLANCHE =====
+     Meme defaut que le 2, generalise : le panneau recalcule --doux et --creme contre le fond de PAGE, devenu
+     navy — ils en ressortent clairs, et tout ce qui les porte a l interieur d une carte blanche devient
+     invisible : les fleches de defilement (1,85), les emplacements memoire vides (1,85), le gras des
+     legendes (1,35). On mesure un texte contre LA SURFACE QUI EST DERRIERE LUI, pas contre le fond de page.
+     CETTE REGLE A ETE ECRITE DEUX FOIS. La premiere, le texte ci-dessus etait pose HORS COMMENTAIRE : le
+     parseur CSS s y est casse et a avale les regles qui suivaient. Une explication mal fermee ne fait pas
+     que gener la lecture — elle supprime du code. */
   html body .carte .fleche-scroll,
   html body .carte .memoire-vide{ color:#5a6672; border-color:#5a667255; }   /* 5,87 sur le blanc */
   html body .carte b{ color:#10181f; }                                       /* 13,31 */
-  html body .btn-jeu, html body .btn-motif{ color:var(--accent-texte); }     /* teinte orange sur blanc : 5,95 */
+  /* Ces boutons existent dans DEUX etats et sur DEUX fonds : au repos ils ont le fond navy de la page, une
+     fois choisis ils prennent une teinte orange sur le blanc de la carte. Ma premiere version les a tous
+     passes en orange fonce — juste pour l etat choisi, faux pour l autre (2,26). Deux fonds, deux valeurs. */
+  html body .btn-jeu, html body .btn-motif{ color:var(--creme); }            /* fond navy : 7,59 */
+  html body .btn-jeu.actif, html body .btn-motif.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19q"></script>
+<script src="/commun-bandeau.js?v=2026-09-19r"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -236,8 +242,8 @@
   </div>
 </section>
 
-<script src="/commun-pied.js?v=2026-09-19q"></script>
-<script src="../reglages-site.js?v=2026-09-19q" defer></script>
+<script src="/commun-pied.js?v=2026-09-19r"></script>
+<script src="../reglages-site.js?v=2026-09-19r" defer></script>
 
 <script>
 (function(){
