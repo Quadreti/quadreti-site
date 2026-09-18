@@ -1327,7 +1327,9 @@
   /* --- 18/09, fondateur : les decroches des BANDES passent eux aussi a l orange de marque. Elles ne suivent pas le
          meme jeton que l onglet et le pied : elles ont le leur, --lisere-couleur, pose element par element par
          bandeau-relief.js. On peint donc le trait directement, ce qui passe devant une variable posee en ligne. --- */
-  html.qz-accueil .qb-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f)!important; }
+  /* L epaisseur suit la meme reduction de 25 % que les autres liseres. Les bandes ne lisent pas --qz-lisere-ep :
+     elles ont --lisere-ep, pose element par element par le script. On ecrit donc le trait directement. */
+  html.qz-accueil .qb-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f)!important; stroke-width:2.25px!important; }
 
   /* --- 18/09, fondateur : « texte icone changez et texte du bandeau defilant egalement orange quadreti ».
          Ces trois textes sont PETITS — 14 px pour le titre, 11,5 px pour son texte et pour les mentions du bandeau.
@@ -1347,6 +1349,11 @@
   /* Le copyright fait 12 px : seuil 4,5, et l orange de marque n y vaudrait que 4,23. Il prend la forme ECRITE de
      l orange, #ff9147 : 6,47 sur le navy du pied. Meme arbitrage que pour le bandeau defilant. */
   body .qz-copy{ color:#ff9147!important; }
+
+  /* 18/09, fondateur : le point ACTIF du diaporama passe au gris. Les inactifs sont deja de ce gris, a 50 %
+     d opacite : la distinction tient donc desormais a l OPACITE seule, et non plus a l opacite ET a la couleur.
+     Un seul ecart a lire au lieu de deux, ce qui est plus juste pour une pastille de 9 px. */
+  html.qz-accueil .qb-diapo-point.qb-actif{ background:#dedede!important; }
 
   /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
          et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
@@ -1471,8 +1478,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-18a">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18a">
+<link rel="stylesheet" href="/commun.css?v=2026-09-18b">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18b">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1530,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <script src="/commun-bandeau.js"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18a">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18b">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">

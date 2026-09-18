@@ -206,7 +206,9 @@
   html.qz-accueil .qz-header.qz-menu-visible .qz-plaque.qz-wordmark-img{color:#dedede!important}
   /* La baseline : elle portait la variante FONCEE de l accent, calculee pour la barre grise — 1,33 ici, invisible. */
   html.qz-accueil .qz-header.qz-menu-visible .qz-cat{color:#ff9147!important}
-  /* 18/09, fondateur : « non, sous-menu kraft rendait bien ». Le tiroir GARDE donc l accent — c est son fond de
-     toujours. Ce qui n allait pas n etait pas sa couleur mais son texte, corrige plus haut : le blanc y valait 1,87,
-     l encre y vaut 9,59. Et sur l onglet devenu navy 2, un tiroir kraft se detache a 5,47. */
+  /* 18/09, fondateur : le tiroir passe au GRIS. Il avait ete kraft un temps ; sur l onglet navy il se detache
+     maintenant a 10,75 au lieu de 5,47, et son texte d encre y gagne aussi — 13,31 au lieu de 9,59.
+     Son cadre gris clair devient de la meme couleur que son fond : il ne dessine plus rien, mais il ne coute rien
+     non plus, et il redeviendra utile si le tiroir reprend une couleur un jour. */
+  html.qz-accueil .qz-header.qz-menu-visible .qz-sublist{background:#dedede!important}
 }
