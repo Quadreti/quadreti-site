@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- 18/09 : qz-fond-sombre = le theme sombre partage. Ecrite en dur : le fond d une page ne doit pas dependre
+     d un aller-retour reseau. -->
+<html lang="fr" class="qz-fond-sombre">
 <head>
 <meta charset="UTF-8">
 <!-- GARDE-ACCES-DEBUT -->
@@ -87,6 +89,39 @@
   --rayon-petit:8px;
 }
 
+/* ============================================================================
+   18/09 — LE THEME SOMBRE. La page etait deja batie sur des jetons de ROLE ; la basculer, ce n est donc pas
+   reecrire des regles, c est redefinir ces jetons. Toutes les valeurs sont mesurees.
+
+   UNE CHOSE QUE LE THEME CLAIR CACHAIT : --fond-page faisait DEUX metiers — le fond de la page, et une surface
+   EN CREUX posee dans une carte (l apercu d un import, la pastille ZIP, le code d un QR, le rail de la jauge).
+   En clair les deux sont gris, on ne voit pas le probleme. En sombre ils partent dans des directions OPPOSEES :
+   le fond de page descend au plus sombre, et un creux pose sur une carte doit au contraire REMONTER, sinon il
+   disparait dedans. Le role est donc separe en deux — c est la regle de la charte appliquee jusqu au bout :
+   nommer par le role, pas par la teinte.
+   ============================================================================ */
+html.qz-fond-sombre{
+  --navy2:#33434F;          /* la carte : 1,42 contre le fond — un panneau, pas une seconde surface lumineuse */
+  --orange-clair:#FF9147;   /* l orange ECRIT sur fond sombre. Meme teinte 24 deg, saturation poussee a 100 %.
+                               Sur un fond sombre on eclaircit en SATURANT, jamais en blanchissant. */
+  --gris-froid:#B6C0C8;     /* le secondaire : 5,53 sur la carte, 7,83 sur le fond. Une vraie hierarchie,
+                               les deux au-dessus du seuil. */
+
+  --fond-page:var(--navy);
+  --fond-surface:var(--navy2);
+  --fond-creux:var(--gris);              /* le creux REMONTE : gris clair, comme les pastilles de l accueil */
+  --texte-principal:var(--gris);         /* 10,75 sur le fond ; 7,59 sur une carte */
+  --texte-secondaire:var(--gris-froid);
+  --texte-sur-creux:var(--encre);                 /* 13,31 */
+  --texte-secondaire-sur-creux:#4F5A65;           /* 5,44 sur le gris — la valeur deja mesuree ici */
+  --texte-accent:var(--orange-clair);             /* 6,47 sur le fond ; 4,57 sur une carte */
+  --texte-accent-sur-creux:var(--orange-texte);   /* sur clair, l orange de marque ne passe pas : 5,6 */
+  --filet:#dedede26;
+  --filet-fort:#dedede4d;
+}
+/* Le panneau de controle ecrit sa feuille APRES celle de la page. A egalite on perd ; il faut etre PLUS PRECIS. */
+html.qz-fond-sombre body{ background:var(--fond-page) !important; color:var(--texte-principal) !important; }
+
 *{ box-sizing:border-box; }
 body{
   margin:0; background:var(--fond-page); color:var(--texte-principal);
@@ -121,7 +156,7 @@ button{ font:inherit; cursor:pointer; }
 .accueil{ margin-bottom:26px; }
 .accueil .ligne{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
 .accueil h1{ font-size:clamp(22px,3vw,27px); }
-.accueil p{ margin:8px 0 0; color:var(--texte-secondaire-sur-gris); font-size:15px; max-width:70ch; }   /* pose sur le gris de page, pas sur une carte */
+.accueil p{ margin:8px 0 0; color:var(--texte-secondaire); font-size:15px; max-width:70ch; }   /* pose sur le FOND DE PAGE, pas sur une carte : 7,83 */
 /* Le badge de forfait : orange plein, encre dessus. Jamais de blanc sur l orange — 3,42, ne passe pas. */
 .badge{
   background:var(--fond-accent); color:var(--texte-sur-accent);
@@ -157,13 +192,13 @@ button{ font:inherit; cursor:pointer; }
 .crea .apercu.qr{ background:var(--fond-barre); color:var(--texte-sur-barre); }
 .crea .apercu.mosaique{ background:var(--fond-accent); color:var(--texte-sur-accent); }
 .crea .apercu.photo{ background:#2f4150; color:var(--texte-sur-barre); }
-.crea .apercu.import{ background:var(--fond-page); color:var(--texte-secondaire-sur-gris); }   /* renommee : « depot » designait aussi le bouton, ma mesure portait sur le mauvais element */
+.crea .apercu.import{ background:var(--fond-creux); color:var(--texte-secondaire-sur-creux); }   /* renommee : « depot » designait aussi le bouton, ma mesure portait sur le mauvais element */
 .crea .legende{ padding:11px 12px 13px; }
 .crea .legende b{ display:block; font-size:13.5px; font-weight:600; }
 .crea .legende span{ display:block; margin-top:3px; font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--texte-secondaire); }
 .crea .zip{
   margin:0 12px 12px; padding:7px; border:none; border-radius:6px;
-  background:var(--fond-page); color:var(--texte-accent);
+  background:var(--fond-creux); color:var(--texte-accent-sur-creux);
   font-size:11px; font-weight:700;
 }
 .crea .zip:hover{ background:var(--fond-accent); color:var(--texte-sur-accent); }
@@ -187,7 +222,7 @@ td{ padding:12px 10px; border-bottom:1px solid var(--filet); font-size:13.5px; v
 tr:last-child td{ border-bottom:none; }
 td code{
   font-family:ui-monospace,monospace; font-size:12.5px;
-  background:var(--fond-page); padding:3px 8px; border-radius:6px;
+  background:var(--fond-creux); color:var(--texte-sur-creux); padding:3px 8px; border-radius:6px;
 }
 .scans{ color:var(--texte-secondaire); font-size:13px; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .mini{
@@ -198,7 +233,7 @@ td code{
 .note{ margin:14px 0 0; font-size:12.5px; color:var(--texte-secondaire); border-left:3px solid var(--fond-accent); padding-left:14px; }
 
 /* ===== Mon forfait ===== */
-.jauge{ height:9px; border-radius:6px; background:var(--fond-page); overflow:hidden; margin:12px 0 8px; }
+.jauge{ height:9px; border-radius:6px; background:var(--fond-creux); overflow:hidden; margin:12px 0 8px; }
 .jauge i{ display:block; height:100%; width:40%; background:var(--fond-accent); border-radius:6px; }
 .compteur{ font-size:13px; color:var(--texte-secondaire); font-variant-numeric:tabular-nums; }
 .cta{
