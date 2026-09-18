@@ -69,8 +69,11 @@
   button:disabled{ opacity:.5; cursor:default; }
   a{ color:#ff9147; font-weight:600; }   /* l orange ECRIT : 6,47 ; l orange de marque n y vaut que 4,23 */
   /* Le rouge d erreur etait un rouge SOMBRE, pense pour un fond clair : 1,5 sur le navy. Il est saturé vers le
-     clair, comme l orange — sur fond sombre on eclaircit en saturant. 7,21. */
-  #erreur{ background:#ff9d8e1f; border:1px solid #ff9d8e55; color:#ff9d8e; border-radius:9px; padding:10px 12px; font-size:13px; margin-top:14px; }
+     clair, comme l orange — sur fond sombre on eclaircit en saturant.
+     CORRIGE dans la foulee : j avais calcule sur le navy NU (7,21). Mais la boite se donne elle-meme un fond
+     teinte a 12 %, et c est SUR CE FOND COMPOSITE qu il faut mesurer — la vraie valeur etait 4,13, sous le seuil.
+     Un fond translucide n est pas un detail : il change ce que le texte a reellement derriere lui. 4,83. */
+  #erreur{ background:#ff9d8e1f; border:1px solid #ff9d8e55; color:#ffb3a6; border-radius:9px; padding:10px 12px; font-size:13px; margin-top:14px; }
   #ok{ background:#d96c2f1f; border:1px solid #d96c2f66; border-radius:9px; padding:14px; font-size:13.5px; }
   .cache{ display:none !important; }
 </style>
