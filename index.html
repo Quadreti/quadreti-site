@@ -1358,6 +1358,19 @@
      Un seul ecart a lire au lieu de deux, ce qui est plus juste pour une pastille de 9 px. */
   html.qz-accueil .qb-diapo-point.qb-actif{ background:#dedede!important; }
 
+  /* --- 18/09, fondateur : « tous les anciens kraft type bouton ou pastille enumeree repassent en gris ». ---
+         Sept familles, 39 elements. Toutes portent deja de l ENCRE, qui passe de 9,59 sur le kraft a 13,31 sur le
+         gris : aucun texte a recalculer, seuls les fonds changent.
+         Sur le fond de page les pastilles valent 10,75 ; celles posees sur une carte (.trust-ic) valent 7,59. --- */
+  body .num, body .diapo-puces label, body .trust-ic, body .face-lien,
+  body .cote.b, body .flag, body .qz-fab{ background:#dedede!important; border-color:#dedede!important; }
+  /* Le picto de la bulle de contact etait en BLANC, calibre pour le kraft — 1,00 sur le gris, il disparaitrait.
+     Il prend l encre, comme tous les autres pictos de pastille. */
+  body .qz-fab svg{ stroke:#10181f!important; color:#10181f!important; }
+  /* Le lisere de la colonne « le plus choisi » distingue une CARTE et non un bouton, mais il suivait le meme kraft.
+     En gris il vaut 7,59 contre sa carte, contre 5,47 au kraft : la colonne se marque mieux. */
+  .blk .offer.pop{ border-color:#dedede!important; }
+
   /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
          et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
          Celle qu on voit est la baseline ANIMEE du bandeau — une suite de lettres, `p.qb-li.qb-l1 > span.qb-mot >
