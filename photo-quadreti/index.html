@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- 18/09 : qz-fond-sombre = le theme sombre partage (onglet navy, lisere gris a 2 px, pied navy). -->
+<html lang="fr" class="qz-fond-sombre">
 <head>
 <!-- GARDE-ACCES-DEBUT -->
 <script>
@@ -64,7 +65,10 @@
   }
   *{ box-sizing:border-box; }
   @media (prefers-reduced-motion:reduce){ *,*::before,*::after{ animation-duration:.001ms!important; transition-duration:.001ms!important; } }
-  body{ margin:0; background:var(--gris); color:var(--texte); font-family:'Jura',sans-serif; font-size:16px; line-height:1.5; }
+  /* 18/09 : le PLAN DE TRAVAIL passe au navy, comme le fond du site. La PHOTO, elle, garde son fond clair :
+     c est le document. `html body` : le panneau ecrit sa feuille apres celle de la page. */
+  body{ margin:0; background:var(--marine); color:#dedede; font-family:'Jura',sans-serif; font-size:16px; line-height:1.5; }
+  html body{ background:var(--marine) !important; color:#dedede !important; }
   h1,h2,h3{ font-family:'Jura',sans-serif; margin:0; text-wrap:balance; }
   ::selection{ background:var(--terracotta); color:#fff; }
   :focus-visible{ outline:2.5px solid var(--charbon); outline-offset:2px; }
@@ -136,7 +140,7 @@
   .atelier{ margin:0; padding:0; }
   .rangee-atelier{
     display:grid; grid-template-columns:92px 1fr 64px; align-items:stretch; min-height:calc(100vh - 130px);
-    background:var(--gris);
+    background:var(--marine);
   }
   @media (max-width:760px){ .rangee-atelier{ grid-template-columns:76px 1fr 54px; } }
 
@@ -356,7 +360,7 @@
 </head>
 <!-- 13/09 : feuille commune du site. ELLE DOIT VENIR AVANT logo-v5.css, que commun-bandeau.js charge plus bas :
      les deux ont des regles de meme force sur le logo, et a egalite la derniere chargee gagne. -->
-<link rel="stylesheet" href="/commun.css?v=2026-09-19k">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19m">
 <style>
   /* 13/09 : sur le SITE, ces jetons sont poses a l execution par le panneau ; ici il n y a pas de panneau, et les valeurs par defaut
      de commun.css sont celles de la charte KRAFT abandonnee — la baseline sortait en #E2725B au lieu de l orange de marque.
@@ -371,7 +375,7 @@
 <!-- 14/09 : l app est servie depuis le site, elle prend donc les fichiers communs de la RACINE. Sa copie locale datait d hier et
      ignorait le pied gris, « Studio », la rubrique « Detente » et « Guide du Designer ». data-base disparait avec elle : il ne
      servait qu a prefixer les liens quand l app vivait hors du site. -->
-<script src="/commun-bandeau.js?v=2026-09-19k"></script>
+<script src="/commun-bandeau.js?v=2026-09-19m"></script>
 
 <!-- 13/09 : l intro a rejoint la colonne centrale (voir plus bas) ; en pleine largeur, elle coupait les rails. -->
 
@@ -2397,7 +2401,7 @@ zoneCanevas.addEventListener('scroll', () => {
 </script>
 
 <!-- 13/09 : pied commun du site, meme fichier que partout ailleurs. -->
-<script src="/commun-pied.js?v=2026-09-19k"></script>
+<script src="/commun-pied.js?v=2026-09-19m"></script>
 
 </body>
 </html>
