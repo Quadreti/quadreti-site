@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19u">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19v">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -204,8 +204,11 @@
   /* Liste etablie A LA MESURE, pas de memoire : .onglets-tranche, .bibliotheque, .zone-resultat et
      .panneau-jeu que j y avais mis sont TRANSPARENTS — ils laissent voir le navy de la page. Les y garder
      inversait le probleme au lieu de le regler : de l encre sur du navy, 1,24. */
+  /* .panneau et .cadre-canevas ne sont BLANCS que dans Pixel Number : ailleurs ils sont transparents et
+     laissent voir le navy. Un meme nom de classe ne porte pas le meme fond d une page a l autre — la liste
+     est donc etablie page par page, a la mesure. */
   html body .carte, html body .carte-taille, html body .carte-stat, html body .carte-legende,
-  html body .plateau-carte, html body .panneau, html body .cadre-canevas{
+  html body .plateau-carte{
     --doux:#5a6672;    /* 5,87 sur le blanc */
     --creme:#10181f;   /* l encre : 13,31 */
   }
@@ -220,7 +223,7 @@
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19u"></script>
+<script src="/commun-bandeau.js?v=2026-09-19v"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -319,8 +322,8 @@
   </div>
 </section>
 
-<script src="/commun-pied.js?v=2026-09-19u"></script>
-<script src="../reglages-site.js?v=2026-09-19u" defer></script>
+<script src="/commun-pied.js?v=2026-09-19v"></script>
+<script src="../reglages-site.js?v=2026-09-19v" defer></script>
 
 <script>
 (function(){
