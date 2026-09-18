@@ -1370,6 +1370,16 @@
   /* Le lisere de la colonne « le plus choisi » distingue une CARTE et non un bouton, mais il suivait le meme kraft.
      En gris il vaut 7,59 contre sa carte, contre 5,47 au kraft : la colonne se marque mieux. */
   .blk .offer.pop{ border-color:#dedede!important; }
+  /* Le badge « Le plus choisi » a resiste : le panneau le tient avec un selecteur de deux classes, plus fort que le
+     mien. Il faut donc etre plus specifique que lui, pas plus insistant — encore une fois. */
+  body .blk .offer .flag{ background:#dedede!important; }
+  /* ET UN DEFAUT QUE J AI CREE : les icones DANS les pastilles de « Commandez en confiance » sont tracees en kraft.
+     Tant que la pastille etait kraft, elles se lisaient par leur seul epaississement ; sur le gris elles tombent a
+     1,39. Le SVG n a pas de classe, on vise donc ses traces. Encre : 13,31.
+     Regle du jour, une fois de plus : changer un fond oblige a regarder ce qui est POSE dessus, pictos compris. */
+  body .trust-ic svg rect, body .trust-ic svg path, body .trust-ic svg circle, body .trust-ic svg line{
+    stroke:#10181f!important;
+  }
 
   /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
          et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
