@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-18k';
+var QZ_VER = '?v=2026-09-18m';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -250,7 +250,10 @@ window.qzEnteteInit = function(){
      et le tiroir lui-meme existe deja dans commun.css, sans media query. Retirer cette ligne ramene le menu en ligne. */
   /* 18/09 : le menu en BURGER sur tout le site. Un premier essai avait eclate la mise en page (toute la page a fond
      perdu deployee a 3250 px) ; la cause est cherchee ci-dessous, mesure de la largeur de page a l appui. */
-  document.documentElement.classList.add('qz-burger');
+  /* 18/09 : MODE BURGER COUPE. Deuxieme essai, meme resultat : la page casse chez le fondateur alors qu elle
+     mesure propre chez moi. Mon volet de verification ne dit donc PAS la verite sur ce point, et je ne rallumerai pas
+     cette ligne sans une preuve venue de son navigateur a lui. Tout le CSS du mode reste en place et inerte.
+     document.documentElement.classList.add('qz-burger'); */
   var MARGE = 16, BLOC = 66, BARRE = 58;
   function caler(){
     var large = window.matchMedia && window.matchMedia('(min-width:901px)').matches;
