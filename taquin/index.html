@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19r">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19s">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -149,10 +149,31 @@
      passes en orange fonce — juste pour l etat choisi, faux pour l autre (2,26). Deux fonds, deux valeurs. */
   html body .btn-jeu, html body .btn-motif{ color:var(--creme); }            /* fond navy : 7,59 */
   html body .btn-jeu.actif, html body .btn-motif.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
+
+  /* ===== 18/09 : LES DEUX GRIS, REDEFINIS SUR LES SURFACES CLAIRES =====
+     J ai d abord corrige classe par classe, et j en trouvais encore a chaque mesure. La cause est unique :
+     le panneau calcule --doux et --creme contre le fond de PAGE, devenu navy. Ils en sortent CLAIRS, ce qui
+     est juste sur la page et faux partout ou une carte blanche les reprend — 1,85.
+     Plutot que de nommer chaque descendant, on REDEFINIT les deux jetons SUR les conteneurs clairs. Tout ce
+     qui vit dedans suit, y compris ce que je n ai pas vu. Une variable se redefinit la ou le contexte change ;
+     c est exactement le cas ici, et c est plus sur qu une liste de classes qu il faut tenir a jour. */
+  html body .carte, html body .carte-taille, html body .carte-stat, html body .carte-legende,
+  html body .plateau-carte, html body .panneau, html body .cadre-canevas, html body .onglets-tranche,
+  html body .bibliotheque, html body .zone-resultat, html body .panneau-jeu{
+    --doux:#5a6672;    /* 5,87 sur le blanc */
+    --creme:#10181f;   /* l encre : 13,31 */
+  }
+
+  /* L orange ECRIT, par le fond qui est derriere lui. Les deux valeurs de la charte, jamais melangees. */
+  html body .btn-suggestion, html body .estimation-pont{ color:#ff9147; }   /* sur navy : 6,47 */
+  html body .valeur-curseur{ color:var(--accent-texte); }                   /* sur blanc : 5,95 */
+  html body .btn-style.actif{ color:var(--accent-texte); }
+  html body .btn-style{ color:var(--creme); }
+  html body .actions-resultat .btn{ color:#dedede; }                        /* etait le navy 2 sur le navy : 1,42 */
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19r"></script>
+<script src="/commun-bandeau.js?v=2026-09-19s"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -205,8 +226,8 @@
   </div>
 </section>
 
-<script src="/commun-pied.js?v=2026-09-19r"></script>
-<script src="../reglages-site.js?v=2026-09-19r" defer></script>
+<script src="/commun-pied.js?v=2026-09-19s"></script>
+<script src="../reglages-site.js?v=2026-09-19s" defer></script>
 
 <script>
 (function(){
