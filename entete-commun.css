@@ -226,3 +226,59 @@
   html.qz-accueil .qz-header.qz-menu-visible .qz-cat,
   html.qz-accueil .qz-header.qz-menu-visible .qz-accroche{font-size:11.6px;line-height:15.6px}
 }
+
+/* ================= 18/09, fondateur : LE MENU EN BURGER, SUR TOUT LE SITE (option B) =================
+   Le tiroir n est pas invente ici : commun.css le decrit deja, sans media query — panneau replie a max-height:0,
+   liste verticale, sous-menu en accordeon, burger et voile. C est le bloc `@media (min-width:901px)` plus haut qui
+   l ecrase pour en faire un menu en ligne. Ce bloc-ci rend le tiroir au-dessus de 900 px, et rien d autre.
+   Il est ecrit EN DERNIER : a specificite egale, c est le dernier ecrit qui gagne — la lecon de la journee.
+   POUR REVENIR AU MENU EN LIGNE : retirer la classe qz-burger dans commun-bandeau.js. Rien d autre a defaire. */
+@media (min-width:901px){
+  /* Le burger reapparait ; la barre reste logo a gauche, burger a droite (le space-between du bloc du haut). */
+  html.qz-burger .qz-header.qz-menu-visible .qz-burger{display:flex}
+  /* Le panneau quitte la ligne et se pose SOUS la barre, cale a droite. `position:absolute` et non `fixed` : la barre
+     porte deja position:relative et un z-index, le panneau suit donc la barre sans calcul de position en JS. */
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel{
+    position:absolute!important; top:100%; right:0; left:auto; width:min(320px,90vw); margin:0;
+    max-height:0!important; overflow:hidden!important; background:#1e2b35!important;
+    border-radius:0 0 4px 4px; box-shadow:0 12px 30px rgba(0,0,0,.35); z-index:70;
+    transition:max-height .3s ease;
+  }
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel.open{max-height:640px!important}
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:10px 14px 16px;gap:0}
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul>li{width:100%;max-width:none;text-align:left}
+  /* Les libelles reprennent la taille du tiroir. Les deux blocs « portable » plus haut les avaient descendus a 11,5 et
+     10 px pour les faire tenir sur une ligne : dans un tiroir vertical, cette contrainte n existe plus. */
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel a,
+  html.qz-burger .qz-header.qz-menu-visible .qz-subtoggle{
+    font-size:13.5px; letter-spacing:.04em; padding:10px 10px; width:100%; text-align:left; justify-content:flex-start;
+  }
+  /* Le sous-menu redevient un ACCORDEON dans le tiroir, au lieu d une carte flottante au survol. */
+  html.qz-burger .qz-header.qz-menu-visible .qz-hassub{position:static}
+  html.qz-burger .qz-header.qz-menu-visible .qz-sublist{
+    position:static; display:flex; flex-direction:column; min-width:0; max-height:0; overflow:hidden;
+    padding:0; border:none!important; box-shadow:none; border-radius:6px; animation:none!important;
+  }
+  html.qz-burger .qz-header.qz-menu-visible li.qz-hassub.open .qz-sublist{max-height:400px;margin:0 0 4px}
+  html.qz-burger .qz-header.qz-menu-visible .qz-sublist a{padding:8px 18px;font-size:12.5px}
+}
+/* Les couleurs du tiroir sur BUREAU. Hors accueil la barre est claire, mais le tiroir, lui, est navy : ses libelles
+   prennent donc le gris (10,75) et non le navy de la barre, qui y vaudrait 1,00. C est exactement le piege corrige le
+   14/09 sur le tiroir mobile, qui se reposerait ici si on ne l ecrivait pas. */
+@media (min-width:901px){
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,
+  html.qz-burger .qz-header.qz-menu-visible .qz-subtoggle{color:#dedede!important}
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
+  html.qz-burger .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#ff9147!important}
+  /* L accueil garde ses rubriques orange, decidees aujourd hui : 6,47 sur le navy du tiroir, la meme valeur que sur
+     l onglet. La seule chose qui change pour elles, c est leur decor. */
+  html.qz-burger.qz-accueil .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,
+  html.qz-burger.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle{color:#ff9147!important}
+  html.qz-burger.qz-accueil .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,
+  html.qz-burger.qz-accueil .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#ffa366!important}
+  /* Le sous-menu gris reste gris DANS le tiroir : 10,75 contre le navy du tiroir, encre dessus a 13,31. */
+  html.qz-burger .qz-header.qz-menu-visible .qz-sublist{background:#dedede!important}
+  html.qz-burger .qz-header.qz-menu-visible .qz-sublist a{color:#10181f!important}
+}
+/* ================= fin du mode burger ================= */
