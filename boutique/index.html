@@ -279,6 +279,13 @@
   html body #my-store-139886004 .grid-product__price,
   html body #my-store-139886004 .ec-price-item{ color:#dedede !important; }
 
+  /* SAUF les boutons de partage d Ecwid (Facebook, X, Pinterest) : ce sont des liens, mon orange les repeignait
+     — 2,96 sur leur propre bleu de marque. Ils gardent le blanc pour lequel ils sont dessines : 6,62.
+     Meme piege que sur l accueil : changer une couleur de LIEN oblige a regarder tous les liens, y compris ceux
+     qui ne ressemblent pas a des liens. */
+  html body #my-store-139886004 .ec-likely__button,
+  html body #my-store-139886004 .ec-likely__button *{ color:#ffffff !important; }
+
   /* Les liens poses sur le navy prennent l orange ECRIT #ff9147 (6,47), pas l orange de marque (4,23). */
   html body main.shop a{ color:#ff9147 !important; }
 
