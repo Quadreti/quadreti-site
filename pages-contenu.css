@@ -93,3 +93,23 @@ html.qz-fond-sombre body .carte-autre img{ border-color:var(--qzc-filet) !import
    Elle est blanche a l encre parce qu elle finit sur du PAPIER. Sa legende, sa grille, son en-tete et sa baseline
    vivent dedans et gardent leurs couleurs d origine. Aucune regle de cette feuille ne la vise ; cette ligne est la
    pour l affirmer, pas pour corriger quoi que ce soit. */
+
+/* ===== 18/09, rattrapage : LA FEUILLE ANCRE SON PROPRE TEXTE =====
+   J ai ecrit plus haut qu aucune regle ne visait la feuille a imprimer, et c etait vrai — mais faux en pratique.
+   Elle ne fixait que son FOND blanc ; sa legende, son titre et ses numeros HERITAIENT la couleur du corps de page,
+   que je venais de passer en gris clair. Resultat : gris sur blanc, 1,35, dans la partie qui finit sur du papier.
+   La lecon est celle de l accueil, prise par l autre bout : changer une couleur de TEXTE oblige a regarder toutes
+   les surfaces qui l heritent. Une surface qui garde son fond doit aussi ancrer son encre. */
+html.qz-fond-sombre body .page-imprimable,
+html.qz-fond-sombre body .page-imprimable h2,
+html.qz-fond-sombre body .page-imprimable .nom,
+html.qz-fond-sombre body .page-imprimable .num,
+html.qz-fond-sombre body .page-imprimable .titre-grand-c,
+html.qz-fond-sombre body .page-imprimable .wordmark-c{ color:#10181f !important; }
+
+/* Deux valeurs de la feuille imprimee etaient DEJA sous le seuil avant aujourd hui, et elles s impriment :
+   la baseline portait la terracotta morte (3,09 sur blanc) et l adresse un gris trop clair (3,15). Elles passent
+   aux valeurs de la charte — l orange ECRIT sur fond clair, et un gris qui tient. Cela change ce qui sort de
+   l imprimante, en mieux. */
+html.qz-fond-sombre body .page-imprimable .baseline-c{ color:#9c4514 !important; }   /* 5,6 sur blanc */
+html.qz-fond-sombre body .page-imprimable .url-c{ color:#5a6672 !important; }        /* 5,87 sur blanc */
