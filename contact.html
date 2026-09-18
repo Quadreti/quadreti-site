@@ -106,6 +106,9 @@
   /* --- Le formulaire : une carte, comme les autres. --- */
   body .c-form-compact{ background:#33434f!important; border:1px solid #33434f!important; border-radius:6px!important; }
   body .c-field label{ color:#dedede!important; }
+  /* Le texte d aide sous le champ de fichier est un <p> SANS CLASSE : il gardait l encre que le panneau pose sur les
+     paragraphes, soit 1,42 sur la carte — invisible. Un texte sans classe reste un texte : il se rattache. 7,59. */
+  body .c-form-compact p{ color:#dedede!important; }
   /* Les CHAMPS restent clairs, et c est deliberé : un champ est fait pour etre rempli, il doit se lire comme une
      surface ou l on ecrit. Fonce sur une carte foncee, il se confondrait avec elle. Encre dessus : 13,31. */
   body .c-field input, body .c-field select, body .c-field textarea{ background:#dedede!important; border:1.5px solid #dedede!important; color:#10181f!important; }
