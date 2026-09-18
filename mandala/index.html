@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19s">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19t">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -196,8 +196,14 @@
   /* Ces boutons existent dans DEUX etats et sur DEUX fonds : au repos ils ont le fond navy de la page, une
      fois choisis ils prennent une teinte orange sur le blanc de la carte. Ma premiere version les a tous
      passes en orange fonce — juste pour l etat choisi, faux pour l autre (2,26). Deux fonds, deux valeurs. */
-  html body .btn-jeu, html body .btn-motif{ color:var(--creme); }            /* fond navy : 7,59 */
-  html body .btn-jeu.actif, html body .btn-motif.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
+  /* Ces boutons vivent DANS une carte claire mais gardent leur PROPRE fond navy — sauf une fois choisis, ou
+     ils prennent une teinte orange sur le blanc. Ils ne peuvent donc pas suivre --creme, qui vaut l encre a
+     l interieur de la carte : leur valeur est ecrite en clair. Deux fonds, deux valeurs, une fois de plus. */
+  html body .btn-jeu, html body .btn-motif, html body .btn-style, html body .btn-taille,
+  html body .btn-cloud, html body .onglet-tranche{ color:#dedede; }                    /* fond navy : 10,75 */
+  html body .btn-jeu.actif, html body .btn-motif.actif, html body .btn-style.actif,
+  html body .btn-taille.actif, html body .onglet-tranche.actif{ color:var(--accent-texte); }  /* fond clair : 5,95 */
+  html body .eyebrow{ color:#ff9147 !important; }   /* certains surtitres sont peints par le panneau */
 
   /* ===== 18/09 : LES DEUX GRIS, REDEFINIS SUR LES SURFACES CLAIRES =====
      J ai d abord corrige classe par classe, et j en trouvais encore a chaque mesure. La cause est unique :
@@ -206,9 +212,11 @@
      Plutot que de nommer chaque descendant, on REDEFINIT les deux jetons SUR les conteneurs clairs. Tout ce
      qui vit dedans suit, y compris ce que je n ai pas vu. Une variable se redefinit la ou le contexte change ;
      c est exactement le cas ici, et c est plus sur qu une liste de classes qu il faut tenir a jour. */
+  /* Liste etablie A LA MESURE, pas de memoire : .onglets-tranche, .bibliotheque, .zone-resultat et
+     .panneau-jeu que j y avais mis sont TRANSPARENTS — ils laissent voir le navy de la page. Les y garder
+     inversait le probleme au lieu de le regler : de l encre sur du navy, 1,24. */
   html body .carte, html body .carte-taille, html body .carte-stat, html body .carte-legende,
-  html body .plateau-carte, html body .panneau, html body .cadre-canevas, html body .onglets-tranche,
-  html body .bibliotheque, html body .zone-resultat, html body .panneau-jeu{
+  html body .plateau-carte, html body .panneau, html body .cadre-canevas{
     --doux:#5a6672;    /* 5,87 sur le blanc */
     --creme:#10181f;   /* l encre : 13,31 */
   }
@@ -222,7 +230,7 @@
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19s"></script>
+<script src="/commun-bandeau.js?v=2026-09-19t"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -318,8 +326,8 @@
 
 <div id="zoneImpression"></div>
 
-<script src="/commun-pied.js?v=2026-09-19s"></script>
-<script src="../reglages-site.js?v=2026-09-19s" defer></script>
+<script src="/commun-pied.js?v=2026-09-19t"></script>
+<script src="../reglages-site.js?v=2026-09-19t" defer></script>
 
 <script>
 (function(){
