@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-18r';
+var QZ_VER = '?v=2026-09-18s';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -284,6 +284,29 @@ window.qzEnteteInit = function(){
       if (nav) { nav.style.alignSelf = ''; nav.style.marginTop = ''; }
     }
   }
+  /* 18/09, fondateur : en mode tiroir, « Mon Espace » reste DANS LA BARRE, a cote du burger. C est une porte, pas une
+     rubrique. Impossible en CSS — le tiroir est en display:none ferme, ses enfants ne peuvent pas ressortir — donc on
+     sort le lien du DOM du tiroir.
+     L extraction se rejoue a chaque changement de la liste : reglages-site.js reconstruit `#qzNavPanel > ul` par
+     innerHTML depuis la base, et le lien reviendrait dans le tiroir sans cela. Les doublons sont supprimes. */
+  function sortirMonEspace(){
+    if (!document.documentElement.classList.contains('qz-menu-tiroir')) return;
+    var barre = menu.querySelector('.qz-burger'); if (!barre) return;
+    var dehors = menu.querySelector('a.qz-espace-barre');
+    var dedans = menu.querySelectorAll('.qz-navpanel a[href$="/mon-espace/"]');
+    for (var i = 0; i < dedans.length; i++){
+      var a = dedans[i], li = a.closest('li');
+      if (dehors) { if (li) li.remove(); else a.remove(); continue; }   /* deja sorti : on retire le doublon */
+      a.className = (a.className ? a.className + ' ' : '') + 'qz-espace-barre';
+      menu.insertBefore(a, barre);
+      if (li) li.remove();
+      dehors = a;
+    }
+  }
+  sortirMonEspace();
+  var liste = nav && nav.querySelector('ul');
+  if (liste && window.MutationObserver) new MutationObserver(sortirMonEspace).observe(liste, { childList: true });
+
   caler(); window.addEventListener('resize', caler); window.addEventListener('load', caler); setTimeout(caler, 1500);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(caler);
 };
