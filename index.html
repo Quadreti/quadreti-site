@@ -1271,9 +1271,11 @@
   .blk .mode, .blk .gift, .blk .trust-card, .blk .offer, .blk .premium, .blk .color-note, .blk .note-navy, #app .face{
     background:#33434f!important; border-color:#33434f!important;
   }
-  /* 18/09, fondateur : « carte titre en kraft ». Elle quitte le groupe des cartes claires. Contre le navy de la page
-     elle vaut 7,74 — elle se detache seule, son lisere n a plus rien a ajouter puisqu il est de la meme teinte. */
-  .blk .titre-carte{ background:var(--qz-terracotta,#CBBD93)!important; border-color:var(--qz-terracotta,#CBBD93)!important; }
+  /* 18/09, fondateur : la carte de titre rebascule au GRIS. Elle avait ete kraft une journee ; contre le navy elle
+     passe de 7,74 a 10,75. Son lisere reste de la couleur de la carte : il ne dessine rien, et n a rien a dessiner
+     — une carte a 10,75 se detache seule. Ses textes ne bougent pas : titre et surtitre sont en encre, qui vaut
+     10,75 sur ce gris comme elle valait 7,74 sur le kraft. */
+  .blk .titre-carte{ background:#dedede!important; border-color:#dedede!important; }
   /* Les deux listes d encre (celle de l essai d origine et celle du rattrapage) fusionnent ici en une seule paire.
      Une seule carte reste CLAIRE : celle du titre, en kraft. Son titre garde donc l encre (7,74). */
   .blk .titre-carte h2{ color:#1e2b35!important; }
@@ -1329,7 +1331,7 @@
          bandeau-relief.js. On peint donc le trait directement, ce qui passe devant une variable posee en ligne. --- */
   /* L epaisseur suit la meme reduction de 25 % que les autres liseres. Les bandes ne lisent pas --qz-lisere-ep :
      elles ont --lisere-ep, pose element par element par le script. On ecrit donc le trait directement. */
-  html.qz-accueil .qb-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f)!important; stroke-width:2.25px!important; }
+  html.qz-accueil .qb-bord-trait{ stroke:#dedede!important; stroke-width:2.25px!important; }
 
   /* --- 18/09, fondateur : « texte icone changez et texte du bandeau defilant egalement orange quadreti ».
          Ces trois textes sont PETITS — 14 px pour le titre, 11,5 px pour son texte et pour les mentions du bandeau.
@@ -1445,7 +1447,7 @@
   /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
      qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
   .finale-bord-fond{ fill:#1e2b35; }   /* la marche porte la matiere de sa section */
-  .finale-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f); }   /* 4,23 sur le navy : un trait, seuil 3,0 */
+  .finale-bord-trait{ stroke:#dedede; }   /* 10,75 sur le navy */
   /* La marche du PIED prolonge desormais cette bande grise. Elle peint le navy SOUS sa ligne et laisse le dessus
      transparent : c etait le navy de la page, donc invisible. La cloture etant passee au gris, ce dessus doit l etre
      aussi — sans quoi la ligne kraft flotte dans le navy, seule, au lieu de border une matiere. Constate par le
@@ -1478,8 +1480,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-18b">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18b">
+<link rel="stylesheet" href="/commun.css?v=2026-09-18c">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-18c">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1539,9 +1541,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-18b"></script>
+<script src="/commun-bandeau.js?v=2026-09-18c"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18b">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18c">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1748,7 +1750,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-18b" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-18c" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2203,7 +2205,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-18b"></script>
+<script src="/commun-pied.js?v=2026-09-18c"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2581,7 +2583,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-18b"></script>
-<script src="/bandeau-gestes.js?v=2026-09-18b"></script>
+<script src="/bandeau-relief.js?v=2026-09-18c"></script>
+<script src="/bandeau-gestes.js?v=2026-09-18c"></script>
 </body>
 </html>
