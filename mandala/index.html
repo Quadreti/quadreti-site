@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19n">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19p">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -167,10 +167,24 @@
     .imp-qr{ width:20mm; height:20mm; border:1.3px dashed #6b6355; border-radius:2mm; display:flex; align-items:center; justify-content:center; font-size:7px; color:#6b6355; text-align:center; }
     @page{ margin:14mm; }
   }
+
+  /* ===== 18/09 : les trois contrastes de la bascule en sombre =====
+     1. Le SURTITRE. Le panneau lui pose #9C4514, l orange qui s ecrit sur du CLAIR. Sur le navy il ne vaut
+        plus que 2,26. Sur du sombre, l orange qui s ecrit est #FF9147 — meme teinte, saturation poussee a
+        100 % : sur un fond sombre on eclaircit en SATURANT, jamais en blanchissant. 6,47.
+     2. L ONGLET INACTIF et les boutons poses sur une CARTE BLANCHE. Leur gris a ete recalcule contre le fond
+        de PAGE, devenu navy — il en est ressorti clair, et donc invisible sur le blanc de la carte. 1,85.
+        Deux fonds, deux calculs : c est la regle que le panneau applique deja pour les libelles de carte.
+     3. Le bouton de TAILLE actif : l orange de marque ecrit sur une carte claire ne vaut que 3,1. */
+  html body .eyebrow{ color:#ff9147; }
+  html body .onglet-mode{ color:#5a6672; }                    /* 5,87 sur la carte blanche */
+  html body .onglet-mode.actif{ color:var(--creme); }         /* celui-la est sur du navy 2 : 7,59 */
+  html body .btn-taille{ color:var(--creme); }                /* fond navy : 7,59 */
+  html body .btn-taille.actif{ color:var(--accent-texte); }   /* fond clair : 5,95 */
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19n"></script>
+<script src="/commun-bandeau.js?v=2026-09-19p"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -266,8 +280,8 @@
 
 <div id="zoneImpression"></div>
 
-<script src="/commun-pied.js?v=2026-09-19n"></script>
-<script src="../reglages-site.js?v=2026-09-19n" defer></script>
+<script src="/commun-pied.js?v=2026-09-19p"></script>
+<script src="../reglages-site.js?v=2026-09-19p" defer></script>
 
 <script>
 (function(){
