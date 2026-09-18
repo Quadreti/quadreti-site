@@ -146,7 +146,7 @@ footer.qz-footer{
    changement d accent. C est une couleur choisie, pas un derive. Valeur de la charte. */
 :root{--qz-orange-marque:#d96c2f;--qz-reflet:var(--qz-orange-marque);--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:var(--qz-terracotta-texte,#9c4514);--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:22px}
 /* 15/09, fondateur : le pied passe au NAVY, mais sur l ACCUEIL SEULEMENT. Ailleurs il reste gris — la decision du 14/09
-   « pour tous les bas de page » tient partout ailleurs. La page d accueil porte deja html.qz-accueil (pose par
+   « pour tous les bas de page » tient partout ailleurs. La page d accueil porte deja html.qz-fond-sombre (pose par
    qzEnteteInit) : trois jetons suffisent a basculer la feuille, le panneau recalcule le reste de son cote.
    L orange en TEXTE change avec le fond : #9c4514 est fait pour le gris (4,77) et ne vaut que 2,3 sur le navy ; #e89a63
    y donne 6,36. */
@@ -155,7 +155,7 @@ footer.qz-footer{
    Les bandes ont leur propre jeton (--lisere-couleur, bandeau-relief.css), traite dans index.html. */
 /* 18/09, fondateur : « lisere -25 % » puis « meme epaisseur que celle de l image ». De 3 px a 2,25, puis a 2 — le cadre de la photo du hero (.qb-diapo) fait 2 px, les decroches le suivent exactement. Ce jeton porte l onglet, la marche du pied et celle de la
    cloture ; les BANDES ont le leur (--lisere-ep), traite dans index.html. */
-html.qz-accueil{--qz-lisere-ep:2px;--qz-lisere:#dedede;--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
+html.qz-fond-sombre{--qz-lisere-ep:2px;--qz-lisere:#dedede;--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
 .qz-pied3{
   width:100%; box-sizing:border-box;
   padding:30px 36px 38px;
@@ -194,22 +194,22 @@ footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage 
 /* 18/09, fondateur : « baseline logo en blanc ». La baseline du pied est la MEME que celle de l en-tete — c est le
    meme bloc de logo. Elle prend donc le blanc elle aussi (14,46 sur le navy du pied), et la CATEGORIE garde
    l orange : le bloc se lit alors sur trois rangs, nom en clair, baseline en blanc, categorie en couleur. */
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
 /* 18/09, fondateur : le bloc logo du pied reduit de 20 %, comme celui de l en-tete. Memes valeurs, meme raison :
    c est le meme bloc, ecrit deux fois. Pas de borne mobile ici — la regle mobile du pied ne touche pas ces valeurs. */
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-plaque{ --t:52.8px; }
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-wm-col{ height:52.8px; margin-top:2.4px; }
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-logorow{ gap:11.2px; }
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-naming.qz-wordmark-img{ font-size:21.6px; }
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-pied-accroche,
-html.qz-accueil footer.qz-footer .qz-basdepage .qz-cat{ font-size:11.6px; line-height:15.6px; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-plaque{ --t:52.8px; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-wm-col{ height:52.8px; margin-top:2.4px; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-logorow{ gap:11.2px; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-naming.qz-wordmark-img{ font-size:21.6px; }
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-pied-accroche,
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-cat{ font-size:11.6px; line-height:15.6px; }
 /* 18/09, fondateur : « tesselle blanche habituelle, seulement la derniere en signature ». Le logo distingue deja
    .qz-b (les ordinaires, sur currentColor) de .qz-o (la SIGNATURE, derniere tesselle) — voir logo-v5.css. Seule la
    signature porte la couleur, et elle prend l orange de marque plutot que l accent en essai.
    Une seule regle pour l en-tete ET le pied : c est le meme logo, il n a pas a etre decrit deux fois.
    2,98 sur la barre, 4,23 sur le pied — c est une seule tesselle, une marque et non une information. */
-html.qz-accueil .qz-case.qz-o .qz-tuile{ --c:var(--qz-orange-marque,#d96c2f); }
+html.qz-fond-sombre .qz-case.qz-o .qz-tuile{ --c:var(--qz-orange-marque,#d96c2f); }
 .qz-basdepage .qz-cat{ display:inline-block; width:auto; opacity:1; animation:none; overflow:visible; font-family:'Jura',sans-serif!important; font-weight:700; font-size:14.5px; line-height:19.5px; letter-spacing:.02em!important; text-transform:none; color:var(--qz-pied-orange-texte); margin:0; white-space:nowrap; } /* 13/09 : sur gris, l orange de marque ne donne que 2,9 de contraste — c est sa version foncee qui s ecrit */
 /* titres de colonnes : capitales Jura, sans tesselle */
 .qz-coltitre{
