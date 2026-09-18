@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-19i';
+var QZ_VER = '?v=2026-09-19j';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -65,7 +65,9 @@ var QZ_TRACE = {
   R: ['0,3','0,2','0,1','0,0','1,0']
 };
 var qzApp = (window.qzApp && QZ_ALPHABET[window.qzApp.lettre]) ? window.qzApp : null;
-if (qzApp) document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-app.css">');
+/* 18/09 : cette feuille etait la SEULE des trois a etre ecrite SANS numero de version. Les cinq apps
+   servaient donc un entete-app.css fige en cache, et un correctif pose ici n arrivait jamais en ligne. */
+if (qzApp) document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-app.css' + QZ_VER + '">');
 function qzPlaqueLettre(lettre){
   var g = QZ_ALPHABET[lettre], n = g[0].length, h = '', y, x, c;
   /* on rogne les colonnes de droite entierement vides : le C et le P sont dessines dans une boite de quatre colonnes dont la

@@ -44,7 +44,7 @@
      l interface, elles sont proposees au CLIENT dans le selecteur de police de ses propres textes (voir la liste plus bas). Les retirer
      aurait casse deux choix du selecteur en silence. -->
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19i">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19j">
 <style>
   /* 18/09 : les cinq jetons morts de la charte prennent leurs valeurs du site. Les NOMS ne changent pas —
      les renommer par leur role toucherait quarante regles pour zero gain visible, et cette app tourne.
@@ -138,8 +138,8 @@
   }
   .rail-gauche .icone-outil:hover{ background:var(--rail-survol); opacity:1; }
   .rail-gauche .icone-outil:hover .etiquette{ color:var(--blanc); }
-  .rail-gauche .icone-outil.actif{ background:var(--rail-survol); color:var(--brule); outline:none; }
-  .rail-gauche .icone-outil.actif .etiquette{ color:var(--brule); }
+  .rail-gauche .icone-outil.actif{ background:var(--rail-survol); color:#ff9147   /* 18/09 : l orange de marque sur le rail navy ne vaut que 3,42 pour une etiquette de 10 px ; sa forme ecrite y donne 6,0 */; outline:none; }
+  .rail-gauche .icone-outil.actif .etiquette{ color:#ff9147   /* 18/09 : l orange de marque sur le rail navy ne vaut que 3,42 pour une etiquette de 10 px ; sa forme ecrite y donne 6,0 */; }
   @media (max-width:760px){
     .rail-gauche .icone-outil{ padding:7px 2px 6px; }
     .rail-gauche .icone-outil svg{ width:17px; height:17px; }
@@ -185,7 +185,7 @@
     width:30px; height:30px; border-radius:8px; border:none; background:transparent; color:var(--blanc);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
-  .icone-mini:hover{ background:var(--rail-survol); color:var(--brule); }
+  .icone-mini:hover{ background:var(--rail-survol); color:#ff9147   /* 18/09 : l orange de marque sur le rail navy ne vaut que 3,42 pour une etiquette de 10 px ; sa forme ecrite y donne 6,0 */; }
   .icone-mini svg{ width:15px; height:15px; }
   .valeur-zoom{ font-family:'Jura',sans-serif; font-weight:700; font-size:10px; color:var(--doux-sombre); }
 
@@ -479,7 +479,7 @@
 <!-- 13/09, demande fondateur : cette app porte son propre logo dans la barre (initiale en tesselles, orange integree), sans accroche
      ni categorie, sur barre navy -- l inverse du site. A declarer AVANT commun-bandeau.js, qui ecrit au fil de la lecture. -->
 <script>window.qzApp = { lettre: 'C', nom: 'Canevas Quadreti', baseline: 'Posez. Composez. Exportez.' };</script>
-<script src="/commun-bandeau.js?v=2026-09-19i"></script>
+<script src="/commun-bandeau.js?v=2026-09-19j"></script>
 
 <!-- Bandeau titre/accroche retire (28/08, gain de place -- meme esprit que Mosaique
      Creative) : redondant avec le bandeau du site au-dessus, et l'acces au guide
@@ -725,8 +725,8 @@
   </div>
 </div>
 
-<script src="/commun-pied.js?v=2026-09-19i"></script>
-<script src="../reglages-site.js?v=2026-09-19i" defer></script>
+<script src="/commun-pied.js?v=2026-09-19j"></script>
+<script src="../reglages-site.js?v=2026-09-19j" defer></script>
 
 <script>
 (function(){
