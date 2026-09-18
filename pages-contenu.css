@@ -217,3 +217,19 @@ html.qz-fond-sombre body.qz-guide-produit .visuel-mini .t,
 html.qz-fond-sombre body.qz-guide-produit .mini-bn .mcell.mhit{ color:#9c4514 !important; }
 /* Sur du SOMBRE, c est l inverse : l orange de marque n y vaut que 4,23, il prend sa forme ecrite #ff9147. */
 html.qz-fond-sombre body.qz-guide-produit .bn-caption span.t{ color:#ff9147 !important; }
+
+/* ----- 18/09, deuxieme passe : sept familles encore ecrites en navy, desormais posees sur du navy.
+   Toutes sont des LEGENDES de schema (le tag de section, les reperes A1/B2 de la planche, les axes du mur,
+   la lettre de lecture). Elles accompagnent le produit mais ne sont pas dessus : elles sont sur la page. */
+html.qz-fond-sombre body.qz-guide-produit .ecran-tag,
+html.qz-fond-sombre body.qz-guide-produit .bn .lbl,
+html.qz-fond-sombre body.qz-guide-produit .bn-caption b,
+html.qz-fond-sombre body.qz-guide-produit .mur-detail .axe,
+html.qz-fond-sombre body.qz-guide-produit .lecture .lc{ color:#dedede !important; }
+
+/* L onglet ACTIF, lui, a un fond clair : son texte redescend a l encre. Ecrit APRES la regle des onglets, et
+   plus precis qu elle — sinon la regle generale, posee plus haut, le repeindrait en clair. */
+html.qz-fond-sombre body.qz-guide-produit .onglets .onglet.actif{ color:#10181f !important; }
+
+/* Le point du dos de visuel est une marque IMPRIMEE sur du papier clair : il reste sombre. */
+html.qz-fond-sombre body.qz-guide-produit .visuel-verso .dot{ background:#10181f !important; color:#10181f !important; }
