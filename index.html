@@ -1535,7 +1535,11 @@ document.addEventListener('DOMContentLoaded', function(){
 ============================================================ -->
 
 <!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-bandeau.js"></script>
+<!-- 18/09 : les scripts communs portent le meme numero de version que les feuilles. Sans cela, versionner les
+     feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
+     restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
+     la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
+<script src="/commun-bandeau.js?v=2026-09-18b"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 <link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-18b">
 
@@ -1744,7 +1748,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-18b" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2199,7 +2203,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js"></script>
+<script src="/commun-pied.js?v=2026-09-18b"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2577,7 +2581,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js"></script>
-<script src="/bandeau-gestes.js"></script>
+<script src="/bandeau-relief.js?v=2026-09-18b"></script>
+<script src="/bandeau-gestes.js?v=2026-09-18b"></script>
 </body>
 </html>
