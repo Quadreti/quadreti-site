@@ -245,6 +245,12 @@
     transition:max-height .3s ease;
   }
   html.qz-burger .qz-header.qz-menu-visible .qz-navpanel.open{max-height:640px!important}
+  /* Les deux valeurs POSEES EN LIGNE par les scripts, pour le menu en ligne, et qui n ont plus d objet ici :
+     - la barre reservait a droite la distance jusqu au bord du mur du hero, pour que la derniere rubrique tombe
+       dessus (148 px a 1280). Le burger, lui, doit venir au bord.
+     - le panneau etait descendu de 27 px pour se centrer sur la ligne du naming ; le tiroir se pose sous la barre. */
+  html.qz-burger .qz-header.qz-menu-visible{padding-right:16px!important}
+  html.qz-burger .qz-header.qz-menu-visible .qz-navpanel{margin-top:0!important;align-self:auto!important}
   html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:10px 14px 16px;gap:0}
   html.qz-burger .qz-header.qz-menu-visible .qz-navpanel>ul>li{width:100%;max-width:none;text-align:left}
   /* Les libelles reprennent la taille du tiroir. Les deux blocs « portable » plus haut les avaient descendus a 11,5 et
