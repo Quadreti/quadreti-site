@@ -236,3 +236,8 @@ html.qz-fond-sombre body.qz-guide-produit .onglets .onglet.actif{ color:#10181f 
    pastille. Un fond en faisait un petit bloc d encre de 5 sur 13 pixels. Regarder ce qu est reellement un element
    avant de lui poser une surface. */
 html.qz-fond-sombre body.qz-guide-produit .visuel-verso .dot{ color:#10181f !important; }
+/* Le bouton PRINCIPAL est pose sur l orange : ma regle sur .mockbtn l a repeint en gris clair — 2,54.
+
+   Une regle large attrape toujours un cas qu on n avait pas en tete. Il reprend l encre : 5,23. */
+
+html.qz-fond-sombre body.qz-guide-app .mockbtn.primary{ color:#10181f !important; }
