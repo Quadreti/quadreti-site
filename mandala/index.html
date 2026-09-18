@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19t">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19u">
 <style>
   /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
      a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
@@ -202,7 +202,11 @@
   html body .btn-jeu, html body .btn-motif, html body .btn-style, html body .btn-taille,
   html body .btn-cloud, html body .onglet-tranche{ color:#dedede; }                    /* fond navy : 10,75 */
   html body .btn-jeu.actif, html body .btn-motif.actif, html body .btn-style.actif,
-  html body .btn-taille.actif, html body .onglet-tranche.actif{ color:var(--accent-texte); }  /* fond clair : 5,95 */
+  html body .btn-taille.actif{ color:var(--accent-texte); }   /* teinte orange sur blanc : 5,95 */
+  /* L onglet de tranche marche A L ENVERS des boutons ci-dessus : au repos il est BLANC, une fois choisi il
+     prend le navy 2. J avais applique la regle des autres sans regarder la sienne. */
+  html body .onglet-tranche{ color:#5a6672; }          /* carte blanche : 5,87 */
+  html body .onglet-tranche.actif{ color:#dedede; }    /* navy 2 : 7,59 */
   html body .eyebrow{ color:#ff9147 !important; }   /* certains surtitres sont peints par le panneau */
 
   /* ===== 18/09 : LES DEUX GRIS, REDEFINIS SUR LES SURFACES CLAIRES =====
@@ -222,15 +226,16 @@
   }
 
   /* L orange ECRIT, par le fond qui est derriere lui. Les deux valeurs de la charte, jamais melangees. */
-  html body .btn-suggestion, html body .estimation-pont{ color:#ff9147; }   /* sur navy : 6,47 */
+  /* `.carte-pont p.estimation-pont` compte deux classes, ma version n en comptait qu une : elle perdait.
+     Etre plus insistant ne sert a rien, il faut etre plus PRECIS. */
+  html body .btn-suggestion,
+  html body .carte-pont p.estimation-pont{ color:#ff9147; }   /* sur navy 2 : 4,83 */
   html body .valeur-curseur{ color:var(--accent-texte); }                   /* sur blanc : 5,95 */
-  html body .btn-style.actif{ color:var(--accent-texte); }
-  html body .btn-style{ color:var(--creme); }
   html body .actions-resultat .btn{ color:#dedede; }                        /* etait le navy 2 sur le navy : 1,42 */
 </style>
 </head>
 <body id="qz-top">
-<script src="/commun-bandeau.js?v=2026-09-19t"></script>
+<script src="/commun-bandeau.js?v=2026-09-19u"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero">
@@ -326,8 +331,8 @@
 
 <div id="zoneImpression"></div>
 
-<script src="/commun-pied.js?v=2026-09-19t"></script>
-<script src="../reglages-site.js?v=2026-09-19t" defer></script>
+<script src="/commun-pied.js?v=2026-09-19u"></script>
+<script src="../reglages-site.js?v=2026-09-19u" defer></script>
 
 <script>
 (function(){
