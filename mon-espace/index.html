@@ -78,7 +78,9 @@
   /* Le gris doux ne passe PAS sur le gris de page : 4,36, mesure. La charte le dit. Pour ce cas precis il faut
      descendre a #4F5A65 — 5,44 sur le gris — plutot que d assombrir le gris doux partout, ce qui abimerait
      inutilement les textes poses sur blanc. */
-  --texte-secondaire-sur-gris:#4F5A65;
+  /* 18/09 : ce jeton s appelait « sur-gris ». La charte interdit de nommer par la TEINTE — le jour ou le fond
+     n est plus gris, le nom ment. Il s appelle desormais par son ROLE : le secondaire pose sur LE FOND DE PAGE. */
+  --texte-secondaire-sur-fond:#4F5A65;
   --texte-sur-accent:var(--encre);
   --texte-sur-barre:var(--gris);
   --texte-accent:var(--orange-texte);
@@ -121,6 +123,11 @@ html.qz-fond-sombre{
 }
 /* Le panneau de controle ecrit sa feuille APRES celle de la page. A egalite on perd ; il faut etre PLUS PRECIS. */
 html.qz-fond-sombre body{ background:var(--fond-page) !important; color:var(--texte-principal) !important; }
+/* Les titres aussi : le panneau leur pose le navy de marque, qui ne vaut que 1,42 sur une carte navy 2. */
+html.qz-fond-sombre body h1,
+html.qz-fond-sombre body h2,
+html.qz-fond-sombre body h3{ color:var(--texte-principal) !important; }
+html.qz-fond-sombre{ --texte-secondaire-sur-fond:var(--gris-froid); }   /* 7,83 sur le fond navy */
 
 *{ box-sizing:border-box; }
 body{
@@ -258,7 +265,7 @@ td code{
 .identite{
   max-width:1180px; margin:0 auto; padding:10px 22px 0;
   display:flex; justify-content:flex-end; align-items:center; gap:14px;
-  font-size:12.5px; color:var(--texte-secondaire-sur-gris);
+  font-size:12.5px; color:var(--texte-secondaire-sur-fond);
 }
 .identite a{ color:var(--texte-principal); font-weight:600; text-decoration:none; border-bottom:1px solid var(--filet); min-height:24px; display:inline-flex; align-items:center; }
 .identite a:hover{ color:var(--texte-accent); border-bottom-color:var(--fond-accent); }
@@ -301,14 +308,14 @@ td code{
 /* ===== Le pied. Socle minimum de CLAUDE.md : la FAQ et le contact, toujours joignables. ===== */
 .pied{
   margin-top:34px; padding-top:20px; border-top:1px solid var(--filet);
-  text-align:center; font-size:13px; color:var(--texte-secondaire-sur-gris);   /* sur le gris de page */
+  text-align:center; font-size:13px; color:var(--texte-secondaire-sur-fond);   /* sur le fond de page */
 }
 .pied a{ color:var(--texte-accent); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; min-height:24px; padding:0 2px; }
 .pied a:hover{ text-decoration:underline; }
 
 .mention{
   max-width:1340px; margin:0 auto; padding:0 clamp(16px,3vw,50px) 40px;
-  font-size:11.5px; color:var(--texte-secondaire-sur-gris); line-height:1.6;   /* sur le gris de page */
+  font-size:11.5px; color:var(--texte-secondaire-sur-fond); line-height:1.6;   /* sur le fond de page */
 }
 
 /* ===== Téléphone. Une grille a deux colonnes n a aucun sens sur 375 px : tout passe en pile,
