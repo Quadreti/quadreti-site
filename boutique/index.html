@@ -267,9 +267,17 @@
   html body #my-store-139886004 .ec-text-muted,
   html body #my-store-139886004 .ec-link--muted{ color:#dedede !important; }
 
-  /* Les VIGNETTES gardent leur socle clair — donc leur titre reste a l encre dessus : 13,31. */
-  html body #my-store-139886004 .grid-category__title-inner,
-  html body #my-store-139886004 .grid-product__title-inner{ color:#10181f !important; }
+  /* CATEGORIE et PRODUIT ne se ressemblent pas, et je m etais trompe en les traitant ensemble.
+     Une vignette de CATEGORIE a un socle clair (#F5F5F5, reglage Ecwid) : son titre est ecrit DESSUS, il reste
+     donc a l encre — 13,31. Une vignette de PRODUIT n en a pas : son titre et son prix tombent directement sur le
+     navy, ou l encre d Ecwid ne vaut que 1,24. Ils passent en gris clair. Verifie a l oeil, pas seulement au
+     calcul : le socle d Ecwid est une couche POSEE PAR-DESSUS, pas un parent — un calcul qui remonte l arbre le
+     rate et croit que tout est sur le navy. */
+  html body #my-store-139886004 .grid-category__title-inner{ color:#10181f !important; }
+  html body #my-store-139886004 .grid-product__title-inner,
+  html body #my-store-139886004 .grid-product__price-value,
+  html body #my-store-139886004 .grid-product__price,
+  html body #my-store-139886004 .ec-price-item{ color:#dedede !important; }
 
   /* Les liens poses sur le navy prennent l orange ECRIT #ff9147 (6,47), pas l orange de marque (4,23). */
   html body main.shop a{ color:#ff9147 !important; }
