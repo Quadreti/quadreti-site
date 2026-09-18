@@ -40,24 +40,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-19m">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19n">
 <style>
-  /* 18/09 : les cinq jetons morts de la charte prennent les valeurs du site. Les NOMS restent — les renommer par
-     leur role toucherait chaque regle du fichier pour zero gain visible, et ces pages tournent. Ce qu ils valent :
-       --charbon  le navy de marque (l ancien #2B353E n est plus la reference)
-       --creme    le gris du site — il ne sert que POSE SUR du sombre
-       --terracotta  l orange de marque — les surfaces et les traits, jamais l ecriture
-       --kraft    le meme gris (l ocre n existe plus dans la charte)
-       --papier   un blanc casse neutre, et SEULEMENT dans les cartes desormais : voir --fond-page ci-dessous.
-     Deux jetons NOUVEAUX :
-       --fond-page    le fond de la page, qui descend au navy. --papier faisait ce metier EN PLUS du sien ;
-                      en clair on ne voyait pas le probleme, en sombre les deux vont a l oppose.
-       --accent-texte l orange qui S ECRIT sur du clair. L orange de marque n y vaut que 3,1 ; celui-ci, 5,6. */
-  :root{ --charbon:#1e2b35; --creme:#dedede; --terracotta:#d96c2f; --kraft:#dedede; --papier:#f2f2f2; --surface:#FFFFFF; --bord:#1e2b351c; --texte:#1e2b35; --doux:#5c646c; --teinte-actif:#d96c2f14; --fond-page:#1e2b35; --accent-texte:#9c4514; --gris-froid:#b6c0c8; }
-  /* 18/09 : le fond de page descend au navy, comme celui de tout le site. `html body` en plus : le panneau de
-     controle ecrit sa feuille APRES celle de la page — a egalite on perd, il faut etre PLUS PRECIS. */
-  body{ margin:0; background:var(--fond-page); font-family:'Jura',sans-serif; color:#dedede; }
-  html body{ background:var(--fond-page) !important; color:#dedede !important; }
+  /* 18/09 : ces valeurs sont le MIROIR EXACT de la Palette Jeux du panneau de controle. Le panneau les reecrit
+     a l identique au chargement ; elles sont ici pour que la page tienne debout meme si le reseau ne repond pas.
+     Si l une des deux bouge un jour, les deux bougent — et c est le PANNEAU qui fait foi, ceci n en est que la
+     copie de secours.
+       --charbon    navy 2 : les surfaces sombres POSEES sur la page (onglet actif, bouton principal, carte pont).
+                    Le navy de marque les ferait disparaitre dans le fond.
+       --papier     le fond de page, devenu navy. C est le champ « Fond de page » de la Palette Jeux.
+       --creme      le gris du site ; --kraft le meme (l ocre n existe plus dans la charte)
+       --terracotta l orange de marque — les surfaces et les traits, jamais l ecriture
+       --accent-texte  l orange qui S ECRIT sur du clair : l orange de marque n y vaut que 3,1, celui-ci 5,6
+     LES COULEURS DE JEU NE SONT PAS ICI et ne bougent pas : vives et distinctes, decision du fondateur.
+     On ne joue pas avec des nuances de navy. */
+  :root{ --charbon:#33434f; --creme:#dedede; --terracotta:#d96c2f; --kraft:#dedede; --papier:#1e2b35; --surface:#FFFFFF; --bord:#dedede26; --texte:#dedede; --doux:#b6c0c8; --teinte-actif:#d96c2f14; --accent-texte:#9c4514; }
+  /* Les textes poses sur une CARTE claire, que le panneau recalcule a l identique contre le fond de carte.
+     Ecrits ici aussi : sans eux, une panne de reseau donnerait du gris clair sur du blanc. */
+  .carte, .carte-stat, .carte-taille, .carte-legende{ color:#10181f; }
+  .carte .label, .carte-stat .label, .carte-taille .label, .carte-legende .label{ color:#5a6672; }
+  body{ margin:0; background:var(--papier); font-family:'Jura',sans-serif; color:var(--texte); }
   h1,h2,h3{ font-family:'Jura',sans-serif; }
 
   .badge-bientot{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--doux); background:#00000008; border-radius:99px; padding:3px 8px; }
@@ -173,7 +175,7 @@
 <!-- 13/09, demande fondateur : cette app porte son propre logo dans la barre (initiale en tesselles, orange integree), sans accroche
      ni categorie, sur barre navy -- l inverse du site. A declarer AVANT commun-bandeau.js, qui ecrit au fil de la lecture. -->
 <script>window.qzApp = { lettre: 'N', nom: 'Number Pixel Quadreti', baseline: 'Chargez. Repérez. Coloriez.' };</script>
-<script src="/commun-bandeau.js?v=2026-09-19m"></script>
+<script src="/commun-bandeau.js?v=2026-09-19n"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="hero-pn">
@@ -276,11 +278,11 @@
   </div>
 </section>
 
-<script src="/commun-pied.js?v=2026-09-19m"></script>
+<script src="/commun-pied.js?v=2026-09-19n"></script>
 
 <div class="zone-impression" id="zoneImpression"></div>
 
-<script src="../reglages-site.js?v=2026-09-19m" defer></script>
+<script src="../reglages-site.js?v=2026-09-19n" defer></script>
 
 <script>
 (function(){

@@ -10,8 +10,11 @@
 
   var DEFAUTS = {
     couleurs: { theme: 'actuel', fond: '#F5F5F5', texte: '#2b353e', accent: '#e2725b', survol: '#cf6450' },
-    couleursJeux: { fondJeu: '#2B353E', carteJeu: '#FFFFFF', accentJeu: '#E2725B', texteJeu: '#F2EEDF',
-      fondPageJeu: '#FBF8F1', textePageJeu: '#2B353E', grisJeu: '#5c646c' },
+    /* 18/09 : ce defaut etait reste sur l identite KRAFT abandonnee — et comme la base ne portait que QUATRE
+       des sept champs, les trois autres tombaient dessus. Les six jeux servaient donc encore du kraft, quoi
+       qu on ecrive dans leur page. Valeurs alignees sur la charte et sur la base. */
+    couleursJeux: { fondJeu: '#33434f', carteJeu: '#FFFFFF', accentJeu: '#d96c2f', texteJeu: '#dedede',
+      fondPageJeu: '#1e2b35', textePageJeu: '#dedede', grisJeu: '#b6c0c8' },
     polices: { titres: 'Quicksand', texte: 'Karla' }
   };
 
