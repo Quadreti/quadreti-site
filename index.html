@@ -725,7 +725,13 @@
      SEUL bloc de la page a ne pas tomber sur l axe du texte. Pleine largeur retenu — la rangee occupe exactement la meme
      empreinte que la carte de titre, le chapo et la note en dessous, et le bouton donne aux cartes le corps qui leur
      manquait. */
-  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-top:var(--qz-espace-bloc); }
+  /* 18/09, fondateur : « reduit les cartes a leur largeur utile ». Elles faisaient 443 px pour un contenu de 156 —
+     la ligne « 20 x 20 cm · 49 tesselles », la plus longue des trois — plus 36 px de remplissage. `1fr` les etirait
+     sur toute la largeur de la page. Plafond a 230 px : 194 pour le contenu, 38 px de jeu. Le plancher reste a 160
+     pour que la grille sache encore se replier. `justify-content:center` sans quoi trois colonnes qui ne remplissent
+     plus la ligne se colleraient a gauche. */
+  .gamme{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,230px)); justify-content:center;
+    gap:14px; margin-top:var(--qz-espace-bloc); }
   /* 17/09 : la carte devient une COLONNE. Ses trois formats n ont pas la meme quantite de texte — le x1 porte une ligne
      de plus que les autres — et leurs boutons se retrouvaient a trois hauteurs differentes. En colonne, le bouton se
      pousse au bas de la carte (margin-top:auto) et les trois se posent sur la meme ligne, quoi que contienne la carte. */
