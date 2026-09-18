@@ -113,3 +113,64 @@ html.qz-fond-sombre body .page-imprimable .wordmark-c{ color:#10181f !important;
    l imprimante, en mieux. */
 html.qz-fond-sombre body .page-imprimable .baseline-c{ color:#9c4514 !important; }   /* 5,6 sur blanc */
 html.qz-fond-sombre body .page-imprimable .url-c{ color:#5a6672 !important; }        /* 5,87 sur blanc */
+
+/* ============================================================================
+   LES DEUX GUIDES                                18/09/2026
+   `quadreti-guide-interactif.html` et `quadreti-guide-codification.html`.
+   Ils etaient deja sur la palette du site (navy, gris, orange), mais en CLAIR. Le fondateur a tranche la seule
+   question qui valait d etre posee : « utilise navy 2 pour creer la grille ». Les tesselles des schemas ne
+   descendent donc pas au fond de page — elles restent des OBJETS POSES DESSUS.
+
+   POURQUOI LES DEUX GUIDES NE RECOIVENT PAS LE MEME TRAITEMENT :
+   — Le guide INTERACTIF est une maquette de L APPLICATION. L app est passee au navy en septembre : ses panneaux
+     blancs deviennent donc des cartes navy 2. Le montrer clair serait montrer une app qui n existe plus.
+   — Le guide de CODIFICATION illustre le PRODUIT PHYSIQUE : des visuels imprimes, le dos d une tesselle, des
+     pochettes. Ses surfaces claires sont du papier et du plastique, pas de l interface. Elles RESTENT CLAIRES,
+     pour la meme raison que la feuille a imprimer des coloriages : une surface qui a un metier garde l allure
+     de son metier. Les assombrir ne serait pas une harmonisation, ce serait une erreur de description.
+
+   UN PIEGE RENCONTRE POUR LA TROISIEME FOIS AUJOURD HUI : `--encre` sert ici a DEUX choses — la couleur du texte,
+   et le fond des surfaces sombres (le cadre des grilles, l onglet actif, le bouton suivant). Le renommer touche
+   vingt-cinq regles. Il garde donc sa valeur — elle reste juste dans ses deux roles — et ce sont les TEXTES qui
+   basculent, un par un, la ou ils se retrouvent sur du sombre. Voir la meme lecon dans Mon Espace.
+   ============================================================================ */
+
+/* ----- Ce qui vaut pour les deux ----- */
+html.qz-fond-sombre body.qz-guide{
+  --fond:#1e2b35;          /* le fond de page */
+  --tesselle:#33434f;      /* navy 2 : LA GRILLE, decision du fondateur */
+  --bord:#dedede26;
+  --encre-douce:#b6c0c8;   /* 7,83 sur le fond */
+}
+html.qz-fond-sombre body.qz-guide{ background:var(--fond) !important; color:#dedede !important; }
+html.qz-fond-sombre body.qz-guide h1,
+html.qz-fond-sombre body.qz-guide h2,
+html.qz-fond-sombre body.qz-guide h3{ color:#dedede !important; }
+
+/* La grille et le mur : les tesselles passent en navy 2. Le cadre reste navy — les interstices dessinent donc
+   la grille sans qu on ait besoin d un trait. */
+html.qz-fond-sombre body.qz-guide .grid7 i,
+html.qz-fond-sombre body.qz-guide .murgrille i{ background:var(--tesselle) !important; }
+/* Effet de bord utile : `.grid7 i.k` valait DEJA #dedede, exactement comme la tesselle par defaut — les deux
+   etaient donc indistinguables depuis toujours. Maintenant que le defaut est navy 2, la difference se voit. */
+
+/* ----- Le guide INTERACTIF : maquette de l app, donc cartes navy 2 ----- */
+html.qz-fond-sombre body.qz-guide-app{ --blanc:#33434f; --gris-doux:#33434f; --second-doux:#3b4d5c; }
+html.qz-fond-sombre body.qz-guide-app header p b,
+html.qz-fond-sombre body.qz-guide-app footer.guide-foot .sig,
+html.qz-fond-sombre body.qz-guide-app .tilenav .cell,
+html.qz-fond-sombre body.qz-guide-app .pop-nav button{ color:#dedede !important; }
+/* Les etats ACTIFS gardent leur fond navy et leur texte clair : ils restent lisibles tels quels. */
+
+/* ----- Le guide de CODIFICATION : le produit physique reste clair, et ancre son encre -----
+   Meme correctif que la feuille a imprimer des coloriages : ces surfaces ne fixaient que leur FOND, leur texte
+   heritait du corps de page que je viens de passer en clair. Elles ancrent desormais leur propre encre. */
+html.qz-fond-sombre body.qz-guide-produit .visuel,
+html.qz-fond-sombre body.qz-guide-produit .visuel-verso,
+html.qz-fond-sombre body.qz-guide-produit .visuel-mini,
+html.qz-fond-sombre body.qz-guide-produit .pochettes,
+html.qz-fond-sombre body.qz-guide-produit .mur,
+html.qz-fond-sombre body.qz-guide-produit .decompo,
+html.qz-fond-sombre body.qz-guide-produit .lecture,
+html.qz-fond-sombre body.qz-guide-produit .legende,
+html.qz-fond-sombre body.qz-guide-produit .quiz{ color:var(--encre) !important; }
