@@ -86,40 +86,40 @@
 
   /* ================= CONTACT DANS LE LANGAGE DE L ACCUEIL — 18/09, a retirer en bloc ================= */
   /* --- Le fond, et tout ce qui est pose dessus. --- */
-  html body{ background:#1e2b35; color:#dedede; }
-  .blk h1{ color:#dedede; }
-  .blk p.lead{ color:#dedede; }
+  html body{ background:#1e2b35!important; color:#dedede!important; }
+  body .blk h1{ color:#dedede!important; }
+  body .blk p.lead{ color:#dedede!important; }
   /* Le surtitre portait l ancienne terracotta. En petit texte l orange de marque ne vaut que 4,23 sur ce navy :
      il prend sa forme ECRITE, #ff9147, qui y donne 6,47. Meme arbitrage que sur l accueil. */
-  .eyebrow{ color:#ff9147; }
+  body .eyebrow{ color:#ff9147!important; }
 
   /* --- Les cartes de motif : navy 2, comme les cartes de contenu de l accueil. 1,42 contre le fond : un panneau,
          pas une seconde surface lumineuse. --- */
-  .reason{ background:#33434f; border:1px solid #33434f; border-radius:6px; color:#dedede; }
-  .reason h3{ color:#dedede; }
-  .reason p{ color:#dedede; }
-  .reason:hover{ border-color:#dedede; }
-  .reason.active{ border-color:var(--qz-orange-marque,#d96c2f); box-shadow:none; }
+  body .reason{ background:#33434f!important; border:1px solid #33434f!important; border-radius:6px!important; color:#dedede!important; }
+  body .reason h3{ color:#dedede!important; }
+  body .reason p{ color:#dedede!important; }
+  body .reason:hover{ border-color:#dedede!important; }
+  body .reason.active{ border-color:var(--qz-orange-marque,#d96c2f)!important; box-shadow:none!important; }
   /* La pastille d icone reprend celle de « Commandez en confiance » : gris clair, encre dessus (13,31). */
-  .reason .ic{ background:#dedede; color:#10181f; border-radius:6px; }
+  body .reason .ic{ background:#dedede!important; color:#10181f!important; border-radius:6px!important; }
 
   /* --- Le formulaire : une carte, comme les autres. --- */
-  .c-form-compact{ background:#33434f; border:1px solid #33434f; border-radius:6px; }
-  .c-field label{ color:#dedede; }
+  body .c-form-compact{ background:#33434f!important; border:1px solid #33434f!important; border-radius:6px!important; }
+  body .c-field label{ color:#dedede!important; }
   /* Les CHAMPS restent clairs, et c est deliberé : un champ est fait pour etre rempli, il doit se lire comme une
      surface ou l on ecrit. Fonce sur une carte foncee, il se confondrait avec elle. Encre dessus : 13,31. */
-  .c-field input, .c-field select, .c-field textarea{ background:#dedede; border:1.5px solid #dedede; color:#10181f; }
-  .c-field input::placeholder, .c-field textarea::placeholder{ color:#4a5158; }
-  .c-field input:focus, .c-field select:focus, .c-field textarea:focus{ outline:2px solid var(--qz-orange-marque,#d96c2f); }
+  body .c-field input, body .c-field select, body .c-field textarea{ background:#dedede!important; border:1.5px solid #dedede!important; color:#10181f!important; }
+  body .c-field input::placeholder, body .c-field textarea::placeholder{ color:#4a5158!important; }
+  body .c-field input:focus, body .c-field select:focus, body .c-field textarea:focus{ outline:2px solid var(--qz-orange-marque,#d96c2f)!important; }
 
   /* --- L appel a l action : orange de marque, encre dessus, comme les sept boutons de l accueil. --- */
-  .c-submit{ background:var(--qz-orange-marque,#d96c2f); color:#10181f; }
-  .c-submit:hover{ background:#df824e; }
-  .direct-note{ color:#dedede; }
-  .direct-note a{ color:#ff9147; }
+  body .c-submit{ background:var(--qz-orange-marque,#d96c2f)!important; color:#10181f!important; }
+  body .c-submit:hover{ background:#df824e!important; }
+  body .direct-note{ color:#dedede!important; }
+  body .direct-note a{ color:#ff9147!important; }
 
   /* --- Le rythme des sections, repris du jeton de l accueil : moitie moins qu avant, comme partout. --- */
-  section.blk{ padding:var(--qz-espace-section,clamp(28px,4vw,48px)) 0; }
+  body section.blk{ padding:var(--qz-espace-section,clamp(28px,4vw,48px)) 0!important; }
   /* ================= fin du bloc Contact ================= */
 </style>
 </head>
