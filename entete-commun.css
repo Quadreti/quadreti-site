@@ -265,7 +265,9 @@
      10 px pour les faire tenir sur une ligne : dans un tiroir vertical, cette contrainte n existe plus. */
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel a,
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle{
-    font-size:13.5px; letter-spacing:.04em; padding:10px 10px; width:100%; text-align:left; justify-content:flex-start;
+    /* box-sizing plutot que width:100% : une largeur pleine A LAQUELLE S AJOUTE le remplissage fait deborder le
+       lien de son panneau — 6 px mesures, assez pour poser une barre de defilement horizontale sur toute la page. */
+    font-size:13.5px; letter-spacing:.04em; padding:10px 10px; width:auto; box-sizing:border-box; text-align:left; justify-content:flex-start;
   }
   /* Le sous-menu redevient un ACCORDEON dans le tiroir, au lieu d une carte flottante au survol. */
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-hassub{position:static}
