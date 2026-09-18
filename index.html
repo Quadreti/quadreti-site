@@ -1324,6 +1324,21 @@
      porte deja le sien, en 2,4 px. Lui en imposer un l epaissirait. */
   .qb-gestes .qb-geste-fleche{ color:#dedede!important; }
 
+  /* --- 18/09, fondateur : les decroches des BANDES passent eux aussi a l orange de marque. Elles ne suivent pas le
+         meme jeton que l onglet et le pied : elles ont le leur, --lisere-couleur, pose element par element par
+         bandeau-relief.js. On peint donc le trait directement, ce qui passe devant une variable posee en ligne. --- */
+  html.qz-accueil .qb-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f)!important; }
+
+  /* --- 18/09, fondateur : « texte icone changez et texte du bandeau defilant egalement orange quadreti ».
+         Ces trois textes sont PETITS — 14 px pour le titre, 11,5 px pour son texte et pour les mentions du bandeau.
+         Seuil 4,5, et l orange de marque n y vaut que 4,23 : il passe a cote de 6 %. Ils prennent donc #ff9147, la
+         forme ECRITE du meme orange, deja validee pour les rubriques du menu — meme teinte, saturation a 100 %,
+         6,47 sur le navy.
+         La regle du site se stabilise ainsi : l orange de marque pour les surfaces et les traits, #ff9147 des qu il
+         faut l ecrire. --- */
+  .qb-gestes .qb-geste-changez h3, .qb-gestes .qb-geste-changez p{ color:#ff9147!important; }
+  body .qb-defile span{ color:#ff9147!important; }
+
   /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
          et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
          Celle qu on voit est la baseline ANIMEE du bandeau — une suite de lettres, `p.qb-li.qb-l1 > span.qb-mot >
@@ -1411,7 +1426,7 @@
   /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
      qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
   .finale-bord-fond{ fill:#33434f; }   /* la marche porte la matiere de sa section */
-  .finale-bord-trait{ stroke:var(--qz-terracotta,#CBBD93); }
+  .finale-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f); }   /* 4,23 sur le navy : un trait, seuil 3,0 */
   /* La marche du PIED prolonge desormais cette bande grise. Elle peint le navy SOUS sa ligne et laisse le dessus
      transparent : c etait le navy de la page, donc invisible. La cloture etant passee au gris, ce dessus doit l etre
      aussi — sans quoi la ligne kraft flotte dans le navy, seule, au lieu de border une matiere. Constate par le

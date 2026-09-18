@@ -145,7 +145,10 @@ footer.qz-footer{
    qzEnteteInit) : trois jetons suffisent a basculer la feuille, le panneau recalcule le reste de son cote.
    L orange en TEXTE change avec le fond : #9c4514 est fait pour le gris (4,77) et ne vaut que 2,3 sur le navy ; #e89a63
    y donne 6,36. */
-html.qz-accueil{--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
+/* 18/09, fondateur : « on repasse les decroches en orange quadreti ». Un seul jeton les porte tous — l onglet du
+   haut et la marche du pied — donc une seule ligne suffit. Un trait de 3 px : seuil 3,0, l orange y vaut 4,23.
+   Les bandes ont leur propre jeton (--lisere-couleur, bandeau-relief.css), traite dans index.html. */
+html.qz-accueil{--qz-lisere:var(--qz-orange-marque,#d96c2f);--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
 .qz-pied3{
   width:100%; box-sizing:border-box;
   padding:30px 36px 38px;
