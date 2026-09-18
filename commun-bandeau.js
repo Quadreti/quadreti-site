@@ -22,8 +22,12 @@ var QZ_BASE = (function () {
 })();
 /* Les feuilles de style vivent A COTE du script (le site les sert a la racine, une app hors site en garde une copie voisine). */
 var QZ_CSS = QZ_BASE ? './' : '/';
-document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css">');
-document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
+/* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
+   lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
+   qu une feuille commune change : c est le prix d un rechargement fiable. */
+var QZ_VER = '?v=2026-09-18a';
+document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
+document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
 /* 13/09, demande fondateur : chaque app porte SON logo dans la barre -- l initiale de son nom en tesselles, une orange integree a la
    lettre, barre navy et lettre grise (l inverse du site), sans accroche ni categorie. Une page d app le declare AVANT ce script :
