@@ -1339,6 +1339,15 @@
   .qb-gestes .qb-geste-changez h3, .qb-gestes .qb-geste-changez p{ color:#ff9147!important; }
   body .qb-defile span{ color:#ff9147!important; }
 
+  /* --- 18/09, fondateur : les icones des reseaux et la ligne de copyright. --- */
+  /* Les icones sont des pastilles : une SURFACE, donc l orange de marque, avec l ENCRE dessus — regle de la charte
+     pour tout texte pose sur l orange, et 5,23 de contraste. Le survol eclaircit vers #df824e, comme les boutons. */
+  body .qz-reseaux .qz-grid a{ background:var(--qz-orange-marque,#d96c2f)!important; color:#10181f!important; }
+  body .qz-reseaux .qz-grid a:hover, body .qz-reseaux .qz-grid a:focus-visible{ background:#df824e!important; }
+  /* Le copyright fait 12 px : seuil 4,5, et l orange de marque n y vaudrait que 4,23. Il prend la forme ECRITE de
+     l orange, #ff9147 : 6,47 sur le navy du pied. Meme arbitrage que pour le bandeau defilant. */
+  body .qz-copy{ color:#ff9147!important; }
+
   /* --- 18/09, fondateur : « baseline logo en blanc (ca ne passe toujours pas) ». Il avait raison trois fois de suite,
          et voici pourquoi : `.qz-accroche`, que je repeignais, est en `display:none`. C est la version de SECOURS.
          Celle qu on voit est la baseline ANIMEE du bandeau — une suite de lettres, `p.qb-li.qb-l1 > span.qb-mot >
@@ -1392,11 +1401,14 @@
      entre le corps navy de la page et ce pied clair : 10,75 entre les deux fonds, la marche se lit seule.
      Plus specifique que le panneau, qui tient `.finale` en transparent et `.finale .phrase` en #10181f. */
   /* 18/09, essai du fondateur : la cloture passe du gris au NAVY 2, comme le bandeau pedagogique et les cartes. */
-  body .finale{ background:#33434f!important; }
+  /* 18/09, fondateur : la cloture rejoint le NAVY DE MARQUE. C est une SECTION, pas une carte : elle peut se fondre
+     dans la page, sa marche du haut la delimite toujours. */
+  body .finale{ background:#1e2b35!important; }
   body .finale .phrase, body .finale p{ color:#dedede!important; }   /* 7,59 sur le navy 2 */
-  /* Le mot accentue repart dans l autre sens pour la troisieme fois aujourd hui : la variante FONCEE etait calculee
-     pour un fond clair (4,50 sur le gris), elle ne vaudrait que 1,74 sur ce navy. La teinte pure y donne 5,47. */
-  body .finale .phrase span{ color:var(--qz-terracotta,#CBBD93)!important; }
+  /* 18/09, fondateur : « changez a volonte » en orange de marque. Ce mot fait 26 px en gras — du GRAND texte, dont le
+     seuil est 3,0 et non 4,5. L orange de marque y vaut 4,23 : c est la deuxieme et derniere place de la page ou il
+     peut etre ECRIT, avec le titre du hero. Partout ailleurs il faut sa forme saturee. */
+  body .finale .phrase span{ color:var(--qz-orange-marque,#d96c2f)!important; }
   /* 18/09, fondateur : « retire lisere ». L anneau d encre que j avais pose autour de ce bouton part. */
 
   /* --- TOUS les appels a l action de la page passent a l ORANGE DE MARQUE : les quatre que le fondateur avait nommes
@@ -1425,13 +1437,13 @@
   }
   /* Le decroche prend ses couleurs : le gris de la section pour la matiere, l accent pour le lisere. Contre le navy
      qui le surplombe, le kraft de marque vaut 7,74 — c est le bon cote pour le mesurer. */
-  .finale-bord-fond{ fill:#33434f; }   /* la marche porte la matiere de sa section */
+  .finale-bord-fond{ fill:#1e2b35; }   /* la marche porte la matiere de sa section */
   .finale-bord-trait{ stroke:var(--qz-orange-marque,#d96c2f); }   /* 4,23 sur le navy : un trait, seuil 3,0 */
   /* La marche du PIED prolonge desormais cette bande grise. Elle peint le navy SOUS sa ligne et laisse le dessus
      transparent : c etait le navy de la page, donc invisible. La cloture etant passee au gris, ce dessus doit l etre
      aussi — sans quoi la ligne kraft flotte dans le navy, seule, au lieu de border une matiere. Constate par le
      fondateur. Le fond de la bande reprend donc le gris de la section qu elle prolonge. */
-  body footer.qz-footer .qz-pied-bord-haut{ background:#33434f!important; }   /* suit la cloture qu elle prolonge */
+  body footer.qz-footer .qz-pied-bord-haut{ background:#1e2b35!important; }   /* suit la cloture qu elle prolonge */
 
   /* --- Le surtitre et les liseres des cartes prennent la variante TEXTE de l accent : sur une carte CLAIRE, l accent
          lui-meme ne vaudrait que 1,39. C est le meme calcul qu au pied de page, applique ici. --- */
