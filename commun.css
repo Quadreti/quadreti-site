@@ -84,17 +84,22 @@
   .qz-qlogo i{ animation:none; opacity:1; transform:none; }
   .qz-cat{ animation:none; width:auto; }
 }
-.qz-burger{
+/* 18/09 : BUTTON.qz-burger, et non .qz-burger seul. Ce bloc decrit un BOUTON — 42 px de cote, flex, fond
+   navy, coins arrondis — mais ecrit sans son element il s applique a tout ce qui porte ce nom de classe. Un mode de menu
+   nomme « qz-burger » et pose sur <html> a donc transforme la racine du document en boite flex de 42 px : le body,
+   devenu element flex, s est reduit a son contenu et toute la page a ete comprimee. Le mode a ete renomme, mais la
+   regle reste ainsi bornee — un nom de classe ne doit pas pouvoir repeindre la racine du document. */
+button.qz-burger{
   justify-self:center; width:42px; height:42px; border-radius:22%;
   background:#1e2b35; border:none; cursor:pointer;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
   transition:background .15s;
 }
-.qz-burger:hover, .qz-burger:focus-visible{ background:#1f272e; }
-.qz-burger span{ width:18px; height:2px; border-radius:1px; background:var(--qz-creme); transition:transform .2s, opacity .2s; }
-.qz-burger.active span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
-.qz-burger.active span:nth-child(2){ opacity:0; }
-.qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+button.qz-burger:hover, button.qz-burger:focus-visible{ background:#1f272e; }
+button.qz-burger span{ width:18px; height:2px; border-radius:1px; background:var(--qz-creme); transition:transform .2s, opacity .2s; }
+button.qz-burger.active span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+button.qz-burger.active span:nth-child(2){ opacity:0; }
+button.qz-burger.active span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
 .qz-navpanel{ width:100%; background:#1e2b35; max-height:0; overflow:hidden; transition:max-height .3s ease; position:relative; z-index:59; }
 .qz-navpanel.open{ max-height:640px; }
 .qz-navpanel > ul{ list-style:none; margin:0; padding:10px 32px 24px; display:flex; flex-direction:column; align-items:center; gap:2px; }
