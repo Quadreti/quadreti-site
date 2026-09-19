@@ -374,8 +374,23 @@ html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barr
      sous-rubriques sur LE MEME AXE que les rubriques. Un retrait a droite en creerait un second.
      Les 18 px de remplissage a droite sont ceux des rubriques ci-dessus : un seul axe pour tout le tiroir. */
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist{ background:transparent!important; padding:0 0 0 14px; }
+  /* ET IL FALLAIT DEFAIRE LE VOLET FLOTTANT. Mesure apres le premier jet : les sous-rubriques restaient chacune a
+     sa propre largeur, et tout le bloc se dessinait 97 px A GAUCHE de son parent. Ni une feuille du depot ni un
+     defaut du navigateur : le PANNEAU reinjecte `.qz-navpanel li.qz-hassub .qz-sublist{position:absolute;left:50%;
+     transform:translateX(-50%);width:max-content}` (reglages-site.js, l.1067) — le sous-menu du menu EN LIGNE, qui
+     s ouvrait en volet sous son bouton. Dans un tiroir ce volet n a plus d objet, mais personne ne l avait retire.
+     Les trois declarations qui le font flotter sont donc annulees ici, nommement. Pas de !important : ce selecteur
+     compte quatre classes contre trois, il passe devant par la precision.
+     `align-items:stretch` : le volet centrait ses entrees ; c est ce qui donnait a chacune la largeur de son texte. */
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist{
+    left:auto; transform:none; width:100%; max-width:none; box-sizing:border-box;
+    align-items:stretch; box-shadow:none;
+  }
+  /* Les elements flexibles du sous-menu sont les `li`, pas les liens : une largeur posee sur le lien se mesure
+     donc contre un `li` deja retreci au texte. C est le `li` qu il faut ouvrir en premier. */
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist>li{ width:100%; max-width:none; text-align:right; }
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a{
-    color:#dedede!important; text-align:right; padding:8px 18px;
+    color:#dedede!important; display:block; width:100%; box-sizing:border-box; text-align:right; padding:8px 18px;
   }
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a:hover,
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a:focus-visible{ color:#ffa366!important; }
