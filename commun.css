@@ -11,7 +11,16 @@
 :root{
   --qz-charbon:#2B353E;
   --qz-creme:#F2EEDF;
-  --qz-terracotta:#E2725B;
+  /* 19/09 : c etait #E2725B, la terracotta de l identite KRAFT ABANDONNEE. Le panneau ecrit la bonne valeur au
+     chargement, ce qui cachait le probleme — mais pendant les premieres images, TOUT ce qui prend cet accent sort
+     en kraft. C est ce qui a saute aux yeux du fondateur sur les icones reseaux le 19/09 : l accueil avait une
+     regle locale qui masquait le flash, et en la retirant le flash est apparu. La cause n etait pas la regle
+     retiree, c etait ce defaut-ci. Il prend l orange de marque de la charte. Le panneau continue de l ecraser :
+     rien n est fige, seul le point de depart devient juste.
+     ⚠ Les QUATRE AUTRES jetons de ce bloc sont eux aussi de la charte Kraft abandonnee (voir CLAUDE.md, « jetons
+     morts ») : --qz-charbon #2B353E est l ancien navy, --qz-creme, --qz-kraft et --qz-clair n ont plus de role.
+     Pas touches ici : ils servent ailleurs et cela depasse la demande. A reprendre en une passe dediee. */
+  --qz-terracotta:#d96c2f;
   --qz-kraft:#CBBD93;
   --qz-clair:#F5F5F5;
   --qz-sombre:#1f272e;

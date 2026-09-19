@@ -1392,7 +1392,8 @@
      veut alignees sur QR, donc en GRIS — et elle redisait le fond et le survol que le panneau ecrit deja pour
      les 38 pages. Une page qui garde sa copie d une regle commune, c est la page qui derive. Voir
      `footer.qz-footer .qz-reseaux .qz-grid a` dans commun.css. */
-  body .qz-reseaux .qz-grid a:hover, body .qz-reseaux .qz-grid a:focus-visible{ background:#df824e!important; }
+  /* 19/09 : le survol aussi. Le panneau ecrit deja exactement #df824e pour les 38 pages ; cette copie ne faisait
+     que rendre l accueil different des autres le jour ou l une des deux bougerait. */
   /* Le copyright fait 12 px : seuil 4,5, et l orange de marque n y vaudrait que 4,23. Il prend la forme ECRITE de
      l orange, #ff9147 : 6,47 sur le navy du pied. Meme arbitrage que pour le bandeau defilant. */
   /* 19/09 : retiree — elle est montee dans commun.css, ou les 38 pages la lisent. Voir .qz-copy la-bas. */
@@ -1558,8 +1559,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-19y">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-19y">
+<link rel="stylesheet" href="/commun.css?v=2026-09-19z">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-19z">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1577,7 +1578,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-19y" defer></script>
+<script src="reglages-site.js?v=2026-09-19z" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1619,9 +1620,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-19y"></script>
+<script src="/commun-bandeau.js?v=2026-09-19z"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-19y">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-19z">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1828,7 +1829,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-19y" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-19z" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2283,7 +2284,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-19y"></script>
+<script src="/commun-pied.js?v=2026-09-19z"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2661,7 +2662,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-19y"></script>
-<script src="/bandeau-gestes.js?v=2026-09-19y"></script>
+<script src="/bandeau-relief.js?v=2026-09-19z"></script>
+<script src="/bandeau-gestes.js?v=2026-09-19z"></script>
 </body>
 </html>
