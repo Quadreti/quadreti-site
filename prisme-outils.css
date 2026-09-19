@@ -144,7 +144,20 @@
   .prisme-puces button:hover, .prisme-puces button:focus-visible{
     box-shadow:inset 1px 1px 0 #ffffff9e, inset -1px -1px 0 #00000029, 0 0 0 2px var(--qz-terracotta,#d96c2f), 0 7px 16px #00000040;
   }
-  .prisme-puces button::after{ background:linear-gradient(105deg, var(--qz-terracotta,#d96c2f)00 0%, var(--qz-terracotta,#d96c2f)8c 50%, var(--qz-terracotta,#d96c2f)00 100%); }
+  /* 19/09, fondateur : « il manque le studio » — puis « comme QR ». Les pastilles etaient les SEULS boutons de
+     l ecosysteme sans eclat au survol, et il y avait DEUX causes dans cette unique ligne, supprimee ici.
+     1. ELLE NE MARCHAIT PAS. Elle disait `var(--qz-terracotta,#d96c2f)00` pour fabriquer un orange transparent en
+        collant `00` derriere la couleur. Or `var()` n est pas un remplacement de texte : apres substitution on
+        obtient `#d96c2f 00`, DEUX jetons au lieu d une couleur. La declaration devient invalide au calcul, et une
+        declaration invalide a ce stade ne rend pas la main a la regle precedente — la propriete retombe a sa valeur
+        initiale, `none`. L eclat n existait donc pas du tout. Mesure : background-image = none.
+     2. ELLE ETAIT ORANGE. Meme si elle avait fonctionne, un eclat orange sur un bouton orange ne se voit pas —
+        c est exactement ce qui a ete corrige le meme soir sur les boutons du site. QR le confirme : tous ses
+        boutons orange, pastilles de navigation comme boutons d action, portent le meme eclat BLANC.
+     En la retirant, les pastilles heritent de la regle `.prisme-fleche, .prisme-puces button::after` ecrite douze
+     lignes plus haut, qui declare deja le bon eclat blanc (#ffffff8c = 55 %, la valeur du site). Rien a ajouter.
+     LA LECON : une couleur fabriquee par concatenation de jetons ne tient pas. Si une teinte transparente est
+     necessaire, elle s ecrit en entier, ou en `color-mix()`. */
   /* L outil choisi prend l orange plein, texte gris : sur une rangee de pastilles grises, c est lui qui dit ou l on est.
      Il ne se souleve pas au survol — il est deja en place. */
   .prisme-puces button[aria-current="true"]{ background:var(--qz-terracotta,#d96c2f); color:#10181f; }   /* 14/09 : idem, 2,54 -> 5,23 */
