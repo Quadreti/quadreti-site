@@ -333,3 +333,51 @@ html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barr
 html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barre:focus-visible{ background:#ffffff; border-color:#ffffff; }
 /* Sous 900 px la barre est une grille serree : la pastille y prendrait trop de place a cote du burger. */
 @media (max-width:900px){ html.qz-menu-tiroir .qz-header.qz-menu-visible > a.qz-espace-barre{ display:none } }
+
+/* ================= 19/09, fondateur : LE TIROIR CALE A DROITE, AUX COULEURS DE QR =================
+   « le menu et sous menu alignement a droite (meme couleur que QR) ». Rien n est invente ici : ce sont les
+   valeurs mesurees hier soir sur qr.quadreti.fr, portees dans la feuille COMMUNE — les 38 pages les heritent.
+   Ecrit EN DERNIER, a specificite egale ou superieure aux regles qu il reprend : c est la lecon de la semaine,
+   une couleur doit etre decidee par UNE ligne, et quand deux se disputent c est la derniere qui gagne.
+
+   LA DECLARATION QUI COMPTE EST `display:block`. Un lien est EN LIGNE par defaut : ni `width:100%` ni
+   `text-align` ne l atteignent. Sans elle, seules les rubriques A SOUS-MENU s alignaient — parce que ce sont
+   des BOUTONS, donc deja des blocs. C est exactement le defaut trouve sur QR. */
+@media (min-width:901px){
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel>ul>li{ text-align:right; }
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel a,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle{
+    display:block; width:100%; box-sizing:border-box; text-align:right; padding:10px 18px;
+  }
+  /* La fleche passe a GAUCHE de sa rubrique (demande du fondateur). `row-reverse` renverse l axe : le premier
+     element, le libelle, se pose a DROITE, et la fleche vient se ranger a sa gauche. `flex-start` devient donc
+     le bord droit. Une seule declaration fait l ordre ET le calage ; `gap` remplace l espace du texte, qui
+     disparait avec la mise en flex. */
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle{
+    display:flex; flex-direction:row-reverse; justify-content:flex-start; align-items:center; gap:8px;
+  }
+  /* Les couleurs de QR : #ff9147 pour les rubriques (6,47 sur le navy du tiroir), #ffa366 au survol.
+     Hors accueil elles etaient grises — deux pages voisines ne doivent pas avoir deux menus de couleurs
+     differentes, c est precisement ce que « uniformise » veut dire. */
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle{ color:#ff9147!important; }
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle:hover,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-subtoggle:focus-visible{ color:#ffa366!important; }
+
+  /* LE SOUS-MENU PERD SA CARTE GRISE. Elle avait ete posee le 18/09 quand le sous-menu flottait au survol sur
+     la barre ; dans un tiroir il est DEDANS, et une plaque claire au milieu du navy y fait un bloc etranger.
+     QR le laisse transparent, ses sous-rubriques en gris : 10,75 sur le navy du tiroir, contre 13,31 dans la
+     carte — on ne perd rien de lisible, on gagne un tiroir d une seule matiere.
+     Le retrait est a GAUCHE, comme sur QR : dans une liste calee a droite il ne se voit pas, et il laisse les
+     sous-rubriques sur LE MEME AXE que les rubriques. Un retrait a droite en creerait un second.
+     Les 18 px de remplissage a droite sont ceux des rubriques ci-dessus : un seul axe pour tout le tiroir. */
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist{ background:transparent!important; padding:0 0 0 14px; }
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a{
+    color:#dedede!important; text-align:right; padding:8px 18px;
+  }
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a:hover,
+  html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a:focus-visible{ color:#ffa366!important; }
+}
+/* ================= fin du tiroir cale a droite ================= */

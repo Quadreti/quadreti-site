@@ -275,8 +275,29 @@ footer.qz-footer .qz-pied-infos a:hover, footer.qz-footer .qz-pied-infos a:focus
 .cta:not(.hero-cta), .btn-studio{ position:relative; overflow:hidden; }
 .cta:not(.hero-cta)::after, .btn-studio::after{
   content:""; position:absolute; top:-30%; bottom:-30%; left:-45%; width:38%; pointer-events:none;
-  background:linear-gradient(105deg, rgba(217,108,47,0) 0%, rgba(217,108,47,.55) 50%, rgba(217,108,47,0) 100%);
+  /* 19/09, fondateur : « les couleurs boutons reflet surbrillance et fond blanc des reseaux sociaux ».
+     L eclat etait ORANGE ici, et BLANC sur les icones reseaux comme sur le bouton du hero (bandeau-relief.css,
+     l.141) — trois boutons orange du meme site, deux eclats differents, et c est celui-ci l intrus : je l avais
+     teinte hier en croyant bien faire. Un eclat orange sur un bouton orange ne se voit d ailleurs presque pas.
+     Il reprend le blanc, au mot pres les memes valeurs que les deux autres. */
+  background:linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%);
   transform:translateX(-120%) skewX(-18deg); opacity:0;
+}
+/* Et le RELIEF qui va avec : les reseaux et le bouton du hero portent le meme filet interieur clair en haut a
+   gauche, l ombre en bas a droite, et l ombre portee dessous. Les boutons du site ne l avaient pas — ils etaient
+   plats a cote. Au survol, le meme soulevement de 3 px et la meme ombre elargie. */
+.cta:not(.hero-cta), .btn-studio{
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.38), inset -1px -1px 0 rgba(0,0,0,.28), 0 5px 12px rgba(0,0,0,.4);
+  transition:transform .15s, box-shadow .15s, background .15s;
+}
+.cta:not(.hero-cta):hover, .cta:not(.hero-cta):focus-visible, .btn-studio:hover, .btn-studio:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.5), inset -1px -1px 0 rgba(0,0,0,.28), 0 7px 16px rgba(0,0,0,.45);
+}
+.cta:not(.hero-cta):active, .btn-studio:active{ transform:none; box-shadow:inset 2px 2px 4px rgba(0,0,0,.35); }
+@media (prefers-reduced-motion:reduce){
+  .cta:not(.hero-cta):hover, .cta:not(.hero-cta):focus-visible,
+  .btn-studio:hover, .btn-studio:focus-visible{ transform:none; }
 }
 .cta:not(.hero-cta):hover::after, .cta:not(.hero-cta):focus-visible::after,
 .btn-studio:hover::after, .btn-studio:focus-visible::after{ animation:qz-reflet .75s cubic-bezier(.4,0,.2,1) forwards; }
@@ -291,8 +312,15 @@ footer.qz-footer .qz-pied-infos a:hover, footer.qz-footer .qz-pied-infos a:focus
 footer.qz-footer .qz-copy{
   grid-column:1 / -1; text-align:center; margin-top:10px; padding-top:18px;
   border-top:1px solid #1e2b3524;
-  color:var(--qz-pied-titre); font-family:'Jura',sans-serif; font-size:12px; font-weight:600;
+  /* 19/09, fondateur : « © 2026 QuadretI · Tous droits reserves en orange quadreti », sur TOUTES les pages.
+     La regle existait, mais ecrite dans index.html : les 37 autres pages gardaient le gris. Elle monte ici.
+     PAS l orange de marque : le copyright fait 12 px, seuil 4,5, et #D96C2F n y vaut que 4,23. Sur le pied clair
+     c est sa forme FONCEE, #9c4514 (4,80 sur le gris) ; sur le pied sombre sa forme ECRITE, #ff9147 (6,47).
+     Trois classes dans le selecteur, et pas un !important : le panneau ecrit sa feuille EN DERNIER mais avec
+     `html.qz-accueil .qz-copy`, moins specifique. On passe devant en etant plus precis, pas plus insistant. */
+  color:#9c4514; font-family:'Jura',sans-serif; font-size:12px; font-weight:600;
 }
+html.qz-fond-sombre footer.qz-footer .qz-copy{ color:#ff9147; }
 @media (max-width:900px){
   .qz-pied3{ grid-template-columns:1fr 1fr; gap:28px; padding:34px 24px 30px; }
   .qz-basdepage{ grid-column:1 / -1; }
