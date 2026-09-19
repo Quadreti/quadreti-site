@@ -15,12 +15,15 @@
    #dedede), un enfant de la barre. Fixer la barre fixe le dessin — il n y a rien de plus a ecrire.
    Mesure prealable : aucun ancetre n a d overflow ni de transform qui casserait `sticky`. Le z-index 60
    deja pose est conserve tel quel : le tiroir du menu (z 70) doit rester AU-DESSUS, et c est le cas. */
-.qz-header{position:sticky;top:0}
-
-/* Complement obligatoire d une barre qui reste : sans lui, un lien d ancre amene sa cible SOUS la barre et
-   le titre visé disparait derriere. 104 px = les 98 px de l onglet (la partie la plus basse du dessin)
-   plus une respiration. Limite aux sections, les seules vraies cibles d ancre du site. */
-section[id]{scroll-margin-top:104px}
+/* 19/09, fondateur : « oui seulement sur pc ». Sur telephone la barre fait 97 px de haut (le bloc logo
+   passe sur deux lignes) contre 58 sur ordinateur : la coller mangerait 14 % de l ecran en permanence.
+   Seuil 901 px — la coupure que le site utilise deja pour ses regles d en-tete de bureau.
+   Le `scroll-margin-top` est dans la meme parenthese, et c est voulu : il ne sert qu a degager une cible
+   d ancre de dessous la barre collante. Sans barre collante, rien ne la couvre. */
+@media (min-width:901px){
+  .qz-header{position:sticky;top:0}
+  section[id]{scroll-margin-top:104px}
+}
 
 /* onglet : dessin entier etire en largeur et en hauteur, sous le contenu de la barre (z-index -1 dans le contexte de la barre) */
 .qz-onglet{position:absolute;left:0;top:0;width:100%;height:var(--qz-onglet,98px);z-index:-1;display:block;overflow:visible;pointer-events:none}
