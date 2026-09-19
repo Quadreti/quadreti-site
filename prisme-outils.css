@@ -188,7 +188,13 @@
    utilisateur. Et pour qui demande moins d animation, il ne bouge pas : il devient une rangee qu on fait defiler soi-meme. */
 .bandeau-outils{ position:relative; margin-top:34px;
   overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scroll-behavior:smooth;
-  scrollbar-width:thin; scrollbar-color:#b6c0c8 transparent; }
+  /* 19/09, fondateur : « est-ce qu on peut eviter d avoir la barre de defilement ? ». Oui — et rien ne se perd :
+     le doigt, la molette et le clavier continuent d agir, ce sont les DEUX FLECHES qui disent desormais que la
+     rangee continue. Une barre grise en travers d une bande de cartes est un element d interface qui n appartient
+     pas au dessin de la page ; les fleches, elles, en font partie.
+     Deux declarations et pas une : `scrollbar-width` pour Firefox, le pseudo-element pour Chrome et Safari. */
+  scrollbar-width:none; }
+.bandeau-outils::-webkit-scrollbar{ display:none; }
 @media (prefers-reduced-motion:reduce){ .bandeau-outils{ scroll-behavior:auto; } }
 /* 16/09, fondateur : « sans fondu de bordure ». Les deux degrades qui faisaient disparaitre les cartes en douceur sur
    les bords sont retires : la coupure franche est la grammaire de la page depuis ce matin — les cartes de titre sont
