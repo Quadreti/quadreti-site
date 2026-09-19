@@ -178,11 +178,14 @@
 .qb-geste-fleche svg{width:clamp(22px,2vw,30px);height:auto;display:block}
 .qb-gestes-A{background:var(--fond,#1e2b35);color:var(--couleur2,#f4f1ea)}
 .qb-gestes-A .qb-geste p{color:color-mix(in srgb,var(--couleur2,#f4f1ea) 70%,transparent)}
-.qb-gestes-A .qb-geste-icone{--ic-fond:var(--fond,#1e2b35)}
+/* 19/09 : --ic-fond retire des trois variantes. Il servait a remplir la main de l icone Clipsez pour qu elle cache
+   la grille ; c est desormais un masque qui decoupe la grille sous la main (voir qg-clipsez-trou dans
+   bandeau-gestes.js), ce qui marche quel que soit le fond. La variante B, la seule en service, le mettait a
+   `transparent` : la ligne du carreau traversait le doigt, incoherence signalee par le fondateur. La variante C,
+   elle, portait #f4f1ea, le creme de l identite KRAFT abandonnee — une couleur morte de moins. */
 /* B (retenue le 11/09) : sur le fond de page, icones et textes navy, sauf Changez en terracotta */
 .qb-gestes-B{background:transparent;color:#1e2b35}
 .qb-gestes-B .qb-geste p{color:color-mix(in srgb,#1e2b35 78%,transparent)}
-.qb-gestes-B .qb-geste-icone{--ic-fond:transparent}
 /* 14/09 : --qz-terracotta-texte et non --qz-terracotta. L orange de marque pose en texte sur ce fond clair vaut 2,54 ;
    le jeton texte porte la meme teinte, foncee juste assez pour se lire (4,67, calcule). Repli sur le #9c4514 de la charte. */
 .qb-gestes-B .qb-geste-changez h3,.qb-gestes-B .qb-geste-changez p{color:var(--qz-terracotta-texte,#9c4514)} /* 12/09 : tout le texte du geste Changez en orange */
@@ -195,7 +198,6 @@
 .qb-gestes-C{background:var(--fond,#1e2b35);padding:0 4vw clamp(20px,2.4vw,36px)}
 .qb-gestes-C .qb-gestes-liste{background:#f4f1ea;color:#1e2b35;padding-left:3vw;padding-right:3vw}
 .qb-gestes-C .qb-geste p{color:#5c646c}
-.qb-gestes-C .qb-geste-icone{--ic-fond:#f4f1ea}
 @media (max-width:900px){
   .qb-gestes-liste{grid-template-columns:1fr 1fr;gap:22px 18px}
   .qb-geste{justify-items:center;text-align:center}
