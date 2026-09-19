@@ -41,8 +41,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/commun.css?v=2026-09-20a">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20a">
+<link rel="stylesheet" href="/commun.css?v=2026-09-20b">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20b">
 <style>
   /* 13/09, demande du fondateur : le menu est sur gris, donc le CONTENU est sur bleu — l inversion de la charte, appliquee a la page.
      Le selecteur passe par l identifiant que le corps porte deja : la feuille que le panneau injecte a l execution pose body{...} a
@@ -70,12 +70,23 @@
   .icon{ width:20px; height:20px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
   /* ---- 15/09 : le bandeau « Mon Espace », sous le prisme ----
-     Un filet et de l air, pas une carte : c est une suite de la page, pas un sixieme outil. */
-  #outils-espace{ padding-top:4px; }
+     C etait « un filet et de l air, pas une carte : une suite de la page, pas un sixieme outil ».
+     19/09, fondateur : « cette carte tu peux la faire passer en navy 2 ». C EST DONC UNE CARTE, et le filet n a
+     plus d objet : une carte se detache par sa surface, un trait par-dessus ferait double emploi.
+     Navy 2 sur le navy de la page : 1,42 — c est le rapport que la charte donne aux cartes du site, un panneau
+     qui se distingue sans s allumer. Les trois textes qu elle porte ont ete remesures CONTRE ELLE, et non contre
+     le fond de page : titre #dedede 7,59 ; paragraphe #aab2ba 4,77 ; bouton gris 7,59, son texte navy 10,75.
+     Tous passent, aucun n avait besoin d etre retouche.
+     Remplissage lateral garde a 22 px, la valeur de `.wrap` : le texte de la carte reste ainsi sur la MEME
+     colonne que le reste de la page, la carte deborde juste autour de lui. */
   .espace-bandeau{
     display:flex; align-items:center; justify-content:space-between; gap:clamp(16px,3vw,40px);
-    border-top:1px solid #33404b; padding-top:24px;
+    background:#33434f; border-radius:4px; padding:24px 22px;
   }
+  /* 19/09, fondateur : « augmenter l espace sous cette carte qui est colle au bas de page ». Mesure : le bas de
+     la carte tombait 4 px SOUS le haut du pied — elle ne le touchait pas, elle passait dessous. La section n avait
+     que 18 px de remplissage bas, et le decroche du pied remonte par-dessus. 64 px lui rendent son air. */
+  #outils-espace{ padding-top:4px; padding-bottom:64px; }
   #outils-espace h2{ font-size:clamp(17px,2vw,21px); font-weight:700; margin:0 0 6px; color:#dedede; }   /* 10,75 sur le navy — et un identifiant, sinon le h2,h3{color:#1e2b35} injecte par le panneau le peindrait en navy sur du navy */
   #outils-espace p{ margin:0; font-size:14px; line-height:1.55; color:#aab2ba; max-width:58ch; }          /* 6,74 */
   /* « bouton gris sur arriere-plan bleu » : la regle du fondateur, et le meme objet que la pastille des barres. */
@@ -98,7 +109,7 @@
 </head>
 <body id="qz-top">
 <!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-bandeau.js?v=2026-09-20a"></script>
+<script src="/commun-bandeau.js?v=2026-09-20b"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
 <section class="blk" id="outils-hero">
@@ -118,7 +129,7 @@
   <div class="wrap">
       <!-- 14/09 : le prisme est ecrit par /prisme-outils.js, qui declare aussi les cinq outils. Jamais en defer ni async : il
            ecrit au fil de la lecture, exactement ici. -->
-      <script src="/prisme-outils.js?v=2026-09-20a"></script>
+      <script src="/prisme-outils.js?v=2026-09-20b"></script>
 
   </div>
 </section>
@@ -137,7 +148,7 @@
 </section>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-20a"></script>
+<script src="/commun-pied.js?v=2026-09-20b"></script>
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
 <script>
@@ -150,6 +161,6 @@
     document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
   }
 </script>
-<script src="reglages-site.js?v=2026-09-20a" defer></script>
+<script src="reglages-site.js?v=2026-09-20b" defer></script>
 </body>
 </html>
