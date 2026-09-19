@@ -322,6 +322,32 @@
   }
   poserBords(); window.addEventListener('load', poserBords); setTimeout(poserBords, 1500); window.addEventListener('resize', poserBords);
 
+  /* 20/09, fondateur : « et le lisere inferieur ? ». Il est parti avec le decroche du site, et on ne
+     peut pas remettre l ancien : il suivait une AUTRE courbe (22 px de profondeur a 41-46 % de la
+     largeur) que celle qui est maintenant dans l image (environ 73 px a 66-70 %) — le trait serait
+     tombe en travers de la photo.
+     Celui-ci vient du MEME fichier que la decoupe, `BANDEAU.svg`, et partage sa boite : il tombe donc
+     exactement sur le bord, a toute largeur. Verifie : l echelle est uniforme (5,842 en X contre 5,840
+     en Y a 1521 px de large), la courbe n est donc pas deformee.
+     `non-scaling-stroke` garde 2 px a l ecran quelle que soit la taille de la bande. */
+  (function liserebas() {
+    var hote = document.getElementById('qbBandeau');
+    if (!hote || hote.querySelector('.qb-lisere-image')) return;
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('class', 'qb-lisere-image');
+    svg.setAttribute('viewBox', '14.52498 47.62499 260.35 76.2');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    var t = document.createElementNS(SVGNS, 'path');
+    t.setAttribute('d', "M 14.52498 111.2298 L 185.552 111.2298 C 185.8116 111.2298 186.0687 111.2479 186.3232 111.2843 C 186.5522 111.3136 186.7941 111.3639 187.049 111.4351 C 187.2853 111.5008 187.5179 111.5804 187.7469 111.674 C 188.0058 111.783 188.2497 111.9017 188.4787 112.0303 C 188.7434 112.1839 188.9861 112.3408 189.2067 112.5007 C 189.4736 112.6991 189.7219 112.9045 189.9516 113.1168 C 190.1715 113.3201 190.3916 113.5453 190.6118 113.7926 C 190.8576 114.072 191.0864 114.3581 191.2982 114.6507 C 191.5046 114.9336 191.7026 115.2389 191.8922 115.5665 L 195.478 121.5964 C 195.5597 121.7361 195.6389 121.8587 195.7154 121.9641 C 195.8248 122.115 195.9446 122.2645 196.0748 122.4126 C 196.1889 122.5404 196.3054 122.6592 196.4243 122.7688 C 196.5537 122.889 196.695 123.006 196.8482 123.1198 C 196.9707 123.2085 197.1134 123.3004 197.2764 123.3954 C 197.4019 123.4652 197.5444 123.5341 197.7041 123.6018 C 197.838 123.657 197.9773 123.7041 198.122 123.7433 C 198.2518 123.7796 198.3756 123.8068 198.4934 123.825 L 274.8749 123.825");
+    t.setAttribute('fill', 'none');
+    t.setAttribute('vector-effect', 'non-scaling-stroke');
+    t.setAttribute('stroke-linejoin', 'round');
+    t.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(t);
+    hote.appendChild(svg);
+  })();
+
   /* 20/09 : poserSilhouette() est RETIREE. Elle decoupait la bande pour dessiner la marche du bas ;
      depuis que les visuels arrivent decoupes, elle couperait une seconde fois, et pas au meme
      endroit — 22 px cote site contre environ 73 px dans l image. La forme vient du fichier.
