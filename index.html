@@ -1628,8 +1628,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-20k">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20k">
+<link rel="stylesheet" href="/commun.css?v=2026-09-20l">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20l">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1647,7 +1647,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-20k" defer></script>
+<script src="reglages-site.js?v=2026-09-20l" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1689,9 +1689,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-20k"></script>
+<script src="/commun-bandeau.js?v=2026-09-20l"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20k">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20l">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1898,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-20k" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-20l" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2151,10 +2151,15 @@ document.addEventListener('DOMContentLoaded', function(){
   var boutons = [].slice.call(d.querySelectorAll('.scal-chap button'));
   if (vues.length !== 14) return;
 
+  /* 19/09, fondateur : « fais une pause plus longue entre chaque dimension de rendu ». `garde` est le temps
+     pendant lequel une taille ATTEINTE reste a l ecran, avant que le chapitre suivant ne reprenne a un carreau.
+     Elle passe de 1,6 / 1,8 / 2,6 s a 2,8 / 3,4 / 4,4 s. C est la SEULE valeur qui change : le temps de POSE
+     d un carreau reste a 620 ms. Le geste doit rester vif — c est le RESULTAT qu on veut laisser regarder, pas
+     le mouvement. Cycle complet : 17,4 s au lieu de 13,1. */
   var CHAPITRES = [
-    { debut: 0,  n: 1, texte: '×1 · 20 × 20 cm', garde: 1600 },
-    { debut: 1,  n: 4, texte: '×4 · 40 × 40 cm', garde: 1800 },
-    { debut: 5,  n: 9, texte: '×9 · 60 × 60 cm', garde: 2600 }
+    { debut: 0,  n: 1, texte: '×1 · 20 × 20 cm', garde: 2800 },
+    { debut: 1,  n: 4, texte: '×4 · 40 × 40 cm', garde: 3400 },
+    { debut: 5,  n: 9, texte: '×9 · 60 × 60 cm', garde: 4400 }
   ];
   var POSE = 620;
   function chapitreDe(i) { for (var k = CHAPITRES.length - 1; k >= 0; k--) if (i >= CHAPITRES[k].debut) return k; return 0; }
@@ -2463,7 +2468,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-20k"></script>
+<script src="/commun-pied.js?v=2026-09-20l"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2841,7 +2846,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-20k"></script>
-<script src="/bandeau-gestes.js?v=2026-09-20k"></script>
+<script src="/bandeau-relief.js?v=2026-09-20l"></script>
+<script src="/bandeau-gestes.js?v=2026-09-20l"></script>
 </body>
 </html>
