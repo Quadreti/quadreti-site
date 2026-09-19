@@ -355,6 +355,26 @@
     }
     chemin.setAttribute('d', out.join(' ') + ' L1 0 L0 0 Z');
   }
+  /* 20/09, fondateur : « a l ecran de demarrage il y a le menu + bandeau + bandeau pedagogique +
+     bandeau defilant ». Les quatre doivent tenir sans defiler. Le bandeau prend son rapport naturel
+     (celui des photos), mais JAMAIS plus que la place qui reste une fois les deux bandes du bas posees.
+     On mesure cette place au lieu de la coder en dur : la bande des gestes et le bandeau defilant
+     changent de hauteur avec la largeur (leurs marges sont en clamp).
+     ⚠️ L en-tete ne compte pas : elle est POSEE SUR le bandeau (les deux commencent a y=0), elle
+     n ajoute pas de hauteur. Mesure.
+     Quand la fenetre est trop basse, le plafond l emporte et la photo est rognee — c est le seul cas,
+     et c est preferable a un defilement pour voir le pedagogique. */
+  function calerPlaceBandeau() {
+    var g = document.querySelector('.qb-gestes'), d = document.querySelector('.qb-defile'), pris = 0;
+    if (g) pris += g.getBoundingClientRect().height + (parseFloat(getComputedStyle(g).marginTop) || 0);
+    if (d) pris += d.getBoundingClientRect().height;
+    var place = Math.max(320, Math.round(window.innerHeight - pris));
+    document.documentElement.style.setProperty('--place-bandeau', place + 'px');
+  }
+  calerPlaceBandeau();
+  window.addEventListener('load', calerPlaceBandeau);
+  window.addEventListener('resize', calerPlaceBandeau);
+
   poserSilhouette(); window.addEventListener('load', poserSilhouette); window.addEventListener('resize', poserSilhouette);
   if (window.ResizeObserver) new ResizeObserver(poserSilhouette).observe(root);
   caler(); if (window.ResizeObserver) new ResizeObserver(caler).observe(root); /* recale logo et menu des que le bloc change de taille (mur plafonne, polices chargees) */
