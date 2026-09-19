@@ -87,7 +87,11 @@
    qui est navy — texte navy sur fond navy, contraste 1,00, menu invisible sur tout telephone. Constate en production. */
 @media (min-width:901px){
   .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#1e2b35!important}
-  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+  /* 19/09, fondateur : « homogenise les oranges des textes ». #d96c2f ne vaut que 2,54 sur cette barre
+     claire — sous le seuil meme des grands textes, et ce sont des liens de 13,5 px. Il passe a la forme
+     CLAIRE de la charte, #9c4514 : 4,60, et c est le meme orange ecrit que partout ailleurs sur fond clair.
+     POUR REVENIR EN ARRIERE : remettre var(--qz-terracotta,#d96c2f). */
+  .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-subtoggle:hover{color:#9c4514!important}
 }
 /* Le tiroir mobile, lui, suit la grammaire des apps : fond navy, texte gris. Et il redevient OPAQUE — la transparence du
    panneau d admin n existe que sur cette largeur (sur bureau le menu vit dans la barre et son fond est deja force a
@@ -97,9 +101,17 @@
   .qz-header.qz-menu-visible .qz-navpanel{background:#1e2b35!important}
   .qz-header.qz-menu-visible .qz-navpanel>ul>li>a,.qz-header.qz-menu-visible .qz-subtoggle{color:#dedede!important}   /* 10,75 sur le navy */
   .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,.qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
-  .qz-header.qz-menu-visible .qz-subtoggle:hover,.qz-header.qz-menu-visible .qz-subtoggle:focus-visible{color:#e89a63!important}   /* l orange eclairci : 6,36 sur le navy */
+  /* 19/09, fondateur : « homogenise les oranges des textes ». #e89a63 etait un TROISIEME orange, a un
+     cheveu de #ff9147 au contraste (6,36 contre 6,47) mais different a l oeil. Il rejoint la forme
+     ecrite de la charte. Le survol reste bien distinct : le texte au repos est gris #dedede. */
+  .qz-header.qz-menu-visible .qz-subtoggle:hover,.qz-header.qz-menu-visible .qz-subtoggle:focus-visible{color:#ff9147!important}
 }
-.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:var(--qz-terracotta,#d96c2f)} /* 12/09 fondateur : fleche du sous-menu en orange */
+/* 19/09, fondateur : « homogenise les oranges des textes ». Le chevron declarait SON orange (#d96c2f)
+   alors que le libelle juste a cote est en #ff9147 : deux oranges dans le meme mot. Verifie : aucune autre
+   regle ne le redefinissait, c etait la seule. Il HERITE maintenant du libelle — donc toujours la meme
+   couleur que lui, sur fond clair comme sur fond sombre, sans avoir a le redeclarer par theme. Il reste
+   orange, puisque le libelle l est. POUR REVENIR EN ARRIERE : remettre var(--qz-terracotta,#d96c2f). */
+.qz-header.qz-menu-visible .qz-subtoggle .qz-chev{color:inherit}
 .qz-header.qz-menu-visible .qz-burger{background:#1e2b35}
 /* ecrans de portable (14 pouces) : liens plus serres pour que le menu tienne sur une ligne */
 @media (min-width:901px) and (max-width:1440px){

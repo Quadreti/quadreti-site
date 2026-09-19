@@ -60,7 +60,10 @@
 .qz-header.qz-app.qz-menu-visible .qz-navpanel>ul>li>a,
 .qz-header.qz-app.qz-menu-visible .qz-subtoggle{color:#dedede!important}
 .qz-header.qz-app.qz-menu-visible .qz-navpanel>ul>li>a:hover,
-.qz-header.qz-app.qz-menu-visible .qz-subtoggle:hover{color:var(--qz-terracotta,#d96c2f)!important}
+/* 19/09, fondateur : « homogenise les oranges des textes ». Le panneau de l en-tete des APPS est navy :
+   #d96c2f n y vaut que 4,23, sous le seuil de liens de 13,5 px, et c etait un orange de plus. Forme
+   ecrite de la charte, 6,47. POUR REVENIR EN ARRIERE : remettre var(--qz-terracotta,#d96c2f). */
+.qz-header.qz-app.qz-menu-visible .qz-subtoggle:hover{color:#ff9147!important}
 .qz-header.qz-app .qz-burger{background:#dedede}
 .qz-header.qz-app .qz-burger:hover,.qz-header.qz-app .qz-burger:focus-visible{background:#ffffff}
 .qz-header.qz-app .qz-burger span{background:#1e2b35}

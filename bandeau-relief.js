@@ -6,20 +6,18 @@
   var REGLAGES = {
     cx: 4, cy: 2, ecart: 0, grilleFixe: true, disposition: 'droite', /* 11/09 fondateur : 4x2 pour occuper la largeur a hauteur egale (le mur est plafonne en hauteur pour tenir sur un 14 pouces) */ /* 'droite' = textes + bouton a gauche, mur a droite ; 'colonne' = textes au-dessus/dessous */ mobile: { max: 640, cx: 2, cy: 2 }, /* carreaux en largeur / hauteur, écart entre carreaux (cqw) */
     /* 12/09 soir, fondateur : sequence logique de 13 photos (photo site 1, n° 1 a 13, recadrees en 2:1 = 1200x600) : etuis, feuilles, imprimante, mains (etui, tesselle), grille vide, coeur, clipsage, coeur en biais, salon. */
+    /* 19/09 (nuit), fondateur : NOUVELLE SERIE. Dix-sept photos livrees en 2580x1280 (rapport 2,016), la
+       dimension calculee pour la bande pleine largeur. Elles remplacent les dix-neuf de septembre, qui
+       etaient en 1200x800 (rapport 1,5) et faites pour le cadre 3:2 de la colonne de droite. */
     visuels: [
-      /* 1 a 5 — la moitie NUMERIQUE (13/09, cinq nouvelles photos du fondateur) : on arrive sur le site, on ouvre le Studio, on compose,
-         le motif est fini, on regarde le mur complet. */
-      '/img/bandeau-app-01-accueil.jpg', '/img/bandeau-app-02-grille.jpg', '/img/bandeau-app-03-composition.jpg',
-      '/img/bandeau-app-04-motif.jpg', '/img/bandeau-app-05-apercu.jpg',
-      /* 6 a 17 — la moitie PHYSIQUE, sequence du 12/09 : etuis, feuilles, imprimante, mains (etui, tesselle), grille vide, coeur, clipsage. */
-      '/img/bandeau-seq-01.jpg', '/img/bandeau-seq-02.jpg', '/img/bandeau-seq-03.jpg', '/img/bandeau-seq-04.jpg',
-      '/img/bandeau-seq-05.jpg', '/img/bandeau-seq-06.jpg', '/img/bandeau-seq-07.jpg', '/img/bandeau-seq-08.jpg',
-      '/img/bandeau-seq-09.jpg', '/img/bandeau-seq-10.jpg', '/img/bandeau-seq-11.jpg', '/img/bandeau-seq-12.jpg',
-      /* 18 — le plan imprime pose a cote du panneau fini : le pont entre l impression et le resultat. Elle ouvrait le diaporama
-         jusqu au 13/09, le fondateur l a demandee en avant-derniere. */
-      '/img/bandeau-seq-00.jpg',
-      /* 19 — le salon. Derniere, et elle tient 60 s avant de reboucler (voir diaporama.tenueFin). */
-      '/img/bandeau-seq-13.jpg'
+      /* 1 a 4 — la moitie NUMERIQUE : on arrive sur le site, on ouvre le Studio, on compose, le motif est fini. */
+      '/img/bandeau-hero-01.jpg', '/img/bandeau-hero-02.jpg', '/img/bandeau-hero-03.jpg', '/img/bandeau-hero-04.jpg',
+      /* 5 a 16 — la moitie PHYSIQUE : etuis, feuilles, imprimante, mains (etui, tesselle), grille vide, coeur, clipsage. */
+      '/img/bandeau-hero-05.jpg', '/img/bandeau-hero-06.jpg', '/img/bandeau-hero-07.jpg', '/img/bandeau-hero-08.jpg',
+      '/img/bandeau-hero-09.jpg', '/img/bandeau-hero-10.jpg', '/img/bandeau-hero-11.jpg', '/img/bandeau-hero-12.jpg',
+      '/img/bandeau-hero-13.jpg', '/img/bandeau-hero-14.jpg', '/img/bandeau-hero-15.jpg', '/img/bandeau-hero-16.jpg',
+      /* 17 — le salon. Derniere, et elle tient 60 s avant de reboucler (voir diaporama.tenueFin). */
+      '/img/bandeau-hero-17.jpg'
     ], ancrage: 'centre',
     /* 13/09 fondateur : le mur devient un diaporama en fondu des visuels ci-dessus (une photo a la fois, format d origine). duree = tenue de chaque photo (s),
        fondu = duree du fondu (s), tenueFin = tenue supplementaire de la derniere photo avant de reboucler. actif: false = mur en tesselles comme avant. */
@@ -29,8 +27,8 @@
          trouver, lire une interface miniature, comprendre l etape : ca ne se fait pas en 2 s. Les photos produit, tres contrastees
          entre elles, se lisent d un coup d oeil et gardent la duree generale ci-dessus. */
       dureeParPhoto: {
-        '/img/bandeau-app-01-accueil.jpg': 4, '/img/bandeau-app-02-grille.jpg': 4, '/img/bandeau-app-03-composition.jpg': 4,
-        '/img/bandeau-app-04-motif.jpg': 4, '/img/bandeau-app-05-apercu.jpg': 4
+        '/img/bandeau-hero-01.jpg': 4, '/img/bandeau-hero-02.jpg': 4,
+        '/img/bandeau-hero-03.jpg': 4, '/img/bandeau-hero-04.jpg': 4
       } }, /* 13/09 fondateur : 2 s par photo (divise par 2), fondu .8 s ; la derniere photo (le salon) reste 60 s en tout (2 + 58) avant de reboucler */
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: 'var(--qz-terracotta,#d96c2f)', couleur2: '#dedede', titre: '#dedede' /* 12/09 fondateur : textes du bandeau navy en gris clair #dedede (comme la barre) */ },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
@@ -321,6 +319,44 @@
     if (droite && large) { var bande = document.querySelector('.qb-gestes'), defile = document.querySelector('.qb-defile'); var dispo = window.innerHeight - parseFloat(R.paddingTop) - Math.round(root.offsetWidth * .012) - (bande ? bande.offsetHeight : 0) - (defile ? defile.offsetHeight : 0) - 2; R.setProperty('--mur-max', Math.max(180, dispo) + 'px'); } else R.removeProperty('--mur-max');
   }
   poserBords(); window.addEventListener('load', poserBords); setTimeout(poserBords, 1500); window.addEventListener('resize', poserBords);
+
+  /* 19/09 (nuit), fondateur : « le decroche n est pas modifie pour laisser continuer l image ».
+     La marche du bas ne RECOUVRE plus la photo en navy, elle DECOUPE la bande : l image continue
+     dedans et descend 22 px plus bas a droite. Le remplissage navy du bord est mis en transparent
+     par le CSS ; seul son lisere reste, et il tombe pile sur la coupe.
+     La forme est exprimee en fractions de la boite (objectBoundingBox) : elle suit donc la largeur
+     toute seule. Mais la part que prennent les 22 px depend de la HAUTEUR — d ou le recalcul a
+     chaque redimensionnement. Le CSS ne l applique qu au-dessus de 901 px ; en dessous rien ne change.
+     ⚠️ On part de la LIGNE (`trait`), jamais du `fond` : les chemins `fond` de BORDS portent, en plus
+     de la marche, les bandes pleines de leur usage d origine — c est la meme raison qui oblige
+     poserMarches() a reconstruire ses remplissages. */
+  var PROF_MARCHE = 22;
+  function poserSilhouette() {
+    var b = BORDS.bas, vb = b.vb, h = root.getBoundingClientRect().height;
+    if (!h) return;
+    var hautFrac = (h - PROF_MARCHE) / h, profFrac = PROF_MARCHE / h;
+    var fx = function (x) { return ((x - vb[0]) / vb[2]).toFixed(5); };
+    var fy = function (y) { return (hautFrac + ((y - vb[1]) / vb[3]) * profFrac).toFixed(5); };
+    var jet = b.trait.match(/[MLQ]|-?\d*\.?\d+/g), i = 0, out = [];
+    while (i < jet.length) {
+      var c = jet[i++];
+      if (c === 'M' || c === 'L') out.push(c + fx(+jet[i++]) + ' ' + fy(+jet[i++]));
+      else if (c === 'Q') out.push('Q' + fx(+jet[i++]) + ' ' + fy(+jet[i++]) + ' ' + fx(+jet[i++]) + ' ' + fy(+jet[i++]));
+    }
+    var chemin = document.getElementById('qbCheminSilhouette');
+    if (!chemin) {
+      var hote = document.createElement('div');
+      hote.setAttribute('aria-hidden', 'true');
+      hote.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      hote.innerHTML = '<svg><defs><clipPath id="qbSilhouette" clipPathUnits="objectBoundingBox">' +
+        '<path id="qbCheminSilhouette" d="M0 0 L1 0 L1 1 L0 1 Z"/></clipPath></defs></svg>';
+      document.body.appendChild(hote);
+      chemin = document.getElementById('qbCheminSilhouette');
+    }
+    chemin.setAttribute('d', out.join(' ') + ' L1 0 L0 0 Z');
+  }
+  poserSilhouette(); window.addEventListener('load', poserSilhouette); window.addEventListener('resize', poserSilhouette);
+  if (window.ResizeObserver) new ResizeObserver(poserSilhouette).observe(root);
   caler(); if (window.ResizeObserver) new ResizeObserver(caler).observe(root); /* recale logo et menu des que le bloc change de taille (mur plafonne, polices chargees) */
   var dernierMobile = estMobile(); window.addEventListener('resize', function () { caler(); if (estMobile() !== dernierMobile) { dernierMobile = estMobile(); root.classList.remove('qb-joue'); preparer(); void root.offsetWidth; if (lanceDeja) root.classList.add('qb-joue'); } });
   /* 13/09 : diaporama -- une <img> par visuel dans .qb-diapo. Fondu croise en CSS (transition d opacite sur .qb-visible), enchainement par
