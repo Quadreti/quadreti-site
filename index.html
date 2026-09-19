@@ -704,6 +704,39 @@
   }
   .color-note b{ color:#10181f; }
 
+  /* ===== 19/09 : LES FLECHES DES BANDES PILOTEES =====
+     Deux boutons poses SUR la fenetre, a gauche et a droite, centres verticalement. En superposition et non dans
+     une barre sous la bande : le fondateur a choisi cette option parce que « la mise en page ne bouge pas », et
+     une barre aurait ajoute cinquante pixels a deux sections.
+     Ils s effacent au bout de course — un bouton qui ne fait rien ment sur ce qui est possible.
+     Ils ne sont PAS le seul moyen d avancer : la fenetre se parcourt aussi au doigt, a la molette et au clavier.
+     Ce sont des raccourcis a la souris, pas la seule porte — c est pour ca qu ils peuvent disparaitre sans rien
+     bloquer. */
+  .defile-cadre{ position:relative; }
+  /* LE CADRE REPREND CE QUE PORTAIT LA FENETRE. Envelopper un bloc lui fait perdre sa place dans la grille — c est
+     exactement l erreur qui a fait tomber le diaporama 196 px trop bas une heure plus tot, et je l ai failli deux
+     fois dans la meme soiree. `.bandeau-outils` est enfant DIRECT de `.app-duo` et y occupe la colonne 2 sur toute
+     la hauteur ; le cadre prend sa place, et la fenetre rend la sienne.
+     Le debord vers le bord de page suit le meme chemin : porte par le cadre, sinon les fleches se posent par
+     rapport a un cadre plus etroit que la bande et flottent a cote d elle. */
+  .app-duo > .defile-cadre{ grid-column:2; grid-row:1 / -1; margin-right:calc(-1 * (var(--qz-bord))); }
+  .app-duo .defile-cadre > .bandeau-outils{ margin-top:0; margin-right:0; }
+  .designer-duo .defile-cadre{ margin-left:calc(-1 * (var(--qz-bord))); }
+  .designer-duo .defile-cadre > .app-grid{ margin-left:0; }
+  .defile-fleche{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:4;
+    width:40px; height:40px; border-radius:22%; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    background:#1e2b35; color:#dedede;
+    box-shadow:inset 1px 1px 0 #ffffff30, inset -1px -1px 0 #00000047, 0 6px 16px #00000059;
+    transition:opacity .2s ease, background .15s ease, visibility .2s; }
+  .defile-fleche:hover, .defile-fleche:focus-visible{ background:#2f4150; }
+  .defile-fleche[hidden]{ opacity:0; visibility:hidden; display:flex; }   /* on le fait disparaitre en douceur, pas d un coup */
+  .defile-prec{ left:10px; }
+  .defile-suiv{ right:10px; }
+  .defile-fleche svg{ width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  @media (prefers-reduced-motion:reduce){ .defile-fleche{ transition:none; } }
+
   /* ===== Scalabilité ===== */
 /* 14/09 : la rangee porte desormais des PHOTOS, plus des grilles de petits carres. Les trois sont recadrees au carre, donc de
      meme hauteur ; la fleche se centre sur l image, pas sur le bloc entier — sinon elle descend au niveau des libelles. */
@@ -1073,16 +1106,29 @@
     .duo-bande .cadeau > *, .duo-bande .trust > *{ flex-basis:360px; }   /* seules ces deux bandes ont des cartes de largeur egale */
     .duo-bande .bande-piste > .qz-copie{ display:block; }
     .duo-bande .lead{ max-width:none; }
-    .designer-duo .modes-piste{ display:flex; gap:14px; width:max-content; padding-right:14px;   /* cette gouttiere de plus est ce qui fait tomber la moitie de la piste PILE sur la sixieme carte : dix cartes, dix gouttieres */
-      animation:bandeau-defile 42s linear infinite; }
-    .designer-duo > .app-grid:hover .modes-piste, .designer-duo .modes-piste:focus-within{ animation-play-state:paused; }
-    .designer-duo .modes-piste > .mode{ flex:0 0 210px; }
-    .designer-duo .modes-piste > .qz-copie{ display:block; }
-    /* Pour qui demande moins d animation : la bande ne bouge plus, on la fait glisser soi-meme, sans barre apparente. */
+    /* 19/09, fondateur : « le mouvement n est pas adapte pour ce type d info ». Plus de defilement automatique —
+       c est le lecteur qui fait avancer la rangee, au doigt, a la molette, aux fleches ou au clavier.
+       Le defilement est porte par la FENETRE et non par la piste : une piste qu on translate ne se parcourt ni au
+       doigt ni au clavier, alors qu un conteneur qui deborde le fait nativement, sans JavaScript.
+       La COPIE des cartes disparait : elle n existait que pour rendre la boucle invisible. Plus de boucle, plus de
+       copie — et le parcours clavier cesse de traverser dix cartes pour en montrer cinq. */
+    .designer-duo .modes-piste{ display:flex; gap:14px; width:max-content; padding-right:14px; }
+    .designer-duo .modes-piste > .mode{ flex:0 0 210px; scroll-snap-align:start; }
+    .designer-duo .modes-piste > .qz-copie{ display:none; }
+        /* DESCENDANT et non enfant direct : `.app-grid` vit dans `.designer-gauche`, pas directement dans la grille.
+       Le commentaire de la regle d origine le disait quarante lignes plus haut ; j avais quand meme ecrit `>`, et
+       la regle n aurait jamais rien fait. */
+    .designer-duo .app-grid{
+      overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scroll-behavior:smooth;
+      scrollbar-width:thin; scrollbar-color:#b6c0c8 transparent; padding-bottom:10px; }
+    /* 19/09 : ce repli ne concerne plus que les bandes de « Cadeau » et « Livraison », qui gardent leur defilement
+       automatique — celles-la n etaient pas dans la demande du fondateur. Celle du Designer est pilotee pour tout le
+       monde desormais ; il ne lui reste qu a perdre la douceur du defilement. */
     @media (prefers-reduced-motion:reduce){
-      .designer-duo .modes-piste, .duo-bande .bande-piste{ animation:none; }
-      .designer-duo .app-grid, .duo-bande .bande-fenetre{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; padding-bottom:24px; margin-bottom:-24px; }
-      .designer-duo .app-grid::-webkit-scrollbar, .duo-bande .bande-fenetre::-webkit-scrollbar{ display:none; }
+      .duo-bande .bande-piste{ animation:none; }
+      .duo-bande .bande-fenetre{ overflow-x:auto; overflow-y:hidden; scrollbar-width:none; padding-bottom:24px; margin-bottom:-24px; }
+      .duo-bande .bande-fenetre::-webkit-scrollbar{ display:none; }
+      .designer-duo .app-grid{ scroll-behavior:auto; }
     }
   }
 
@@ -1640,8 +1686,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-20m">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20m">
+<link rel="stylesheet" href="/commun.css?v=2026-09-20n">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20n">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1659,7 +1705,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-20m" defer></script>
+<script src="reglages-site.js?v=2026-09-20n" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1701,9 +1747,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-20m"></script>
+<script src="/commun-bandeau.js?v=2026-09-20n"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20m">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20n">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1910,7 +1956,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-20m" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-20n" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2233,6 +2279,67 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+<script>
+/* 19/09 : les deux bandes pilotees de l accueil — « Cinq outils » et « Tout ce qu on peut en faire ».
+   Le defilement lui-meme ne demande AUCUN JavaScript : c est un conteneur qui deborde, le navigateur sait deja le
+   faire parcourir au doigt, a la molette et au clavier. Ce script n ajoute que le confort a la souris — deux
+   fleches — et il s efface proprement s il ne s execute pas : la bande reste parcourable.
+   Le PAS est mesure sur la premiere carte plus la gouttiere reelle, jamais devine : les deux bandes n ont ni la
+   meme largeur de carte (300 et 210) ni le meme ecart (22 et 14). */
+(function () {
+  var zones = [
+    { sel: '#bandeauOutils', piste: '.bandeau-piste', carte: '.face', nom: 'Les cinq outils Quadreti' },
+    { sel: '#designer .app-grid', piste: '.modes-piste', carte: '.mode', nom: 'Les cinq modes du Designer' }
+  ];
+  var CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+
+  zones.forEach(function (z) {
+    var f = document.querySelector(z.sel); if (!f) return;
+    var piste = f.querySelector(z.piste); if (!piste) return;
+    var cartes = piste.querySelectorAll(z.carte); if (cartes.length < 2) return;
+
+    /* la fenetre devient une region parcourable au clavier et annoncee comme telle */
+    f.setAttribute('tabindex', '0');
+    f.setAttribute('role', 'region');
+    f.setAttribute('aria-label', z.nom + ' — faites defiler pour les voir tous');
+
+    var cadre = document.createElement('div');
+    cadre.className = 'defile-cadre';
+    f.parentNode.insertBefore(cadre, f);
+    cadre.appendChild(f);
+
+    function bouton(cls, label, retourne) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'defile-fleche ' + cls;
+      b.setAttribute('aria-label', label);
+      b.innerHTML = retourne ? CHEV.replace('<svg ', '<svg style="transform:rotate(180deg)" ') : CHEV;
+      cadre.appendChild(b); return b;
+    }
+    var prec = bouton('defile-prec', 'Voir les précédents', false);
+    var suiv = bouton('defile-suiv', 'Voir les suivants', true);
+
+    function pas() {
+      var r = cartes[0].getBoundingClientRect().width;
+      var g = parseFloat(getComputedStyle(piste).columnGap || getComputedStyle(piste).gap) || 0;
+      return Math.round(r + g);
+    }
+    prec.addEventListener('click', function () { f.scrollBy({ left: -pas(), behavior: 'smooth' }); });
+    suiv.addEventListener('click', function () { f.scrollBy({ left: pas(), behavior: 'smooth' }); });
+
+    /* un bouton qui ne peut rien faire s efface : il ne doit pas promettre une suite qui n existe pas */
+    function etat() {
+      var max = f.scrollWidth - f.clientWidth;
+      prec.hidden = f.scrollLeft <= 2;
+      suiv.hidden = f.scrollLeft >= max - 2;
+      if (max <= 2) { prec.hidden = true; suiv.hidden = true; }   /* tout tient a l ecran : aucune fleche */
+    }
+    f.addEventListener('scroll', etat, { passive: true });
+    window.addEventListener('resize', etat);
+    etat();
+  });
+})();
+</script>
+
 <p class="scal-foot note-navy rv"><b>Une imprimante de salon. Un mur XXL.</b> La grande composition naît de petits visuels imprimés chez vous, un par un —<br class="saut-bandeau"> pas besoin de matériel professionnel. La taille de départ n'est jamais une décision définitive.</p>
   </div>
 </section>
@@ -2480,7 +2587,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-20m"></script>
+<script src="/commun-pied.js?v=2026-09-20n"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2858,7 +2965,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-20m"></script>
-<script src="/bandeau-gestes.js?v=2026-09-20m"></script>
+<script src="/bandeau-relief.js?v=2026-09-20n"></script>
+<script src="/bandeau-gestes.js?v=2026-09-20n"></script>
 </body>
 </html>

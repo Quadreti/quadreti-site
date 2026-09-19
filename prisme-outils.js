@@ -63,11 +63,13 @@ var QZ_PRISME_OUTILS = [
     /* Les cartes arrivent balisees POUR LE PRISME : seule celle de devant est lisible, les quatre autres sont masquees aux lecteurs
        d ecran et sorties du parcours clavier. A plat, elles sont toutes a l ecran — il faut donc leur rendre leur statut normal. */
     var visibles = faces.replace(/ aria-hidden="true"/g, '').replace(/tabindex="-1"/g, 'tabindex="0"');
-    /* La copie, elle, n existe que pour l oeil : masquee et hors du parcours, sinon on tabule dix fois pour cinq outils. */
-    var copie = visibles.replace(/tabindex="0"/g, 'tabindex="-1"').replace(/<article class="face/g, '<article aria-hidden="true" class="face');
+    /* 19/09 : LA COPIE DISPARAIT. Elle n existait que pour la boucle du defilement automatique — au moment ou
+       l animation rebouclait, le second exemplaire occupait la place du premier et la jointure ne se voyait pas.
+       Le defilement est maintenant PILOTE par le lecteur : il n y a plus de boucle, donc plus rien a masquer.
+       Cinq cartes au lieu de dix : moitie moins de HTML, et le parcours clavier redevient evident. */
     document.write(
-      '<div class="bandeau-outils" id="bandeauOutils">' +
-        '<div class="bandeau-piste">' + visibles + copie + '</div>' +
+      '<div class="bandeau-outils" id="bandeauOutils" data-defile="Les cinq outils Quadreti">' +
+        '<div class="bandeau-piste">' + visibles + '</div>' +
       '</div>'
     );
     return;

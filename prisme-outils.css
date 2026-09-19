@@ -186,13 +186,23 @@
    plat et mises en mouvement. 60 secondes pour un tour complet : assez lent pour qu on lise une carte sans la poursuivre.
    Le defilement s arrete au survol ET au focus clavier — un bandeau qui fuit sous le curseur est une animation contre son
    utilisateur. Et pour qui demande moins d animation, il ne bouge pas : il devient une rangee qu on fait defiler soi-meme. */
-.bandeau-outils{ position:relative; overflow:hidden; margin-top:34px; }
+.bandeau-outils{ position:relative; margin-top:34px;
+  overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scroll-behavior:smooth;
+  scrollbar-width:thin; scrollbar-color:#b6c0c8 transparent; }
+@media (prefers-reduced-motion:reduce){ .bandeau-outils{ scroll-behavior:auto; } }
 /* 16/09, fondateur : « sans fondu de bordure ». Les deux degrades qui faisaient disparaitre les cartes en douceur sur
    les bords sont retires : la coupure franche est la grammaire de la page depuis ce matin — les cartes de titre sont
    coupees pareil par le bord de la fenetre. */
 
-.bandeau-piste{ display:flex; gap:22px; width:max-content; animation:bandeau-defile 60s linear infinite; }
-.bandeau-outils:hover .bandeau-piste, .bandeau-piste:focus-within{ animation-play-state:paused; }
+/* 19/09, fondateur : plus de defilement automatique. C est le lecteur qui fait avancer la rangee — au doigt, a la
+   molette, avec les fleches posees par le script, ou au clavier une fois la zone prise en focus.
+   Le defilement est porte par la FENETRE et non par la piste : une piste qu on translate ne peut pas etre parcourue
+   au doigt ni au clavier, alors qu un conteneur qui deborde l est nativement, sans une ligne de JavaScript.
+   `scroll-snap` en `proximity` et non `mandatory` : la rangee s aimante quand on la relache pres d une carte,
+   mais on garde le droit de s arreter entre deux. Le mandatory se bat avec le doigt. */
+.bandeau-piste{ display:flex; gap:22px; width:max-content; }
+.bandeau-piste > .face{ scroll-snap-align:start; }
+/* 19/09 : la pause au survol n a plus d objet, rien ne bouge tout seul. */
 @keyframes bandeau-defile{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 
 /* Les cartes du prisme sont posees en absolu dans leur scene ; ici elles reprennent le fil normal du document. */
@@ -209,5 +219,6 @@
 .bandeau-piste .face-corps p{ font-size:13px; }
 
 @media (prefers-reduced-motion:reduce){
-  .bandeau-piste{ animation:none; width:auto; overflow-x:auto; padding-bottom:8px; }
+  /* 19/09 : ce repli n a plus d objet — la bande est desormais pilotee pour tout le monde, pas seulement pour
+     qui demande moins d animation. Seule la douceur du defilement est retiree, plus haut. */
 }
