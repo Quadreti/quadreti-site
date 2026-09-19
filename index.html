@@ -520,18 +520,22 @@
   /* Le comparateur : deux photos du MEME cadrage superposees, la seconde rognee a la position du curseur. Le curseur est un
      <input type="range"> rendu invisible mais bien present — il est deja pilotable au clavier et annonce aux lecteurs d ecran,
      ce qu un glisser maison ne serait pas. */
-  .comparateur{ position:relative; width:100%; aspect-ratio:3/2; overflow:hidden; border-radius:6px; --pos:50%; }
+  /* 19/09, fondateur : NOUVEAU COUPLE D IMAGES, et le cadre passe au CARRE.
+     Les deux rendus qu il a deposes sont carres (2000x2000) et, surtout, RIGOUREUSEMENT SUPERPOSABLES — meme
+     cadrage, meme echelle, meme fond. Les garder dans un cadre 3:2 aurait coupe un tiers de la hauteur, donc la
+     premiere et la derniere rangee du support : le Q ne se serait plus lu en entier. Le cadre suit les images.
+     Le support EST carre : c est le cadre 3:2 qui etait l intrus, pas elles. */
+  .comparateur{ position:relative; width:100%; aspect-ratio:1/1; overflow:hidden; border-radius:6px; --pos:50%; }
   .comparateur img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
   /* 16/09 : c est la grille VIDE qui est decoupee, parce que c est elle qu on tire — le resultat est dessous, entier.
      Avant ce jour la pleine etait au-dessus : le cote marque AVANT montrait le resultat et le cote APRES la grille vide. */
   .comparateur .avant{ clip-path:inset(0 calc(100% - var(--pos)) 0 0); }
-  /* 2 — « que la grille vide et la grille pleine correspondent en disposition ». Calage obtenu par CORRELATION des deux
-     images, et non en lisant des bords a la main : mes reperes se contredisaient selon que je mesurais l arete d une
-     barre de la grille vide ou le joint entre deux tesselles de la pleine. La ressemblance passe de 0,28 a 0,53 : elle
-     double. La photo du dessus laisse a decouvert une bande de 4,5 % en bas — c est du mur gris sur les deux photos, le
-     raccord ne se voit pas. On ne les agrandit surtout PAS : la grille occupe 91 % de la hauteur, le moindre
-     agrandissement lui couperait sa premiere rangee. */
-  .comparateur .avant{ transform:translate(-1.31%,-4.11%) scale(0.9925); }
+  /* 19/09 : LA RUSTINE DE CALAGE EST RETIREE, et c est le vrai gain du jour.
+     Elle disait `transform:translate(-1.31%,-4.11%) scale(0.9925)`. Ces trois nombres venaient d une correlation
+     entre deux photos qui n avaient JAMAIS ete prises pour se superposer : on rattrapait apres coup un defaut de
+     prise de vue, et la ressemblance plafonnait a 0,53. Le fondateur a refait les deux rendus dans la MEME scene ;
+     ils se superposent au pixel. Un calage a corriger n existe plus — le meilleur correctif est celui qu on peut
+     supprimer. Ne pas la remettre : si un futur couple avait besoin d elle, c est le couple qu il faudrait refaire. */
   .comparateur .cote{
     position:absolute; top:12px; font-family:'Jura',sans-serif; font-weight:700; font-size:11px; letter-spacing:.08em;
     text-transform:uppercase; padding:5px 10px; border-radius:4px; pointer-events:none;
@@ -1559,8 +1563,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-20b">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20b">
+<link rel="stylesheet" href="/commun.css?v=2026-09-20c">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20c">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1578,7 +1582,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-20b" defer></script>
+<script src="reglages-site.js?v=2026-09-20c" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1620,9 +1624,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-20b"></script>
+<script src="/commun-bandeau.js?v=2026-09-20c"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20b">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20c">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1829,7 +1833,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-20b" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-20c" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -1948,8 +1952,11 @@ document.addEventListener('DOMContentLoaded', function(){
         <div class="comparateur" id="comparateur">
           <!-- 16/09, fondateur : « la photo qui se tire, c est la grille vide ; le resultat en dessous ». Le resultat est
                donc pose le premier, la grille vide par-dessus : on tire la vide et le mur fini apparait. -->
-          <img class="apres" src="img/mur-apres.jpg" alt="La même grille, composée d'un motif en tesselles orange et bleues">
-          <img class="avant" src="img/kit-grille.jpg" alt="La grille Quadreti vide, ses 49 cases">
+          <!-- 19/09 : nouveau couple depose par le fondateur, refait dans la meme scene — ils se superposent au pixel,
+               ce qui a permis de retirer la rustine de calage (voir .comparateur .avant dans la feuille ci-dessus).
+               `kit-grille.jpg` n est pas supprime : il sert encore a la section Kit, plus haut. -->
+          <img class="apres" src="img/comparateur-apres.jpg" alt="Le même support, garni de tesselles orange et bleu nuit qui dessinent le Q de Quadreti" loading="lazy" width="1000" height="1000">
+          <img class="avant" src="img/comparateur-avant.jpg" alt="Le support Quadreti nu, ses 49 cases vides" loading="lazy" width="1000" height="1000">
           <span class="cote a">Avant</span>
           <span class="cote b">Après</span>
           <div class="ligne"></div>
@@ -2284,7 +2291,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-20b"></script>
+<script src="/commun-pied.js?v=2026-09-20c"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2662,7 +2669,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-20b"></script>
-<script src="/bandeau-gestes.js?v=2026-09-20b"></script>
+<script src="/bandeau-relief.js?v=2026-09-20c"></script>
+<script src="/bandeau-gestes.js?v=2026-09-20c"></script>
 </body>
 </html>
