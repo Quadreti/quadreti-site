@@ -526,6 +526,20 @@
      premiere et la derniere rangee du support : le Q ne se serait plus lu en entier. Le cadre suit les images.
      Le support EST carre : c est le cadre 3:2 qui etait l intrus, pas elles. */
   .comparateur{ position:relative; width:100%; aspect-ratio:1/1; overflow:hidden; border-radius:6px; --pos:50%; }
+  /* 19/09, fondateur : « realigne la taille de cette image a la hauteur de sa voisine ».
+     Mesure : la photo du salon faisait 651 x 434, le comparateur 651 x 651 — 217 px de plus, et les deux legendes
+     ne tombaient donc pas sur la meme ligne.
+     Le comparateur ne peut pas s aplatir : il est carre depuis ce matin PARCE QUE le support est carre, et le
+     remettre en 3:2 recouperait la premiere et la derniere rangee. C est donc sa LARGEUR qui se reduit.
+     Le 1.5 ci-dessous n est pas un nombre choisi : c est l `aspect-ratio:1.5` de `.mur-situation img`, vingt-cinq
+     lignes plus haut. La photo fait hauteur = largeur / 1,5 ; un carre de cette hauteur-la mesure donc
+     largeur / 1,5 de cote. Ecrit en division plutot qu en 66,67 % pour que le lien reste lisible : si la photo
+     change de proportion un jour, c est ce 1.5-la qu il faudra reporter ici, et on le verra.
+     BORNE A 861 px : sous 860 les deux colonnes s empilent et la photo passe en `aspect-ratio:auto` — il n y a
+     plus de voisine a hauteur de laquelle s aligner, le comparateur reprend toute la largeur. */
+  @media (min-width:861px){
+    .comparateur{ width:calc(100% / 1.5); margin-inline:auto; }
+  }
   .comparateur img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
   /* 16/09 : c est la grille VIDE qui est decoupee, parce que c est elle qu on tire — le resultat est dessous, entier.
      Avant ce jour la pleine etait au-dessus : le cote marque AVANT montrait le resultat et le cote APRES la grille vide. */
@@ -1563,8 +1577,8 @@
 
 
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-20d">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20d">
+<link rel="stylesheet" href="/commun.css?v=2026-09-20e">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-20e">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1582,7 +1596,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-20d" defer></script>
+<script src="reglages-site.js?v=2026-09-20e" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1624,9 +1638,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-20d"></script>
+<script src="/commun-bandeau.js?v=2026-09-20e"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20d">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-20e">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -1833,7 +1847,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-20d" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-20e" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2291,7 +2305,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-20d"></script>
+<script src="/commun-pied.js?v=2026-09-20e"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -2669,7 +2683,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-20d"></script>
-<script src="/bandeau-gestes.js?v=2026-09-20d"></script>
+<script src="/bandeau-relief.js?v=2026-09-20e"></script>
+<script src="/bandeau-gestes.js?v=2026-09-20e"></script>
 </body>
 </html>
