@@ -305,6 +305,15 @@ footer.qz-footer .qz-pied-infos a:hover, footer.qz-footer .qz-pied-infos a:focus
   .cta:not(.hero-cta):hover::after, .cta:not(.hero-cta):focus-visible::after,
   .btn-studio:hover::after, .btn-studio:focus-visible::after{ animation:none }
 }
+/* 19/09, fondateur : « aligner les boutons reseaux sociaux sur QR ». Mesure des deux pieds : orange #d96c2f,
+   38 px, rayon 4 px, meme relief, meme eclat — tout etait deja identique SAUF la couleur du pictogramme.
+   Le site le sortait en ENCRE, QR en GRIS. Et l encre ne venait pas de cette feuille, qui dit #dedede depuis le
+   13/09 : c est le PANNEAU qui la recalcule, `couleurLisibleSur(accent, texte)` (reglages-site.js l.262). Il
+   choisit ce qui se lit le mieux — ici l encre, 5,23 contre 2,54 — et ecrit en dernier, avec !important.
+   Le fondateur a tranche l inverse le 13/09 et le redit aujourd hui en montrant QR : le picto est GRIS.
+   C est un arbitrage assume, pas un oubli — 2,54 est sous le seuil de 4,5, et l encre reste disponible si la
+   question revient. Pour passer devant le panneau : quatre classes contre trois, et le meme !important. */
+footer.qz-footer .qz-reseaux .qz-grid a{ color:#dedede!important; }
 .qz-reseaux .qz-ico{ width:18px; height:18px; display:block; fill:currentColor; }
 /* barre grise du copyright, centre : la bulle contact et le bouton Remonter occupent gauche et droite */
 /* 13/09 : le copyright est INTEGRE au pied, il n a plus de barre a lui. Il prend toute la largeur sous les quatre colonnes,
