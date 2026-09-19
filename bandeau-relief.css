@@ -174,7 +174,13 @@
 .qb-geste-icone{width:clamp(36px,3vw,44px);height:clamp(36px,3vw,44px);display:block;color:inherit}
 .qb-geste h3{margin:3px 0 0;font-family:'Jura',sans-serif;font-weight:700;font-size:clamp(14px,1.05vw,16px);letter-spacing:.02em;line-height:1.2}
 .qb-geste p{margin:0;font-size:clamp(11.5px,.85vw,12.5px);line-height:1.45;font-weight:500;max-width:36ch} /* 11/09 : phrases sur deux lignes */
-.qb-geste-fleche{display:flex;align-items:center;justify-content:center;height:clamp(36px,3vw,44px);opacity:.55}
+/* 19/09, fondateur : « le flechage en couleur dedede comme la derniere fleche ». Les trois fleches etaient DEJA
+   en #dedede — ce n etait pas la couleur, c etait ce `opacity:.55` qui les delavait a l equivalent d un gris 136.
+   Et la troisieme, elle, paraissait juste : la regle du fondu de « Changez » (index.html) force a `opacity:1` le
+   li:nth-last-child(2), c est-a-dire precisement la fleche qui la precede. Deux des trois etaient donc pales, la
+   derniere franche, sans que rien ne le decide — d ou l impression d un flechage a deux couleurs.
+   A pleine opacite le gris donne 10,75 sur le navy, contre 3,81 a 55 % : on y gagne aussi en lisibilite. */
+.qb-geste-fleche{display:flex;align-items:center;justify-content:center;height:clamp(36px,3vw,44px)}
 .qb-geste-fleche svg{width:clamp(22px,2vw,30px);height:auto;display:block}
 .qb-gestes-A{background:var(--fond,#1e2b35);color:var(--couleur2,#f4f1ea)}
 .qb-gestes-A .qb-geste p{color:color-mix(in srgb,var(--couleur2,#f4f1ea) 70%,transparent)}
