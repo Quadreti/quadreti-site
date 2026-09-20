@@ -153,7 +153,7 @@ footer.qz-footer{
 /* 18/09, fondateur : l orange de marque revient comme TOUCHE, pendant que l accent du site est en essai kraft. Il a
    donc son propre jeton : ce qui le porte (l eclat des boutons, les quatre appels a l action) ne doit PAS suivre un
    changement d accent. C est une couleur choisie, pas un derive. Valeur de la charte. */
-:root{--qz-orange-marque:#d96c2f;--qz-reflet:var(--qz-orange-marque);--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:var(--qz-terracotta-texte,#9c4514);--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:22px}
+:root{--qz-orange-marque:#d96c2f;--qz-reflet:var(--qz-orange-marque);--qz-encre:#10181f;--qz-pied-fond:#dedede;--qz-pied-titre:#1e2b35;--qz-pied-orange-texte:var(--qz-terracotta-texte,#9c4514);--qz-lisere:var(--qz-terracotta,#d96c2f);--qz-lisere-ep:3px;--qz-pied-decroche:29px}
 /* 15/09, fondateur : le pied passe au NAVY, mais sur l ACCUEIL SEULEMENT. Ailleurs il reste gris — la decision du 14/09
    « pour tous les bas de page » tient partout ailleurs. La page d accueil porte deja html.qz-fond-sombre (pose par
    qzEnteteInit) : trois jetons suffisent a basculer la feuille, le panneau recalcule le reste de son cote.
