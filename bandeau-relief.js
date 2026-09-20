@@ -13,11 +13,11 @@
        ⚠️ LE SITE NE DOIT PLUS DESSINER LA MARCHE : voir le bloc de l accueil dans index.html.
        Treize et non dix-sept : les quatre dernieres n ont pas ete montees. */
     visuels: [
-      '/img/bandeau-hero-01.jpg', '/img/bandeau-hero-02.jpg', '/img/bandeau-hero-03.jpg',
-      '/img/bandeau-hero-04.jpg', '/img/bandeau-hero-05.jpg', '/img/bandeau-hero-06.jpg',
-      '/img/bandeau-hero-07.jpg', '/img/bandeau-hero-08.jpg', '/img/bandeau-hero-09.jpg',
-      '/img/bandeau-hero-10.jpg', '/img/bandeau-hero-11.jpg', '/img/bandeau-hero-12.jpg',
-      '/img/bandeau-hero-13.jpg'
+      '/img/bandeau-hero-01.webp', '/img/bandeau-hero-02.webp', '/img/bandeau-hero-03.webp',
+      '/img/bandeau-hero-04.webp', '/img/bandeau-hero-05.webp', '/img/bandeau-hero-06.webp',
+      '/img/bandeau-hero-07.webp', '/img/bandeau-hero-08.webp', '/img/bandeau-hero-09.webp',
+      '/img/bandeau-hero-10.webp', '/img/bandeau-hero-11.webp', '/img/bandeau-hero-12.webp',
+      '/img/bandeau-hero-13.webp'
     ], ancrage: 'centre',
     /* 13/09 fondateur : le mur devient un diaporama en fondu des visuels ci-dessus (une photo a la fois, format d origine). duree = tenue de chaque photo (s),
        fondu = duree du fondu (s), tenueFin = tenue supplementaire de la derniere photo avant de reboucler. actif: false = mur en tesselles comme avant. */
@@ -29,8 +29,8 @@
       /* 20/09 : on garde 4 s sur les quatre premieres, les ecrans de l app — elles se ressemblent
          et l oeil doit trouver ce qui a change dans l interface. Les autres gardent la duree generale. */
       dureeParPhoto: {
-        '/img/bandeau-hero-01.jpg': 4, '/img/bandeau-hero-02.jpg': 4,
-        '/img/bandeau-hero-03.jpg': 4, '/img/bandeau-hero-04.jpg': 4
+        '/img/bandeau-hero-01.webp': 4, '/img/bandeau-hero-02.webp': 4,
+        '/img/bandeau-hero-03.webp': 4, '/img/bandeau-hero-04.webp': 4
       } }, /* 13/09 fondateur : 2 s par photo (divise par 2), fondu .8 s ; la derniere photo (le salon) reste 60 s en tout (2 + 58) avant de reboucler */
     couleurs: { fond: '#1e2b35', cadre: '#1e2f45', creux: '#2b3e54', couleur1: 'var(--qz-terracotta,#d96c2f)', couleur2: '#dedede', titre: '#dedede' /* 12/09 fondateur : textes du bandeau navy en gris clair #dedede (comme la barre) */ },
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
@@ -347,6 +347,11 @@
     svg.appendChild(t);
     hote.appendChild(svg);
   })();
+
+  /* 20/09 (soir) : les 13 visuels passent en WebP a couche alpha, 2000 x 615, cadres par le
+     fondateur dans l atelier local a partir de BORD 2 PRIME 80. La marche mesure 6,808 mm sur les
+     treize, au millieme. Les JPEG precedents la PEIGNAIENT en #1e2b34 ; elle est maintenant un vrai
+     vide, donc independante de la couleur de fond. Anciens .jpg gardes dans img/.
 
   /* 20/09 : poserSilhouette() est RETIREE. Elle decoupait la bande pour dessiner la marche du bas ;
      depuis que les visuels arrivent decoupes, elle couperait une seconde fois, et pas au meme
