@@ -379,7 +379,7 @@
     }
 
     /* Le masque du bandeau defilant, en coordonnees 0-1 : il suit la bande quelle que soit sa taille. */
-    function masque(creux, bande) {
+    function masque(creux, bande, h) {
       var d = TRACE.replace(/(-?[\d.]+),(-?[\d.]+)/g, function (t, x, y) {
         return ((parseFloat(x) - X0) / LARG).toFixed(5) + "," +
                (((parseFloat(y) - Y_HAUT) / PROF_MM * creux) / bande).toFixed(5);
@@ -440,7 +440,7 @@
          il la faisait deborder de 26 px exactement. */
       var reste = Math.max(0, Math.round(window.innerHeight - h));
       document.documentElement.style.setProperty("--defile-h", (creux + reste) + "px");
-      masque(creux, creux + reste);
+      masque(creux, creux + reste, h);
       /* LE LISERE EST REMONTE D UN PIXEL. Sa partie droite longe le bord BAS de la forme, et la
          moitie basse de son epaisseur tombait hors du cadre — pas celui du SVG, qu on a ouvert,
          mais celui de `.qb`, qui porte overflow:hidden et coupe a la hauteur du bandeau. Le trait
