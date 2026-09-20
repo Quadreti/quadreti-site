@@ -420,7 +420,11 @@
       /* On mesure depuis la HAUTEUR du bandeau, pas depuis sa position : il commence a zero,
          et sa position peut ne pas etre stabilisee quand on calcule. La bande tombait alors sur
          son plancher de 26 px et laissait trois pixels de vide en bas de la fenetre. */
-      var reste = Math.max(26, Math.round(window.innerHeight - h));
+      /* Plancher a zero depuis que la photo occupe toute la fenetre : il ne reste RIEN sous elle,
+         la bande ne fait plus que la hauteur de la marche et son texte se centre dedans. Le
+         plancher de 26 px servait quand le texte devait tenir sous le bord bas de la photo ;
+         il la faisait deborder de 26 px exactement. */
+      var reste = Math.max(0, Math.round(window.innerHeight - h));
       document.documentElement.style.setProperty("--defile-h", (creux + reste) + "px");
       masque(creux, creux + reste);
       /* LE LISERE EST REMONTE D UN PIXEL. Sa partie droite longe le bord BAS de la forme, et la
