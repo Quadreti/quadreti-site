@@ -404,6 +404,12 @@
         return;
       }
       if (g.parentNode !== bd) bd.appendChild(g);
+      /* sortirLesPoints : ils vivent dans .qb-mur, qui porte z-index:0 et cree donc un contexte
+         d empilement — leur propre z-index n y vaut que dans ce bloc, et le bandeau defilant
+         passait devant. On les remonte d un cran, en enfant direct du bandeau : leur position
+         est en pourcentage et en `bottom`, elle ne change pas de repere. */
+      var pts = document.querySelector(".qb-diapo-points");
+      if (pts && pts.parentNode !== bd) bd.appendChild(pts);
       var h = bd.getBoundingClientRect().height;
       if (!h) return;
       var creux = Math.round(h * PROF_MM / FORME_MM);
