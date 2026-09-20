@@ -402,12 +402,21 @@
       var hautVoile = g.getBoundingClientRect().top - bd.getBoundingClientRect().top;
       var hVoile = Math.max(1, h - hautVoile);
       var frac = (h - creux - hautVoile) / hVoile;      /* ou tombe le bord haut de la marche */
+      /* le meme trace, ramene cette fois dans la boite du BANDEAU ENTIER : c est le masque du
+         voile general, qui part du haut de l image et non du haut des icones. */
+      var fracImage = (h - creux) / h;
+      var dImage = TRACE.replace(/(-?[\d.]+),(-?[\d.]+)/g, function (t, x, y) {
+        return ((parseFloat(x) - X0) / LARG).toFixed(5) + "," +
+               (fracImage + ((parseFloat(y) - Y_HAUT) / PROF_MM * creux) / h).toFixed(5);
+      }).replace(/^M/, "L");
       var dPhoto = TRACE.replace(/(-?[\d.]+),(-?[\d.]+)/g, function (t, x, y) {
         return ((parseFloat(x) - X0) / LARG).toFixed(5) + "," +
                (frac + ((parseFloat(y) - Y_HAUT) / PROF_MM * creux) / hVoile).toFixed(5);
       }).replace(/^M/, "L");
       svg.innerHTML = '<defs><clipPath id="qzMarche" clipPathUnits="objectBoundingBox">' +
         '<path d="' + d + ' L 0,1 L 1,1 Z"/></clipPath>' +
+        '<clipPath id="qzImage" clipPathUnits="objectBoundingBox">' +
+        '<path d="M 0,0 L 1,0 ' + dImage + ' Z"/></clipPath>' +
         '<clipPath id="qzPhoto" clipPathUnits="objectBoundingBox">' +
         '<path d="M 0,0 L 1,0 ' + dPhoto + ' Z"/></clipPath></defs>';
     }
