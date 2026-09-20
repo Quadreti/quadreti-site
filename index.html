@@ -1733,7 +1733,7 @@
          et non un arrondi : la bande doit epouser exactement celui des images, sinon la marche ne
          tombe pas sur le bord. 20/09 (soir) : 2000 x 654, soit 497 px sur l ecran du fondateur —
          toute la place disponible, choix du fondateur (260 x 85 mm de forme). */
-      aspect-ratio:2000 / 888;
+      aspect-ratio:2000 / 926;
       /* Les quatre elements de l ecran d accueil — menu, bandeau, bande pedagogique, bandeau defilant —
          doivent tenir sans defiler. Le rapport ci-dessus donne la hauteur VOULUE ; ce plafond garde la
          place des deux bandes du bas, mesurees en ligne : 180 px a 1366, 186 a 1440, 189 a 1920.
@@ -1746,7 +1746,10 @@
          Le defilant n a plus besoin de 55 px de reserve : son texte fait 19 px et il se loge
          SOUS le bord bas de la photo, ou il reste 29 px. C est cette valeur-la, pas sa hauteur
          d origine. En dessous de 29 le texte toucherait la photo. */
-      max-height:calc(100vh - 29px);
+      /* 20/09 (soir, 3) : plus AUCUNE reserve. La photo occupe toute la fenetre sous rien du
+         tout — le bandeau defilant ne vit plus que dans le creux de la marche, a gauche, et
+         son texte passe sous la photo a droite. Choix du fondateur. */
+      max-height:100vh;
       padding-bottom:calc(1.2cqw + 22px);    /* 1.2cqw = la marge d origine ; +22 = la profondeur de la marche */
     }
     /* 20/09 : le chevauchement de 22 px et le rattrapage de fond sont RETIRES. Ils servaient a la
@@ -1826,7 +1829,10 @@
     html.qz-accueil .qb-defile{
       margin-top:calc(0px - var(--marche-px,40px));
       height:var(--defile-h, calc(55px + var(--marche-px,40px)));
-      box-sizing:border-box; padding:var(--marche-px,40px) 0 0;
+      /* Plus de rembourrage haut : la bande ne fait plus que la hauteur de la marche, et son
+         texte se centre dedans. Il etait auparavant pousse SOUS le bord bas de la photo ;
+         maintenant il passe dessous a droite, c est voulu. */
+      box-sizing:border-box; padding:0;
       display:flex; align-items:center;
       -webkit-clip-path:url(#qzMarche); clip-path:url(#qzMarche);
       position:relative; z-index:5;
@@ -1864,8 +1870,8 @@
     }
   }
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-21r">
-<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-21r">
+<link rel="stylesheet" href="/commun.css?v=2026-09-21s">
+<link rel="stylesheet" href="/prisme-outils.css?v=2026-09-21s">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
    variable CSS, et le rognage de la photo « apres » suit. Clavier et lecteurs d ecran fonctionnent sans une ligne de plus. */
@@ -1883,7 +1889,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
 })();
 </script>
-<script src="reglages-site.js?v=2026-09-21r" defer></script>
+<script src="reglages-site.js?v=2026-09-21s" defer></script>
 <script defer>
 /* 30/08 : menu en surimpression (voir le bloc CSS .qz-header transparent plus
    haut). Remonte le hero de la hauteur reelle du menu -- la video passe
@@ -1925,9 +1931,9 @@ document.addEventListener('DOMContentLoaded', function(){
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-21r"></script>
+<script src="/commun-bandeau.js?v=2026-09-21s"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-21r">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-21s">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -2134,7 +2140,7 @@ document.addEventListener('DOMContentLoaded', function(){
          du Designer, et la bande des quatre autres outils ajoutee le matin meme, laissent la place au prisme — le meme composant
          que le Studio, ecrit par /prisme-outils.js. Les modes du Designer ne sont pas perdus : ils sont dans l app, et l accueil
          n a pas a les detailler avant d avoir dit ce qu est l ecosysteme. -->
-    <script src="/prisme-outils.js?v=2026-09-21r" data-mode="bandeau"></script>
+    <script src="/prisme-outils.js?v=2026-09-21s" data-mode="bandeau"></script>
 
     <div class="app-cta rv"><a class="btn-studio" href="/outils.html">Voir le Studio</a></div>
     </div>
@@ -2765,7 +2771,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-21r"></script>
+<script src="/commun-pied.js?v=2026-09-21s"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -3143,7 +3149,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-21r"></script>
-<script src="/bandeau-gestes.js?v=2026-09-21r"></script>
+<script src="/bandeau-relief.js?v=2026-09-21s"></script>
+<script src="/bandeau-gestes.js?v=2026-09-21s"></script>
 </body>
 </html>
