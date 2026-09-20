@@ -425,6 +425,10 @@
       masque(creux, creux + reste);
     }
     attendre();
+    /* construireDiapo() reconstruit le diaporama APRES ce reglage et remet les points dans
+       .qb-mur : on repasse derriere lui. Trois passages suffisent, caler() ne fait rien quand
+       tout est deja en place. */
+    setTimeout(attendre, 400); setTimeout(attendre, 1500); setTimeout(attendre, 3500);
   })();
 
   (function liserebas() {
