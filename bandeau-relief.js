@@ -423,6 +423,15 @@
       var reste = Math.max(26, Math.round(window.innerHeight - h));
       document.documentElement.style.setProperty("--defile-h", (creux + reste) + "px");
       masque(creux, creux + reste);
+      /* LE LISERE EST REMONTE D UN PIXEL. Sa partie droite longe le bord BAS de la forme, et la
+         moitie basse de son epaisseur tombait hors du cadre — pas celui du SVG, qu on a ouvert,
+         mais celui de `.qb`, qui porte overflow:hidden et coupe a la hauteur du bandeau. Le trait
+         y paraissait deux fois plus fin qu en haut, defaut signale deux fois par le fondateur.
+         On decale le TRACE d un pixel vers le haut, converti en unites du dessin : sa moitie
+         basse rentre dans le cadre. Recalcule a chaque taille, le rapport unites/pixels changeant
+         avec elle. */
+      var traitL = bd.querySelector(".qb-lisere-image path");
+      if (traitL) traitL.setAttribute("transform", "translate(0 " + (-1.1 * FORME_MM / h).toFixed(4) + ")");
     }
     attendre();
     /* construireDiapo() reconstruit le diaporama APRES ce reglage et remet les points dans
