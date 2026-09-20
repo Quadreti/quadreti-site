@@ -408,7 +408,12 @@
       if (!h) return;
       var creux = Math.round(h * PROF_MM / FORME_MM);
       document.documentElement.style.setProperty("--marche-px", creux + "px");
-      masque(creux, creux + DEFILE);
+      /* Ce qui reste de fenetre sous la photo. Le bandeau defilant prend exactement ca,
+         plus le creux de la marche qu il vient combler. En dessous de 26 px le texte
+         toucherait la photo, donc on ne descend jamais sous ce plancher. */
+      var reste = Math.max(26, Math.round(window.innerHeight - bd.getBoundingClientRect().bottom));
+      document.documentElement.style.setProperty("--defile-h", (creux + reste) + "px");
+      masque(creux, creux + reste);
     }
     attendre();
   })();
