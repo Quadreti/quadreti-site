@@ -363,11 +363,20 @@
     var TRACE = "M77.499816,483.96964375691476L153.895616,483.9876437569146L154.030116,483.9716437569146Q154.092116,483.96464375691465 154.198316,483.94964375691467Q154.382716,483.9256437569148 154.567816,483.8866437569146Q154.794216,483.83864375691456 154.935116,483.7986437569147Q155.199116,483.7216437569146 155.346316,483.6666437569148Q155.568116,483.58664375691467 155.745216,483.50264375691484Q155.899316,483.43064375691466 156.044016,483.34864375691467Q156.225016,483.2456437569147 156.381116,483.13664375691457L156.524416,483.0366437569147L156.596716,482.9636437569147L160.435816,479.71064375691464Q160.807216,479.3886437569147 161.179816,479.1306437569146Q161.570716,478.85864375691483 162.024516,478.5986437569147Q162.410816,478.38064375691476 162.815616,478.1906437569147Q163.216916,478.0046437569148 163.707916,477.8216437569148Q164.091716,477.6796437569147 164.574516,477.53964375691476Q164.971616,477.42664375691464 165.439316,477.3276437569147Q165.837316,477.2456437569148 166.253716,477.1876437569146Q166.712216,477.1226437569147 167.104416,477.09764375691475Q167.570216,477.0646437569147 168.030816,477.0646437569147L337.498716,477.0646437569147";
     var DEFILE = 55;                             /* la hauteur propre du bandeau defilant */
     function bureau() { return window.matchMedia("(min-width: 901px)").matches; }
-    var bd = document.getElementById("qbBandeau");
-    var g = document.querySelector(".qb-gestes");
-    var df = document.querySelector(".qb-defile");
-    if (!bd || !g || !df) return;
-    var nidOrigine = g.parentNode, apres = g.nextSibling;
+    var bd, g, df, nidOrigine, apres;
+    /* `.qb-gestes` est construite par bandeau-gestes.js, charge APRES ce fichier : on patiente
+       jusqu a ce que les trois blocs existent, au lieu de sortir en silence. */
+    var essais = 0;
+    function attendre() {
+      bd = document.getElementById("qbBandeau");
+      g = document.querySelector(".qb-gestes");
+      df = document.querySelector(".qb-defile");
+      if (!bd || !g || !df) { if (++essais < 120) setTimeout(attendre, 100); return; }
+      nidOrigine = g.parentNode; apres = g.nextSibling;
+      caler();
+      window.addEventListener("resize", caler);
+      if (window.ResizeObserver) new ResizeObserver(caler).observe(bd);
+    }
 
     /* Le masque du bandeau defilant, en coordonnees 0-1 : il suit la bande quelle que soit sa taille. */
     function masque(creux, bande) {
@@ -401,9 +410,7 @@
       document.documentElement.style.setProperty("--marche-px", creux + "px");
       masque(creux, creux + DEFILE);
     }
-    caler();
-    window.addEventListener("resize", caler);
-    if (window.ResizeObserver) new ResizeObserver(caler).observe(bd);
+    attendre();
   })();
 
   (function liserebas() {
