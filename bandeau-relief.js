@@ -411,7 +411,10 @@
       /* Ce qui reste de fenetre sous la photo. Le bandeau defilant prend exactement ca,
          plus le creux de la marche qu il vient combler. En dessous de 26 px le texte
          toucherait la photo, donc on ne descend jamais sous ce plancher. */
-      var reste = Math.max(26, Math.round(window.innerHeight - bd.getBoundingClientRect().bottom));
+      /* On mesure depuis la HAUTEUR du bandeau, pas depuis sa position : il commence a zero,
+         et sa position peut ne pas etre stabilisee quand on calcule. La bande tombait alors sur
+         son plancher de 26 px et laissait trois pixels de vide en bas de la fenetre. */
+      var reste = Math.max(26, Math.round(window.innerHeight - h));
       document.documentElement.style.setProperty("--defile-h", (creux + reste) + "px");
       masque(creux, creux + reste);
     }
