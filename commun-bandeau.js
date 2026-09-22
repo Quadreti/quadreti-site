@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-22d';
+var QZ_VER = '?v=2026-09-22e';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -379,9 +379,9 @@ document.write('<script>window.qzEnteteInit && window.qzEnteteInit();window.qzLo
    Forme choisie apres trois propositions (maquette : SITE\maquette-menu-plein-ecran.html).
    Les regles de dessin sont dans entete-commun.css, bloc « LE MENU EN VITRINE ».
 
-   ETEINT PAR DEFAUT, comme le tiroir en son temps :
-      quadreti.fr/?vitrine=1   -> essai, memorise pour la session
-      quadreti.fr/?vitrine=0   -> retour au tiroir
+   ALLUME POUR TOUT LE MONDE depuis le 22/09 (demande du fondateur). Porte de secours :
+      quadreti.fr/?vitrine=0   -> retour au tiroir, memorise pour la session
+      quadreti.fr/?vitrine=1   -> annule la porte de secours
 
    CE FICHIER NE FABRIQUE PAS LA LISTE. Les rubriques viennent de la base (`menu_liens`), et
    reglages-site.js reconstruit `#qzNavPanel > ul` par innerHTML. On DECORE donc ce qui est la,
@@ -441,9 +441,12 @@ document.write('<script>window.qzEnteteInit && window.qzEnteteInit();window.qzLo
   /* ---------- l interrupteur ---------- */
   try {
     var v = new URLSearchParams(location.search).get('vitrine');
-    if (v === '1') sessionStorage.setItem('qzVitrine', '1');
-    if (v === '0') sessionStorage.removeItem('qzVitrine');
-    if (sessionStorage.getItem('qzVitrine') === '1') html.classList.add('qz-menu-vitrine');
+    /* 22/09, fondateur : la vitrine devient LE menu du site, pour tout le monde. ?vitrine=0
+       reste comme porte de secours (retour au tiroir, memorise pour la session) ; ?vitrine=1
+       annule cette porte. */
+    if (v === '1') sessionStorage.removeItem('qzVitrineOff');
+    if (v === '0') sessionStorage.setItem('qzVitrineOff', '1');
+    if (sessionStorage.getItem('qzVitrineOff') !== '1') html.classList.add('qz-menu-vitrine');
     /* ?anim=1|2|3 : les trois arrivees a comparer (voir entete-commun.css, bloc « TROIS
        ARRIVEES »). ?anim=0 revient a l arrivee actuelle. Memorise pour la session, comme le
        reste — refermer et rouvrir le menu rejoue l animation. */

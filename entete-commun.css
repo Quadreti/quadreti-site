@@ -436,9 +436,8 @@ html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barr
    image qui n apparait qu au survol arrive apres qu on ait decide ou pointer, et au doigt elle
    n apparait jamais.
 
-   ETEINT PAR DEFAUT. Il s allume dans SON navigateur, comme le tiroir en son temps :
-      quadreti.fr/?vitrine=1   -> essai, memorise pour la session
-      quadreti.fr/?vitrine=0   -> retour au tiroir
+   ALLUME POUR TOUT LE MONDE depuis le 22/09 (demande du fondateur), apres essai derriere
+   ?vitrine=1. Porte de secours : quadreti.fr/?vitrine=0 -> retour au tiroir pour la session.
    Deux pannes en production le 18/09 ont appris a ne pas poser un mode de menu pour tout le
    monde avant qu il l ait vu chez lui.
 
