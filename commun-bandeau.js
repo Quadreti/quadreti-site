@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-22c';
+var QZ_VER = '?v=2026-09-22d';
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -372,4 +372,456 @@ document.write('<script>window.qzEnteteInit && window.qzEnteteInit();window.qzLo
       toggle.setAttribute('aria-expanded', String(open));
     }
   });
+})();
+
+/* ================= 21/09, fondateur : LE MENU EN VITRINE =================
+   Le burger ouvre un calque plein ecran ou chaque rubrique est une carte avec son image.
+   Forme choisie apres trois propositions (maquette : SITE\maquette-menu-plein-ecran.html).
+   Les regles de dessin sont dans entete-commun.css, bloc « LE MENU EN VITRINE ».
+
+   ETEINT PAR DEFAUT, comme le tiroir en son temps :
+      quadreti.fr/?vitrine=1   -> essai, memorise pour la session
+      quadreti.fr/?vitrine=0   -> retour au tiroir
+
+   CE FICHIER NE FABRIQUE PAS LA LISTE. Les rubriques viennent de la base (`menu_liens`), et
+   reglages-site.js reconstruit `#qzNavPanel > ul` par innerHTML. On DECORE donc ce qui est la,
+   et on rejoue a chaque reconstruction — exactement comme sortirMonEspace plus haut. Ajouter
+   une rubrique dans le panneau suffit : elle devient une carte sans toucher a ce fichier. */
+(function () {
+  'use strict';
+
+  /* ---- les images de chaque rubrique, par son adresse ----
+     UNE image, ou PLUSIEURS : dans ce cas la carte porte des pastilles et le visiteur passe de
+     l une a l autre EN CLIQUANT. Rien ne tourne tout seul — decision du fondateur, 21/09 :
+     dans un menu, ce qui bouge pendant qu on choisit gene au lieu d aider. La grammaire est
+     celle du diaporama d accueil (pastilles role=tab, fleches), reprise plutot que reinventee.
+     Provisoire ICI, et c est un defaut a corriger : ces images devraient venir du panneau,
+     comme les libelles. Tant qu elles sont dans le code, en changer une demande un depot. */
+  var IMAGES = {
+    '/index.html': [
+      ['/img/mur-salon.jpg',        'Le mur dans un salon'],
+      ['/img/mur-apres.jpg',        'Un mur terminé'],
+      ['/img/comparateur-apres.jpg','Avant / après']
+    ],
+    '/boutique/': [
+      ['/img/mur-apres.jpg',         'Le mur fini'],
+      ['/img/etui-3.jpg',            'L’étui à tesselles'],
+      ['/img/kit-tesselle-etui.jpg', 'Le kit complet']
+    ],
+    '/outils.html': [
+      ['/img/bandeau-app-02-grille.jpg', 'La grille'],
+      ['/img/bandeau-app-04-motif.jpg',  'Le motif'],
+      ['/img/bandeau-app-05-apercu.jpg', 'L’aperçu']
+    ],
+    '/blog/': [
+      ['/img/kit-feuille.jpg',   'Les feuilles pré-découpées'],
+      ['/img/kit-grille.jpg',    'La grille vide'],
+      ['/img/mur-etape-07.jpg',  'Le montage, étape par étape']
+    ],
+    '/mon-espace/': [
+      ['/img/bandeau-app-05-apercu.jpg', 'Vos créations']
+    ],
+    /* les trois gestes, dans l ordre : c est la rubrique ou plusieurs images disent vraiment
+       quelque chose que l on ne dirait pas avec une seule */
+    'Comment ça marche': [
+      ['/img/geste-imprimez.jpg', 'Imprimez'],
+      ['/img/geste-clipsez.jpg',  'Clipsez'],
+      ['/img/geste-glissez.jpg',  'Glissez']
+    ],
+    'Détente': [
+      ['/img/comparateur-apres.jpg', 'Mosaïque révélée'],
+      ['/img/mur-x4.jpg',            'Quatre carreaux'],
+      ['/img/mur-x9.jpg',            'Neuf carreaux']
+    ]
+  };
+
+  var COUPE = 'qzVitrineCoupe';   /* prefixe : chaque carte a cheval a le sien, COUPE + son rang */
+  var html = document.documentElement;
+
+  /* ---------- l interrupteur ---------- */
+  try {
+    var v = new URLSearchParams(location.search).get('vitrine');
+    if (v === '1') sessionStorage.setItem('qzVitrine', '1');
+    if (v === '0') sessionStorage.removeItem('qzVitrine');
+    if (sessionStorage.getItem('qzVitrine') === '1') html.classList.add('qz-menu-vitrine');
+    /* ?anim=1|2|3 : les trois arrivees a comparer (voir entete-commun.css, bloc « TROIS
+       ARRIVEES »). ?anim=0 revient a l arrivee actuelle. Memorise pour la session, comme le
+       reste — refermer et rouvrir le menu rejoue l animation. */
+    var an = new URLSearchParams(location.search).get('anim');
+    if (an !== null) {
+      if (/^[123]$/.test(an)) sessionStorage.setItem('qzAnim', an);
+      else sessionStorage.setItem('qzAnim', '');   /* ?anim=0 : aucune, le fondu d origine */
+    }
+    /* LE DEROULE EST L ARRIVEE DU MENU (choix du fondateur, 21/09, apres comparaison des
+       trois) : c est le defaut quand la vitrine est allumee, sans parametre a taper. ?anim=1
+       ou ?anim=3 restent la pour recomparer, ?anim=0 revient au fondu d origine. */
+    var anc = sessionStorage.getItem('qzAnim');
+    if (anc === null) anc = '2';
+    if (anc && html.classList.contains('qz-menu-vitrine')) html.classList.add('qz-anim-' + anc);
+    /* ?vit=NNN : la duree du deroule en millisecondes, pour la regler a l oeil. Memorisee
+       comme le reste ; ?vit=0 revient au defaut de la feuille de style. */
+    var vt = new URLSearchParams(location.search).get('vit');
+    if (vt !== null) {
+      if (/^[1-9][0-9]{1,4}$/.test(vt)) sessionStorage.setItem('qzVit', vt);
+      else sessionStorage.removeItem('qzVit');
+    }
+    var vtc = sessionStorage.getItem('qzVit');
+    if (vtc) html.style.setProperty('--qz-deroule-duree', vtc + 'ms');
+  } catch (e) { /* navigation privee stricte : pas d essai, pas de casse */ }
+
+  function actif() { return html.classList.contains('qz-menu-vitrine'); }
+  function bureau() { return window.matchMedia('(min-width:901px)').matches; }
+
+  /* ---------- la vignette ---------- */
+  function cle(li) {
+    var a = li.querySelector(':scope > a[href]');
+    if (a) {
+      var h = a.getAttribute('href') || '';
+      h = h.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
+      if (IMAGES[h]) return h;
+      /* les pages du depot peuvent etre servies sous un prefixe : on retombe sur la fin */
+      for (var k in IMAGES) if (k.charAt(0) === '/' && h.slice(-k.length) === k) return k;
+      return null;
+    }
+    var b = li.querySelector(':scope > .qz-subtoggle');
+    if (!b) return null;
+    var t = (b.textContent || '').replace(/[▾▴]/g, '').trim();
+    return IMAGES[t] ? t : null;
+  }
+
+  function poserVignette(li) {
+    if (li.querySelector(':scope > .qz-vitrine-vue')) return;   /* deja fait */
+    var k = cle(li); if (!k) return;
+    var liste = IMAGES[k]; if (!liste) return;
+    if (typeof liste === 'string') liste = [[liste, '']];
+    liste = liste.map(function (e) { return typeof e === 'string' ? [e, ''] : e; });
+
+    var vue = document.createElement('span');
+    vue.className = 'qz-vitrine-vue';
+    liste.forEach(function (e, i) {
+      var src = e[0];
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = '';                     /* decorative : le titre de la carte porte deja le sens */
+      img.loading = 'lazy';
+      if (i === 0) img.className = 'qz-actif';
+      vue.appendChild(img);
+    });
+
+    /* DEUX FLECHES, et non N pastilles (fondateur, 21/09) : deux boutons, c est la meme carte
+       qu il y ait trois images ou six. Des pastilles rendaient les cartes inegales entre elles.
+       Elles vivent DANS la vignette et au-dessus du lien etire de la carte : sans cela un clic
+       dessus suivrait le lien et on atterrirait sur la Boutique en voulant regarder une photo.
+       Le compteur qui suit n est pas affiche — il est la pour les lecteurs d ecran, qui sinon
+       n auraient aucun moyen de savoir ou ils en sont. */
+    if (liste.length > 1) {
+      var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+                 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                 '<path d="M15 5 8 12l7 7"/></svg>';
+      ['prec', 'suiv'].forEach(function (sens) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'qz-vitrine-fleche qz-' + sens;
+        b.setAttribute('aria-label', sens === 'prec' ? 'Image précédente' : 'Image suivante');
+        b.innerHTML = CHEV;
+        vue.appendChild(b);
+      });
+      var cpt = document.createElement('span');
+      cpt.className = 'qz-vitrine-compte';
+      cpt.setAttribute('aria-live', 'polite');
+      cpt.textContent = 'Image 1 sur ' + liste.length;
+      vue.appendChild(cpt);
+    }
+
+    /* LA LEGENDE, qui change a chaque clic. Elle nomme ce qu on regarde — sans elle, trois
+       photos d une meme rubrique ne disent pas ce qui les distingue. Les titres sont ranges
+       avec les images, un tableau par rubrique : une image sans son nom n existe pas. */
+    var leg = document.createElement('span');
+    leg.className = 'qz-vitrine-legende';
+    leg.textContent = liste[0][1] || '';
+
+    /* TITRE EN HAUT, PHOTO, LEGENDE (fondateur, 21/09). Le titre de la rubrique est le premier
+       enfant de la carte : on pose donc la vignette APRES lui, et non en tete comme avant. */
+    var titre = li.querySelector(':scope > a, :scope > .qz-subtoggle');
+    if (titre && titre.nextSibling) { li.insertBefore(vue, titre.nextSibling); li.insertBefore(leg, vue.nextSibling); }
+    else if (titre) { li.appendChild(vue); li.appendChild(leg); }
+    else { li.insertBefore(vue, li.firstChild); li.insertBefore(leg, vue.nextSibling); }
+    /* les sous-rubriques, si la carte en a, repassent apres la legende */
+    var sous = li.querySelector(':scope > .qz-sublist');
+    if (sous) li.appendChild(sous);
+    /* la table des titres reste accessible pour les changements d image */
+    vue.qzTitres = liste.map(function (x) { return x[1] || ''; });
+  }
+
+  /* ---- passer d une image a l autre ----
+     Aucun defilement automatique : on ne bouge que sur un clic ou une fleche. */
+  function montrer(vue, k) {
+    var imgs = vue.querySelectorAll(':scope > img');
+    if (!imgs.length) return;
+    k = (k + imgs.length) % imgs.length;
+    for (var i = 0; i < imgs.length; i++) imgs[i].classList.toggle('qz-actif', i === k);
+    var cpt = vue.querySelector('.qz-vitrine-compte');
+    if (cpt) cpt.textContent = 'Image ' + (k + 1) + ' sur ' + imgs.length;
+    var leg = vue.parentElement && vue.parentElement.querySelector(':scope > .qz-vitrine-legende');
+    if (leg && vue.qzTitres) leg.textContent = vue.qzTitres[k] || '';
+  }
+
+  function courant(vue) {
+    var imgs = [].slice.call(vue.querySelectorAll(':scope > img'));
+    var k = imgs.findIndex ? imgs.findIndex(function (i) { return i.classList.contains('qz-actif'); })
+                           : -1;
+    return k < 0 ? 0 : k;
+  }
+
+  /* delegation sur le document : reglages-site.js reconstruit la liste depuis la base, des
+     ecouteurs poses sur chaque pastille disparaitraient avec elle */
+  document.addEventListener('click', function (e) {
+    var fl = e.target.closest && e.target.closest('.qz-vitrine-fleche');
+    if (!fl) return;
+    e.preventDefault(); e.stopPropagation();      /* surtout pas le lien de la carte */
+    var vue = fl.closest('.qz-vitrine-vue');
+    montrer(vue, courant(vue) + (fl.classList.contains('qz-suiv') ? 1 : -1));
+  }, true);
+
+  /* ECHAP FERME LE MENU. Sur un calque qui couvre toute la page, c est la premiere sortie que
+     tout le monde essaie — et il n y en avait aucune, ni pour la vitrine ni pour le tiroir.
+     On ne ferme pas a la main : on clique le burger, pour passer par la meme bascule que le
+     clic (aria-expanded, libelle, voile, verrou de defilement). Puis le focus revient sur le
+     burger, sinon il reste sur une carte devenue invisible. Borne a la vitrine : sans le
+     parametre, un visiteur ne voit rien changer. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !actif()) return;
+    var panneau = document.getElementById('qzNavPanel');
+    var btn = document.getElementById('qzMenuBtn');
+    if (!panneau || !btn || !panneau.classList.contains('open')) return;
+    e.preventDefault();
+    btn.click();
+    btn.focus();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var fl = e.target.closest && e.target.closest('.qz-vitrine-fleche');
+    if (!fl) return;
+    e.preventDefault();
+    var vue = fl.closest('.qz-vitrine-vue');
+    montrer(vue, courant(vue) + (e.key === 'ArrowRight' ? 1 : -1));
+  });
+
+  /* ---------- ou tombe la marche du decroche ----------
+     On ne redessine rien : on lit le trace deja pose dans la page (le lisere de l onglet) et on
+     en deduit ou la marche commence et finit. Le jour ou le decroche change de dessin, ceci
+     suit sans etre retouche. */
+  function morceaux(d) {            /* M / L / Q absolus — tout ce que le trace utilise */
+    var j = d.match(/[MLQ]|-?[\d.]+/g) || [], out = [], i = 0, c = 'M';
+    while (i < j.length) {
+      if (/[MLQ]/.test(j[i])) { c = j[i++]; continue; }
+      var n = c === 'Q' ? 4 : 2, v = [];
+      for (var k = 0; k < n; k++) v.push(parseFloat(j[i++]));
+      out.push({ c: c, v: v });
+    }
+    return out;
+  }
+
+  function geometrie() {
+    var trait = document.querySelector('.qz-onglet-trait');
+    var svg = trait && trait.closest('svg');
+    if (!trait || !svg) return null;
+    var vb = (svg.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
+    if (vb.length !== 4) return null;
+    var pts = morceaux(trait.getAttribute('d') || '');
+    var xs = [], ys = [];
+    pts.forEach(function (p) {
+      for (var i = 0; i < p.v.length; i += 2) { xs.push(p.v[i]); ys.push(p.v[i + 1]); }
+    });
+    if (!ys.length) return null;
+    var creux = Math.max.apply(null, ys), plat = Math.min.apply(null, ys);
+    var debut = -Infinity, fin = Infinity;
+    for (var i = 0; i < ys.length; i++) {
+      if (Math.abs(ys[i] - creux) < .01) debut = Math.max(debut, xs[i]);   /* dernier point bas */
+      if (Math.abs(ys[i] - plat) < .01) fin = Math.min(fin, xs[i]);        /* premier point haut */
+    }
+    if (!isFinite(debut) || !isFinite(fin) || fin <= debut) return null;
+    /* la boite reelle du SVG, et non une largeur reconstituee : l onglet fait 1536 px quand
+       clientWidth en rend 1521 (barre de defilement), et la marche tombait 15 px a cote */
+    var rs = svg.getBoundingClientRect();
+    if (!rs.width || !rs.height) return null;
+    return {
+      trait: trait, vb: vb, rs: rs,
+      X: function (x) { return rs.left + (x - vb[0]) / vb[2] * rs.width; },
+      Y: function (y) { return rs.top + (y - vb[1]) / vb[3] * rs.height; },
+      debut: rs.left + (debut - vb[0]) / vb[2] * rs.width,
+      fin: rs.left + (fin - vb[0]) / vb[2] * rs.width
+    };
+  }
+
+  /* ---------- la decoupe de la carte a cheval ---------- */
+  function defs(id) {
+    var d = document.getElementById(id);
+    if (d) return d;
+    var hote = document.getElementById('qzVitrineDefs');
+    if (!hote) {
+      hote = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      hote.id = 'qzVitrineDefs';
+      hote.setAttribute('width', '0'); hote.setAttribute('height', '0');
+      hote.setAttribute('aria-hidden', 'true'); hote.style.position = 'absolute';
+      hote.innerHTML = '<defs></defs>';
+      document.body.appendChild(hote);
+    }
+    var cp = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+    cp.id = id;
+    cp.setAttribute('clipPathUnits', 'objectBoundingBox');
+    cp.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path'));
+    hote.querySelector('defs').appendChild(cp);
+    return cp;
+  }
+
+  function decouper(li, g, panneau, rang, b) {
+    if (!b || !b.width || !b.height) return;
+    /* le calque glisse de 8 px a l ouverture : on retranche la translation en cours, sinon la
+       decoupe tombe 8 px trop haut pendant toute l animation */
+    var m = getComputedStyle(panneau).transform, ty = 0;
+    if (m && m !== 'none') { var n = m.match(/-?[0-9.]+/g); ty = (n && parseFloat(n[n.length - 1])) || 0; }
+    var haut = b.top - ty;
+    var jeu = parseFloat(getComputedStyle(html).getPropertyValue('--qz-vitrine-jeu')) || 10;
+
+    /* on ramene le trace de l onglet dans la boite de la carte, decale du jeu vers le bas —
+       le meme jeu que partout, sans lui la carte se lit comme rognee et non comme une forme */
+    function u(vx) { return (g.X(vx) - b.left) / b.width; }
+    function w(vy) { return (g.Y(vy) + jeu - haut) / b.height; }
+
+    var d = '';
+    morceaux(g.trait.getAttribute('d')).forEach(function (p, i) {
+      var c = p.c, t = p.v;
+      if (c === 'Q') d += ' Q ' + u(t[0]).toFixed(5) + ',' + w(t[1]).toFixed(5) + ' ' +
+                              u(t[2]).toFixed(5) + ',' + w(t[3]).toFixed(5);
+      else d += (i === 0 ? 'M ' : ' L ') + u(t[0]).toFixed(5) + ',' + w(t[1]).toFixed(5);
+    });
+    d += ' L 2,2 L -1,2 Z';          /* on ferme SOUS la courbe, large */
+
+    var id = COUPE + rang;
+    defs(id).firstChild.setAttribute('d', d);
+    li.style.clipPath = 'url(#' + id + ')';
+    li.style.webkitClipPath = 'url(#' + id + ')';
+    var courbe = li.querySelector(':scope > .qz-vitrine-courbe');
+    if (!courbe) {
+      courbe = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      courbe.setAttribute('class', 'qz-vitrine-courbe');
+      courbe.setAttribute('viewBox', '0 0 1 1');
+      courbe.setAttribute('preserveAspectRatio', 'none');
+      courbe.setAttribute('aria-hidden', 'true');
+      /* sans vector-effect, une epaisseur de 2 est lue dans le repere 0..1 : elle vaudrait deux
+         fois la largeur de la carte, et le filet serait invisible */
+      courbe.innerHTML = '<path vector-effect="non-scaling-stroke"/>';
+      li.appendChild(courbe);
+    }
+    courbe.firstChild.setAttribute('d', d);
+  }
+
+  /* ---------- placer les cartes de la premiere rangee ---------- */
+  /* La boite d une carte, prise sur la MISE EN PAGE et non sur le rendu.
+     getBoundingClientRect() inclut les transformations : pendant l animation d arrivee, les
+     cartes sont encore decalees et la mesure ment — une carte se retrouvait exclue de la
+     premiere rangee et restait sans decroche. offsetTop/offsetLeft ignorent les
+     transformations ; l ul, lui, n est jamais anime, il sert donc d origine. */
+  function boite(li, ru) {
+    return { left: ru.left + li.offsetLeft, top: ru.top + li.offsetTop,
+             width: li.offsetWidth, height: li.offsetHeight,
+             right: ru.left + li.offsetLeft + li.offsetWidth };
+  }
+
+  function placer() {
+    var panneau = document.getElementById('qzNavPanel');
+    var ul = panneau && panneau.querySelector('ul');
+    if (!ul) return;
+    var lis = [].slice.call(ul.children);
+    lis.forEach(function (li) {
+      li.classList.remove('qz-vitrine-remonte', 'qz-vitrine-decoupee');
+      li.style.clipPath = ''; li.style.webkitClipPath = '';
+      var c = li.querySelector(':scope > .qz-vitrine-courbe'); if (c) c.remove();
+    });
+    if (!bureau()) return;
+    var g = geometrie(); if (!g) return;
+
+    /* la premiere rangee, mesuree APRES avoir retire les marges : sinon on la cherche sur une
+       mise en page qu on vient soi-meme de deformer */
+    var ru = ul.getBoundingClientRect();
+    var haut = Infinity;
+    lis.forEach(function (li) { haut = Math.min(haut, Math.round(boite(li, ru).top)); });
+    var premiere = lis.filter(function (li) {
+      return Math.round(boite(li, ru).top) <= haut + 2;
+    });
+
+    /* TROIS CAS, ET IL FAUT LES TROIS. Une premiere version en posait deux avec un seuil de
+       8 px, et une carte qui ne mordait la marche que de 4 px tombait entre les deux : ni
+       remontee ni decoupee, elle restait en bas toute seule pendant que ses voisines montaient.
+       La tolerance doit donc jouer dans les DEUX sens, pas seulement pour refuser la decoupe. */
+    var TOL = 8;
+    premiere.forEach(function (li) {
+      var r = boite(li, ru);
+      if (r.left >= g.fin - TOL) {                 /* 1. passe la marche : elle remonte, nette */
+        li.classList.add('qz-vitrine-remonte'); return;
+      }
+      if (r.right <= g.debut + TOL) return;        /* 2. entierement dans le creux : elle reste */
+      /* 3. vraiment a cheval : elle remonte ET porte la courbe. La laisser passer sous l onglet
+         opaque donnerait une carte sans jeu, qui se lit comme rognee et non comme une forme. */
+      li.classList.add('qz-vitrine-remonte', 'qz-vitrine-decoupee');
+    });
+    /* la decoupe se calcule une fois les marges posees */
+    premiere.forEach(function (li) {
+      if (li.classList.contains('qz-vitrine-decoupee'))
+        decouper(li, g, panneau, lis.indexOf(li), boite(li, ul.getBoundingClientRect()));
+    });
+  }
+
+  /* la page ne defile plus derriere le calque. On lit l etat du panneau plutot que de compter
+     les clics : le menu se ferme aussi par le voile, par Echap et par un lien. */
+  var minuterieVerrou = null;
+  function verrou() {
+    var p = document.getElementById('qzNavPanel');
+    var ouvert = !!(p && p.classList.contains('open'));
+    clearTimeout(minuterieVerrou);
+    if (ouvert) { html.classList.add('qz-vitrine-ouverte'); return; }
+    /* A LA FERMETURE, ON ATTEND LA FIN DE L ENROULEMENT. Sinon la barre de defilement de la
+       page revient des le premier instant, pendant que le menu est encore la : la page se
+       retrecit d un coup sous un calque encore visible. Invisible a 200 ms, franc a 2 s. */
+    var d = parseFloat(getComputedStyle(html).getPropertyValue('--qz-deroule-duree')) || 0;
+    if (/mss*$/.test(getComputedStyle(html).getPropertyValue('--qz-deroule-duree')) === false) d *= 1000;
+    if (!d || !html.classList.contains('qz-anim-2')) { html.classList.remove('qz-vitrine-ouverte'); return; }
+    minuterieVerrou = setTimeout(function () { html.classList.remove('qz-vitrine-ouverte'); }, d);
+  }
+
+  function vitrine() {
+    if (!actif()) return;
+    var ul = document.querySelector('#qzNavPanel ul');
+    if (!ul) return;
+    [].slice.call(ul.children).forEach(poserVignette);
+    placer();
+  }
+
+  /* ---------- quand rejouer ----------
+     Au chargement la boite des cartes n est pas toujours etablie (polices, images), et
+     reglages-site.js reconstruit la liste depuis la base apres coup. On rejoue donc a chaque
+     occasion plutot que de parier sur un seul moment. */
+  function brancher() {
+    if (!actif()) return;
+    vitrine();
+    var ul = document.querySelector('#qzNavPanel ul');
+    if (ul && window.MutationObserver) new MutationObserver(vitrine).observe(ul, { childList: true });
+    var btn = document.getElementById('qzMenuBtn');
+    if (btn) btn.addEventListener('click', function () { setTimeout(vitrine, 0); setTimeout(verrou, 0); });
+    window.addEventListener('resize', vitrine);
+    window.addEventListener('load', vitrine);
+    var p = document.getElementById('qzNavPanel');
+    if (p) p.addEventListener('transitionend', placer);
+    /* l arrivee des cartes decale leur rendu : on remesure quand elle est finie */
+    if (p) p.addEventListener('animationend', placer, true);
+    if (p && window.MutationObserver) new MutationObserver(verrou)
+      .observe(p, { attributes: true, attributeFilter: ['class'] });
+    verrou();
+    [200, 800, 2000].forEach(function (t) { setTimeout(vitrine, t); });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', brancher);
+  else brancher();
 })();

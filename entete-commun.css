@@ -427,3 +427,428 @@ html.qz-menu-tiroir.qz-fond-sombre .qz-header.qz-menu-visible > a.qz-espace-barr
   html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-sublist a:focus-visible{ color:#ffa366!important; }
 }
 /* ================= fin du tiroir cale a droite ================= */
+
+/* ================= 21/09, fondateur : LE MENU EN VITRINE =================
+   Le burger n ouvre plus un tiroir de 320 px mais un calque PLEIN ECRAN ou les rubriques sont
+   des cartes avec leur image, toutes visibles en meme temps. Forme choisie par le fondateur
+   apres trois propositions (maquette : SITE\maquette-menu-plein-ecran.html) : la seule des
+   trois ou l image aide AVANT le choix, et la seule identique a la souris et au doigt — une
+   image qui n apparait qu au survol arrive apres qu on ait decide ou pointer, et au doigt elle
+   n apparait jamais.
+
+   ETEINT PAR DEFAUT. Il s allume dans SON navigateur, comme le tiroir en son temps :
+      quadreti.fr/?vitrine=1   -> essai, memorise pour la session
+      quadreti.fr/?vitrine=0   -> retour au tiroir
+   Deux pannes en production le 18/09 ont appris a ne pas poser un mode de menu pour tout le
+   monde avant qu il l ait vu chez lui.
+
+   COMMENT LE HAUT SUIT LE DECROCHE : on ne decoupe pas le calque. Sur ce site, la surface
+   visible de l en-tete EST l onglet (`.qz-onglet`, SVG opaque dans un en-tete a z-index 60).
+   Le calque part donc de inset:0 avec un z-index plus bas, l onglet le recouvre, et le bord
+   haut du navy epouse la courbe tout seul — lisere orange compris, sans tracé dupliqué.
+   Les cartes entierement a droite de la marche remontent le combler ; celle qui est A CHEVAL
+   recoit sa propre decoupe, calculee en JS (voir `vitrine()` dans commun-bandeau.js). Sans le
+   meme jeu de 10 px que les autres, elle se lit comme une carte rognee et non comme une forme.
+
+   POUR REVENIR EN ARRIERE : retirer la classe qz-menu-vitrine dans commun-bandeau.js. Ce bloc
+   ne s applique qu a travers elle, le tiroir reste intact dessous. */
+/* la page ne defile plus derriere le calque : une barre de defilement qui bouge sous un menu
+   plein ecran donne l impression que le menu glisse */
+html.qz-menu-vitrine.qz-vitrine-ouverte,
+html.qz-menu-vitrine.qz-vitrine-ouverte body{overflow:hidden}
+
+/* LA SUPERPOSITION DES IMAGES VAUT A TOUTES LES LARGEURS. Ecrite d abord dans le seul bloc
+   ordinateur, elle laissait le telephone empiler les trois images l une sous l autre : carte
+   de 321 px au lieu de 96, et les trois visibles a la fois. */
+html.qz-menu-vitrine .qz-vitrine-vue{position:relative}
+html.qz-menu-vitrine .qz-vitrine-vue > img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
+  opacity:0; transition:opacity .28s ease, transform .4s ease;
+}
+html.qz-menu-vitrine .qz-vitrine-vue > img.qz-actif{opacity:1}
+
+/* UN MENU FERME NE DOIT RIEN ATTRAPER. Le panneau se masque par opacite puis par visibilite,
+   avec un delai pour laisser jouer l enroulement — et tant que ce delai court, ou s il ne se
+   declenche pas, des cartes invisibles restent sous la souris : mesure 3,5 s apres fermeture,
+   le centre de l ecran tombait encore sur une carte, un clic sur la page pouvait envoyer sur
+   une rubrique. On coupe donc les clics des que .open disparait, sans attendre l animation.
+   Le !important et l etoile sont necessaires : les fleches des vignettes declarent
+   pointer-events:auto, qu un parent a none ne suffit pas a eteindre. */
+html.qz-menu-vitrine .qz-navpanel:not(.open),
+html.qz-menu-vitrine .qz-navpanel:not(.open) *{pointer-events:none!important}
+
+html.qz-menu-vitrine{
+  --qz-vitrine-jeu:16px;          /* LE vide : marges du calque, ecart entre cartes, et
+                                     decalage de la courbe sous le decroche. Un seul nombre
+                                     a changer pour resserrer ou aerer l ensemble. */
+  --qz-vitrine-barre:58px;        /* hauteur de la barre, une fois la marche passee */
+  --qz-vitrine-carte:rgba(255,255,255,.055);
+  --qz-vitrine-carte-survol:rgba(255,255,255,.10);
+  --qz-vitrine-filet:rgba(222,222,222,.16);
+  --qz-vitrine-filet-vif:rgba(222,222,222,.34);
+  --qz-vitrine-second:#98A2AC;    /* --qz-gris-doux tombe a 2,46 sur le navy ; celui-ci tient 5,57 */
+  --qz-vitrine-rayon:0;           /* angles droits sur toutes les cartes (fondateur, 21/09) :
+                                     la carte a cheval a un coin coupe par la courbe, un arrondi
+                                     ailleurs rendait la serie batarde */
+}
+
+@media (min-width:901px){
+  /* ---- le calque ---- */
+  html.qz-menu-vitrine .qz-header.qz-menu-visible .qz-navpanel{
+    position:fixed!important; inset:0!important; top:0!important; left:0!important;
+    right:0!important; bottom:0!important; width:auto!important; max-width:none!important;
+    margin:0!important; border-radius:0!important; box-shadow:none!important;
+    background:var(--qz-pied-fond,#1e2b35)!important; z-index:40!important;
+    overflow:hidden!important; max-height:none!important; height:auto!important;
+    /* on ouvre par visibilite et non par display : le calque doit garder une mise en page
+       fermee, sinon la decoupe de la carte a cheval se calcule sur une boite de taille zero */
+    display:block!important; opacity:0; visibility:hidden; transform:translateY(-8px);
+    transition:opacity .24s ease, transform .24s ease, visibility 0s .24s;
+  }
+  html.qz-menu-vitrine .qz-header.qz-menu-visible .qz-navpanel.open{
+    opacity:1; visibility:visible; transform:none; transition-delay:0s;
+  }
+  @media (prefers-reduced-motion:reduce){
+    html.qz-menu-vitrine .qz-header.qz-menu-visible .qz-navpanel{transition:none}
+  }
+
+  /* ---- l ordre des plans, et pourquoi il n est pas celui de la maquette ----
+     Sur l accueil, bandeau-relief.js DEPLACE le panneau DANS l en-tete. Le calque se retrouve
+     donc dans la pile de l en-tete, ou l onglet vit a z-index -1 : le calque passait par-dessus
+     le decroche au lieu de passer dessous, et la courbe disparaissait. On remonte donc l onglet
+     AU-DESSUS du calque, et le logo et les boutons encore au-dessus — plutot que de sortir le
+     panneau de l en-tete, ce qui casserait l extraction de « Mon Espace » faite plus haut.
+     Trois lignes, toutes bornees a la classe de mode : rien a defaire ailleurs. */
+  html.qz-menu-vitrine .qz-header.qz-menu-visible .qz-onglet{z-index:41}
+  html.qz-menu-vitrine .qz-header.qz-menu-visible > .qz-logorow,
+  html.qz-menu-vitrine .qz-header.qz-menu-visible > .qz-burger,
+  html.qz-menu-vitrine .qz-header.qz-menu-visible > .qz-espace-barre,
+  html.qz-menu-vitrine .qz-header.qz-menu-visible > a{position:relative; z-index:42}
+
+  /* ---- la grille ---- */
+  html.qz-menu-vitrine .qz-navpanel > ul{
+    position:absolute;
+    left:var(--qz-vitrine-jeu); right:var(--qz-vitrine-jeu); bottom:var(--qz-vitrine-jeu);
+    top:calc(var(--qz-onglet,98px) + var(--qz-vitrine-jeu));
+    display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr));
+    /* !important sur gap et grid-auto-rows : la regle du tiroir
+       (html.qz-menu-tiroir .qz-header.qz-menu-visible .qz-navpanel>ul) pose gap:0 avec UNE
+       CLASSE DE PLUS que celle-ci. Etre ecrit en dernier ne suffit pas face a une specificite
+       superieure — les cartes se touchaient. */
+    grid-auto-rows:minmax(0,1fr)!important; gap:var(--qz-vitrine-jeu)!important;
+    margin:0!important; padding:0!important; list-style:none; align-content:stretch;
+  }
+
+  /* ---- une carte ---- */
+  html.qz-menu-vitrine .qz-navpanel > ul > li{
+    /* position:relative en !important A CAUSE DE .qz-hassub : le tiroir lui pose
+       position:static avec QUATRE classes, contre deux ici. Sur cette carte-la, la courbe —
+       qui est en position absolue — ne se calait donc pas sur elle mais sur la grille entiere,
+       et s etalait sur 1504 px de large : c est la fine ligne blanche qui traversait le menu.
+       Le meme symptome, une deuxieme cause. */
+    position:relative!important; display:flex!important; flex-direction:column; min-height:0;
+    width:auto!important; max-width:none!important; text-align:left!important; margin:0;
+    background:var(--qz-vitrine-carte); border:1px solid var(--qz-vitrine-filet);
+    border-radius:var(--qz-vitrine-rayon); overflow:hidden;
+    transition:background .18s, transform .18s, box-shadow .18s, border-color .18s;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li:hover,
+  html.qz-menu-vitrine .qz-navpanel > ul > li:focus-within{
+    background:var(--qz-vitrine-carte-survol); transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(0,0,0,.45); border-color:var(--qz-terracotta,#d96c2f);
+  }
+
+  /* la vignette, posee par le JS. Elle peut porter PLUSIEURS images empilees : on passe de
+     l une a l autre en cliquant une pastille, jamais tout seul. */
+  html.qz-menu-vitrine .qz-vitrine-vue{
+    position:relative; flex:1 1 auto; min-height:0; overflow:hidden;
+    background:var(--qz-pied-fond,#1e2b35); display:block;
+  }
+  html.qz-menu-vitrine .qz-vitrine-vue img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
+    opacity:0; transition:opacity .28s ease, transform .4s ease;
+  }
+  html.qz-menu-vitrine .qz-vitrine-vue img.qz-actif{opacity:1}
+  html.qz-menu-vitrine .qz-navpanel > ul > li:hover .qz-vitrine-vue img.qz-actif{transform:scale(1.04)}
+
+  /* ---- les deux fleches ----
+     Deux boutons plutot que N pastilles : la carte est la meme qu il y ait trois images ou
+     six. Au-dessus du lien etire de la carte, sinon un clic dessus suivrait le lien.
+     Discretes au repos, elles se montrent au survol et au clavier — mais restent VISIBLES en
+     permanence la ou il n y a pas de survol (telephone, tablette) : sinon personne ne saurait
+     qu elles existent. */
+  html.qz-menu-vitrine .qz-vitrine-fleche{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:5;
+    width:34px; height:34px; padding:0; border-radius:50%; cursor:pointer;
+    display:grid; place-items:center; pointer-events:auto;
+    border:1px solid var(--qz-vitrine-filet-vif);
+    background:rgba(16,24,31,.62); color:var(--qz-lisere,#dedede);
+    transition:background .16s, border-color .16s, color .16s;
+  }
+  html.qz-menu-vitrine .qz-vitrine-fleche svg{width:17px; height:17px}
+  html.qz-menu-vitrine .qz-vitrine-fleche.qz-prec{left:9px}
+  html.qz-menu-vitrine .qz-vitrine-fleche.qz-suiv{right:9px; transform:translateY(-50%) rotate(180deg)}
+  html.qz-menu-vitrine .qz-vitrine-fleche:hover{
+    background:var(--qz-terracotta,#d96c2f); border-color:var(--qz-terracotta,#d96c2f);
+    color:var(--qz-encre,#10181f);
+  }
+  html.qz-menu-vitrine .qz-vitrine-fleche:focus-visible{
+    outline:2px solid var(--qz-lisere,#dedede); outline-offset:2px;
+  }
+  /* le compteur n est pas affiche : il annonce le changement aux lecteurs d ecran */
+  html.qz-menu-vitrine .qz-vitrine-compte{
+    position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden;
+    clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
+  }
+  @media (hover:hover){
+    html.qz-menu-vitrine .qz-vitrine-fleche{opacity:0; transition:opacity .18s ease,
+      background .16s, border-color .16s, color .16s}
+    html.qz-menu-vitrine .qz-navpanel > ul > li:hover .qz-vitrine-fleche,
+    html.qz-menu-vitrine .qz-navpanel > ul > li:focus-within .qz-vitrine-fleche{opacity:1}
+  }
+
+  /* LE TITRE EST EN HAUT DE LA CARTE (fondateur, 21/09) : titre, photo, legende. Il n est
+     plus sous l image — l ordre vient du DOM, la vignette est posee apres lui par le JS. */
+  html.qz-menu-vitrine .qz-navpanel > ul > li > a,
+  html.qz-menu-vitrine .qz-navpanel > ul > li > .qz-subtoggle{
+    flex:0 0 auto; display:block!important; width:auto!important; text-align:left!important;
+    padding:13px 14px 10px!important; font-size:15px!important; font-weight:700!important;
+    letter-spacing:.06em!important; text-transform:uppercase!important;
+    background:transparent!important; border:0; cursor:pointer;
+  }
+  /* toute la carte est cliquable quand la rubrique a une destination ; pas de second lien
+     ajoute, c est le lien existant qu on etire — un seul objet pour le clavier et le lecteur */
+  html.qz-menu-vitrine .qz-navpanel > ul > li:not(.qz-hassub) > a::after{
+    content:''; position:absolute; inset:0;
+  }
+  /* le trait orange qui souligne le titre au survol */
+  html.qz-menu-vitrine .qz-navpanel > ul > li > a::before,
+  html.qz-menu-vitrine .qz-navpanel > ul > li > .qz-subtoggle::before{
+    content:''; display:block; width:0; height:2px; background:var(--qz-terracotta,#d96c2f);
+    margin:0 0 7px; transition:width .22s ease; order:-1;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li:hover > a::before,
+  html.qz-menu-vitrine .qz-navpanel > ul > li:hover > .qz-subtoggle::before{width:34px}
+  /* plus de chevron : rien ne se deplie, le sous-menu est deja la */
+  html.qz-menu-vitrine .qz-navpanel .qz-chev{display:none!important}
+
+  /* ---- la legende, sous la photo, qui change a chaque clic ---- */
+  html.qz-menu-vitrine .qz-vitrine-legende{
+    flex:0 0 auto; display:block; padding:9px 14px 12px;
+    font-size:12.5px; font-weight:600; letter-spacing:.02em;
+    color:var(--qz-vitrine-second); line-height:1.3;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  html.qz-menu-vitrine .qz-vitrine-legende:empty{display:none}
+  html.qz-menu-vitrine .qz-navpanel > ul > li:hover .qz-vitrine-legende{color:var(--qz-lisere,#dedede)}
+  html.qz-menu-vitrine .qz-navpanel > ul > li.qz-hassub .qz-vitrine-legende{padding-bottom:6px}
+
+  /* ---- les sous-rubriques, en pastilles, toujours visibles ---- */
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist{
+    position:static!important; display:flex!important; flex-direction:row!important;
+    flex-wrap:wrap!important; gap:6px; align-items:flex-start;
+    margin:0!important; padding:0 14px 13px!important; background:transparent!important;
+    border:0!important; box-shadow:none!important; min-width:0!important;
+    max-height:none!important; overflow:visible!important; animation:none!important;
+    border-radius:0!important;
+  }
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist li{width:auto!important; max-width:none!important;
+    margin:0; flex:0 0 auto}
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist a{
+    display:inline-block!important; width:auto!important; padding:5px 11px!important; font-size:12.5px!important;
+    font-weight:600!important; text-transform:none!important; letter-spacing:.02em!important;
+    background:rgba(0,0,0,.22)!important; border:1px solid var(--qz-vitrine-filet);
+    border-radius:999px!important; text-align:left!important;
+  }
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist a:hover,
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist a:focus-visible{
+    background:var(--qz-terracotta,#d96c2f)!important; color:var(--qz-encre,#10181f)!important;
+    border-color:var(--qz-terracotta,#d96c2f);
+  }
+
+  /* ---- les cartes qui comblent le decroche ----
+     Classes posees par le JS, qui sait ou tombe la marche. `remonte` = la carte est
+     entierement a droite de la marche ; `decoupee` = elle est a cheval et porte sa courbe. */
+  html.qz-menu-vitrine .qz-navpanel > ul > li.qz-vitrine-remonte{
+    margin-top:calc(var(--qz-vitrine-barre) - var(--qz-onglet,98px));
+  }
+  /* la decoupe elle-meme est posee EN LIGNE par le JS : chaque carte a cheval a son propre
+     clipPath (une decoupe est calculee pour une boite, elle ne se partage pas). Cette regle ne
+     garde donc que ce qui ne depend pas de la boite. */
+  html.qz-menu-vitrine .qz-navpanel > ul > li.qz-vitrine-decoupee{ border-radius:0 }
+  html.qz-menu-vitrine .qz-vitrine-courbe{
+    position:absolute; inset:0; width:100%; height:100%; pointer-events:none;
+    overflow:hidden; z-index:3;
+  }
+  html.qz-menu-vitrine .qz-vitrine-courbe path{
+    fill:none; stroke:var(--qz-vitrine-filet-vif); stroke-width:2;
+    stroke-linejoin:round; stroke-linecap:round;
+  }
+}
+
+/* ================= la vitrine au telephone et sur tablette =================
+   Sous 901 px le site masque l onglet : pas de decroche, donc pas de decoupe et personne ne
+   remonte. Les cartes passent en ligne — vignette a gauche, texte a droite — en GRILLE et non
+   en flex : avec un flex en ligne, le titre et les pastilles se posent cote a cote au lieu de
+   s empiler. */
+@media (max-width:900px){
+  html.qz-menu-vitrine .qz-navpanel{
+    background:var(--qz-pied-fond,#1e2b35)!important; max-height:0; overflow:hidden;
+    transition:max-height .3s ease;
+  }
+  /* bottom:0 est indispensable : le panneau est en position fixe et sa hauteur suit son
+     contenu — sans lui il depasse le bas de l ecran (mesure : 909 px de bas sur un ecran de
+     780), et comme la page est verrouillee derriere, les dernieres cartes deviennent
+     inatteignables. Avec, il s arrete au bord et defile a l interieur. */
+  html.qz-menu-vitrine .qz-navpanel.open{
+    bottom:0!important; max-height:none!important; height:auto!important;
+    overflow:auto!important; -webkit-overflow-scrolling:touch;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul{
+    display:grid!important; grid-template-columns:1fr; gap:var(--qz-vitrine-jeu);
+    padding:var(--qz-vitrine-jeu)!important; margin:0!important; align-content:start;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li{
+    position:relative; display:grid!important; grid-template-columns:110px 1fr;
+    grid-template-rows:auto auto; align-items:center; width:100%!important;
+    max-width:none!important; text-align:left!important;
+    background:var(--qz-vitrine-carte); border:1px solid var(--qz-vitrine-filet);
+    border-radius:var(--qz-vitrine-rayon); overflow:hidden;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li{grid-template-rows:auto auto auto}
+  html.qz-menu-vitrine .qz-vitrine-vue{grid-row:1 / -1; grid-column:1; height:100%; min-height:96px;
+    overflow:hidden; background:var(--qz-pied-fond,#1e2b35)}
+  html.qz-menu-vitrine .qz-vitrine-legende{grid-column:2; padding:0 13px 10px; font-size:12px}
+  /* la superposition est posee plus haut, hors media query — ne rien redefinir ici */
+  html.qz-menu-vitrine .qz-navpanel > ul > li > a,
+  html.qz-menu-vitrine .qz-navpanel > ul > li > .qz-subtoggle{
+    grid-column:2; display:block!important; width:auto!important; text-align:left!important;
+    padding:11px 13px 9px!important; font-size:14px!important; font-weight:700!important;
+    letter-spacing:.05em!important; text-transform:uppercase!important;
+    background:transparent!important; border:0;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li:not(.qz-hassub) > a{grid-row:1 / 3; align-self:center}
+  html.qz-menu-vitrine .qz-navpanel > ul > li:not(.qz-hassub) > a::after{content:''; position:absolute; inset:0}
+  html.qz-menu-vitrine .qz-navpanel .qz-chev{display:none!important}
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist{
+    grid-column:2; position:static!important; display:flex!important; flex-direction:row!important;
+    flex-wrap:wrap!important; gap:6px; align-items:flex-start;
+    margin:0!important; padding:0 13px 12px!important; background:transparent!important;
+    max-height:none!important; overflow:visible!important;
+  }
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist li{width:auto!important; max-width:none!important;
+    margin:0; flex:0 0 auto}
+  html.qz-menu-vitrine .qz-navpanel .qz-sublist a{
+    display:inline-block!important; width:auto!important; padding:5px 10px!important; font-size:12px!important;
+    font-weight:600!important; text-transform:none!important;
+    background:rgba(0,0,0,.22)!important; border:1px solid var(--qz-vitrine-filet);
+    border-radius:999px!important;
+  }
+  html.qz-menu-vitrine .qz-navpanel > ul > li.qz-vitrine-remonte{margin-top:0}
+  html.qz-menu-vitrine .qz-navpanel > ul > li.qz-vitrine-decoupee{
+    -webkit-clip-path:none; clip-path:none;
+  }
+  html.qz-menu-vitrine .qz-vitrine-courbe{display:none}
+}
+
+/* ================= 21/09 : TROIS ARRIVEES A COMPARER =================
+   Le menu s ouvrait en fondu de 240 ms avec une descente de 8 px, d un bloc. Correct pour un
+   tiroir de 320 px, un peu sec pour un plein ecran a six images. Trois propositions, a essayer
+   sur le vrai menu plutot que sur une maquette :
+      ?vitrine=1&anim=1   le decale — les cartes arrivent l une apres l autre
+      ?vitrine=1&anim=2   le deroule — le menu se deroule depuis la courbe du decroche
+      ?vitrine=1&anim=3   rien de plus — le bloc, en 200 ms au lieu de 240
+   Sans `anim`, c est l arrivee actuelle. Referme et rouvre le menu pour rejouer.
+   Tout est en CSS : aucune animation pilotee en JS. */
+
+/* les trois remplacent la descente du calque : sinon deux mouvements se superposent */
+html.qz-anim-1 .qz-header.qz-menu-visible .qz-navpanel,
+html.qz-anim-2 .qz-header.qz-menu-visible .qz-navpanel{
+  transform:none!important; transition:opacity .16s ease, visibility 0s .16s!important;
+}
+html.qz-anim-1 .qz-header.qz-menu-visible .qz-navpanel.open,
+html.qz-anim-2 .qz-header.qz-menu-visible .qz-navpanel.open{transition-delay:0s!important}
+
+/* ---------- 1. LE DECALE ----------
+   Les cartes montent de 14 px en se revelant, 40 ms d ecart, dans le sens de la lecture.
+   Six cartes : 200 ms de trainee, 540 ms du debut a la fin. */
+@keyframes qzCarteArrive{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+@keyframes qzCarteFondu{ from{opacity:0} to{opacity:1} }
+html.qz-anim-1 .qz-navpanel.open > ul > li{
+  animation:qzCarteArrive .34s cubic-bezier(.2,.8,.3,1) both;
+}
+/* la carte a cheval ne BOUGE pas : sa decoupe est calee sur l onglet, la deplacer ferait
+   glisser sa courbe loin de celle du decroche pendant toute l animation. Elle se contente
+   d apparaitre, au meme rythme que les autres. */
+html.qz-anim-1 .qz-navpanel.open > ul > li.qz-vitrine-decoupee{ animation-name:qzCarteFondu }
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(1){animation-delay:0ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(2){animation-delay:40ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(3){animation-delay:80ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(4){animation-delay:120ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(5){animation-delay:160ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(6){animation-delay:200ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(7){animation-delay:240ms}
+html.qz-anim-1 .qz-navpanel.open > ul > li:nth-child(8){animation-delay:280ms}
+
+/* ---------- 2. LE DEROULE ----------
+   La grille se decouvre du haut vers le bas, comme un store. Son bord haut EST le decroche :
+   le mouvement part donc de la courbe, qui cesse d etre un simple bord pour devenir l origine
+   du geste. C est le seul des trois qui utilise la forme de la marque. */
+/* Le rideau doit partir du DECROCHE, pas du bord de la grille.
+   Les cartes de la premiere rangee remontent de 40 px AU-DESSUS de la boite de l ul (c est
+   tout l objet du comblement) : une decoupe a inset(0 ...) les rognait en permanence et la
+   rangee du haut retombait a plat pendant et apres l animation.
+   On ouvre donc la region de ce debord — une valeur negative en haut — et on fait descendre
+   le bord bas depuis cette meme ligne. */
+html.qz-anim-2 .qz-navpanel > ul{
+  --qz-debord:calc(var(--qz-vitrine-barre) - var(--qz-onglet,98px));   /* -40px */
+}
+@keyframes qzDeroule{
+  from{ clip-path:inset(var(--qz-debord,-40px) 0 calc(100% - var(--qz-debord,-40px)) 0) }
+  to  { clip-path:inset(var(--qz-debord,-40px) 0 0 0) }
+}
+/* La duree est un JETON, pas une valeur figee : le fondateur la veut « moyenne/lente » et
+   c est le genre de reglage qui se juge a l oeil, pas au raisonnement. 800 ms par defaut ;
+   ?vit=1200 (en millisecondes) pour essayer autre chose sans toucher au code. */
+html.qz-anim-2{ --qz-deroule-duree:1500ms }
+html.qz-anim-2 .qz-navpanel.open > ul{
+  animation:qzDeroule var(--qz-deroule-duree,1500ms) cubic-bezier(.22,.7,.2,1) both;
+}
+/* ---- et la remontee ----
+   Il n y a pas de classe « en train de se fermer » : le panneau perd simplement .open. On met
+   donc l enroulement sur l etat FERME — au chargement il joue une fois dans le vide, panneau
+   invisible, sans consequence ; a la fermeture il joue a l endroit.
+   Pour qu on le voie, le panneau doit rester visible le temps de s enrouler : son opacite et
+   sa visibilite attendent la fin (transition-delay = la duree). A l ouverture, aucun delai. */
+@keyframes qzEnroule{
+  from{ clip-path:inset(var(--qz-debord,-40px) 0 0 0) }
+  to  { clip-path:inset(var(--qz-debord,-40px) 0 calc(100% - var(--qz-debord,-40px)) 0) }
+}
+html.qz-anim-2 .qz-navpanel > ul{
+  animation:qzEnroule var(--qz-deroule-duree,1500ms) cubic-bezier(.22,.7,.2,1) both;
+}
+html.qz-anim-2 .qz-header.qz-menu-visible .qz-navpanel{
+  transition:opacity 0s linear var(--qz-deroule-duree,1500ms),
+             visibility 0s var(--qz-deroule-duree,1500ms)!important;
+}
+html.qz-anim-2 .qz-header.qz-menu-visible .qz-navpanel.open{
+  transition:opacity .12s ease!important; transition-delay:0s!important;
+}
+
+/* ---------- 3. RIEN DE PLUS ----------
+   Le bloc, mais plus vif : 200 ms et aucune descente. Un menu s ouvre souvent — une animation
+   trop presente se remarque une fois et fatigue les neuf suivantes. */
+html.qz-anim-3 .qz-header.qz-menu-visible .qz-navpanel{
+  transform:none!important; transition:opacity .2s ease, visibility 0s .2s!important;
+}
+html.qz-anim-3 .qz-header.qz-menu-visible .qz-navpanel.open{transition-delay:0s!important}
+
+/* ---------- mouvement reduit : aucune des trois ---------- */
+@media (prefers-reduced-motion:reduce){
+  html.qz-anim-1 .qz-navpanel.open > ul > li,
+  html.qz-anim-2 .qz-navpanel > ul,
+  html.qz-anim-2 .qz-navpanel.open > ul{animation:none!important}
+  html.qz-anim-1 .qz-header.qz-menu-visible .qz-navpanel,
+  html.qz-anim-2 .qz-header.qz-menu-visible .qz-navpanel,
+  html.qz-anim-3 .qz-header.qz-menu-visible .qz-navpanel{transition:none!important}
+}
