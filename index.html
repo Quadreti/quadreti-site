@@ -783,6 +783,24 @@
   .scal-scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
     opacity:0; transition:opacity .26s ease; }
   .scal-scene img.on{ opacity:1; }
+  /* 24/09, fondateur : « la couleur saccade ». Mesure : le mur a la MEME couleur sur les quatorze photos (159,155,152) ;
+     c est le FONDU qui clignotait. L ancienne vue s effacait pendant que la nouvelle apparaissait : a mi-chemin chacune
+     n etait qu a moitie la, le fond navy transparaissait et le mur s assombrissait d environ 15 % -- a chaque carreau
+     pose, toutes les 0,6 s. Desormais la nouvelle vue se pose PAR-DESSUS l ancienne, qui reste pleinement visible
+     dessous jusqu a la fin du fondu : il n y a plus rien a voir au travers. */
+  .scal-scene img.dessous{ z-index:1; opacity:1; transition:none; }
+  .scal-scene img.dessus{ z-index:2; }
+  /* 24/09, fondateur : « un titrage entre chaque composition pour ameliorer la comprehension ». Au debut de chaque
+     taille, un carton se pose sur la scene : la taille en grand, un trait de la marque, puis ce qu elle est en
+     carreaux et en centimetres. La pose des carreaux ne reprend qu apres lui. */
+  .scal-carton{ --carton-fond:rgba(16,24,31,.86); --carton-texte:#dedede;
+    position:absolute; inset:0; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background:var(--carton-fond); color:var(--carton-texte); opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .3s ease, visibility 0s linear .3s; }
+  .scal-carton.on{ opacity:1; visibility:visible; transition:opacity .3s ease; }
+  .scal-carton .taille{ font-family:'Jura',sans-serif; font-weight:700; font-size:clamp(44px,8vw,84px); line-height:1; letter-spacing:.02em; }
+  .scal-carton .trait{ width:48px; height:3px; border-radius:2px; background:var(--qz-terracotta,#d96c2f); }
+  .scal-carton .detail{ font-family:'Jura',sans-serif; font-weight:600; font-size:clamp(13px,1.6vw,17px); letter-spacing:.06em; }
   /* la jauge dit ou l on en est sans occuper de place : quatorze pastilles auraient fait plus de bruit que le
      diaporama lui-meme. Elle est posee SUR l image, en bas. */
   .scal-jauge{ position:absolute; left:0; right:0; bottom:0; height:3px; background:#10181f59; }
@@ -798,7 +816,7 @@
   .scal-chap button:hover, .scal-chap button:focus-visible{ border-color:#dedede; color:#dedede; }
   .scal-chap button[aria-current="true"]{ background:#dedede; border-color:#dedede; color:#10181f; }
   @media (prefers-reduced-motion:reduce){
-    .scal-scene img, .scal-jauge i{ transition:none; }
+    .scal-scene img, .scal-jauge i, .scal-carton, .scal-carton.on{ transition:none; }
   }
   .scal .arrow{ font-size:22px; color:var(--kraft); font-weight:700; padding-bottom:26px; }
   .scal-foot{ text-align:center; font-size:14.5px; color:#4F5A65; max-width:560px; margin:14px auto 0; }
@@ -2380,6 +2398,8 @@ document.addEventListener('DOMContentLoaded', function(){
         <img data-src="img/mur-etape-13.jpg" alt="">
         <img data-src="img/mur-etape-14.jpg" alt="">
         <div class="scal-jauge" aria-hidden="true"><i></i></div>
+        <!-- 24/09 : le carton de titre. aria-hidden : la legende en dessous (aria-live) annonce deja chaque taille. -->
+        <div class="scal-carton" id="scalCarton" aria-hidden="true"><div class="taille"></div><div class="trait"></div><div class="detail"></div></div>
       </div>
       <div class="scal-sous">
         <!-- aria-live : c est le CHANGEMENT DE TAILLE qui porte l information, pas chaque carreau pose.
@@ -2427,13 +2447,24 @@ document.addEventListener('DOMContentLoaded', function(){
      d un carreau reste a 620 ms. Le geste doit rester vif — c est le RESULTAT qu on veut laisser regarder, pas
      le mouvement. Cycle complet : 17,4 s au lieu de 13,1. */
   var CHAPITRES = [
-    { debut: 0,  n: 1, texte: '×1 · 20 × 20 cm', garde: 2800 },
-    { debut: 1,  n: 4, texte: '×4 · 40 × 40 cm', garde: 3400 },
-    { debut: 5,  n: 9, texte: '×9 · 60 × 60 cm', garde: 4400 }
+    { debut: 0,  n: 1, texte: '×1 · 20 × 20 cm', garde: 2800, grand: '×1', carton: '1 carreau · 20 × 20 cm' },
+    { debut: 1,  n: 4, texte: '×4 · 40 × 40 cm', garde: 3400, grand: '×4', carton: '4 carreaux · 40 × 40 cm' },
+    { debut: 5,  n: 9, texte: '×9 · 60 × 60 cm', garde: 4400, grand: '×9', carton: '9 carreaux · 60 × 60 cm' }
   ];
   var POSE = 620;
+  /* 24/09 : le carton de titre reste 1,6 s au debut de chaque taille ; la pose reprend ensuite */
+  var TITRE = 1600;
+  var carton = document.getElementById('scalCarton'), minuteurCarton = null;
+  function montrerCarton(c) {
+    if (!carton) return;
+    carton.querySelector('.taille').textContent = c.grand;
+    carton.querySelector('.detail').textContent = c.carton;
+    carton.classList.add('on');
+    clearTimeout(minuteurCarton);
+    minuteurCarton = setTimeout(function () { carton.classList.remove('on'); }, TITRE);
+  }
   function chapitreDe(i) { for (var k = CHAPITRES.length - 1; k >= 0; k--) if (i >= CHAPITRES[k].debut) return k; return 0; }
-  function duree(i) { var c = CHAPITRES[chapitreDe(i)]; return (i === c.debut + c.n - 1) ? c.garde : POSE; }
+  function duree(i) { var c = CHAPITRES[chapitreDe(i)]; return ((i === c.debut + c.n - 1) ? c.garde : POSE) + (i === c.debut ? TITRE : 0); }
 
   /* chargement : la vue demandee et les deux suivantes, jamais plus */
   function charger(i) {
@@ -2447,10 +2478,16 @@ document.addEventListener('DOMContentLoaded', function(){
   function afficher(i) {
     if (i === courante) return;
     charger(i);
-    if (courante >= 0) vues[courante].classList.remove('on');
-    vues[i].classList.add('on');
+    /* 24/09 : la nouvelle vue se pose PAR-DESSUS l ancienne, qui reste opaque dessous le temps du fondu (voir le CSS).
+       Tout ce qui trainerait d un changement precedent (clics rapides) est d abord range. */
+    for (var v = 0; v < vues.length; v++) if (v !== i && v !== courante) vues[v].classList.remove('on', 'dessus', 'dessous');
+    var ancienne = courante >= 0 ? vues[courante] : null;
+    if (ancienne) { ancienne.classList.remove('dessus'); ancienne.classList.add('dessous'); }
+    vues[i].classList.remove('dessous'); vues[i].classList.add('on', 'dessus');
+    if (ancienne) setTimeout(function () { if (ancienne !== vues[courante]) ancienne.classList.remove('on', 'dessous'); }, 320);
     courante = i;
     var k = chapitreDe(i), c = CHAPITRES[k];
+    if (i === c.debut) montrerCarton(c);
     var rang = i - c.debut + 1;
     titre.innerHTML = c.texte + (c.n > 1 ? ' <span class="cpt">' + rang + ' / ' + c.n + '</span>' : '');
     jauge.style.width = ((i + 1) / vues.length * 100).toFixed(1) + '%';
