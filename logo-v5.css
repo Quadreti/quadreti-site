@@ -78,3 +78,48 @@
 .qz-header .qz-cat{filter:none}
 /* 10/09, demande fondateur : logo reduit sur mobile uniquement */
 @media (max-width:640px){.qz-header .qz-plaque.qz-wordmark-img{--t:42px}.qz-header .qz-naming.qz-wordmark-img{font-size:25px}.qz-header .qz-cat{font-size:9px}.qz-header .qz-logorow{gap:10px}}
+/* LOGO14-DEBUT -- 26/09 : LOGO 14 (voir commun-bandeau.js). Genere par LOGO\VISUEL MUR\generer-logo14-site.js, ne pas editer a la main.
+   Charte : Q et point du i #D96C2F ; nom, accroche et categorie #DEDEDE sur fond sombre (navy 1 sur la barre grise) ;
+   lisere #DEDEDE de 0,44 mm autour du Q et du point, sur fond sombre seulement ; accroche et categorie en minuscules, justifiees.
+   Selecteurs par id (#qzLogoRow) : l en-tete porte deja des regles de couleur et d animation en !important (panneau, sequence
+   d accueil) ecrites pour l ancien logo ; l id les passe toutes sans avoir a les retirer. */
+.qz-logo14{display:block;height:auto;overflow:visible;flex:none;color:inherit}
+.qz-logo14 .qz14-q,.qz-logo14 .qz14-pt{fill:var(--qz14-accent,#d96c2f);fill-rule:evenodd;stroke:var(--qz14-lisere,none);stroke-width:0.44;stroke-linejoin:round}
+.qz-logo14 .qz14-nom{fill:var(--qz14-nom,currentColor);fill-rule:evenodd}
+.qz-logo14 .qz14-pt{transform-box:fill-box;transform-origin:center}
+.qz-l14{--qz14-nom:#1e2b35;--qz14-texte:#1e2b35}
+/* fond sombre : l en-tete n est navy que sur bureau -- sous 900 px la barre reste grise (#dedede), le nom y reste navy */
+@media (min-width:901px){html.qz-fond-sombre .qz-l14{--qz14-lisere:#dedede;--qz14-nom:#dedede;--qz14-texte:#dedede}}
+html.qz-fond-sombre footer.qz-footer .qz-l14{--qz14-lisere:#dedede;--qz14-nom:#dedede;--qz14-texte:#dedede}
+.qz-logorow.perso-actif .qz-logo14{display:none}
+/* en-tete */
+#qzLogoRow.qz-l14{gap:0!important;align-items:flex-start}
+#qzLogoRow.qz-l14 .qz-wm14{display:flex;flex-direction:column;align-items:flex-start;gap:3px;height:auto!important;margin-top:0!important;clip-path:none!important}
+#qzLogoRow.qz-l14 .qz-logo14{width:180px;color:var(--qz14-nom)}
+#qzLogoRow.qz-l14 .qz-accroche,#qzLogoRow.qz-l14 .qb-b1,#qzLogoRow.qz-l14 .qz-cat{font-family:'Jura',sans-serif!important;font-weight:600!important;font-size:11px;line-height:14px!important;text-transform:lowercase!important;white-space:nowrap;margin:0!important;width:auto!important;color:var(--qz14-texte)!important;opacity:1;transform:none}
+#qzLogoRow.qz-l14 .qb-b1 *,#qzLogoRow.qz-l14 .qz-cat .qz-l{animation:none!important;opacity:1!important;transform:none!important;color:inherit!important;letter-spacing:inherit!important;font:inherit!important;text-transform:inherit!important}
+#qzLogoRow.qz-l14 .qb-b1{overflow:visible!important;padding:0!important}
+@media (max-width:640px){#qzLogoRow.qz-l14 .qz-logo14{width:140px}#qzLogoRow.qz-l14 .qz-cat{font-size:9px;line-height:11px!important}}
+/* accueil, bureau : le logo reste cache tant que son animation n a pas demarre (meme role que l anti-flash de index.html) */
+html.qb-attente #qzLogoRow.qz-l14:not(.qz-anime):not(.qz-fini) .qz-logo14{opacity:0}
+/* pied */
+html footer.qz-footer .qz-basdepage .qz-logorow.qz-l14{gap:0}
+html footer.qz-footer .qz-basdepage .qz-logorow.qz-l14 .qz-wm-col.qz-wm14{display:flex;flex-direction:column;align-items:flex-start;gap:3px;height:auto;margin-top:0}
+html footer.qz-footer .qz-basdepage .qz-l14 .qz-logo14{width:180px}
+html footer.qz-footer .qz-basdepage .qz-l14 .qz-pied-accroche,html footer.qz-footer .qz-basdepage .qz-l14 .qz-cat{font-family:'Jura',sans-serif!important;font-weight:600;font-size:11px;line-height:14px;text-transform:lowercase;white-space:nowrap;margin:0;width:auto}
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-l14 .qz-pied-accroche,html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-l14 .qz-cat{color:#dedede!important}
+html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-l14 .qz-logo14{color:#dedede}
+html:not(.qz-fond-sombre) footer.qz-footer .qz-l14{--qz14-nom:currentColor}
+/* le deroule (en-tete seulement, quand commun-bandeau.js pose qz-anime : a chaque arrivee sur l accueil, une fois par session ailleurs) */
+@keyframes qz14-trait{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes qz14-plein{from{opacity:0}to{opacity:1}}
+@keyframes qz14-point{0%{transform:scale(0)}60%{transform:scale(1.4)}100%{transform:none}}
+@keyframes qz14-descendre{from{opacity:0;transform:translateY(-.7em)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  #qzLogoRow.qz-l14.qz-anime .qz14-duc{animation:qz14-trait var(--u) linear var(--d) both!important}
+  #qzLogoRow.qz-l14.qz-anime .qz14-plein{animation:qz14-plein 0.15s linear var(--d) both!important}
+  #qzLogoRow.qz-l14.qz-anime .qz14-pt{animation:qz14-point .25s ease-out 3.18s both!important}
+  #qzLogoRow.qz-l14.qz-anime .qz-accroche,#qzLogoRow.qz-l14.qz-anime .qb-b1{animation:qz14-descendre 0.6s cubic-bezier(.2,.8,.3,1) 3.73s both!important}
+  #qzLogoRow.qz-l14.qz-anime .qz-cat{animation:qz14-descendre 0.6s cubic-bezier(.2,.8,.3,1) 4.73s both!important}
+}
+/* LOGO14-FIN */

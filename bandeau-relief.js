@@ -580,7 +580,9 @@
     if (s.portee === 'logo') {
       /* seul le bloc logo s anime ; le reste est visible tout de suite, le mur part 1 s apres la derniere ligne du logo */
       menu.classList.add('qb-seq-logo'); document.documentElement.classList.remove('qb-attente', 'qb-attente-icones');
-      setTimeout(lancer, Math.round((tb + .5 + 1) * 1000)); return true;
+      /* 26/09 : avec le LOGO 14, le mur attend la fin de son deroule (window.QZ14_FIN) au lieu de la derniere ligne de l ancien logo */
+      var finLogo = (window.QZ14_FIN && document.querySelector('#qzLogoRow.qz-l14')) ? window.QZ14_FIN : tb + .5;
+      setTimeout(lancer, Math.round((finLogo + 1) * 1000)); return true;
     }
     menu.classList.add('qb-seq'); root.classList.add('qb-seq');
     document.documentElement.classList.remove('qb-attente'); /* anti-flash (index.html) : les animations qb-seq partent de l opacite 0, pas de saut */
@@ -598,6 +600,8 @@
     var attendreFin = function () {
       if (demarrerSequence()) return; /* sequence generale : le mur part par minuteur a la fin des boutons */
       var lettres = row.querySelectorAll('.qz-naming .qz-l'); var dernier = lettres[lettres.length - 1];
+      /* 26/09 : LOGO 14 -- plus de lettres de naming ; la fin du logo est celle de la categorie (ou du point du i si la categorie est masquee) */
+      if (row.classList.contains('qz-l14')) { var c14 = row.querySelector('.qz-wm14 > .qz-cat'); dernier = (c14 && c14.getClientRects().length) ? c14 : row.querySelector('.qz14-pt'); }
       if (!dernier || !window.getComputedStyle || getComputedStyle(dernier).animationName === 'none') { partir(); return; }
       dernier.addEventListener('animationend', partir, { once: true });
       setTimeout(partir, 20000); /* filet de securite */
