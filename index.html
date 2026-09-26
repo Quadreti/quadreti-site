@@ -1957,20 +1957,22 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <!-- TEXTURE-FOND-DEBUT -- 26/09, fondateur : texture du fond de l accueil (maquette « Texture du fond », reglages choisis par lui :
-     grain fin 20 %, marbrure 30 % puis 40 % le soir meme, halo 10 %). PAS de tesselles fantomes : l accueil a deja les siennes (#champTessellesFond).
+     grain fin 20 %, marbrure 30 % puis 40 % le soir meme ; halo 10 % retire le soir meme ; bruit teinte navy). PAS de tesselles fantomes : l accueil a deja les siennes (#champTessellesFond).
      Accueil seulement pour l instant (« on teste sur l accueil, puis on etend si ca plait en ligne »). Tout est dessine par le
      navigateur (bruit SVG), aucune image a charger. Les deux couches de grain sont FIXES (le mur ne defile pas), sous les
-     tesselles de fond (z-index -2 contre -1) ; le halo, lui, suit chaque section. -->
+     tesselles de fond (z-index -2 contre -1). -->
 <style>
-/* Le navy est repeint sur une couche fixe et les deux bruits s y fondent (background-blend-mode) : un mix-blend-mode sur le fond
-   de la page ne produit rien (mesure : pixels identiques). L opacite de chaque bruit est portee par le SVG lui-meme
+/* 26/09 soir, fondateur : « voile navy » -- le bruit etait GRIS, fondu en lumiere douce : il eclaircissait le navy et le ternissait
+   (mesure #1E2B35 -> #26333D, « effet brouillard »). Il est maintenant TEINTE dans le navy lui-meme (du navy fonce au navy 2, calcul
+   en sRGB) et pose normalement : sa moyenne reste #1E2B35, il donne de la matiere sans voile.
+   Le navy est repeint sur une couche fixe. L opacite de chaque bruit est portee par le SVG lui-meme
    (grain 0.20, marbrure 0.40 depuis le 26/09 soir) : a changer dans --qz-texture, une seule fois pour toute la page.
    RACCORDS : la marbrure repetee en tuiles laissait une COUTURE a chaque raccord (700 px : ecart 2,1 contre 1,3 ailleurs ;
    1500 px avec stitchTiles et une frequence entiere : encore 2,6) -- « comme une tapisserie mal posee » (fondateur).
    Elle n est donc plus repetee : UNE image a la taille de l ecran (cover). Le grain fin reste en tuiles de 260 px : raccord invisible. */
-:root{--qz-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E")}
+:root{--qz-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix type='matrix' values='0.3294 0 0 0 -0.0471 0.3765 0 0 0 -0.0196 0.4078 0 0 0 0.0039 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix type='matrix' values='0.3294 0 0 0 -0.0471 0.3765 0 0 0 -0.0196 0.4078 0 0 0 0.0039 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E")}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
-  background-image:var(--qz-texture);background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center;background-blend-mode:soft-light,soft-light}
+  background-image:var(--qz-texture);background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center}
 /* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
    peintes en navy uni et cachaient la texture. Elles prennent LA MEME, calee sur l ecran (background-attachment:fixed, memes
    tailles, meme origine que la couche du fond) : d une surface a l autre, le grain continue sans raccord. !important : certaines
@@ -1979,18 +1981,13 @@ html.qz-accueil #qbBandeau,html.qz-accueil .qb-defile,html.qz-accueil section.fi
 html.qz-accueil footer.qz-footer .qz-pied3,html.qz-accueil #qzNavPanel,html.qz-accueil .qz-tex-forme{
   background-color:#1e2b35!important;background-image:var(--qz-texture)!important;background-size:260px 260px,cover!important;
   background-repeat:repeat,no-repeat!important;background-position:0 0,center!important;background-attachment:fixed,fixed!important;
-  background-blend-mode:soft-light,soft-light!important}
+  background-blend-mode:normal!important}
 /* Les decroches sont des FORMES (chemins SVG remplis de navy) : un fond CSS ne s y applique pas. Le script plus bas pose sous chaque
    forme une plaque texturee (.qz-tex-forme) decoupee au meme dessin (masque), puis vide le remplissage du chemin. Le lisere du
    decroche, trace par un autre chemin, reste par-dessus, intact. */
 html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .finale-bord-fond,html.qz-accueil.qz-tex-formes .qz-pied-fond{fill:transparent!important}
 .qz-tex-forme{position:absolute;pointer-events:none;mask-size:100% 100%;-webkit-mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat}
-/* halo : une lumiere douce a l interieur de chaque section. 26/09, fondateur : « je vois les frontieres entre sections ».
-   La premiere version partait du bord haut et assombrissait le bas : deux sections voisines faisaient une marche nette.
-   C est maintenant une tache CENTREE dans la section, nulle sur ses bords : aucune couture. */
-html.qz-accueil section.blk{background-image:radial-gradient(ellipse 60% 45% at 22% 45%,rgba(222,222,222,.10),transparent 100%)}
-/* une section sur deux (.alt) porte sa tache a droite : la meme tache repetee a gauche se lisait elle aussi comme un motif de papier peint */
-html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45% at 78% 45%,rgba(222,222,222,.10),transparent 100%)}
+/* 26/09 soir, fondateur : HALO RETIRE (il voilait le fond et les tesselles, « effet brouillard »). */
 </style>
 <script>
 /* plaques texturees sous les decroches (voir plus haut). Rejouees au redimensionnement : la plaque suit la forme au pixel. */
@@ -3139,10 +3136,14 @@ html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45%
      Le kraft PUR est ecarte : il plafonnait a 1,22 meme pousse, et a 1,39 en opaque. Trois tesselles sur dix ne se
      voyaient donc pas du tout. C est le kraft FONCE qui rend le chaud visible. Les poids sont conserves : le navy porte
      le champ, le chaud le ponctue. */
+  /* 26/09 soir, fondateur : « retire voile tesselle fantome, test couleur tesselle orange et gris dedede ». Moitie orange, moitie
+     gris clair, pleines (plus d opacite tiree au hasard). La 3e entree reste pour le panneau, qui envoie toujours 3 couleurs ;
+     son poids a 0 la retire du tirage. */
+  var COULEURS_FIGEES = true; /* voir __reglerTessellesFond, en bas */
   var COULEURS = [
-    { hex:'#1E2B35', poids:5 },
-    { hex:'#D96C2F', poids:2 },
-    { hex:'#706851', poids:3 }
+    { hex:'#D96C2F', poids:5 },
+    { hex:'#DEDEDE', poids:5 },
+    { hex:'#DEDEDE', poids:0 }
   ];
   var PALETTE_PONDEREE = [];
   function recalculerPalette(){
@@ -3189,7 +3190,7 @@ html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45%
       el.style.width = taille + 'px';
       el.style.height = taille + 'px';
       el.style.background = PALETTE_PONDEREE[Math.floor(Math.random() * PALETTE_PONDEREE.length)];
-      el.style.opacity = (0.28 + Math.random() * 0.32).toFixed(2);   /* 17/09 : 0,28 a 0,60 au lieu de 0,18 a 0,48 — « une teinte un peu plus marquee ». Le navy passe de 2,49 a 3,59 au plus fort. */
+      el.style.opacity = '1'; /* 26/09 soir, fondateur : plus de voile. Avant : 0,28 a 0,60 au hasard (17/09). */   /* 17/09 : 0,28 a 0,60 au lieu de 0,18 a 0,48 — « une teinte un peu plus marquee ». Le navy passe de 2,49 a 3,59 au plus fort. */
       champ.appendChild(el);
       tesselles.push({
         el: el, taille: taille,
@@ -3271,7 +3272,10 @@ html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45%
     if (typeof cfg.vitesse === 'number') multiplicateurVitesse = cfg.vitesse;
     if (typeof cfg.quantite === 'number') NB_TESSELLES = cfg.quantite;
     if (typeof cfg.taille === 'number') TAILLE_MULTIPLICATEUR = cfg.taille;
-    if (cfg.couleurs && cfg.couleurs.length === 3){
+    /* 26/09 soir : TEST du fondateur (orange + gris #DEDEDE). Le panneau envoie ses 3 couleurs d avant et les ecrasait (le gris
+       ressortait navy, mesure). Tant que COULEURS_FIGEES vaut true, les couleurs du panneau sont ignorees ; repasser a false pour
+       lui rendre la main (et y reporter les nouvelles couleurs si le test est adopte). */
+    if (!COULEURS_FIGEES && cfg.couleurs && cfg.couleurs.length === 3){
       COULEURS.forEach(function(c, i){ c.hex = cfg.couleurs[i]; });
       recalculerPalette();
     }
