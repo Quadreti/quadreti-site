@@ -1981,7 +1981,10 @@ document.addEventListener('DOMContentLoaded', function(){
 /* 26/09 nuit, fondateur : « rajoute un voile, je te laisse decider de l intensite ». Voile navy #1E2B35 a 30 % pose sur l image :
    le plus leger qui tient le contraste du texte #DEDEDE au-dessus de 4,5 sur 99 % de l image (mesure 4,84 ; sans voile 3,41).
    Seul le reflet le plus clair (0,1 % de l image) reste en dessous (3,08). La matiere garde ~70 % de son relief (ecart 12,9 / 18,5). */
-:root{--qz-texture:linear-gradient(rgba(30,43,53,.30),rgba(30,43,53,.30)),url("/img/fond-texture-3-navy.webp")}
+/* 26/09 nuit, fondateur : « remets pour le moment le site en navy d origine ». Texture COUPEE : toutes les surfaces retombent sur
+   leur background-color #1E2B35. Pour la remettre, rendre a --qz-texture la valeur ci-dessous (images gardees dans img/) :
+   linear-gradient(rgba(30,43,53,.30),rgba(30,43,53,.30)),url("/img/fond-texture-3-navy.webp") */
+:root{--qz-texture:none}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
   background-image:var(--qz-texture);background-size:cover;background-repeat:no-repeat;background-position:center}
 /* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
