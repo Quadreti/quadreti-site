@@ -1978,7 +1978,10 @@ document.addEventListener('DOMContentLoaded', function(){
    Teinte navy par la luminosite (x 0,8), la rouille gardee dans sa couleur d origine la ou elle est orange et saturee (22,5 % de
    l image), image retournee gauche-droite. WebP 264 Ko. Contraste du texte #DEDEDE : median 10,8, 4,8 sur les 5 % les plus clairs.
    Autres fonds prets dans img/ : fond-beton-navy.webp (TEXTURE 1), fond-texture-2.webp (TEXTURE 2 telle quelle). */
-:root{--qz-texture:url("/img/fond-texture-3-navy.webp")}
+/* 26/09 nuit, fondateur : « rajoute un voile, je te laisse decider de l intensite ». Voile navy #1E2B35 a 30 % pose sur l image :
+   le plus leger qui tient le contraste du texte #DEDEDE au-dessus de 4,5 sur 99 % de l image (mesure 4,84 ; sans voile 3,41).
+   Seul le reflet le plus clair (0,1 % de l image) reste en dessous (3,08). La matiere garde ~70 % de son relief (ecart 12,9 / 18,5). */
+:root{--qz-texture:linear-gradient(rgba(30,43,53,.30),rgba(30,43,53,.30)),url("/img/fond-texture-3-navy.webp")}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
   background-image:var(--qz-texture);background-size:cover;background-repeat:no-repeat;background-position:center}
 /* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
