@@ -1962,7 +1962,11 @@ document.addEventListener('DOMContentLoaded', function(){
      navigateur (bruit SVG), aucune image a charger. Les deux couches de grain sont FIXES (le mur ne defile pas), sous les
      tesselles de fond (z-index -2 contre -1). -->
 <style>
-/* 26/09 soir, fondateur : « voile navy » -- le bruit etait GRIS, fondu en lumiere douce : il eclaircissait le navy et le ternissait
+/* 26/09 nuit, fondateur : le fond devient une VRAIE photo de beton (« TEXTURE 1 », Canva, 3840 x 2160, deposee dans !BAZAR A MORAD),
+   teintee navy DANS l image (chaque pixel = #1E2B35 x sa luminosite relative x 1,3 ; moyenne mesuree 30,0 / 43,0 / 53,0 = #1E2B35),
+   2560 x 1440, WebP 120 Ko : /img/fond-beton-navy.webp. Une seule image a la taille de l ecran, fixe : pas de raccord.
+   Le bruit dessine par le navigateur (grain + marbrure) est remplace ; historique ci-dessous.
+   Ancien : « voile navy » -- le bruit etait GRIS, fondu en lumiere douce : il eclaircissait le navy et le ternissait
    (mesure #1E2B35 -> #26333D, « effet brouillard »). Il est maintenant TEINTE dans le navy lui-meme (du navy fonce au navy 2, calcul
    en sRGB) et pose normalement : sa moyenne reste #1E2B35, il donne de la matiere sans voile.
    Le navy est repeint sur une couche fixe. L opacite de chaque bruit est portee par le SVG lui-meme
@@ -1970,17 +1974,17 @@ document.addEventListener('DOMContentLoaded', function(){
    RACCORDS : la marbrure repetee en tuiles laissait une COUTURE a chaque raccord (700 px : ecart 2,1 contre 1,3 ailleurs ;
    1500 px avec stitchTiles et une frequence entiere : encore 2,6) -- « comme une tapisserie mal posee » (fondateur).
    Elle n est donc plus repetee : UNE image a la taille de l ecran (cover). Le grain fin reste en tuiles de 260 px : raccord invisible. */
-:root{--qz-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix type='matrix' values='0.3294 0 0 0 -0.0471 0.3765 0 0 0 -0.0196 0.4078 0 0 0 0.0039 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix type='matrix' values='0.3294 0 0 0 -0.0471 0.3765 0 0 0 -0.0196 0.4078 0 0 0 0.0039 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.10'/%3E%3C/svg%3E")}
+:root{--qz-texture:url("/img/fond-beton-navy.webp")}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
-  background-image:var(--qz-texture);background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center}
+  background-image:var(--qz-texture);background-size:cover;background-repeat:no-repeat;background-position:center}
 /* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
    peintes en navy uni et cachaient la texture. Elles prennent LA MEME, calee sur l ecran (background-attachment:fixed, memes
    tailles, meme origine que la couche du fond) : d une surface a l autre, le grain continue sans raccord. !important : certaines
    (menu ouvert) posent leur fond en !important. */
 html.qz-accueil #qbBandeau,html.qz-accueil .qb-defile,html.qz-accueil section.finale,html.qz-accueil .qz-pied-bord,
 html.qz-accueil footer.qz-footer .qz-pied3,html.qz-accueil #qzNavPanel,html.qz-accueil .qz-tex-forme{
-  background-color:#1e2b35!important;background-image:var(--qz-texture)!important;background-size:260px 260px,cover!important;
-  background-repeat:repeat,no-repeat!important;background-position:0 0,center!important;background-attachment:fixed,fixed!important;
+  background-color:#1e2b35!important;background-image:var(--qz-texture)!important;background-size:cover!important;
+  background-repeat:no-repeat!important;background-position:center!important;background-attachment:fixed!important;
   background-blend-mode:normal!important}
 /* Les decroches sont des FORMES (chemins SVG remplis de navy) : un fond CSS ne s y applique pas. Le script plus bas pose sous chaque
    forme une plaque texturee (.qz-tex-forme) decoupee au meme dessin (masque), puis vide le remplissage du chemin. Le lisere du
