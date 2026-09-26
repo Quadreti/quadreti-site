@@ -1957,21 +1957,27 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <!-- TEXTURE-FOND-DEBUT -- 26/09, fondateur : texture du fond de l accueil (maquette « Texture du fond », reglages choisis par lui :
-     grain fin 20 %, marbrure 30 %, halo 10 %). PAS de tesselles fantomes : l accueil a deja les siennes (#champTessellesFond).
+     grain fin 20 %, marbrure 30 % puis 40 % le soir meme, halo 10 %). PAS de tesselles fantomes : l accueil a deja les siennes (#champTessellesFond).
      Accueil seulement pour l instant (« on teste sur l accueil, puis on etend si ca plait en ligne »). Tout est dessine par le
      navigateur (bruit SVG), aucune image a charger. Les deux couches de grain sont FIXES (le mur ne defile pas), sous les
      tesselles de fond (z-index -2 contre -1) ; le halo, lui, suit chaque section. -->
 <style>
 /* Le navy est repeint ICI, sur une couche fixe, et les deux bruits se fondent dessus (background-blend-mode) : un mix-blend-mode
    sur le fond de la page ne produit rien (mesure : pixels identiques). L opacite de chaque bruit est portee par le SVG lui-meme
-   (grain 0.20, marbrure 0.30) : a changer la, pas dans une variable CSS. */
+   (grain 0.20, marbrure 0.40 depuis le 26/09 soir) : a changer la, pas dans une variable CSS.
+   RACCORDS : la marbrure repetee en tuiles laissait une COUTURE a chaque raccord (700 px : ecart 2,1 contre 1,3 ailleurs ;
+   1500 px avec stitchTiles et une frequence entiere : encore 2,6) -- « comme une tapisserie mal posee » (fondateur).
+   Elle n est donc plus repetee : UNE image etiree a la taille de l ecran (cover), donc aucun raccord. La couche est fixe,
+   l image ne bouge pas au defilement. Le grain fin, lui, reste en tuiles de 260 px : raccord mesure invisible (1,31 contre 1,34). */
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.30'/%3E%3C/svg%3E");
-  background-size:260px 260px,700px 700px;background-blend-mode:soft-light,soft-light}
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E");
+  background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center;background-blend-mode:soft-light,soft-light}
 /* halo : une lumiere douce a l interieur de chaque section. 26/09, fondateur : « je vois les frontieres entre sections ».
    La premiere version partait du bord haut (lumiere pleine au bord) et assombrissait le bas : deux sections voisines faisaient
    une marche nette. Le halo est maintenant une tache CENTREE dans la section, nulle sur ses bords haut et bas : aucune couture. */
 html.qz-accueil section.blk{background-image:radial-gradient(ellipse 60% 45% at 22% 45%,rgba(222,222,222,.10),transparent 100%)}
+/* une section sur deux (.alt) porte sa tache a droite : la meme tache repetee a gauche se lisait elle aussi comme un motif de papier peint */
+html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45% at 78% 45%,rgba(222,222,222,.10),transparent 100%)}
 </style>
 <!-- TEXTURE-FOND-FIN -->
 </head>
