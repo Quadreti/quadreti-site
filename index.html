@@ -1962,23 +1962,69 @@ document.addEventListener('DOMContentLoaded', function(){
      navigateur (bruit SVG), aucune image a charger. Les deux couches de grain sont FIXES (le mur ne defile pas), sous les
      tesselles de fond (z-index -2 contre -1) ; le halo, lui, suit chaque section. -->
 <style>
-/* Le navy est repeint ICI, sur une couche fixe, et les deux bruits se fondent dessus (background-blend-mode) : un mix-blend-mode
-   sur le fond de la page ne produit rien (mesure : pixels identiques). L opacite de chaque bruit est portee par le SVG lui-meme
-   (grain 0.20, marbrure 0.40 depuis le 26/09 soir) : a changer la, pas dans une variable CSS.
+/* Le navy est repeint sur une couche fixe et les deux bruits s y fondent (background-blend-mode) : un mix-blend-mode sur le fond
+   de la page ne produit rien (mesure : pixels identiques). L opacite de chaque bruit est portee par le SVG lui-meme
+   (grain 0.20, marbrure 0.40 depuis le 26/09 soir) : a changer dans --qz-texture, une seule fois pour toute la page.
    RACCORDS : la marbrure repetee en tuiles laissait une COUTURE a chaque raccord (700 px : ecart 2,1 contre 1,3 ailleurs ;
    1500 px avec stitchTiles et une frequence entiere : encore 2,6) -- « comme une tapisserie mal posee » (fondateur).
-   Elle n est donc plus repetee : UNE image etiree a la taille de l ecran (cover), donc aucun raccord. La couche est fixe,
-   l image ne bouge pas au defilement. Le grain fin, lui, reste en tuiles de 260 px : raccord mesure invisible (1,31 contre 1,34). */
+   Elle n est donc plus repetee : UNE image a la taille de l ecran (cover). Le grain fin reste en tuiles de 260 px : raccord invisible. */
+:root{--qz-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E")}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1500' height='1500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.40'/%3E%3C/svg%3E");
-  background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center;background-blend-mode:soft-light,soft-light}
+  background-image:var(--qz-texture);background-size:260px 260px,cover;background-repeat:repeat,no-repeat;background-position:0 0,center;background-blend-mode:soft-light,soft-light}
+/* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
+   peintes en navy uni et cachaient la texture. Elles prennent LA MEME, calee sur l ecran (background-attachment:fixed, memes
+   tailles, meme origine que la couche du fond) : d une surface a l autre, le grain continue sans raccord. !important : certaines
+   (menu ouvert) posent leur fond en !important. */
+html.qz-accueil #qbBandeau,html.qz-accueil .qb-defile,html.qz-accueil section.finale,html.qz-accueil .qz-pied-bord,
+html.qz-accueil footer.qz-footer .qz-pied3,html.qz-accueil #qzNavPanel,html.qz-accueil .qz-tex-forme{
+  background-color:#1e2b35!important;background-image:var(--qz-texture)!important;background-size:260px 260px,cover!important;
+  background-repeat:repeat,no-repeat!important;background-position:0 0,center!important;background-attachment:fixed,fixed!important;
+  background-blend-mode:soft-light,soft-light!important}
+/* Les decroches sont des FORMES (chemins SVG remplis de navy) : un fond CSS ne s y applique pas. Le script plus bas pose sous chaque
+   forme une plaque texturee (.qz-tex-forme) decoupee au meme dessin (masque), puis vide le remplissage du chemin. Le lisere du
+   decroche, trace par un autre chemin, reste par-dessus, intact. */
+html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .finale-bord-fond,html.qz-accueil.qz-tex-formes .qz-pied-fond{fill:transparent!important}
+.qz-tex-forme{position:absolute;pointer-events:none;mask-size:100% 100%;-webkit-mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat}
 /* halo : une lumiere douce a l interieur de chaque section. 26/09, fondateur : « je vois les frontieres entre sections ».
-   La premiere version partait du bord haut (lumiere pleine au bord) et assombrissait le bas : deux sections voisines faisaient
-   une marche nette. Le halo est maintenant une tache CENTREE dans la section, nulle sur ses bords haut et bas : aucune couture. */
+   La premiere version partait du bord haut et assombrissait le bas : deux sections voisines faisaient une marche nette.
+   C est maintenant une tache CENTREE dans la section, nulle sur ses bords : aucune couture. */
 html.qz-accueil section.blk{background-image:radial-gradient(ellipse 60% 45% at 22% 45%,rgba(222,222,222,.10),transparent 100%)}
 /* une section sur deux (.alt) porte sa tache a droite : la meme tache repetee a gauche se lisait elle aussi comme un motif de papier peint */
 html.qz-accueil section.blk.alt{background-image:radial-gradient(ellipse 60% 45% at 78% 45%,rgba(222,222,222,.10),transparent 100%)}
 </style>
+<script>
+/* plaques texturees sous les decroches (voir plus haut). Rejouees au redimensionnement : la plaque suit la forme au pixel. */
+(function () {
+  var FORMES = ['.qz-onglet-fond', '.finale-bord-fond', '.qz-pied-fond'];
+  function poser() {
+    FORMES.forEach(function (sel) {
+      var chemin = document.querySelector(sel); if (!chemin) return;
+      var svg = chemin.ownerSVGElement; if (!svg || !svg.parentNode) return;
+      var plaque = svg.previousElementSibling;
+      if (!plaque || !plaque.classList || !plaque.classList.contains('qz-tex-forme')) {
+        plaque = document.createElement('div'); plaque.className = 'qz-tex-forme'; plaque.setAttribute('aria-hidden', 'true');
+        var vb = svg.getAttribute('viewBox'), par = svg.getAttribute('preserveAspectRatio') || 'none';
+        var m = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" preserveAspectRatio="' + par + '"><path d="' + chemin.getAttribute('d') + '"/></svg>';
+        var u = 'url("data:image/svg+xml,' + encodeURIComponent(m) + '")';
+        plaque.style.maskImage = u; plaque.style.webkitMaskImage = u;
+        var cs = getComputedStyle(svg);
+        plaque.style.zIndex = cs.zIndex;
+        /* la plaque doit peindre SOUS le dessin : il passe positionne, apres elle dans la page */
+        if (cs.position === 'static') svg.style.position = 'relative';
+        svg.parentNode.insertBefore(plaque, svg);
+      }
+      var p = plaque.offsetParent || document.body, rp = p.getBoundingClientRect(), rs = svg.getBoundingClientRect();
+      plaque.style.left = (rs.left - rp.left - p.clientLeft) + 'px'; plaque.style.top = (rs.top - rp.top - p.clientTop) + 'px';
+      plaque.style.width = rs.width + 'px'; plaque.style.height = rs.height + 'px';
+    });
+    document.documentElement.classList.add('qz-tex-formes');
+  }
+  var t; function plusTard() { clearTimeout(t); t = setTimeout(poser, 60); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poser); else poser();
+  window.addEventListener('load', poser); window.addEventListener('resize', plusTard);
+  if (window.ResizeObserver) document.addEventListener('DOMContentLoaded', function () { var ro = new ResizeObserver(plusTard); FORMES.forEach(function (sel) { var c = document.querySelector(sel); if (c && c.ownerSVGElement) ro.observe(c.ownerSVGElement); }); });
+})();
+</script>
 <!-- TEXTURE-FOND-FIN -->
 </head>
 <body id="qz-top">
