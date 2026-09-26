@@ -1956,6 +1956,22 @@ document.addEventListener('DOMContentLoaded', function(){
   addEventListener('resize', caler);
 });
 </script>
+<!-- TEXTURE-FOND-DEBUT -- 26/09, fondateur : texture du fond de l accueil (maquette « Texture du fond », reglages choisis par lui :
+     grain fin 20 %, marbrure 30 %, halo 10 %). PAS de tesselles fantomes : l accueil a deja les siennes (#champTessellesFond).
+     Accueil seulement pour l instant (« on teste sur l accueil, puis on etend si ca plait en ligne »). Tout est dessine par le
+     navigateur (bruit SVG), aucune image a charger. Les deux couches de grain sont FIXES (le mur ne defile pas), sous les
+     tesselles de fond (z-index -2 contre -1) ; le halo, lui, suit chaque section. -->
+<style>
+/* Le navy est repeint ICI, sur une couche fixe, et les deux bruits se fondent dessus (background-blend-mode) : un mix-blend-mode
+   sur le fond de la page ne produit rien (mesure : pixels identiques). L opacite de chaque bruit est portee par le SVG lui-meme
+   (grain 0.20, marbrure 0.30) : a changer la, pas dans une variable CSS. */
+html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.30'/%3E%3C/svg%3E");
+  background-size:260px 260px,700px 700px;background-blend-mode:soft-light,soft-light}
+/* halo : une lumiere douce en haut a gauche de chaque section, un bas un peu plus sombre -- la transition entre deux sections */
+html.qz-accueil section.blk{background-image:radial-gradient(ellipse 70% 60% at 22% 0%,rgba(222,222,222,.10),transparent 70%),linear-gradient(to bottom,transparent 55%,rgba(16,24,31,.22))}
+</style>
+<!-- TEXTURE-FOND-FIN -->
 </head>
 <body id="qz-top">
 <div class="champ-tesselles-fond" id="champTessellesFond" aria-hidden="true"></div>
