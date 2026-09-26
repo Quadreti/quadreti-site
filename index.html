@@ -1974,7 +1974,9 @@ document.addEventListener('DOMContentLoaded', function(){
    RACCORDS : la marbrure repetee en tuiles laissait une COUTURE a chaque raccord (700 px : ecart 2,1 contre 1,3 ailleurs ;
    1500 px avec stitchTiles et une frequence entiere : encore 2,6) -- « comme une tapisserie mal posee » (fondateur).
    Elle n est donc plus repetee : UNE image a la taille de l ecran (cover). Le grain fin reste en tuiles de 260 px : raccord invisible. */
-:root{--qz-texture:url("/img/fond-beton-navy.webp")}
+/* 26/09 nuit, fondateur : « on teste TEXTURE 2 tel quel » (Canva, 1672 x 941, sans teinte). Pour revenir a TEXTURE 1 navy :
+   url("/img/fond-beton-navy.webp"). */
+:root{--qz-texture:url("/img/fond-texture-2.webp")}
 html.qz-accueil body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-color:#1e2b35;
   background-image:var(--qz-texture);background-size:cover;background-repeat:no-repeat;background-position:center}
 /* 26/09, fondateur : « sur le menu et le bandeau, la ou les decroches la masquent, ainsi que le bas de page ». Ces surfaces sont
