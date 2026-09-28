@@ -1,0 +1,51 @@
+/* QuadretI — FOND QUADRILLAGE (28/09, fondateur : « c'est magnifique, on teste : retire les tesselles fantômes et remplace avec cet arrière-plan »).
+   Le fond de la page est le mur : grille de 25 mm en nervures qui ressortent (lumière haut-gauche, ligne noire, ombre bas-droit), cases en creux,
+   quelques cases remplies d une teinte de bleu, légèrement bombées, traversées par un reflet à leur propre rythme ; lèvre biseautée tout autour
+   de la fenêtre. Source : SITE\DESIGN SYSTEME\mockup-quadrillage-fond.html (réglages choisis par le fondateur : case 25 mm, nervure 0,8 mm,
+   relief 50 %, lèvre 6 mm, 10 % de cases colorées, sans sous-quadrillage). Les cases sont posées par fond-quadrillage.js.
+   Toutes les couleurs sont des jetons ici ; le script lit la palette de bleus dans --qzq-b1 … --qzq-b7. Accueil seulement pour l instant. */
+:root{
+  --qzq-fond:#1E2B35;        /* navy de la charte */
+  --qzq-ligne:#000000;       /* la nervure */
+  --qzq-case:25mm;           /* une tesselle */
+  --qzq-nervure:0.8mm;       /* épaisseur de la ligne */
+  --qzq-prof:0.5;            /* relief 0..1 */
+  --qzq-levre:6mm;           /* lèvre périphérique */
+  --qzq-bord:calc(0.25mm + var(--qzq-nervure) + 0.6mm); /* lumière + ligne + ombre : ce que la nervure occupe au bord de chaque case */
+  --qzq-b1:#12233A;--qzq-b2:#1E2F45;--qzq-b3:#27405C;--qzq-b4:#2F5D8A;--qzq-b5:#3A7CA5;--qzq-b6:#5FA8D3;--qzq-b7:#9DCBE8; /* les bleus des cases */
+}
+@media (max-width:640px){:root{--qzq-levre:2mm}}
+
+/* la grille : quatre dégradés répétés, période = une case. html body … !important : index.html pose « background:#1e2b35 !important » sur le body */
+html body.qz-quadrille{
+  background-color:var(--qzq-fond)!important;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,calc(var(--qzq-prof)*.35)) 0 0.25mm, var(--qzq-ligne) 0.25mm calc(0.25mm + var(--qzq-nervure)), rgba(0,0,0,calc(var(--qzq-prof)*.75)) calc(0.25mm + var(--qzq-nervure)) calc(0.25mm + var(--qzq-nervure) + 0.6mm), transparent calc(0.25mm + var(--qzq-nervure) + 0.6mm)),
+    linear-gradient(to bottom, rgba(255,255,255,calc(var(--qzq-prof)*.35)) 0 0.25mm, var(--qzq-ligne) 0.25mm calc(0.25mm + var(--qzq-nervure)), rgba(0,0,0,calc(var(--qzq-prof)*.75)) calc(0.25mm + var(--qzq-nervure)) calc(0.25mm + var(--qzq-nervure) + 0.6mm), transparent calc(0.25mm + var(--qzq-nervure) + 0.6mm))!important;
+  background-size:var(--qzq-case) var(--qzq-case)!important;
+  background-position:0 0!important;
+  background-attachment:scroll!important;
+}
+/* la lèvre : bourrelet fixe tout autour de la fenêtre, biseauté, au-dessus du contenu qui défile, sous la barre du haut (z-index 1) */
+/* ⚠ index.html pose déjà « html.qz-accueil body::before » : une couche FIXE navy opaque en z-index -2 (reste de la texture béton du 26/09).
+   Elle recouvrirait la grille. Le même pseudo-élément devient ici la lèvre : fond transparent, au-dessus du contenu. */
+html body.qz-quadrille::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1!important;
+  background:transparent!important;background-image:none!important;
+  box-shadow:inset 0 0 0 var(--qzq-levre) color-mix(in srgb, var(--qzq-fond) 80%, #000),
+    inset 0.6mm 0.6mm 0 rgba(255,255,255,calc(var(--qzq-prof)*.25)),
+    inset -0.6mm -0.6mm 0 rgba(0,0,0,calc(var(--qzq-prof)*.6)),
+    inset calc(var(--qzq-levre) + 0.5mm) calc(var(--qzq-levre) + 0.5mm) 0 rgba(0,0,0,calc(var(--qzq-prof)*.7)),
+    inset calc(var(--qzq-levre) + 3mm) calc(var(--qzq-levre) + 3mm) 5mm rgba(0,0,0,calc(var(--qzq-prof)*.5)),
+    inset calc(-1 * var(--qzq-levre) - 0.5mm) calc(-1 * var(--qzq-levre) - 0.5mm) 0 rgba(255,255,255,calc(var(--qzq-prof)*.18));
+}
+/* les cases : une couche sous le contenu (z-index -1 : au-dessus du fond du body, sous tout ce qui est dans la page) */
+.qz-quadrillage{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:-1}
+.qz-quadrillage i{position:absolute;display:block;border-radius:0;background:var(--t,transparent)}
+.qz-quadrillage i.creux{background:transparent;box-shadow:inset 0.9mm 0.9mm 1.8mm rgba(0,0,0,calc(var(--qzq-prof)*.9)),inset -0.25mm -0.25mm 0.5mm rgba(255,255,255,calc(var(--qzq-prof)*.12))}
+.qz-quadrillage i.plein{overflow:hidden;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzq-prof)*.5)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,calc(var(--qzq-prof)*.55)),0.35mm 0.35mm 0.9mm rgba(0,0,0,calc(var(--qzq-prof)*.7))}
+.qz-quadrillage i.plein::after{content:'';position:absolute;inset:-10%;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.42) 47%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.12) 55%,transparent 64%);transform:translateX(-130%);opacity:.9;animation:qzq-reflet var(--u,7s) cubic-bezier(.4,0,.2,1) var(--d,0s) infinite}
+@keyframes qzq-reflet{0%{transform:translateX(-130%)}18%{transform:translateX(130%)}100%{transform:translateX(130%)}}
+@media (prefers-reduced-motion:reduce){.qz-quadrillage i.plein::after{animation:none}}
+/* les tesselles fantômes de l accueil laissent la place */
+body.qz-quadrille #champTessellesFond{display:none!important}
