@@ -16,6 +16,7 @@
   var melange = function (t) { return '#' + A.map(function (v, k) { return Math.round(v + (Z[k] - v) * t).toString(16).padStart(2, '0'); }).join(''); };
   var mm = function (v) { return v * 96 / 25.4; };
   var voile, bloc, logo, passer, minuteur = null, entre = false, t0 = Date.now(), tAnim = 0, chargee = false;
+  var DUREE_MIN = 10000; /* 28/09 soir, fondateur : le spinner se répète pendant 10 s au moins */
   var DEPART = 1200, CYCLE = 2800, PLEINE = 2000; /* spinner : départ après le logo, durée d un tour, instant du tour où la rangée est pleine */
   function construire() {
     if (voile) return;
@@ -23,7 +24,7 @@
     var tuiles = ''; for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) tuiles += '<i class="qze-t" style="--i:' + (r * 3 + c) + ';--g:' + (r + c) + ';--t:' + melange((r + c) / 4) + '"><svg class="qze-q" style="--dx:' + c + ';--dy:' + r + '" viewBox="0 0 807 807" aria-hidden="true"><g transform="translate(0 757) scale(1 -1)"><path d="' + Qd + '" fill-rule="nonzero"/></g></svg></i>';
     var rangee = ''; for (var k = 0; k < 9; k++) rangee += '<li style="--k:' + k + ';--t:' + melange(k / 8) + ';--clip:qze-clip' + k + '"></li>';
     voile.innerHTML = '<div class="qz-quadrillage" aria-hidden="true"></div><div class="qze-bloc"><button class="qze-logo9" type="button" aria-label="Entrer sur Quadreti">' + tuiles + '</button>'
-      + '<ul class="qze-rangee" role="status" aria-label="Chargement du site">' + rangee + '</ul><p class="qze-bienvenue">Bienvenue dans l’univers Quadreti</p></div>'
+      + '<ul class="qze-rangee" role="status" aria-label="Chargement du site">' + rangee + '</ul><p class="qze-bienvenue"><span class="qze-l1">Bienvenue dans l’univers</span> <span class="qze-marque">Quadreti</span></p></div>'
       + '<button class="qze-passer" type="button" aria-label="Passer l’animation et entrer sur le site"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l7 7-7 7M13 5l7 7-7 7"/></svg>Passer</button>';
     document.body.insertBefore(voile, document.body.firstChild); html.classList.remove('qz-entree-attente');
     bloc = voile.querySelector('.qze-bloc'); logo = voile.querySelector('.qze-logo9'); passer = voile.querySelector('.qze-passer');
@@ -48,10 +49,10 @@
   }
   function creux() { var q = voile.querySelector('.qz-quadrillage'); q.innerHTML = ''; var c = cas(), cols = Math.ceil(innerWidth / c), rows = Math.ceil(innerHeight / c), f = document.createDocumentFragment();
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) { var i = document.createElement('i'); i.className = 'creux'; i.style.left = 'calc(' + x + ' * var(--qzq-case) + var(--qzq-bord))'; i.style.top = 'calc(' + y + ' * var(--qzq-case) + var(--qzq-bord))'; i.style.width = i.style.height = 'calc(var(--qzq-case) - var(--qzq-bord))'; f.appendChild(i); } q.appendChild(f); }
-  /* la page est chargée derrière le voile : le spinner finit son tour et s arrête RANGÉE PLEINE — au plus tôt à la fin du 2e tour, pour qu on le
+  /* la page est chargée derrière le voile : le spinner finit son tour et s arrête RANGÉE PLEINE — au plus tôt après DUREE_MIN de spinner, pour qu on le
      voie se clipser (28/09 soir, fondateur : « l animation tesselle par tesselle ne fonctionne pas » : il s arrêtait à 2,6 s, en plein remplissage) */
   function prete() { if (chargee) return; chargee = true; if (voile) { caler(); creux(); }
-    var ecoule = Date.now() - (tAnim || t0), tour = Math.max(1, Math.ceil((ecoule - DEPART - PLEINE) / CYCLE)), arret = DEPART + tour * CYCLE + PLEINE;
+    var ecoule = Date.now() - (tAnim || t0), tour = Math.max(Math.ceil((DUREE_MIN - PLEINE) / CYCLE), Math.ceil((ecoule - DEPART - PLEINE) / CYCLE)), arret = DEPART + tour * CYCLE + PLEINE;
     setTimeout(function () { if (voile) voile.classList.add('qze-prete'); }, Math.max(0, arret - ecoule)); }
   function entrer() {
     if (entre || !voile) return; if (!chargee && !reduit) { prete(); } entre = true; clearTimeout(minuteur);
