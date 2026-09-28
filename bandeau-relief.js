@@ -21,6 +21,10 @@
     ], ancrage: 'centre',
     /* 13/09 fondateur : le mur devient un diaporama en fondu des visuels ci-dessus (une photo a la fois, format d origine). duree = tenue de chaque photo (s),
        fondu = duree du fondu (s), tenueFin = tenue supplementaire de la derniere photo avant de reboucler. actif: false = mur en tesselles comme avant. */
+    /* 28/09, fondateur : LA BANNIERE EST LE MUR. vivant.actif = true remplace le diaporama par un mur 7×7 interactif (maquette
+       SITE\DESIGN SYSTEME\mockup-banniere-mur-vivant.html) : au repos il vit tout seul (une case change de teinte, une photo se pose et se
+       decoupe), au premier geste il devient celui du visiteur — clic = couleur suivante, photo deposee = decoupee en 2×2 ou 3×3. actif: false = diaporama. */
+    vivant: { actif: true, N: 7, pasCouleur: 900, pasPhoto: 6000, tailles: [2, 3] },
     diaporama: { actif: true, duree: 2, fondu: .8, tenueFin: 58,
       /* 13/09 fondateur : duree PAR PHOTO, pour les seules photos qui en ont besoin. Les cinq du parcours numerique sont quasi
          identiques -- meme piece, meme personne, meme bureau ; seul l ecran change, et il est petit dans le cadre. L oeil doit le
@@ -529,7 +533,48 @@
     var durB1 = T.mode === 'clip' || T.mode === 'dactylo' ? (lettresB1 - 1) * T.ln + .45 : T.dn; var tl4 = tl1 + durB1 + p;
     R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', tl4.toFixed(2) + 's');
   }
+  function construireVivant() {
+    var V = REGLAGES.vivant, N = V.N || 7, T = REGLAGES.textes, p = REGLAGES.pause; cx = nbCarreaux().cx; cy = nbCarreaux().cy; R.setProperty('--cx', cx); R.setProperty('--cy', cy);
+    if (mur._vivantStop) mur._vivantStop(); /* le bandeau se reconstruit au redimensionnement : on coupe l instance precedente */
+    mur.classList.remove('qb-vif-avous');
+    var html = '<div class="qb-vif" role="group" aria-label="Mur Quadreti 7 par 7 : cliquez une tesselle pour changer sa couleur, deposez une photo pour la poser">';
+    for (var i = 0; i < N * N; i++) html += '<button type="button" class="qb-vt" data-i="' + i + '" aria-label="tesselle ' + (Math.floor(i / N) + 1) + ',' + (i % N + 1) + '"></button>';
+    html += '</div><div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label><button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><span class="qb-vif-etat" aria-live="polite">demonstration</span></div>';
+    mur.innerHTML = html; mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
+    var grille = mur.querySelector('.qb-vif'), tuiles = grille.querySelectorAll('.qb-vt'), etat = mur.querySelector('.qb-vif-etat');
+    var cs = getComputedStyle(mur), PAL = []; for (var k = 1; k <= 9; k++) { var v = cs.getPropertyValue('--qv-' + k).trim(); if (v) PAL.push(v); }
+    var cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1;
+    Array.prototype.forEach.call(tuiles, function (b, i) { var c = PAL[Math.floor(Math.random() * 7)]; b.style.setProperty('--c', c); cases.push({ el: b, couleur: c, photo: null }); });
+    function peindre(k, c) { var x = cases[k]; x.photo = null; x.couleur = c; x.el.className = 'qb-vt'; x.el.style.cssText = ''; x.el.style.setProperty('--c', c); }
+    function poserPhoto(src, r0, c0, n) { r0 = Math.max(0, Math.min(N - n, r0)); c0 = Math.max(0, Math.min(N - n, c0)); var pid = idPhoto++; photos.push({ id: pid, src: src, r0: r0, c0: c0, n: n });
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) { var k = (r0 + r) * N + (c0 + c), x = cases[k]; x.photo = { id: pid, r: r, c: c }; x.el.className = 'qb-vt qb-vt-photo qb-vt-pose'; x.el.style.cssText = ''; x.el.style.backgroundImage = 'url("' + src + '")'; }
+      caler(); }
+    function caler() { var jt = parseFloat(getComputedStyle(grille).gap) || 3, cw = grille.clientWidth / N; cases.forEach(function (x) { if (!x.photo) return; var ph = null; for (var i = 0; i < photos.length; i++) if (photos[i].id === x.photo.id) ph = photos[i]; if (!ph) return; var px = ph.n * cw + (ph.n - 1) * jt; x.el.style.backgroundSize = px + 'px ' + px + 'px'; x.el.style.backgroundPosition = (-(x.photo.c * (cw + jt))) + 'px ' + (-(x.photo.r * (cw + jt))) + 'px'; }); }
+    window.addEventListener('resize', caler);
+    function demoPas() { if (!demo) return; var k = Math.floor(Math.random() * N * N); if (cases[k].photo) return; peindre(k, PAL[Math.floor(Math.random() * 7)]); }
+    function demoPhoto() { if (!demo) return; photos = []; cases.forEach(function (x, k) { if (x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); var tailles = V.tailles || [2, 3], nn = tailles[Math.floor(Math.random() * tailles.length)]; poserPhoto(visuels[iPhoto++ % visuels.length], Math.floor(Math.random() * (N - nn + 1)), Math.floor(Math.random() * (N - nn + 1)), nn); }
+    function stopDemo() { if (!demo) return; demo = false; clearInterval(tCouleur); clearInterval(tPhoto); etat.textContent = 'a vous : cliquez une case, deposez une photo'; mur.classList.add('qb-vif-avous'); }
+    function demarrerDemo() { if (demo) return; demo = true; tCouleur = setInterval(demoPas, V.pasCouleur || 900); tPhoto = setInterval(demoPhoto, V.pasPhoto || 6000); setTimeout(demoPhoto, 1200); }
+    mur._vivantStop = function () { clearInterval(tCouleur); clearInterval(tPhoto); demo = false; window.removeEventListener('resize', caler); };
+    grille.addEventListener('click', function (e) { var b = e.target.closest('.qb-vt'); if (!b) return; stopDemo(); var k = +b.getAttribute('data-i'), x = cases[k]; var i = PAL.indexOf(x.couleur); peindre(k, PAL[(i + 1) % PAL.length]); });
+    function lireFichier(f, r0, c0) { if (!f || !/^image\//.test(f.type)) return; stopDemo(); var u = URL.createObjectURL(f), im = new Image(); im.onload = function () { poserPhoto(u, r0, c0, 3); }; im.src = u; }
+    mur.querySelector('input[type=file]').addEventListener('change', function (e) { lireFichier(e.target.files[0], 2, 2); e.target.value = ''; });
+    grille.addEventListener('dragover', function (e) { e.preventDefault(); grille.classList.add('qb-vif-survol'); });
+    grille.addEventListener('dragleave', function () { grille.classList.remove('qb-vif-survol'); });
+    grille.addEventListener('drop', function (e) { e.preventDefault(); grille.classList.remove('qb-vif-survol'); var r = grille.getBoundingClientRect(), cw = grille.clientWidth / N; lireFichier(e.dataTransfer.files[0], Math.floor((e.clientY - r.top) / cw) - 1, Math.floor((e.clientX - r.left) / cw) - 1); });
+    mur.querySelector('.qb-vif-melanger').addEventListener('click', function () { stopDemo(); cases.forEach(function (x, k) { if (!x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); });
+    /* meme prise que le diaporama : lancer() appelle diapo.demarrer(delai) au depart du mur */
+    diapo = { demarrer: function (delai) { setTimeout(demarrerDemo, Math.max(0, delai) * 1000); } };
+    if (lanceDeja) demarrerDemo(); /* reconstruction (bascule mobile/bureau) alors que le mur a deja ete lance : la demo repart tout de suite */
+    /* minutage des textes : comme le diaporama, le titre « Changez » arrive au premier changement du mur */
+    var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's'); R.setProperty('--P', '60s');
+    completPose = t0 + .8; tChangement = t0 + 2; R.setProperty('--t-changement', tChangement.toFixed(2) + 's');
+    var tl1 = T.quand === 'ouverture' ? REGLAGES.depart + .3 : tChangement; var l1 = document.querySelector('.qb-l1'); var lettresB1 = l1 ? l1.querySelectorAll('.qb-l').length : 0;
+    var durB1 = T.mode === 'clip' || T.mode === 'dactylo' ? (lettresB1 - 1) * T.ln + .45 : T.dn; var tl4 = tl1 + durB1 + p;
+    R.setProperty('--tl1', tl1.toFixed(2) + 's'); R.setProperty('--tl2', tl1.toFixed(2) + 's'); R.setProperty('--tl3', tl1.toFixed(2) + 's'); R.setProperty('--tl4', tl4.toFixed(2) + 's');
+  }
   var preparer = function () {
+    if (REGLAGES.vivant && REGLAGES.vivant.actif) { construireVivant(); return; }
     if (REGLAGES.diaporama && REGLAGES.diaporama.actif) { construireDiapo(); return; }
     construire();
     var p = REGLAGES.pause; var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's');

@@ -333,3 +333,24 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
    ligne que le fondateur a entouree, apparue quand j ai retire les 4 px de recouvrement pour caler le lisere.
    Le lisere, lui, ne bouge pas : il reste sur le bord exact. */
 .qz-marche:not(.qb-bord-ligne){overflow:visible}
+
+/* ===== MUR VIVANT (28/09, fondateur : « la bannière est le mur ») — remplace le diaporama dans le même cadre. Couleurs = jetons ci-dessous
+   (les sept bleus du fond quadrillage, l orange de marque, le gris du site). Tesselle = bouton, relief bombé, reflet au survol. ===== */
+.qb-mur.qb-mur-vivant{--qv-1:#12233A;--qv-2:#1E2F45;--qv-3:#27405C;--qv-4:#2F5D8A;--qv-5:#3A7CA5;--qv-6:#5FA8D3;--qv-7:#9DCBE8;--qv-8:#D96C2F;--qv-9:#DEDEDE;
+  display:block;height:auto;padding:0;gap:0;opacity:1;animation:none}
+.qb.qb-dispo-droite .qb-mur.qb-mur-vivant{width:min(52cqw, calc(var(--mur-max,38vh) - 34px));max-width:100%}
+.qb-vif{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:3px;padding:3px;aspect-ratio:1;width:100%;box-sizing:border-box;background:#000;border-radius:6px;
+  box-shadow:0 0 0 var(--qz-lisere-ep,2px) var(--lisere-couleur,#d96c2f),0 18px 40px -14px rgba(0,0,0,.8)}
+.qb-vif.qb-vif-survol{outline:3px dashed var(--qz-terracotta,#d96c2f);outline-offset:4px}
+.qb-vt{position:relative;border:0;padding:0;margin:0;background:var(--c,#27405C);border-radius:3px;cursor:pointer;overflow:hidden;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.22),inset -1px -1px 0 rgba(0,0,0,.45);transition:background-color .45s ease,transform .18s cubic-bezier(.34,1.56,.64,1)}
+.qb-vt:hover{transform:scale(1.05);z-index:1}.qb-vt:focus-visible{outline:2px solid var(--qz-terracotta,#d96c2f);outline-offset:-2px}
+.qb-vt-photo{background-color:#000;background-repeat:no-repeat}
+.qb-vt-pose{animation:qb-vt-pose .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes qb-vt-pose{0%{transform:scale(.6);opacity:.2}60%{transform:scale(1.06);opacity:1}100%{transform:none}}
+.qb-vif-outils{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;font-family:'Jura',sans-serif}
+.qb-vif-btn{font:600 12px/1 'Jura',sans-serif;background:transparent;color:#dedede;border:1px solid #5a6672;border-radius:999px;padding:7px 12px;cursor:pointer}
+.qb-vif-btn:hover{border-color:#dedede}
+.qb-vif-etat{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--qz-terracotta,#d96c2f);margin-left:auto}
+@media (max-width:900px){.qb.qb-dispo-droite .qb-mur.qb-mur-vivant{width:100%}.qb-vif-etat{width:100%;margin-left:0}}
+@media (prefers-reduced-motion:reduce){.qb-vt,.qb-vt-pose{animation:none;transition:none}}
