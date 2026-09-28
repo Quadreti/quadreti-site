@@ -56,6 +56,13 @@
     var cols = Math.ceil(document.documentElement.clientWidth / cas);
     var i = couche.children[y * cols + x];
     if (!i || i.className.indexOf('plein') < 0) return;
+    /* variante (fondateur, 28/09) : soit un rebond, soit un changement de teinte — au hasard, une fois sur deux ; réglable : window.qzQuadrillageVariante = 'rebond' | 'couleur' | 'mixte' */
+    var mode = window.qzQuadrillageVariante || 'mixte';
+    if (mode === 'couleur' || (mode === 'mixte' && Math.random() < 0.5)) {
+      var pal = bleus(), actuelle = i.style.getPropertyValue('--t').trim(), autres = pal.filter(function (b) { return b !== actuelle; });
+      if (autres.length) i.style.setProperty('--t', autres[Math.floor(Math.random() * autres.length)]);
+      return;
+    }
     i.classList.remove('rebond'); void i.offsetWidth; i.classList.add('rebond');
     i.addEventListener('animationend', function fin() { i.classList.remove('rebond'); i.removeEventListener('animationend', fin); });
   }, { passive: true });
