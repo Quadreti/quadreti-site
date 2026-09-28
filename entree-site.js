@@ -4,7 +4,7 @@
    Réglages : AUTO_MS (sortie automatique), CLE (une fois par visite). Le reste du site écoute 'qz-entree-fin' pour partir. */
 (function () {
   'use strict';
-  var AUTO_MS = 30000, CLE = 'quadreti-entree-vue', MIN_MS = 2600; /* MIN_MS : le spinner tourne au moins ce temps-là, même si la page est déjà en cache */
+  var AUTO_MS = 30000, CLE = 'quadreti-entree-vue';
   var html = document.documentElement;
   var deja = false; try { deja = sessionStorage.getItem(CLE) === '1'; } catch (e) {}
   if (deja || window.qzSansEntree) { html.classList.remove('qz-entree-attente'); return; }
@@ -15,7 +15,8 @@
   var A = [0x1E, 0x2F, 0x45], Z = [0x34, 0x50, 0x6B];
   var melange = function (t) { return '#' + A.map(function (v, k) { return Math.round(v + (Z[k] - v) * t).toString(16).padStart(2, '0'); }).join(''); };
   var mm = function (v) { return v * 96 / 25.4; };
-  var voile, bloc, logo, passer, minuteur = null, entre = false, t0 = Date.now(), chargee = false;
+  var voile, bloc, logo, passer, minuteur = null, entre = false, t0 = Date.now(), tAnim = 0, chargee = false;
+  var DEPART = 1200, CYCLE = 2800, PLEINE = 2000; /* spinner : départ après le logo, durée d un tour, instant du tour où la rangée est pleine */
   function construire() {
     if (voile) return;
     voile = document.createElement('div'); voile.className = 'qze'; voile.setAttribute('role', 'dialog'); voile.setAttribute('aria-label', 'Bienvenue sur Quadreti');
@@ -26,7 +27,7 @@
       + '<button class="qze-passer" type="button" aria-label="Passer l’animation et entrer sur le site"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l7 7-7 7M13 5l7 7-7 7"/></svg>Passer</button>';
     document.body.insertBefore(voile, document.body.firstChild); html.classList.remove('qz-entree-attente');
     bloc = voile.querySelector('.qze-bloc'); logo = voile.querySelector('.qze-logo9'); passer = voile.querySelector('.qze-passer');
-    caler(); creux();
+    tAnim = Date.now(); caler(); creux();
     logo.addEventListener('click', entrer); passer.addEventListener('click', entrer);
     document.addEventListener('keydown', clavier);
     window.addEventListener('resize', caler); window.addEventListener('resize', creux);
@@ -47,8 +48,11 @@
   }
   function creux() { var q = voile.querySelector('.qz-quadrillage'); q.innerHTML = ''; var c = cas(), cols = Math.ceil(innerWidth / c), rows = Math.ceil(innerHeight / c), f = document.createDocumentFragment();
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) { var i = document.createElement('i'); i.className = 'creux'; i.style.left = 'calc(' + x + ' * var(--qzq-case) + var(--qzq-bord))'; i.style.top = 'calc(' + y + ' * var(--qzq-case) + var(--qzq-bord))'; i.style.width = i.style.height = 'calc(var(--qzq-case) - var(--qzq-bord))'; f.appendChild(i); } q.appendChild(f); }
-  /* la page est chargée derrière le voile : le spinner s arrête, rangée pleine (au plus tôt MIN_MS après le départ) */
-  function prete() { if (chargee) return; chargee = true; if (voile) { caler(); creux(); } var reste = Math.max(0, MIN_MS - (Date.now() - t0)); setTimeout(function () { if (voile) voile.classList.add('qze-prete'); }, reste); }
+  /* la page est chargée derrière le voile : le spinner finit son tour et s arrête RANGÉE PLEINE — au plus tôt à la fin du 2e tour, pour qu on le
+     voie se clipser (28/09 soir, fondateur : « l animation tesselle par tesselle ne fonctionne pas » : il s arrêtait à 2,6 s, en plein remplissage) */
+  function prete() { if (chargee) return; chargee = true; if (voile) { caler(); creux(); }
+    var ecoule = Date.now() - (tAnim || t0), tour = Math.max(1, Math.ceil((ecoule - DEPART - PLEINE) / CYCLE)), arret = DEPART + tour * CYCLE + PLEINE;
+    setTimeout(function () { if (voile) voile.classList.add('qze-prete'); }, Math.max(0, arret - ecoule)); }
   function entrer() {
     if (entre || !voile) return; if (!chargee && !reduit) { prete(); } entre = true; clearTimeout(minuteur);
     try { sessionStorage.setItem(CLE, '1'); } catch (e) {}
@@ -70,6 +74,6 @@
   /* le voile se construit dès que <body> existe ; le garde-accès (voile 999999) reste au-dessus tant que le mot de passe n est pas saisi */
   if (document.body) construire(); else document.addEventListener('DOMContentLoaded', construire);
   if (document.readyState === 'complete') prete(); else window.addEventListener('load', function () { if (document.fonts && document.fonts.ready) document.fonts.ready.then(prete); else prete(); });
-  /* sécurité : quoi qu il arrive, le spinner s arrête au bout de 8 s */
+  /* sécurité : quoi qu il arrive, la page est tenue pour chargée au bout de 8 s */
   setTimeout(prete, 8000);
 })();
