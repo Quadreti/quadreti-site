@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 18/09 : qz-fond-sombre = le theme sombre du site. Ecrit EN DUR dans la balise, pas pose par un
      script : le fond ne doit pas dependre d un chargement. Les regles vivent dans commun.css et entete-commun.css. -->
-<html lang="fr" class="qz-fond-sombre">
+<html lang="fr" class="qz-fond-sombre qz-barres-claires"><!-- 28/09, fondateur : barre du haut, bandeau defilant et pied en gris #DEDEDE (qz-barres-claires), le reste de la page garde le theme sombre -->
 <head>
 <meta charset="UTF-8">
 <!-- 12/09 : anti-flash de la sequence d accueil (bandeau-relief.js). Sur bureau, les textes animes (logo, menu, titre, boutons, icones)
@@ -1511,6 +1511,7 @@
   .qb-gestes .qb-geste-changez h3, .qb-gestes .qb-geste-changez p{ color:#d96c2f!important; }
   /* 18/09, fondateur : le bandeau defilant repasse au GRIS. 10,75 sur le navy, contre 6,47 a l orange. */
   body .qb-defile span{ color:#dedede!important; }
+  html.qz-barres-claires body .qb-defile span{ color:#1e2b35!important; } /* 28/09 : barres claires, texte navy sur gris */
 
   /* --- 18/09, fondateur : « Changez a volonte, et l icone et le texte, FIXES, aucune animation ». ---
          Ni l un ni l autre n a d animation propre : ils sont MASQUES par la sequence d entree, qui les revele apres
@@ -1916,7 +1917,7 @@
     }
   }
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-22e">
+<link rel="stylesheet" href="/commun.css?v=2026-09-28d">
 <!-- FOND-QUADRILLAGE -- 28/09, fondateur : « on teste : retire les tesselles fantomes et remplace avec cet arriere-plan »
      (maquette SITE\DESIGN SYSTEME\mockup-quadrillage-fond.html, reglages choisis par lui). Accueil seulement. Script en fin de page. -->
 <link rel="stylesheet" href="/fond-quadrillage.css?v=2026-09-28c">
@@ -1999,6 +2000,8 @@ html.qz-accueil footer.qz-footer .qz-pied3,html.qz-accueil #qzNavPanel,html.qz-a
   background-color:#1e2b35!important;background-image:var(--qz-texture)!important;background-size:cover!important;
   background-repeat:no-repeat!important;background-position:center!important;background-attachment:fixed!important;
   background-blend-mode:normal!important}
+/* 28/09, BARRES CLAIRES : ces memes surfaces, quand l accueil porte qz-barres-claires, prennent le gris du site (plaques de l onglet, defilant, pied). */
+html.qz-accueil.qz-barres-claires .qb-defile,html.qz-accueil.qz-barres-claires .qz-pied-bord,html.qz-accueil.qz-barres-claires footer.qz-footer .qz-pied3,html.qz-accueil.qz-barres-claires .qz-tex-forme{background-color:#dedede!important;background-image:none!important}
 /* Les decroches sont des FORMES (chemins SVG remplis de navy) : un fond CSS ne s y applique pas. Le script plus bas pose sous chaque
    forme une plaque texturee (.qz-tex-forme) decoupee au meme dessin (masque), puis vide le remplissage du chemin. Le lisere du
    decroche, trace par un autre chemin, reste par-dessus, intact. */
@@ -2061,9 +2064,9 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-22e"></script>
+<script src="/commun-bandeau.js?v=2026-09-28d"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-22e">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-28d">
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -2920,7 +2923,7 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-22e"></script>
+<script src="/commun-pied.js?v=2026-09-28d"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -3305,7 +3308,7 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-22e"></script>
+<script src="/bandeau-relief.js?v=2026-09-28d"></script>
 <script src="/bandeau-gestes.js?v=2026-09-22e"></script>
 <script src="/fond-quadrillage.js?v=2026-09-28c" defer></script>
 </body>

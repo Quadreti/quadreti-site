@@ -164,7 +164,7 @@ footer.qz-footer{
    Les bandes ont leur propre jeton (--lisere-couleur, bandeau-relief.css), traite dans index.html. */
 /* 18/09, fondateur : « lisere -25 % » puis « meme epaisseur que celle de l image ». De 3 px a 2,25, puis a 2 — le cadre de la photo du hero (.qb-diapo) fait 2 px, les decroches le suivent exactement. Ce jeton porte l onglet, la marche du pied et celle de la
    cloture ; les BANDES ont le leur (--lisere-ep), traite dans index.html. */
-html.qz-fond-sombre{--qz-lisere-ep:2px;--qz-lisere:#dedede;--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
+html.qz-fond-sombre:not(.qz-barres-claires){--qz-lisere-ep:2px;--qz-lisere:#dedede;--qz-pied-fond:#1e2b35;--qz-pied-titre:#dedede;--qz-pied-orange-texte:var(--qz-terracotta,#e89a63)}   /* 17/09 : suit l accent. Sur le pied NAVY de l accueil, l accent se lit tel quel ; sur le pied clair des autres pages, c est sa variante TEXTE que le panneau calcule. Ces deux valeurs etaient ecrites en dur et ne suivaient aucun reglage — c est la derniere poche d orange du site. */
 .qz-pied3{
   width:100%; box-sizing:border-box;
   padding:30px 36px 38px;
@@ -203,16 +203,16 @@ footer.qz-footer .qz-basdepage .qz-wordmark-img, footer.qz-footer .qz-basdepage 
 /* 18/09, fondateur : « baseline logo en blanc ». La baseline du pied est la MEME que celle de l en-tete — c est le
    meme bloc de logo. Elle prend donc le blanc elle aussi (14,46 sur le navy du pied), et la CATEGORIE garde
    l orange : le bloc se lit alors sur trois rangs, nom en clair, baseline en blanc, categorie en couleur. */
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-pied-accroche{ color:#ffffff!important; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-cat{ color:#ff9147!important; }
 /* 18/09, fondateur : le bloc logo du pied reduit de 20 %, comme celui de l en-tete. Memes valeurs, meme raison :
    c est le meme bloc, ecrit deux fois. Pas de borne mobile ici — la regle mobile du pied ne touche pas ces valeurs. */
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-plaque{ --t:52.8px; }
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-wm-col{ height:52.8px; margin-top:2.4px; }
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-logorow{ gap:11.2px; }
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-naming.qz-wordmark-img{ font-size:21.6px; }
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-pied-accroche,
-html.qz-fond-sombre footer.qz-footer .qz-basdepage .qz-cat{ font-size:11.6px; line-height:15.6px; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-plaque{ --t:52.8px; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-wm-col{ height:52.8px; margin-top:2.4px; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-logorow{ gap:11.2px; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-naming.qz-wordmark-img{ font-size:21.6px; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-pied-accroche,
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-basdepage .qz-cat{ font-size:11.6px; line-height:15.6px; }
 /* 18/09, fondateur : « tesselle blanche habituelle, seulement la derniere en signature ». Le logo distingue deja
    .qz-b (les ordinaires, sur currentColor) de .qz-o (la SIGNATURE, derniere tesselle) — voir logo-v5.css. Seule la
    signature porte la couleur, et elle prend l orange de marque plutot que l accent en essai.
@@ -338,7 +338,7 @@ footer.qz-footer .qz-copy{
      `html.qz-accueil .qz-copy`, moins specifique. On passe devant en etant plus precis, pas plus insistant. */
   color:#9c4514; font-family:'Jura',sans-serif; font-size:12px; font-weight:600;
 }
-html.qz-fond-sombre footer.qz-footer .qz-copy{ color:#ff9147; }
+html.qz-fond-sombre:not(.qz-barres-claires) footer.qz-footer .qz-copy{ color:#ff9147; }
 @media (max-width:900px){
   .qz-pied3{ grid-template-columns:1fr 1fr; gap:28px; padding:34px 24px 30px; }
   .qz-basdepage{ grid-column:1 / -1; }
@@ -369,3 +369,9 @@ html.qz-fond-sombre footer.qz-footer .qz-copy{ color:#ff9147; }
    La premiere version posait une bordure droite entre deux sections claires. Abandonnee : sur ce site le liseré marche,
    toujours. Les frontieres claire/claire portent donc un decroche comme les autres — leur fond etant transparent, seule la
    ligne se dessine. Voir data-marche-haut dans index.html et poserMarches() dans bandeau-relief.js. */
+
+/* BARRES-CLAIRES pied (28/09, fondateur) : sur l accueil aux barres claires, le pied reprend ses couleurs de gris quelles que soient les
+   couleurs injectees par le panneau ou par le theme sombre : liens et titres navy, copyright gris 2 (4,6 sur le gris). */
+html.qz-barres-claires footer.qz-footer .qz-pied-infos a,html.qz-barres-claires footer.qz-footer .qz-pied3 a:not(.qz-logorow),html.qz-barres-claires footer.qz-footer .qz-coltitre{color:#1e2b35!important}
+html.qz-barres-claires footer.qz-footer .qz-pied-infos a:hover,html.qz-barres-claires footer.qz-footer .qz-pied-infos a:focus-visible{color:#9c4514!important}
+html.qz-barres-claires footer.qz-footer .qz-copy,html.qz-barres-claires footer.qz-footer .qz-reseaux .qz-sub{color:#5a6672!important}

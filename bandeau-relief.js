@@ -130,7 +130,8 @@
     /* 16/09, fondateur : « decroche bas retire ». Le bord BAS de la bande defilante n est plus pose du tout : la bande
        s arrete sur une horizontale franche. Les trois listes de minutage qui citent encore 'qb-bord-defile-bas' plus bas
        cherchent l element avec querySelector et sortent si elles ne le trouvent pas — rien a y toucher. */
-    poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', navy);
+    var couleurDefile = document.documentElement.classList.contains('qz-barres-claires') ? '#dedede' : navy; /* 28/09 : bandeau defilant gris sur l accueil aux barres claires */
+    poser(bande, 'bas', 'qb-bord-bas', navy); poser(bande, 'defile', 'qb-bord-defile-haut', couleurDefile);
     poserMarches();   /* 15/09 : les marches entre sections, memes tracés */
     var dec = (L.reflet && L.reflet.mode !== 'changement' && L.reflet.decalage) || 0; ['qb-bord-haut', 'qb-bord-bas', 'qb-bord-defile-haut', 'qb-bord-defile-bas'].forEach(function (k, i) { var r = document.querySelector('.qb-bord-ligne.' + k + ' .qb-bord-reflet'); if (r) r.style.animationDelay = (i * dec) + 's'; });
   }  var root = document.getElementById('qbBandeau'); if (!root) return;
