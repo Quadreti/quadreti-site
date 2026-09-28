@@ -4,7 +4,7 @@
    pour que l accueil ait le même semis à chaque visite. À inclure avec defer, après commun-bandeau.js. */
 (function () {
   'use strict';
-  var PART = 0.10;      /* part de cases colorées (fondateur : 10 %) */
+  var PART = (typeof window.QZQ_PART === 'number') ? window.QZQ_PART : 0.10;      /* part de cases colorées (fondateur : 10 %) ; 28/09 soir : réglable par window.QZQ_PART (accueil refondu : 0, seules les photos sont pleines) */
   var GRAINE = 7;
   var body = document.body;
   if (!body || body.classList.contains('qz-sans-quadrillage')) return;

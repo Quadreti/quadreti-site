@@ -1,0 +1,71 @@
+/* QuadretI — REFONTE DE L ACCUEIL (28/09 soir, fondateur : « enchaîne tout, on reprendra les points nécessaires ensuite »).
+   La maquette v4 (SITE\DESIGN SYSTEME\mockup-gabarits-sections-v4.html, gelée) passe sur le site. Les sections sont construites par
+   refonte-accueil.js dans #refonte, sur la GRILLE du site (case 25 mm, fond-quadrillage.css) ; les anciennes sections restent dans la page,
+   masquées par html.qz-refonte (retour arrière : retirer la classe). Règles tenues : écarts en 1 case ou 1/2 case, bandes de titre = négatif
+   de l onglet du menu (elles s emboîtent sous lui au défilement), gris voilé #C7C9CA, liserés 1,5 px, une section claire sur deux, une photo
+   entière par bloc (sans joints), cartes à hauteur automatique arrondie à la demi-case. Jetons ci-dessous. */
+:root{--qzr-case:var(--qzq-case,25mm);--qzr-bord:var(--qzq-bord,1.65mm);--qzr-clair:#c7c9ca;--qzr-navy:#1e2b35;--qzr-gris:#dedede;--qzr-gris-3:#aab2ba;
+  --qzr-texte-clair:#1e2b35;--qzr-texte-clair-2:#3d4650;--qzr-orange:#d96c2f;--qzr-orange-clair:#f0a06a;--qzr-orange-sombre:#843a11;--qzr-encre:#10181f;--qzr-lisere:1.5px}
+html.qz-refonte .blk-ancien{display:none!important}
+#refonte{position:relative;width:100%;z-index:2}
+#refonte .sec-clair{position:absolute;left:0;width:100%;background-color:var(--qzr-clair);
+  background-image:linear-gradient(to right,rgba(30,43,53,.10) 0 0.8mm,transparent 0.8mm),linear-gradient(to bottom,rgba(30,43,53,.10) 0 0.8mm,transparent 0.8mm);
+  background-size:var(--qzr-case) var(--qzr-case);background-position:0.25mm 0.25mm}
+#refonte .r-bloc{position:absolute;left:calc(var(--x) * var(--qzr-case));top:calc(var(--y) * var(--qzr-case));width:calc(var(--w) * var(--qzr-case));height:calc(var(--h) * var(--qzr-case));box-sizing:border-box}
+#refonte .r-carte{height:100%;box-sizing:border-box;padding:calc(var(--qzr-case) * .25) calc(var(--qzr-case) * .5);display:flex;flex-direction:column;justify-content:center;gap:8px;color:var(--qzr-gris);background:var(--qzr-navy)}
+#refonte .clair .r-carte{background:var(--qzr-clair);color:var(--qzr-texte-clair)}
+#refonte .r-carte p{margin:0;font-size:16px;line-height:1.55;max-width:62ch;color:inherit}
+#refonte .r-carte p.petit{font-size:14.5px;color:var(--qzr-gris-3)}
+#refonte .clair .r-carte p.petit{color:var(--qzr-texte-clair-2)}
+#refonte .r-carte p.accroche{font:400 22px/1.15 'Quadreti Modulaire',Jura,sans-serif;text-transform:uppercase;color:var(--qzr-orange-clair)}
+#refonte .r-carte h3{margin:0;font:700 15px/1.25 Jura,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:inherit}
+#refonte .r-app .ini{width:calc(var(--qzr-case) * .5);height:calc(var(--qzr-case) * .5);display:grid;place-items:center;background:var(--qzr-orange);color:var(--qzr-encre);font:400 18px/1 'Quadreti Modulaire',Jura,sans-serif}
+#refonte .r-app h3{font-size:13.5px}
+#refonte .r-app a{color:inherit;text-decoration:none}
+#refonte .r-app a:hover h3,#refonte .r-app a:focus-visible h3{color:var(--qzr-orange-clair)}
+#refonte .r-format b{font:400 30px/1 'Quadreti Modulaire',Jura,sans-serif;color:var(--qzr-orange-clair)}
+#refonte .r-format span{font-size:14px}
+/* boutons : les tesselles du site (tesselle-bouton.css), largeur du bloc, 1/2 case de haut */
+#refonte .r-bouton .cta{width:100%;height:100%;min-height:44px;box-sizing:border-box}
+/* photos entières : un cadre sur le bloc de tesselles, sans joints ; biseau et reflet des cases pleines ; apparition au défilement */
+#refonte .r-photo{left:calc(var(--x) * var(--qzr-case) + var(--qzr-bord));top:calc(var(--y) * var(--qzr-case) + var(--qzr-bord));width:calc(var(--w) * var(--qzr-case) - var(--qzr-bord));height:calc(var(--h) * var(--qzr-case) - var(--qzr-bord));
+  margin:0;overflow:hidden;background:#000;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.35),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.45),0.35mm 0.5mm 1.2mm rgba(0,0,0,.5);
+  opacity:0;transform:scale(.92);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+#refonte .r-photo.clip{opacity:1;transform:none}
+#refonte .r-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#refonte .r-avantapres .apres{clip-path:inset(0 0 0 var(--cur,50%))}
+#refonte .r-avantapres .ligne{position:absolute;top:0;bottom:0;left:var(--cur,50%);width:2px;background:var(--qzr-gris);transform:translateX(-1px);pointer-events:none}
+#refonte .r-avantapres input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+#refonte .r-avantapres .lib{position:absolute;bottom:10px;font:700 11px/1 Jura,sans-serif;letter-spacing:.2em;text-transform:uppercase;background:rgba(16,24,31,.7);color:var(--qzr-gris);padding:5px 8px}
+#refonte .r-faq{height:100%;box-sizing:border-box;padding:0 calc(var(--qzr-case) * .5);display:flex;flex-direction:column;justify-content:center;background:var(--qzr-clair);color:var(--qzr-texte-clair)}
+#refonte .r-faq button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;font:700 15.5px/1.35 Jura,sans-serif;min-height:44px}
+#refonte .r-faq button:focus-visible{outline:2px solid var(--qzr-navy);outline-offset:4px}
+#refonte .r-faq button span{font:400 22px/1 Jura,sans-serif;color:var(--qzr-orange-sombre)}
+#refonte .r-faq p{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:var(--qzr-texte-clair-2);max-width:80ch}
+/* bandes de titre : négatif de l onglet du menu ; même tracé, même échelle verticale (calculée sur l onglet réel par le script) */
+#refonte .r-bande{position:absolute;z-index:3;left:0;width:100%;height:var(--qzr-case)}
+#refonte .r-bande svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#refonte .r-bande .r-fond{fill:var(--qzr-navy)}
+#refonte .r-bande .r-trait{fill:none;stroke:var(--qzr-gris);stroke-width:var(--qzr-lisere);vector-effect:non-scaling-stroke;stroke-linejoin:round}
+#refonte .r-bande.clair .r-fond{fill:var(--qzr-clair)}
+#refonte .r-bande.clair .r-trait{stroke:var(--qzr-orange)}
+#refonte .r-bande .contenu{position:absolute;top:0;bottom:0;right:var(--qzr-case);display:flex;flex-direction:column;justify-content:center}
+#refonte .r-bande .eyebrow{margin:0 0 3px;font:700 11px/1 Jura,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--qzr-orange-clair)}
+#refonte .r-bande h2{margin:0;font:400 clamp(20px,1.7vw,28px)/1.05 'Quadreti Modulaire',Jura,sans-serif;text-transform:uppercase;color:var(--qzr-gris);white-space:nowrap}
+#refonte .r-bande.clair .eyebrow{color:var(--qzr-orange-sombre)}
+#refonte .r-bande.clair h2{color:var(--qzr-navy)}
+#refonte .r-mesure{position:absolute;left:-9999px;top:0;visibility:hidden}
+@media (prefers-reduced-motion:reduce){#refonte .r-photo{opacity:1;transform:none;transition:none}}
+@media (max-width:699px){
+  #refonte .r-carte{padding:calc(var(--qzr-case) * .25)}
+  #refonte .r-bande .contenu{left:calc(var(--qzr-case) * .25)!important;right:calc(var(--qzr-case) * .25);justify-content:flex-end;padding-bottom:6px}
+  #refonte .r-bande h2{white-space:normal;font-size:18px}
+}
+/* ÉTAPE 4 — le pied de l accueil : gris voilé, liseré 1,5 px, réseaux en haut de la première colonne et logo en bas (script) */
+html.qz-refonte.qz-barres-claires footer.qz-footer .qz-pied3,
+html.qz-refonte.qz-barres-claires .qz-pied-bord .qz-tex-forme,
+html.qz-refonte.qz-barres-claires footer.qz-footer .qz-tex-forme,
+html.qz-refonte.qz-barres-claires .qb-defile{background-color:var(--qzr-clair)!important}
+html.qz-refonte.qz-barres-claires footer.qz-footer{--qz-lisere-ep:1.5px;--qz-pied-fond:var(--qzr-clair)}
+html.qz-refonte .qz-basdepage.r-pied-col{display:flex;flex-direction:column;justify-content:space-between;gap:calc(var(--qzr-case) * .5)}
+html.qz-refonte .qz-basdepage.r-pied-col .qz-reseaux{margin-top:0}
