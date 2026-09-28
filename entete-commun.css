@@ -865,3 +865,15 @@ html.qz-anim-3 .qz-header.qz-menu-visible .qz-navpanel.open{transition-delay:0s!
   html.qz-barres-claires .qz-header.qz-menu-visible .qz-accroche{color:#1e2b35!important}
   html.qz-barres-claires .qz-header.qz-menu-visible .qz-cat{color:#9c4514!important}
 }
+/* ---- MENU VOILE (28/09 soir, fondateur, etape 1 de la refonte : la maquette v4 passe sur le site). ----
+   Le gris #DEDEDE « agresse » : il recoit un voile navy a 12 % = #C7C9CA (maquette v4). Liseres a 1,5 px « pareil pour tout le monde ».
+   Portee : html.qz-barres-claires (l accueil), comme le reste des barres claires. Couleurs recalculees pour ce gris :
+   rubriques et accroche navy #1e2b35 (8,70) ; survol et categorie #843a11 (4,87 ; le #9c4514 ne donnait que 3,86). */
+html.qz-barres-claires .qz-header{--qz-lisere-ep:1.5px}
+html.qz-barres-claires .qz-onglet-fond{fill:#c7c9ca}
+@media (min-width:901px){
+  html.qz-barres-claires .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:hover,
+  html.qz-barres-claires .qz-header.qz-menu-visible .qz-navpanel>ul>li>a:focus-visible,
+  html.qz-barres-claires .qz-header.qz-menu-visible .qz-subtoggle:hover{color:#843a11!important}
+  html.qz-barres-claires .qz-header.qz-menu-visible .qz-cat{color:#843a11!important}
+}
