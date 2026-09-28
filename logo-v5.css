@@ -133,3 +133,11 @@ html:not(.qz-fond-sombre) footer.qz-footer .qz-l14{--qz14-nom:currentColor}
   #qzLogoRow.qz-l14.qz-anime g:first-of-type .qz14-q{animation:qz14-q-plein 5s cubic-bezier(.4,0,.2,1) 4.05s infinite!important}
 }
 /* LOGO14-FIN */
+
+/* TITRES-MODULAIRE -- 28/09, demande du fondateur : les titres de section (h2) passent en police propriétaire Quadreti Modulaire
+   (ses deux planches : minuscules + capitales carrées ; /polices/Quadreti-Modulaire.otf, régénérée par SITEPOLICE PROPRIETAIREgenerateur-police.js).
+   La police n a ni accents ni ponctuation : les accents sont retirés du texte par commun-bandeau.js (é -> e), la ponctuation retombe sur Jura.
+   Une seule graisse : font-weight 400 et font-synthesis none, sinon le navigateur fabrique un faux gras baveux. */
+@font-face{font-family:'Quadreti Modulaire';src:url('/polices/Quadreti-Modulaire.otf?v=2026-09-28a') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+body h2{font-family:'Quadreti Modulaire','Jura',sans-serif!important;font-weight:400!important;font-synthesis:none;letter-spacing:.01em}
+/* TITRES-MODULAIRE-FIN */

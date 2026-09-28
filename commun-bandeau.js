@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-28a'; /* 28/09 : logo QUADRETI en police propriétaire (série carrée), Q et I orange */
+var QZ_VER = '?v=2026-09-28b'; /* 28/09 : logo QUADRETI en police propriétaire (série carrée), Q et I orange */
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -870,4 +870,24 @@ document.write('<script>window.qzEnteteInit && window.qzEnteteInit();window.qzLo
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', brancher);
   else brancher();
+})();
+
+/* TITRES-MODULAIRE -- 28/09 : les h2 sont en Quadreti Modulaire (logo-v5.css), police sans accents pour l instant (fondateur : « veille a ne pas
+   mettre les accents »). On retire donc les accents du TEXTE des titres de section (é -> e, œ -> oe), au chargement puis a chaque reecriture
+   (reglages-site.js pose les textes du panneau apres coup). Retirer ce bloc le jour ou la police aura ses accents. */
+(function(){
+  var enCours = false;
+  function sansAccents(){
+    if (enCours) return; enCours = true;
+    try {
+      var hs = document.querySelectorAll('h2'), i, w, n, t;
+      for (i = 0; i < hs.length; i++) {
+        w = document.createTreeWalker(hs[i], NodeFilter.SHOW_TEXT, null, false);
+        while ((n = w.nextNode())) { t = n.nodeValue.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/œ/g, 'oe').replace(/Œ/g, 'OE'); if (t !== n.nodeValue) n.nodeValue = t; }
+      }
+    } finally { enCours = false; }
+  }
+  if (document.readyState !== 'loading') sansAccents(); else document.addEventListener('DOMContentLoaded', sansAccents);
+  window.addEventListener('load', sansAccents);
+  if (window.MutationObserver) document.addEventListener('DOMContentLoaded', function(){ var att; new MutationObserver(function(){ clearTimeout(att); att = setTimeout(sansAccents, 60); }).observe(document.body, { childList: true, subtree: true, characterData: true }); });
 })();
