@@ -542,14 +542,23 @@
     /* 28/09, fondateur : « le carreau anime manque des fonctionnalites de la maquette » — parite avec mockup-banniere-mur-vivant.html :
        palette (cliquable : choisir une teinte, puis peindre ; sans choix, le clic fait defiler), Photo 3x3 / 2x2, Vider, Telecharger mon mur
        (PNG 1400 px signe), Ouvrir dans Designer (composition gardee dans localStorage, cle quadreti-mur-banniere), toast au premier geste. */
-    html += '</div><div class="qb-vif-palette" role="radiogroup" aria-label="Teinte a poser"></div>' +
-      '<div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label>' +
-      '<button type="button" class="qb-vif-btn qb-vif-taille" aria-pressed="true" title="Une photo couvre 3 x 3 tesselles ; sinon 2 x 2">Photo 3\u00d73</button>' +
-      '<button type="button" class="qb-vif-btn qb-vif-camera" hidden>Me prendre en photo</button>' +
-      '<button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><button type="button" class="qb-vif-btn qb-vif-vider">Vider</button>' +
-      '<button type="button" class="qb-vif-btn qb-vif-telecharger">Telecharger mon mur</button><a class="qb-vif-btn qb-vif-designer" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Ouvrir dans Designer</a>' +
-      '<span class="qb-vif-etat" aria-live="polite">demonstration</span></div><div class="qb-vif-toast" aria-hidden="true">Le mur est \u00e0 vous</div>';
-    mur.innerHTML = html; mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
+    /* 28/09 (soir), fondateur : « le mur doit occuper plus l espace en hauteur, ses commandes sont inaccessibles » — les commandes passent
+       dans un RAIL vertical a droite du mur (tesselles-icones, libelle en info-bulle et pour les lecteurs d ecran ; palette en mini-grille 3x3).
+       Le mur prend ainsi toute la hauteur disponible (--mur-max) ; plus rien sous lui que la ligne d etat. */
+    var lib = function (t) { return '<span class="qb-vif-lib">' + t + '</span>'; };
+    html += '</div><div class="qb-vif-rail"><div class="qb-vif-palette" role="radiogroup" aria-label="Teinte a poser"></div>' +
+      '<label class="qb-vif-btn" title="Deposer une photo"><input type="file" accept="image/*" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11a2 2 0 0 1 2 2v3M4 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3M2 15l4.5-4.5L12 16M19 9v6M16 12h6"/><circle cx="8" cy="9" r="1.6"/></svg>' + lib('Deposer une photo') + '</label>' +
+      '<button type="button" class="qb-vif-btn qb-vif-camera" hidden title="Me prendre en photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>' + lib('Me prendre en photo') + '</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-taille" title="Une photo couvre 3 x 3 tesselles ; cliquer pour 2 x 2"><span class="qb-vif-t">3\u00d73</span>' + lib('Taille des photos') + '</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-melanger" title="Melanger les couleurs"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h4l8 10h6M21 7h-6l-2 2.5M3 17h4l2-2.5M18 4l3 3-3 3M18 14l3 3-3 3"/></svg>' + lib('Melanger') + '</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-vider" title="Vider le mur"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>' + lib('Vider') + '</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-telecharger" title="Telecharger mon mur (PNG)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>' + lib('Telecharger mon mur') + '</button>' +
+      '<a class="qb-vif-btn qb-vif-designer" href="https://designer.quadreti.fr" target="_blank" rel="noopener" title="Ouvrir dans Designer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M11 5H5v14h14v-6"/></svg>' + lib('Ouvrir dans Designer') + '</a>' +
+      '</div><span class="qb-vif-etat" aria-live="polite">demonstration</span><div class="qb-vif-toast" aria-hidden="true">Le mur est \u00e0 vous</div>';
+    mur.innerHTML = html;
+    /* la grille et le rail sont mis cote a cote dans un cadre */
+    (function () { var g = mur.querySelector('.qb-vif'), r = mur.querySelector('.qb-vif-rail'), cadre = document.createElement('div'); cadre.className = 'qb-vif-cadre'; mur.insertBefore(cadre, g); cadre.appendChild(g); cadre.appendChild(r); })();
+    mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
     var grille = mur.querySelector('.qb-vif'), tuiles = grille.querySelectorAll('.qb-vt'), etat = mur.querySelector('.qb-vif-etat');
     var cs = getComputedStyle(mur), PAL = []; for (var k = 1; k <= 9; k++) { var v = cs.getPropertyValue('--qv-' + k).trim(); if (v) PAL.push(v); }
     var cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1, taille = 3, couleurChoisie = null;
@@ -576,7 +585,7 @@
     grille.addEventListener('dragleave', function () { grille.classList.remove('qb-vif-survol'); });
     grille.addEventListener('drop', function (e) { e.preventDefault(); grille.classList.remove('qb-vif-survol'); var r = grille.getBoundingClientRect(), cw = grille.clientWidth / N; lireFichier(e.dataTransfer.files[0], Math.floor((e.clientY - r.top) / cw) - Math.floor(taille / 2), Math.floor((e.clientX - r.left) / cw) - Math.floor(taille / 2)); });
     mur.querySelector('.qb-vif-melanger').addEventListener('click', function () { stopDemo(); cases.forEach(function (x, k) { if (!x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); });
-    mur.querySelector('.qb-vif-taille').addEventListener('click', function () { taille = taille === 3 ? 2 : 3; this.textContent = 'Photo ' + taille + '\u00d7' + taille; this.setAttribute('aria-pressed', taille === 3 ? 'true' : 'false'); });
+    mur.querySelector('.qb-vif-taille').addEventListener('click', function () { taille = taille === 3 ? 2 : 3; this.querySelector('.qb-vif-t').textContent = taille + '\u00d7' + taille; this.title = 'Une photo couvre ' + taille + ' x ' + taille + ' tesselles ; cliquer pour ' + (taille === 3 ? 2 : 3) + ' x ' + (taille === 3 ? 2 : 3); });
     mur.querySelector('.qb-vif-vider').addEventListener('click', function () { stopDemo(); photos = []; cases.forEach(function (x, k) { peindre(k, PAL[2]); }); });
     /* telecharger : le mur redessine sur un canevas de 1400 px (joints noirs, photos decoupees comme a l ecran), signature Quadreti en bas */
     mur.querySelector('.qb-vif-telecharger').addEventListener('click', function () { stopDemo(); var S = 1400, J = Math.round(S * 3 / 520), C = (S - J * (N + 1)) / N, cv = document.createElement('canvas'); cv.width = S; cv.height = S + 90; var g = cv.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, S, S); g.fillStyle = '#1e2b35'; g.fillRect(0, S, S, 90);

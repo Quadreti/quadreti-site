@@ -33,9 +33,14 @@ html.qz-tesselles-boutons .qb.qb-dispo-droite .qb-ctas .cta{
   transform:none!important;
   transition:background-color .18s ease, box-shadow .12s ease, transform .12s ease!important;
 }
-/* le bouton du hero etait centre par translateX(-50%) en position absolue ; dans la disposition « droite » il vit dans .qb-ctas (statique) */
-html.qz-tesselles-boutons .hero-cta.cta{ position:static; }
-html.qz-tesselles-boutons .hero:not(.qb-dispo-droite) .hero-cta.cta{ position:absolute; left:50%; bottom:38px; transform:translateX(-50%)!important; }
+/* le bouton du hero : dans la disposition « droite » il vit dans .qb-ctas (bandeau-relief.js le deplace), position relative, rien a centrer.
+   Quand il reste enfant direct de .hero (autres dispositions), il garde son centrage absolu d origine — ET ce centrage doit survivre au survol
+   (29/08 : le bouton qui s echappe). ⚠ 28/09 : une premiere version testait .hero:not(.qb-dispo-droite), or cette classe est portee par .qb,
+   pas par .hero : la regle s appliquait toujours et decalait le bouton (signale par le fondateur). */
+html.qz-tesselles-boutons .qb-ctas .hero-cta.cta{ position:relative; left:auto; bottom:auto; }
+html.qz-tesselles-boutons .hero > .hero-cta.cta{ position:absolute; left:50%; bottom:38px; transform:translateX(-50%)!important; }
+html.qz-tesselles-boutons .hero > .hero-cta.cta:hover, html.qz-tesselles-boutons .hero > .hero-cta.cta:focus-visible{ transform:translateX(-50%) translate(-0.3mm,-0.4mm)!important; }
+html.qz-tesselles-boutons .hero > .hero-cta.cta:active{ transform:translateX(-50%) translate(0.2mm,0.3mm)!important; }
 /* secondaire : gris du site, navy dessus (10,75 mesuré, #1e2b35 sur #dedede) */
 html.qz-tesselles-boutons .cta.light,
 html.qz-tesselles-boutons .qb.qb-dispo-droite .qb-ctas .qb-cta2{ background:var(--qzt-fond-2)!important; color:var(--qzt-encre-2)!important; border:0!important; }

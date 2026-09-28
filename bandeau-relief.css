@@ -338,7 +338,7 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
    (les sept bleus du fond quadrillage, l orange de marque, le gris du site). Tesselle = bouton, relief bombé, reflet au survol. ===== */
 .qb-mur.qb-mur-vivant{--qv-1:#12233A;--qv-2:#1E2F45;--qv-3:#27405C;--qv-4:#2F5D8A;--qv-5:#3A7CA5;--qv-6:#5FA8D3;--qv-7:#9DCBE8;--qv-8:#D96C2F;--qv-9:#DEDEDE;
   display:block;height:auto;padding:0;gap:0;opacity:1;animation:none}
-.qb.qb-dispo-droite .qb-mur.qb-mur-vivant{width:min(52cqw, calc(var(--mur-max,38vh) - 34px));max-width:100%}
+.qb.qb-dispo-droite .qb-mur.qb-mur-vivant{width:auto;max-width:100%} /* 28/09 soir : la taille est portee par la grille (.qb-vif), voir RAIL */
 .qb-vif{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:3px;padding:3px;aspect-ratio:1;width:100%;box-sizing:border-box;background:#000;border-radius:6px;
   box-shadow:0 0 0 var(--qz-lisere-ep,2px) var(--lisere-couleur,#d96c2f),0 18px 40px -14px rgba(0,0,0,.8)}
 .qb-vif.qb-vif-survol{outline:3px dashed var(--qz-terracotta,#d96c2f);outline-offset:4px}
@@ -418,3 +418,23 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 .qb-vif-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#dedede;color:#1e2b35;padding:10px 16px;border-radius:999px;font:700 13px/1 'Jura',sans-serif;opacity:0;transition:.3s;z-index:920;pointer-events:none}
 .qb-vif-toast.qb-on{opacity:1;transform:translateX(-50%)}
 @media (prefers-reduced-motion:reduce){.qb-vif-toast{transition:none}}
+
+/* ===== 28/09 soir : RAIL des commandes a droite du mur (fondateur : le mur plus grand, les commandes accessibles) =====
+   La grille prend la hauteur disponible (--mur-max moins la ligne d etat) ; le rail = 36 px de tesselles-icones + palette 3x3. */
+.qb-vif-cadre{display:grid;grid-template-columns:auto auto;gap:10px;align-items:start;justify-content:start}
+.qb.qb-dispo-droite .qb-vif{width:min(calc(60cqw - 42px), var(--mur-max,38vh))} /* la grille prend TOUTE la hauteur disponible : la ligne d etat n est plus visible (lecteurs d ecran seulement), le toast la remplace */
+.qb-vif-rail{display:flex;flex-direction:column;gap:5px;width:32px} /* 31 + 5 + 7 x 32 + 6 x 5 = 290 px : tient dans la grille des 300 px */
+.qb-vif-rail .qb-vif-palette{display:grid;grid-template-columns:repeat(3,9px);gap:2px;margin:0;justify-content:center}
+.qb-vif-rail .qb-vif-teinte{width:9px;height:9px}
+.qb-vif-rail .qb-vif-btn{width:32px;height:32px;padding:0;border:0;border-radius:0;display:grid;place-items:center;background:#1e2f45;color:#dedede;cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.55),0 0 0 0.8mm #000,0.35mm 0.5mm 1.2mm rgba(0,0,0,.7);transition:transform .15s,background-color .15s}
+.qb-vif-rail .qb-vif-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.qb-vif-rail .qb-vif-btn:hover,.qb-vif-rail .qb-vif-btn:focus-visible{background:var(--qz-terracotta,#d96c2f);color:#10181f;transform:translate(-0.3mm,-0.4mm)}
+.qb-vif-rail .qb-vif-btn:active{transform:translate(0.2mm,0.3mm);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.3),0 0 0 0.8mm #000}
+.qb-vif-rail .qb-vif-btn:focus-visible{outline:2px solid #dedede;outline-offset:3px}
+.qb-vif-rail .qb-vif-t{font:700 11px/1 'Jura',sans-serif;letter-spacing:.04em}
+.qb-vif-lib{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap} /* libelle pour les lecteurs d ecran, l info-bulle pour la souris */
+.qb-mur-vivant .qb-vif-etat{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0}
+@media (max-width:900px){.qb.qb-dispo-droite .qb-vif{width:100%}}
+/* 28/09 soir : RAIL sur petit ecran -- sous la grille, en ligne (cette regle doit rester APRES le bloc RAIL : meme specificite, c est l ordre qui tranche ; mesure : grille tombee a 24 px quand elle etait avant) */
+@media (max-width:900px){.qb-vif-cadre{grid-template-columns:1fr;justify-content:stretch}.qb-vif-rail{flex-direction:row;flex-wrap:wrap;justify-content:center;width:auto}.qb-vif-rail .qb-vif-palette{grid-template-columns:repeat(9,9px);align-self:center}}
