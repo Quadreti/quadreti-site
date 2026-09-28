@@ -539,11 +539,24 @@
     mur.classList.remove('qb-vif-avous');
     var html = '<div class="qb-vif" role="group" aria-label="Mur Quadreti 7 par 7 : cliquez une tesselle pour changer sa couleur, deposez une photo pour la poser">';
     for (var i = 0; i < N * N; i++) html += '<button type="button" class="qb-vt" data-i="' + i + '" aria-label="tesselle ' + (Math.floor(i / N) + 1) + ',' + (i % N + 1) + '"></button>';
-    html += '</div><div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label><button type="button" class="qb-vif-btn qb-vif-camera" hidden>Me prendre en photo</button><button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><span class="qb-vif-etat" aria-live="polite">demonstration</span></div>';
+    /* 28/09, fondateur : « le carreau anime manque des fonctionnalites de la maquette » — parite avec mockup-banniere-mur-vivant.html :
+       palette (cliquable : choisir une teinte, puis peindre ; sans choix, le clic fait defiler), Photo 3x3 / 2x2, Vider, Telecharger mon mur
+       (PNG 1400 px signe), Ouvrir dans Designer (composition gardee dans localStorage, cle quadreti-mur-banniere), toast au premier geste. */
+    html += '</div><div class="qb-vif-palette" role="radiogroup" aria-label="Teinte a poser"></div>' +
+      '<div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label>' +
+      '<button type="button" class="qb-vif-btn qb-vif-taille" aria-pressed="true" title="Une photo couvre 3 x 3 tesselles ; sinon 2 x 2">Photo 3\u00d73</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-camera" hidden>Me prendre en photo</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><button type="button" class="qb-vif-btn qb-vif-vider">Vider</button>' +
+      '<button type="button" class="qb-vif-btn qb-vif-telecharger">Telecharger mon mur</button><a class="qb-vif-btn qb-vif-designer" href="https://designer.quadreti.fr" target="_blank" rel="noopener">Ouvrir dans Designer</a>' +
+      '<span class="qb-vif-etat" aria-live="polite">demonstration</span></div><div class="qb-vif-toast" aria-hidden="true">Le mur est \u00e0 vous</div>';
     mur.innerHTML = html; mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
     var grille = mur.querySelector('.qb-vif'), tuiles = grille.querySelectorAll('.qb-vt'), etat = mur.querySelector('.qb-vif-etat');
     var cs = getComputedStyle(mur), PAL = []; for (var k = 1; k <= 9; k++) { var v = cs.getPropertyValue('--qv-' + k).trim(); if (v) PAL.push(v); }
-    var cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1;
+    var cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1, taille = 3, couleurChoisie = null;
+    var palette = mur.querySelector('.qb-vif-palette'), toast = mur.querySelector('.qb-vif-toast'), tToast = null;
+    PAL.forEach(function (c, i) { var b = document.createElement('button'); b.type = 'button'; b.className = 'qb-vif-teinte'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false'); b.setAttribute('aria-label', 'teinte ' + (i + 1)); b.style.setProperty('--c', c); b.setAttribute('data-c', c); palette.appendChild(b); });
+    palette.addEventListener('click', function (e) { var b = e.target.closest('.qb-vif-teinte'); if (!b) return; stopDemo(); var c = b.getAttribute('data-c'); couleurChoisie = (couleurChoisie === c) ? null : c; Array.prototype.forEach.call(palette.children, function (x) { x.setAttribute('aria-checked', x.getAttribute('data-c') === couleurChoisie ? 'true' : 'false'); }); etat.textContent = couleurChoisie ? 'cliquez une case pour la peindre' : 'a vous : cliquez une case, deposez une photo'; });
+    function direToast(txt) { toast.textContent = txt; toast.classList.add('qb-on'); clearTimeout(tToast); tToast = setTimeout(function () { toast.classList.remove('qb-on'); }, 2200); }
     Array.prototype.forEach.call(tuiles, function (b, i) { var c = PAL[Math.floor(Math.random() * 7)]; b.style.setProperty('--c', c); cases.push({ el: b, couleur: c, photo: null }); });
     function peindre(k, c) { var x = cases[k]; x.photo = null; x.couleur = c; x.el.className = 'qb-vt'; x.el.style.cssText = ''; x.el.style.setProperty('--c', c); }
     function poserPhoto(src, r0, c0, n) { r0 = Math.max(0, Math.min(N - n, r0)); c0 = Math.max(0, Math.min(N - n, c0)); var pid = idPhoto++; photos.push({ id: pid, src: src, r0: r0, c0: c0, n: n });
@@ -553,16 +566,25 @@
     window.addEventListener('resize', caler);
     function demoPas() { if (!demo) return; var k = Math.floor(Math.random() * N * N); if (cases[k].photo) return; peindre(k, PAL[Math.floor(Math.random() * 7)]); }
     function demoPhoto() { if (!demo) return; photos = []; cases.forEach(function (x, k) { if (x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); var tailles = V.tailles || [2, 3], nn = tailles[Math.floor(Math.random() * tailles.length)]; poserPhoto(visuels[iPhoto++ % visuels.length], Math.floor(Math.random() * (N - nn + 1)), Math.floor(Math.random() * (N - nn + 1)), nn); }
-    function stopDemo() { if (!demo) return; demo = false; clearInterval(tCouleur); clearInterval(tPhoto); etat.textContent = 'a vous : cliquez une case, deposez une photo'; mur.classList.add('qb-vif-avous'); }
+    function stopDemo() { if (!demo) return; demo = false; clearInterval(tCouleur); clearInterval(tPhoto); etat.textContent = 'a vous : cliquez une case, deposez une photo'; mur.classList.add('qb-vif-avous'); direToast('Le mur est \u00e0 vous'); }
     function demarrerDemo() { if (demo) return; demo = true; tCouleur = setInterval(demoPas, V.pasCouleur || 900); tPhoto = setInterval(demoPhoto, V.pasPhoto || 6000); setTimeout(demoPhoto, 1200); }
     mur._vivantStop = function () { clearInterval(tCouleur); clearInterval(tPhoto); demo = false; window.removeEventListener('resize', caler); if (mur._vivantStopCam) mur._vivantStopCam(); };
-    grille.addEventListener('click', function (e) { var b = e.target.closest('.qb-vt'); if (!b) return; stopDemo(); var k = +b.getAttribute('data-i'), x = cases[k]; var i = PAL.indexOf(x.couleur); peindre(k, PAL[(i + 1) % PAL.length]); });
-    function lireFichier(f, r0, c0) { if (!f || !/^image\//.test(f.type)) return; stopDemo(); var u = URL.createObjectURL(f), im = new Image(); im.onload = function () { poserPhoto(u, r0, c0, 3); }; im.src = u; }
-    mur.querySelector('input[type=file]').addEventListener('change', function (e) { lireFichier(e.target.files[0], 2, 2); e.target.value = ''; });
+    grille.addEventListener('click', function (e) { var b = e.target.closest('.qb-vt'); if (!b) return; stopDemo(); var k = +b.getAttribute('data-i'), x = cases[k]; if (couleurChoisie) { peindre(k, couleurChoisie); return; } var i = PAL.indexOf(x.couleur); peindre(k, PAL[(i + 1) % PAL.length]); });
+    function lireFichier(f, r0, c0) { if (!f || !/^image\//.test(f.type)) return; stopDemo(); var u = URL.createObjectURL(f), im = new Image(); im.onload = function () { poserPhoto(u, r0, c0, taille); }; im.src = u; }
+    mur.querySelector('input[type=file]').addEventListener('change', function (e) { lireFichier(e.target.files[0], Math.floor((N - taille) / 2), Math.floor((N - taille) / 2)); e.target.value = ''; });
     grille.addEventListener('dragover', function (e) { e.preventDefault(); grille.classList.add('qb-vif-survol'); });
     grille.addEventListener('dragleave', function () { grille.classList.remove('qb-vif-survol'); });
-    grille.addEventListener('drop', function (e) { e.preventDefault(); grille.classList.remove('qb-vif-survol'); var r = grille.getBoundingClientRect(), cw = grille.clientWidth / N; lireFichier(e.dataTransfer.files[0], Math.floor((e.clientY - r.top) / cw) - 1, Math.floor((e.clientX - r.left) / cw) - 1); });
+    grille.addEventListener('drop', function (e) { e.preventDefault(); grille.classList.remove('qb-vif-survol'); var r = grille.getBoundingClientRect(), cw = grille.clientWidth / N; lireFichier(e.dataTransfer.files[0], Math.floor((e.clientY - r.top) / cw) - Math.floor(taille / 2), Math.floor((e.clientX - r.left) / cw) - Math.floor(taille / 2)); });
     mur.querySelector('.qb-vif-melanger').addEventListener('click', function () { stopDemo(); cases.forEach(function (x, k) { if (!x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); });
+    mur.querySelector('.qb-vif-taille').addEventListener('click', function () { taille = taille === 3 ? 2 : 3; this.textContent = 'Photo ' + taille + '\u00d7' + taille; this.setAttribute('aria-pressed', taille === 3 ? 'true' : 'false'); });
+    mur.querySelector('.qb-vif-vider').addEventListener('click', function () { stopDemo(); photos = []; cases.forEach(function (x, k) { peindre(k, PAL[2]); }); });
+    /* telecharger : le mur redessine sur un canevas de 1400 px (joints noirs, photos decoupees comme a l ecran), signature Quadreti en bas */
+    mur.querySelector('.qb-vif-telecharger').addEventListener('click', function () { stopDemo(); var S = 1400, J = Math.round(S * 3 / 520), C = (S - J * (N + 1)) / N, cv = document.createElement('canvas'); cv.width = S; cv.height = S + 90; var g = cv.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, S, S); g.fillStyle = '#1e2b35'; g.fillRect(0, S, S, 90);
+      var att = []; cases.forEach(function (x, k) { var r = Math.floor(k / N), c = k % N, X = J + c * (C + J), Y = J + r * (C + J); if (!x.photo) { g.fillStyle = x.couleur; g.fillRect(X, Y, C, C); return; } var p = null; for (var i = 0; i < photos.length; i++) if (photos[i].id === x.photo.id) p = photos[i]; if (!p) return;
+        att.push(new Promise(function (ok) { var im = new Image(); im.crossOrigin = 'anonymous'; im.onload = function () { var px = p.n * C + (p.n - 1) * J; var sc = Math.max(px / im.width, px / im.height), w = im.width * sc, h = im.height * sc, ox = (px - w) / 2, oy = (px - h) / 2; g.save(); g.beginPath(); g.rect(X, Y, C, C); g.clip(); g.drawImage(im, X - x.photo.c * (C + J) + ox, Y - x.photo.r * (C + J) + oy, w, h); g.restore(); ok(); }; im.onerror = function () { ok(); }; im.src = p.src; })); });
+      Promise.all(att).then(function () { g.fillStyle = '#dedede'; g.font = '600 34px Jura, sans-serif'; g.fillText('QUADRETI  \u00b7  mon mur 7 \u00d7 7  \u00b7  quadreti.fr', J, S + 58); try { var a = document.createElement('a'); a.download = 'mon-mur-quadreti.png'; a.href = cv.toDataURL('image/png'); a.click(); direToast('Votre mur est t\u00e9l\u00e9charg\u00e9'); } catch (e) { direToast('T\u00e9l\u00e9chargement impossible ici'); } }); });
+    /* ouvrir dans Designer : la composition est gardee dans le navigateur (cle quadreti-mur-banniere) ; Designer ne la lit PAS encore — brief a faire au fil Application (Designer) */
+    mur.querySelector('.qb-vif-designer').addEventListener('click', function () { try { localStorage.setItem('quadreti-mur-banniere', JSON.stringify({ n: N, quand: Date.now(), cases: cases.map(function (x) { return x.photo ? { photo: x.photo.id, r: x.photo.r, c: x.photo.c } : { c: x.couleur }; }), photos: photos.map(function (p) { return { id: p.id, r0: p.r0, c0: p.c0, n: p.n }; }) })); } catch (e) {} direToast('Composition gard\u00e9e : Designer la retrouvera'); });
     /* 28/09, fondateur : « se prendre en photo pour tester des le premier moment ». Camera de l appareil, ouverte SEULEMENT apres un clic,
        apercu en miroir dans un cadre carre, la prise est decoupee en 3x3 au centre du mur comme une photo deposee. Tout reste dans le
        navigateur : aucun envoi, aucun stockage — le flux est coupe des que la boite se ferme. Le bouton n existe que si la camera est
@@ -589,7 +611,7 @@
         prendre.addEventListener('click', function () {
           var w = video.videoWidth, h = video.videoHeight; if (!w || !h) return; var c = Math.min(w, h), cv = document.createElement('canvas'); cv.width = cv.height = c; var g = cv.getContext('2d');
           g.translate(c, 0); g.scale(-1, 1); /* miroir, comme l apercu */ g.drawImage(video, (w - c) / 2, (h - c) / 2, c, c, 0, 0, c, c);
-          cv.toBlob(function (b) { if (!b) return; var u = URL.createObjectURL(b); fermerCam(); poserPhoto(u, 2, 2, 3); etat.textContent = 'vous voilà sur le mur'; }, 'image/jpeg', .92);
+          cv.toBlob(function (b) { if (!b) return; var u = URL.createObjectURL(b); fermerCam(); poserPhoto(u, Math.floor((N - taille) / 2), Math.floor((N - taille) / 2), taille); etat.textContent = 'vous voilà sur le mur'; }, 'image/jpeg', .92);
         });
       }
       btnCam.addEventListener('click', ouvrirCam);

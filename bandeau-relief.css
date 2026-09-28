@@ -406,3 +406,15 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
 .qb-cam-annuler{background:#dedede;color:#1e2b35}.qb-cam-annuler:hover{background:#fff}
 .qb-cam-prendre:focus-visible,.qb-cam-annuler:focus-visible{outline:2px solid #dedede;outline-offset:3px}
 .qb-vif-btn[hidden]{display:none}
+
+/* ===== 28/09 : PARITE mur vivant / maquette — palette cliquable, bouton enfonce (aria-pressed), toast, lien Designer ===== */
+.qb-vif-palette{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.qb-vif-teinte{width:22px;height:22px;border:0;border-radius:0;padding:0;cursor:pointer;background:var(--c);box-shadow:inset 1px 1px 0 rgba(255,255,255,.25),inset -1px -1px 0 rgba(0,0,0,.4);transition:transform .15s}
+.qb-vif-teinte:hover{transform:translateY(-2px)}
+.qb-vif-teinte[aria-checked="true"]{outline:2px solid #dedede;outline-offset:2px;transform:translateY(-2px)}
+.qb-vif-teinte:focus-visible{outline:2px solid var(--qz-terracotta,#d96c2f);outline-offset:2px}
+.qb-vif-btn[aria-pressed="true"]{background:var(--qz-terracotta,#d96c2f);color:#10181f;border-color:var(--qz-terracotta,#d96c2f);font-weight:700}
+a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
+.qb-vif-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#dedede;color:#1e2b35;padding:10px 16px;border-radius:999px;font:700 13px/1 'Jura',sans-serif;opacity:0;transition:.3s;z-index:920;pointer-events:none}
+.qb-vif-toast.qb-on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.qb-vif-toast{transition:none}}
