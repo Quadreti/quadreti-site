@@ -462,3 +462,8 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 /* 28/09 soir, fondateur : « le flechage Changez en orange » — l icone Changez (ses fleches circulaires) prend l orange de son libelle (#d96c2f, 4,23 sur le navy, seuil graphique 3 atteint) ; les trois autres restent grises. */
 .qb-gestes .qb-geste-changez .qb-geste-tess .qb-geste-icone{color:var(--qz-terracotta,#d96c2f)!important;stroke:var(--qz-terracotta,#d96c2f)!important}
 /* 28/09 soir : la photo du salon a EXACTEMENT le rapport du bandeau (2000 x 926, comme les visuels du diaporama) : cover = ajustement pile, decroches compris. */
+/* 28/09 soir : « Le mur est a vous. » au-dessus du mur demo. Jura (la police des titres n a pas d accents), gris du site, halo sombre des lettres comme le titre ; posee en absolu au-dessus de la grille pour ne rien changer au calcul de hauteur du mur ; 24 px d air au-dessus de l etiquette App demo. S efface avec le mur en mode salon. */
+.qb-vif-cadre{position:relative} /* l etiquette et la phrase se calent sur le CADRE (mesure : il etait en static, elles se calaient sur le mur entier) */
+.qb-vif-invite{position:absolute;left:0;width:calc(100% - 42px);bottom:calc(100% + 36px);margin:0;text-align:center;font:700 clamp(14px,1.15vw,18px)/1.2 'Jura',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#dedede;text-shadow:0 1px 2px rgba(16,24,31,.75),0 1px 8px rgba(16,24,31,.85);pointer-events:none}
+.qb-en-salon .qb-vif-invite{opacity:0;transition:opacity .35s ease}
+@media (max-width:900px){.qb-vif-invite{width:100%}.qb-mur-vivant .qb-vif-cadre{margin-top:72px}} /* mobile : le mur suit les boutons de pres (9 px mesures) ; 72 px de marge font la place de la phrase, a 24 px des boutons */
