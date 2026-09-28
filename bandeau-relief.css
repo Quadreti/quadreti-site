@@ -505,3 +505,28 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 /* 29/09 : le nom du mode en cours sous le mur (Pixel, Photo, Mosaïque), à la place de la mention d échelle ; caché en composition */
 .qb-sm-mode{position:absolute;z-index:2;transform:translateX(-50%);margin:12px 0 0;white-space:nowrap;pointer-events:none;font:600 11px/1 Jura,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#DEDEDE;text-shadow:0 1px 2px rgba(16,24,31,.75),0 2px 14px rgba(16,24,31,.85);transition:opacity .3s}
 .qb.qb-sm-compose .qb-sm-mode{opacity:0}
+
+/* 29/09, fondateur : LA LOUPE de la mosaïque — une loupe à manche bois (image du fondateur, verre découpé) ; dans le verre, la tesselle visée grossie avec ses voisines. */
+.qb-sm-loupe{position:absolute;z-index:5;pointer-events:none;opacity:0;transform:scale(.92);transform-origin:30% 30%;filter:drop-shadow(6px 14px 16px rgba(16,24,31,.6));transition:opacity .25s,transform .25s}
+.qb-sm-loupe.qb-sm-loupe-on{opacity:1;transform:none}
+.qb-sm-loupe canvas{position:absolute;display:block}
+.qb-sm-loupe img{position:absolute;inset:0;width:100%;height:100%;max-width:none}
+.qb-sm-loupe.qb-sm-loupe-miroir img{transform:scaleX(-1)}
+.qb-sm-loupe-lib{position:absolute;transform:translateX(-50%);white-space:nowrap;font:600 10px/1 Jura,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#dedede;text-shadow:0 1px 2px rgba(16,24,31,.75),0 2px 12px rgba(16,24,31,.85)}
+.qb-sm-viseur{position:absolute;z-index:3;pointer-events:none;box-sizing:content-box;margin:-3px 0 0 -3px;border:2px solid var(--qz-terracotta,#d96c2f);opacity:0;transition:opacity .2s}
+.qb-sm-viseur.qb-sm-viseur-on{opacity:1}
+.qb.qb-sm-compose .qb-sm-viseur{opacity:0}
+.qb.qb-sm-compose .qb-sm-loupe{opacity:0}
+@media (prefers-reduced-motion:reduce){.qb-sm-loupe{transition:opacity .2s}}
+
+/* 29/09, fondateur : la commande de la loupe — une icône discrète à gauche de l étiquette ; ouverte : Lecture / Pause / Fin */
+.qb-sm-lctrl{position:absolute;z-index:6;display:none;align-items:center;gap:4px;transform:translateY(-50%)}
+.qb-sm-lctrl.qb-sm-lctrl-on{display:flex}
+.qb.qb-sm-compose .qb-sm-lctrl{display:none}
+.qb-sm-lctrl button{display:grid;place-items:center;width:24px;height:24px;padding:0;border:1px solid rgba(222,222,222,.28);background:rgba(16,24,31,.45);color:#dedede;cursor:pointer;opacity:.7;transition:opacity .2s,border-color .2s,background .2s}
+.qb-sm-lctrl button:hover,.qb-sm-lctrl button:focus-visible{opacity:1;border-color:#dedede}
+.qb-sm-lctrl button:focus-visible{outline:2px solid #dedede;outline-offset:2px}
+.qb-sm-lctrl button[aria-pressed="true"]{opacity:1;color:#10181f;background:var(--qz-terracotta,#d96c2f);border-color:var(--qz-terracotta,#d96c2f)}
+.qb-sm-lctrl-tir{display:none;gap:4px}
+.qb-sm-lctrl.qb-sm-lctrl-ouvert .qb-sm-lctrl-tir{display:flex}
+.qb-sm-lctrl.qb-sm-lctrl-ouvert .qb-sm-lctrl-loupe{opacity:1;border-color:#dedede}

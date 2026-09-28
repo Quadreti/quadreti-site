@@ -33,9 +33,10 @@
       salonMur: { actif: true, carreaux: [3, 3], image: '/img/mur-demo-couple.webp', cadrageY: .5, /* 29/09 : couple fictif (IA) en image cible */
         modes: ['pixel', 'photo', 'mosaique'], pasMode: 4200, /* démo fixe : croissance dans le 1er mode, puis les suivants */
         souvenirs: [{ src: '/img/mur-demo-souvenirs.webp?v=3', cote: 64, colonnes: 12, nombre: 174 }], /* planches de petites photos pour la Mosaïque (ajouter des planches ici) */
-        mosaique: { teinte: .78, voile: .28, division: 3 }, /* division : souvenirs par tesselle en largeur et en hauteur (1, 2 ou 3) */ /* double lecture : part de la couleur du couple posée sur chaque souvenir (teinte), puis voile pour la luminosité */ croissance: [[1, 1, 'collage'], [2, 2, 'photo'], [3, 3, 'mosaique']], pasCroissance: 4200, /* 29/09 : une taille, un usage — [colonnes, rangées, contenu] */
+        mosaique: { teinte: .78, voile: .28, division: 3 },
+        loupe: { image: '/img/loupe-main.webp?v=1', l: 870, h: 596, verre: [18.6, 15.6, 252, 238.8], sortieBas: 739.8, bras: true, vitesse: 1.6, rangees: [.32, .5, .68], reprise: 4000, verrePx: 180, tesselle: .5, fondMur: '#1B2731' }, /* 29/09 : la loupe du fondateur, tenue par une main ; vitesse = tesselles par seconde du balayage, rangees = hauteurs balayées (part du mur), reprise = ms avant qu elle reprenne après la souris ; verre = la découpe dans l image (px) ; verrePx = largeur du verre à l écran (au moins) ; tesselle = part du verre occupée par la tesselle visée ; bras : le bras sort par le bord droit de l écran, jamais coupé dans le bandeau (sortieBas = où il touche le bas de l image) ; loupe sans main : '/img/loupe-bois.webp?v=2', l 822, h 595, verre [24.6, 28.2, 391.2, 363] */ /* division : souvenirs par tesselle en largeur et en hauteur (1, 2 ou 3) */ /* double lecture : part de la couleur du couple posée sur chaque souvenir (teinte), puis voile pour la luminosité */ croissance: [[1, 1, 'collage'], [2, 2, 'photo'], [3, 3, 'mosaique']], pasCroissance: 4200, /* 29/09 : une taille, un usage — [colonnes, rangées, contenu] */
         collage: { mot: 'NOUS', fonds: ['#D96C2F', '#E07A3C', '#E8925A', '#F0AC7C', '#F6C6A1', '#FADCC4'], fondFleche: '#FADCC4', /* 29/09, fondateur : « pas navy, des teintes d oranges » -- fonds des cases d icônes, du orange de marque au pêche clair */ icones: { planche: '/img/mur-demo-icones.webp?v=1', cote: 96, colonnes: 12, fleche: 2, coeur: 36, coeurs: [53, 90], /* 29/09, fondateur : « les cœurs, pas 3 fois les mêmes » -- deux cœurs différents autour du mot, aucun doublon dans la sélection */
-          choix: [38, 1, 41, 12, 39, 20, 44, 26, 46, 18, 47, 13, 48, 7, 51, 25, 57, 16, 59, 32, 62, 6, 63, 19, 40, 0, 54, 17, 56, 29, 37, 3] } }, /* icônes du fondateur (3 planches, détourées) : flèche, cœur, et la sélection d amour et de voyage posée entre les souvenirs */ /* 1 carreau : le mot (7 lettres au plus, sans accent) ; icones : { coeur: '/img/…', fleche: '/img/…' } (fondateur, à venir) — vide = icônes provisoires dessinées */ resolution: 2, /* résolution par tesselle (comme le Designer) : chaque tesselle imprimée porte r x r couleurs ; 1 = une couleur unie */ /* 28/09 soir, fondateur : l image remplit tout le mur, recalculée au nombre de tesselles ; à l arrivée le mur grandit (croissance), puis la tesselle qui bouge prend le relais */ rythme: 2000, canapeCm: 220, auDessusCm: 25, zoom: 1,
+          choix: [38, 1, 41, 12, 39, 20, 44, 26, 46, 18, 47, 13, 48, 7, 51, 25, 57, 16, 59, 32, 62, 6, 63, 19, 40, 0, 54, 17, 56, 29, 37, 3] } }, /* icônes du fondateur (3 planches, détourées) : flèche, cœur, et la sélection d amour et de voyage posée entre les souvenirs */ /* 1 carreau : le mot (7 lettres au plus, sans accent) ; icones : { coeur: '/img/…', fleche: '/img/…' } (fondateur, à venir) — vide = icônes provisoires dessinées */ resolution: 2, /* résolution par tesselle (comme le Designer) : chaque tesselle imprimée porte r x r couleurs ; 1 = une couleur unie */ /* 28/09 soir, fondateur : l image remplit tout le mur, recalculée au nombre de tesselles ; à l arrivée le mur grandit (croissance), puis la tesselle qui bouge prend le relais */ rythme: 2000, canapeCm: 220, auDessusCm: 25, zoom: 1.04, /* 29/09, fondateur : « légèrement zoomé pour agrandir » — à 1536 x 704, 1,04 fait passer la tesselle de 12 à 13 px (mur 255 -> 276 px) ; 1,06 donnerait le même mur avec moins de marge */
         photo: { w: 3000, h: 1700, cx0: 567, cx1: 2508, dossier: 918, pied: 1440 } /* repères remesurés sur salon-navy-lampe-3000.webp (28/09 soir) */ } }, /* 28/09 soir, fondateur : une photo = UNE CASE ou LE CARREAU ENTIER, rien entre les deux */
     diaporama: { actif: true, duree: 2, fondu: .8, tenueFin: 58,
       /* 13/09 fondateur : duree PAR PHOTO, pour les seules photos qui en ont besoin. Les cinq du parcours numerique sont quasi
@@ -673,7 +674,8 @@
       voile.className = 'qb-sm-voile'; invite.className = 'qb-sm-invite'; invite.textContent = 'Le mur est \u00e0 vous.'; echelle.className = 'qb-sm-echelle';
       echelle.textContent = 'Mur de ' + NB + ' carreaux \u00b7 ' + (NC * 18.9).toFixed(1).replace('.', ',') + ' \u00d7 ' + (NR * 18.9).toFixed(1).replace('.', ',') + ' cm';
       var modeLbl = document.createElement('p'); modeLbl.className = 'qb-sm-mode'; modeLbl.setAttribute('aria-live', 'polite');
-      [voile, murS, invite, echelle, modeLbl].forEach(function (e) { root.appendChild(e); });
+      var loupe = document.createElement('div'); loupe.className = 'qb-sm-loupe'; loupe.setAttribute('aria-hidden', 'true'); var LP = S.loupe || {}; loupe.innerHTML = '<canvas></canvas>' + (LP.image ? '<img alt="" src="' + LP.image + '">' : '') + '<span class="qb-sm-loupe-lib"></span>';
+      [voile, murS, invite, echelle, modeLbl, loupe].forEach(function (e) { root.appendChild(e); });
       root.classList.add('qb-sm', 'qb-sm-repos');
       /* 28/09 soir, fondateur : le bouton fauteuil quitte le rail ; à sa place, « Exposez », cliquable, à cheval au milieu du bord bas du cadre (comme App démo en haut) */
       btnSalon.hidden = true; btnSalon.style.display = 'none'; /* le style du rail bat l attribut hidden */ var cadreSM = mur.querySelector('.qb-vif-cadre'), btnExp = document.createElement('button'); btnExp.type = 'button'; btnExp.className = 'qb-sm-exposer'; btnExp.textContent = 'Exposez'; btnExp.title = 'Remettre le carreau au mur du salon'; if (cadreSM) cadreSM.appendChild(btnExp);
@@ -700,7 +702,7 @@
       function fondSous(sous) { var R = Math.round(Math.sqrt(sous.length)), t = (100 / R) + '%'; return sous.map(function (h, q) { var x = q % R, y = Math.floor(q / R); return 'linear-gradient(' + h + ',' + h + ') ' + (R > 1 ? x * 100 / (R - 1) : 0) + '% ' + (R > 1 ? y * 100 / (R - 1) : 0) + '% / ' + t + ' ' + t + ' no-repeat'; }).join(','); }
       /* LES MODES (29/09) : Pixel = initEtats (aplats) ; Photo et Mosaïque = une image du mur entier (TP px par tesselle), découpée carreau par
          carreau et posée comme une photo 7 x 7 sur chaque carreau — la composition et « Exposez » la gèrent comme une photo déposée. */
-      var MODE = (S.croissance && S.croissance[0] && S.croissance[0][2]) || (S.modes && S.modes[0]) || 'pixel', TUILES = null, idMode = 50000, NOMS = { pixel: 'Pixel', photo: 'Photo', mosaique: 'Mosa\u00efque', collage: 'Collage' }, DESCR = { pixel: 'pixel couleur', photo: 'une photo en grand', mosaique: 'mosa\u00efque de souvenirs', collage: 'photo-collage' }, ICONES = {}, TP = 48;
+      var MODE = (S.croissance && S.croissance[0] && S.croissance[0][2]) || (S.modes && S.modes[0]) || 'pixel', TUILES = null, LOUPE = null, idMode = 50000, NOMS = { pixel: 'Pixel', photo: 'Photo', mosaique: 'Mosa\u00efque', collage: 'Collage' }, DESCR = { pixel: 'pixel couleur', photo: 'une photo en grand', mosaique: 'mosa\u00efque de souvenirs', collage: 'photo-collage' }, ICONES = {}, TP = 48;
       function chargerSouvenirs(fin) { var lots = S.souvenirs || [], reste = lots.length, res = []; if (!reste) { fin(); return; }
         lots.forEach(function (L) { var im2 = new Image(); im2.onload = function () { var p = document.createElement('canvas'); p.width = p.height = 6; var pg = p.getContext('2d');
             for (var k = 0; k < L.nombre; k++) { var sx = (k % L.colonnes) * L.cote, sy = Math.floor(k / L.colonnes) * L.cote; pg.clearRect(0, 0, 6, 6); pg.drawImage(im2, sx, sy, L.cote, L.cote, 0, 0, 6, 6); var d = pg.getImageData(0, 0, 6, 6).data, r = 0, g = 0, b = 0;
@@ -745,14 +747,82 @@
           var T = TUILES[k2], px = x * ps, py = y * ps; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(T.img, T.sx, T.sy, T.s, T.s, px, py, ps, ps);
           g.globalCompositeOperation = 'color'; g.globalAlpha = M.teinte == null ? .78 : M.teinte; g.fillStyle = cible; g.fillRect(px, py, ps, ps);
           g.globalCompositeOperation = 'source-over'; g.globalAlpha = M.voile == null ? .28 : M.voile; g.fillRect(px, py, ps, ps); }
-        g.globalAlpha = 1; return cv; }
+        g.globalAlpha = 1; LOUPE = { choix: choix, cibles: cibles, GW: GW, D: D }; stL = null; return cv; }
       function etatsDepuisImage(cv) { var C = cv.width / NC; /* taille d un carreau dans l image, quelle que soit la finesse */ for (var n2 = 0; n2 < NB; n2++) { var c0 = n2 % NC, r0 = Math.floor(n2 / NC), q = document.createElement('canvas'); q.width = q.height = C;
           q.getContext('2d').drawImage(cv, c0 * C, r0 * C, C, C, 0, 0, C, C); var id = idMode++, src = q.toDataURL('image/webp', .86), cs2 = [];
           for (var k = 0; k < N * N; k++) cs2.push({ photo: { id: id, r: Math.floor(k / N), c: k % N } }); etats[n2] = { cases: cs2, photos: [{ id: id, src: src, r0: 0, c0: 0, n: N }] }; } }
-      function appliquerMode(mode, vague) { MODE = mode; var m = mode; if (m !== 'pixel' && m !== 'collage' && (!IMG || (m === 'mosaique' && !TUILES))) m = 'pixel';
-        if (m === 'pixel') initEtats(); else etatsDepuisImage(imageMode(m)); calage(); modeLbl.textContent = NB + ' carreau' + (NB > 1 ? 'x' : '') + ' \u00b7 ' + (DESCR[m] || NOMS[m]); if (typeof libMode === 'function' && btnMode) libMode();
+      function appliquerMode(mode, vague) { MODE = mode; var m = mode; LOUPE = null; cacherLoupe(); arreterDemo(); try { if (m !== 'pixel' && m !== 'collage' && (!IMG || (m === 'mosaique' && !TUILES))) m = 'pixel';
+        if (m === 'pixel') initEtats(); else etatsDepuisImage(imageMode(m)); } finally { if (ctrlL) ctrlL.classList.toggle('qb-sm-lctrl-on', !!LOUPE); } calage(); modeLbl.textContent = NB + ' carreau' + (NB > 1 ? 'x' : '') + ' \u00b7 ' + (DESCR[m] || NOMS[m]); placerCtrl(); if (typeof libMode === 'function' && btnMode) libMode();
         if (vague) { carr.forEach(function (d) { Array.prototype.forEach.call(d.children, function (i) { i.classList.remove('qb-sm-pose'); void i.offsetWidth; i.classList.add('qb-sm-pose'); }); });
           setTimeout(function () { murS.querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); }, N * N * 22 + 480); } }
+      /* LA LOUPE (29/09, fondateur) : sur la mosaïque, survoler une tesselle la montre en grand, redessinée depuis les souvenirs eux-mêmes (pas un
+         agrandissement du mur) : les D x D souvenirs de la tesselle, avec la même teinte ; un carreau retouché n a plus de loupe. */
+      var viseur = document.createElement('b'); viseur.className = 'qb-sm-viseur'; viseur.setAttribute('aria-hidden', 'true'); murS.appendChild(viseur);
+      function cacherLoupe() { loupe.classList.remove('qb-sm-loupe-on'); viseur.classList.remove('qb-sm-viseur-on'); }
+      /* une tesselle du mur (X, Y en tesselles), rendue une fois à la taille tp (px réels) puis gardée : ses D x D souvenirs, teintés comme sur le mur */
+      function rendreTesselle(X, Y, tp) { var cle = X + ',' + Y + ',' + tp, C = LOUPE.cache || (LOUPE.cache = {}); if (C[cle]) return C[cle];
+        var cv = document.createElement('canvas'); cv.width = cv.height = tp; var g = cv.getContext('2d'), Dv = LOUPE.D, M = S.mosaique || {}, u = tp / Dv; g.imageSmoothingQuality = 'high';
+        for (var sy = 0; sy < Dv; sy++) for (var sx = 0; sx < Dv; sx++) { var q = (Y * Dv + sy) * LOUPE.GW + X * Dv + sx, T = TUILES[LOUPE.choix[q]], cible = LOUPE.cibles[q], px = sx * u, py = sy * u; if (!T) continue;
+          g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(T.img, T.sx, T.sy, T.s, T.s, px, py, u, u);
+          g.globalCompositeOperation = 'color'; g.globalAlpha = M.teinte == null ? .78 : M.teinte; g.fillStyle = cible; g.fillRect(px, py, u, u);
+          g.globalCompositeOperation = 'source-over'; g.globalAlpha = M.voile == null ? .28 : M.voile; g.fillRect(px, py, u, u); }
+        return (C[cle] = cv); }
+      /* la loupe regarde le point (fx, fy) du mur, en tesselles, à virgule : le verre se pose à côté du mur à cette hauteur, le viseur sur le mur */
+      function regarder(fx, fy) { if (!LOUPE || !TUILES || ouvert !== null || enCroissance) { cacherLoupe(); return; }
+        var W7 = N * NC, H7 = N * NR, V = LP.verre || [0, 0, 200, 200], ech = (LP.verrePx || 180) / (V[2] - V[0]), PAS = 7 * G.pp + G.j, tw = G.pp - G.j;
+        function surMur(a) { var c = Math.floor(a / N); return G.j + c * PAS + (a - c * N) * G.pp; } /* position (px) d un point du mur, depuis le coin de murS */
+        var rr = root.getBoundingClientRect(), mw = murS.getBoundingClientRect(), ec = 22, miroir = false, cyT = mw.top - rr.top + surMur(fy) - G.j / 2;
+        var gx = mw.right - rr.left + ec, tete = document.querySelector('.qz-header'), haut = tete ? tete.getBoundingClientRect().bottom - rr.top + 8 : 8;
+        if (LP.bras) { var hv = (V[3] - V[1]) * ech, gy0 = Math.max(haut, cyT - hv / 2), eX = (rr.width + 2 - gx) / ((LP.sortieBas || LP.l) - V[0]), eY = (rr.height + 2 - gy0) / (LP.h - V[1]); ech = Math.min(ech * 1.6, Math.max(ech, Math.min(eX, eY))); }
+        var L = Math.round((LP.l || 400) * ech), H = Math.round((LP.h || 300) * ech), vx = V[0] * ech, vy = V[1] * ech, vw = (V[2] - V[0]) * ech, vh = (V[3] - V[1]) * ech;
+        if (!LP.bras && gx - vx + L > rr.width - 8) { miroir = true; gx = mw.left - rr.left - ec - vw; }
+        var gy = LP.bras ? Math.max(haut, cyT - vh / 2) : Math.max(haut, Math.min(rr.height - vh - 40, cyT - vh / 2)), vxE = miroir ? L - vx - vw : vx;
+        loupe.style.width = L + 'px'; loupe.style.height = H + 'px'; loupe.style.left = Math.round(gx - vxE) + 'px'; loupe.style.top = Math.round(gy - vy) + 'px'; loupe.classList.toggle('qb-sm-loupe-miroir', miroir);
+        /* le viseur : un carré de la taille d une tesselle, centré sur le point regardé */
+        viseur.style.width = viseur.style.height = (tw + 2) + 'px'; viseur.style.left = (surMur(fx) - tw / 2) + 'px'; viseur.style.top = (surMur(fy) - tw / 2) + 'px'; viseur.classList.add('qb-sm-viseur-on');
+        /* le verre : le mur grossi autour du point, avec ses joints (1 : 26 de la tesselle, double entre deux carreaux) */
+        var cv = loupe.firstChild, dpr = Math.min(2, window.devicePixelRatio || 1), m = 4, cw = vw + 2 * m, ch = vh + 2 * m, W2 = Math.round(cw * dpr), H2 = Math.round(ch * dpr);
+        cv.style.left = (vxE - m) + 'px'; cv.style.top = (vy - m) + 'px'; cv.style.width = cw + 'px'; cv.style.height = ch + 'px'; if (cv.width !== W2 || cv.height !== H2) { cv.width = W2; cv.height = H2; }
+        var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, cw, ch); g.save(); g.beginPath(); g.ellipse(cw / 2, ch / 2, cw / 2, ch / 2, 0, 0, Math.PI * 2); g.clip();
+        g.fillStyle = LP.fondMur || '#1B2731'; g.fillRect(0, 0, cw, ch);
+        var t = vw * (LP.tesselle || .5), jt = t / 26, P = t + jt, tp = Math.round(t * dpr);
+        function dansVerre(a) { return a * P + Math.floor(a / N) * jt; }
+        var cx = cw / 2 - dansVerre(fx), cy = ch / 2 - dansVerre(fy), X0 = Math.floor(fx), Y0 = Math.floor(fy);
+        for (var YY = Y0 - 3; YY <= Y0 + 3; YY++) for (var XX = X0 - 3; XX <= X0 + 3; XX++) { if (XX < 0 || YY < 0 || XX >= W7 || YY >= H7) continue; if (modifies[Math.floor(YY / N) * NC + Math.floor(XX / N)]) continue;
+          g.drawImage(rendreTesselle(XX, YY, tp), cx + dansVerre(XX), cy + dansVerre(YY), t, t); }
+        var rf = g.createRadialGradient(cw * .32, ch * .26, 0, cw * .32, ch * .26, cw * .55); rf.addColorStop(0, 'rgba(255,255,255,.22)'); rf.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rf; g.fillRect(0, 0, cw, ch); g.restore();
+        var lib = loupe.lastChild; lib.textContent = '1 tesselle \u00b7 ' + (LOUPE.D * LOUPE.D) + ' souvenirs'; lib.style.left = (vxE + vw / 2) + 'px'; lib.style.top = (vy + vh + 12) + 'px';
+        loupe.classList.add('qb-sm-loupe-on'); }
+      function montrerLoupe(n, k) { if (modifies[n]) { cacherLoupe(); return; } regarder((n % NC) * N + k % N + .5, Math.floor(n / NC) * N + Math.floor(k / N) + .5); }
+      function tesselleSous(e) { var i = e.target; if (!i || i.tagName !== 'I') return null; var d = i.parentNode, n = carr.indexOf(d); if (n < 0) return null; return { n: n, k: Array.prototype.indexOf.call(d.children, i) }; }
+      murS.addEventListener('mousemove', function (e) { if (etatL === 'fin') return; arreterDemo(); var t = tesselleSous(e); if (t) montrerLoupe(t.n, t.k); else cacherLoupe(); });
+      murS.addEventListener('mouseleave', function () { if (etatL === 'pause' && stL) { regarder(stL.fx, stL.fy); return; } cacherLoupe(); relancerDemo(LP.reprise || 4000); });
+      /* LE BALAYAGE : de gauche à droite sur une rangée, puis retour sur la suivante, en continu, tant que rien d autre ne se passe */
+      var tDemo = null, rafL = 0, etatL = 'lecture', stL = null, ctrlL = null, geoL = null;
+      function placerCtrl() { if (!ctrlL || !geoL) return; var lbw = modeLbl.offsetWidth || 0; ctrlL.style.right = Math.round(geoL.W - (geoL.cx - lbw / 2 - 10)) + 'px'; ctrlL.style.top = Math.round(geoL.y + (modeLbl.offsetHeight || 11) / 2) + 'px'; } /* à gauche de l étiquette, 10 px avant, centrée sur sa ligne ; replacée quand le texte change */
+      function arreterDemo() { clearTimeout(tDemo); tDemo = null; cancelAnimationFrame(rafL); rafL = 0; }
+      function relancerDemo(delai) { arreterDemo(); if (etatL === 'lecture') tDemo = setTimeout(demoLoupe, delai || 0); }
+      function demoLoupe() { arreterDemo(); if (!LOUPE || ouvert !== null || enCroissance || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+        var W7 = N * NC, H7 = N * NR, xa = .1 * W7, xb = .9 * W7, R = (LP.rangees && LP.rangees.length ? LP.rangees : [.5]).map(function (v) { return v * H7; }), v = LP.vitesse || 1.6;
+        var st = stL || (stL = { fx: xa, fy: R[0], r: 0, sens: 1, t: 0 }); st.t = 0;
+        function image(now) { if (ouvert !== null || !LOUPE || enCroissance) { rafL = 0; cacherLoupe(); return; }
+          var dt = st.t ? Math.min(.1, (now - st.t) / 1000) : 0; st.t = now; st.fx += st.sens * v * dt;
+          if (st.fx > xb || st.fx < xa) { st.fx = Math.max(xa, Math.min(xb, st.fx)); st.sens = -st.sens; st.r = (st.r + 1) % R.length; }
+          st.fy += (R[st.r] - st.fy) * Math.min(1, dt * 2.5); regarder(st.fx, st.fy); rafL = requestAnimationFrame(image); }
+        rafL = requestAnimationFrame(image); }
+      /* LA COMMANDE DE LA LOUPE : une icône loupe discrète ; ouverte, Lecture / Pause / Fin (icônes lucide, trait currentColor) */
+      (function () { var ic = function (d) { return '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+        ctrlL = document.createElement('div'); ctrlL.className = 'qb-sm-lctrl'; ctrlL.setAttribute('role', 'group'); ctrlL.setAttribute('aria-label', 'Loupe');
+        ctrlL.innerHTML = '<span class="qb-sm-lctrl-tir"><button type="button" data-l="lecture" aria-label="Lecture : la loupe balaie le mur" title="Lecture">' + ic('<polygon points="6 3 20 12 6 21 6 3"/>') + '</button>' +
+          '<button type="button" data-l="pause" aria-label="Pause : la loupe s arr\u00eate sur place" title="Pause">' + ic('<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>') + '</button>' +
+          '<button type="button" data-l="fin" aria-label="Fin : ranger la loupe" title="Fin">' + ic('<rect x="5" y="5" width="14" height="14" rx="1"/>') + '</button></span>' +
+          '<button type="button" class="qb-sm-lctrl-loupe" aria-expanded="false" aria-label="Commandes de la loupe" title="Loupe">' + ic('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>') + '</button>';
+        root.appendChild(ctrlL); var btnL = ctrlL.querySelector('.qb-sm-lctrl-loupe');
+        function marquer() { ctrlL.querySelectorAll('[data-l]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-l') === etatL ? 'true' : 'false'); }); ctrlL.setAttribute('data-etat', etatL); }
+        btnL.addEventListener('click', function () { var o = !ctrlL.classList.contains('qb-sm-lctrl-ouvert'); ctrlL.classList.toggle('qb-sm-lctrl-ouvert', o); btnL.setAttribute('aria-expanded', o ? 'true' : 'false'); });
+        ctrlL.querySelectorAll('[data-l]').forEach(function (b) { b.addEventListener('click', function () { etatL = b.getAttribute('data-l'); marquer();
+          if (etatL === 'lecture') demoLoupe(); else if (etatL === 'pause') { arreterDemo(); if (stL) regarder(stL.fx, stL.fy); } else { arreterDemo(); cacherLoupe(); } }); });
+        marquer(); })();
       function initEtats() { for (var n = 0; n < NB; n++) { var c0 = n % NC, r0 = Math.floor(n / NC), cs2 = []; for (var k = 0; k < N * N; k++) cs2.push(origine(c0 * N + k % N, r0 * N + Math.floor(k / N))); etats[n] = { cases: cs2, photos: [] }; } }
       /* une tesselle du mur : sa couleur, ou son morceau de photo (même découpe que la grille démo, au pas du mur) */
       function habiller(i, x, ph) { var w = G.pp - G.j; if (x.photo && ph) { var px = ph.n * w + (ph.n - 1) * G.j; i.style.backgroundImage = 'url("' + ph.src + '")'; i.style.backgroundSize = px + 'px ' + px + 'px'; i.style.backgroundPosition = (-(x.photo.c * G.pp)) + 'px ' + (-(x.photo.r * G.pp)) + 'px'; i.style.backgroundColor = ''; }
@@ -768,10 +838,11 @@
         /* 28/09 soir, fondateur : « centre verticalement le tableau et le texte » -- le bloc (phrase « Le mur est à vous. », 14 px, le mur) est centré
            entre le bas de la barre du haut et le haut du dossier du canapé (repère de la photo). Remplace l accrochage à 25 cm au-dessus du dossier. */
         var tete = document.querySelector('.qz-header'), hautZone = tete ? Math.max(0, tete.getBoundingClientRect().bottom - rr.top) : 0, basZone = oy + PH.dossier * sc, ih = invite.offsetHeight || 20;
-        var X0 = Math.round(bx - LW / 2), Y0 = Math.round((hautZone + basZone) / 2 - LH / 2 + (14 + ih) / 2); G = { pp: pp, j: j };
+        var lbH = (modeLbl.offsetHeight || 11) + 12, X0 = Math.round(bx - LW / 2), Y0 = Math.round((hautZone + basZone) / 2 - LH / 2 + (14 + ih - lbH) / 2); /* 29/09 : le bloc entier (phrase, mur, étiquette du dessous) centré, marges égales */ G = { pp: pp, j: j };
         murS.style.left = (X0 - j) + 'px'; murS.style.top = (Y0 - j) + 'px'; murS.style.width = (LW + 2 * j) + 'px'; murS.style.height = (LH + 2 * j) + 'px';
         carr.forEach(function (d, n) { d.style.left = (j + (n % NC) * PAS) + 'px'; d.style.top = (j + Math.floor(n / NC) * PAS) + 'px'; d.style.width = d.style.height = TT + 'px'; d.style.setProperty('--w', (pp - j) + 'px'); d.style.setProperty('--j', j + 'px'); });
         invite.style.left = echelle.style.left = modeLbl.style.left = (X0 + LW / 2) + 'px'; invite.style.top = Y0 + 'px'; echelle.style.top = modeLbl.style.top = (Y0 + LH + j) + 'px';
+        geoL = { W: rr.width, cx: X0 + LW / 2, y: Y0 + LH + j + 12 }; placerCtrl();
         for (var n = 0; n < NB; n++) if (etats[n]) peindreCarreau(n); }
       /* la tesselle qui bouge : toutes les « rythme » ms, sur un autre carreau ; la survoler ouvre CE carreau */
       function bouger() { if (ouvert !== null) return; var libres = []; for (var n = 0; n < NB; n++) if (n !== actif || NB === 1) libres.push(n); actif = libres[Math.floor(Math.random() * libres.length)];
@@ -787,7 +858,7 @@
       function vol(depuis, duree) { var a = depuis.getBoundingClientRect(), b = grille.getBoundingClientRect(), k = a.width / b.width;
         grille.style.transition = 'none'; grille.style.transformOrigin = '0 0'; grille.style.transform = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + k + ')'; void grille.offsetWidth;
         grille.style.transition = 'transform ' + duree + 'ms cubic-bezier(.2,.8,.2,1)'; grille.style.transform = 'none'; setTimeout(function () { grille.style.transition = ''; }, duree + 30); }
-      function ouvrir(n) { if (ouvert !== null || enCroissance) return; clearTimeout(tSurvol); ouvert = n; instantane = JSON.stringify(etats[n]); murS.querySelectorAll('.qb-sm-bouge').forEach(function (x) { x.classList.remove('qb-sm-bouge'); });
+      function ouvrir(n) { if (ouvert !== null || enCroissance) return; clearTimeout(tSurvol); arreterDemo(); cacherLoupe(); ouvert = n; instantane = JSON.stringify(etats[n]); murS.querySelectorAll('.qb-sm-bouge').forEach(function (x) { x.classList.remove('qb-sm-bouge'); });
         charger(etats[n]); root.classList.remove('qb-sm-repos'); root.classList.add('qb-sm-compose'); carr[n].classList.add('qb-sm-parti'); centrerOutil();
         etat.textContent = 'carreau ' + (n + 1) + ' : cliquez une case, d\u00e9posez une photo'; vol(carr[n], 600);
         setTimeout(function () { var b = palette.querySelector('.qb-vif-teinte'); if (b) b.focus({ preventScroll: true }); }, 650); }
@@ -795,7 +866,7 @@
         grille.style.transformOrigin = '0 0'; grille.style.transition = 'transform 420ms cubic-bezier(.4,0,.2,1)'; grille.style.transform = 'translate(' + (b.left - a.left) + 'px,' + (b.top - a.top) + 'px) scale(' + k + ')';
         setTimeout(function () { root.classList.remove('qb-sm-compose'); root.classList.add('qb-sm-repos'); grille.style.transition = ''; grille.style.transform = ''; mur.style.transform = ''; peindreCarreau(n); carr[n].classList.remove('qb-sm-parti');
           Array.prototype.forEach.call(carr[n].children, function (i) { i.classList.remove('qb-sm-pose'); void i.offsetWidth; i.classList.add('qb-sm-pose'); });
-          setTimeout(function () { carr[n].querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); ouvert = null; carr[n].focus({ preventScroll: true }); lancerBouge(); }, N * N * 22 + 480); }, 430); }
+          setTimeout(function () { carr[n].querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); ouvert = null; carr[n].focus({ preventScroll: true }); lancerBouge(); relancerDemo(LP.reprise || 4000); }, N * N * 22 + 480); }, 430); }
       function clavier(e) { if (e.key === 'Escape' && ouvert !== null) auMur(); }
       /* 28/09 soir, fondateur : « l outil étant masqué, ne pourrait-on pas plutôt le centrer dans le bandeau ? » -- à l ouverture, le mur démo (la grille
          et sa boîte à outils) est déplacé pour que la GRILLE soit au centre du bandeau : au milieu en largeur, et en hauteur entre la barre du haut et
@@ -816,7 +887,7 @@
       libMode(); btnMode.addEventListener('click', changerMode); var railSM = mur.querySelector('.qb-vif-rail'), designerSM = railSM && railSM.querySelector('.qb-vif-designer'); if (railSM) railSM.insertBefore(btnMode, designerSM || null);
       voile.addEventListener('click', auMur); btnExp.addEventListener('click', auMur); document.addEventListener('keydown', clavier); window.addEventListener('resize', calage);
       var stopAvant = mur._vivantStop; mur._vivantStop = function () { stopAvant(); clearInterval(tBouge); clearTimeout(tSurvol); document.removeEventListener('keydown', clavier); window.removeEventListener('resize', calage);
-        [voile, murS, invite, echelle, modeLbl, btnExp, btnMode].forEach(function (e) { e.remove(); }); btnSalon.hidden = false; btnSalon.style.display = ''; root.classList.remove('qb-sm', 'qb-sm-repos', 'qb-sm-compose'); root.style.backgroundSize = ''; root.style.backgroundPosition = ''; grille.style.transform = ''; mur.style.transform = ''; };
+        arreterDemo(); [voile, murS, invite, echelle, modeLbl, btnExp, btnMode, loupe, ctrlL].forEach(function (e) { e.remove(); }); btnSalon.hidden = false; btnSalon.style.display = ''; root.classList.remove('qb-sm', 'qb-sm-repos', 'qb-sm-compose'); root.style.backgroundSize = ''; root.style.backgroundPosition = ''; grille.style.transform = ''; mur.style.transform = ''; };
       /* l image : chargée une fois ; en attendant (ou si elle manque), le mur prend la teinte navy */
       initEtats(); calage();
       var im = new Image(); im.onload = function () { IMG = im; if (ouvert === null && !enCroissance) { echantillonner(); appliquerMode(MODE); } }; im.src = S.image || S.portrait;
@@ -834,7 +905,7 @@
         /* la démo : croissance dans le premier mode, puis chaque mode suivant, une vague de tesselles à chaque changement ; le mur reste sur le dernier */
         enCroissance = true; MODE = modes[0]; var i = 0, jm = 1;
         (function suite() { etape(etapes[i][0], etapes[i][1], etapes[i][2]); i++; if (i < etapes.length) { setTimeout(suite, S.pasCroissance || 2600); return; }
-          if (parTaille) { setTimeout(function () { enCroissance = false; lancerBouge(); }, 1200); return; }
+          if (parTaille) { setTimeout(function () { enCroissance = false; lancerBouge(); relancerDemo(900); }, 1200); return; }
           (function modeSuivant() { setTimeout(function () { if (jm < modes.length) { appliquerMode(modes[jm++], true); modeSuivant(); } else { enCroissance = false; lancerBouge(); } }, jm === 1 ? (S.pasCroissance || 2600) : (S.pasMode || 4200)); })(); })(); }
       diapo = { demarrer: function (delai) { setTimeout(croissance, Math.max(0, delai) * 1000); } };
       if (lanceDeja) { var dF = etapes[etapes.length - 1]; MODE = dF[2] || (S.modes && S.modes[S.modes.length - 1]) || 'pixel'; etape(dF[0], dF[1], dF[2]); lancerBouge(); } /* reconstruction (bascule bureau/mobile) : directement le mur final */
