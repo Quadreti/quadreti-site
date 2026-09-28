@@ -47,5 +47,17 @@
   window.addEventListener('resize', replanifier);
   /* la page grandit après coup (bandeau, panneau, images) : on suit la hauteur du document */
   var h0 = 0; setInterval(function () { var h = document.documentElement.scrollHeight; if (Math.abs(h - h0) > 40) { h0 = h; replanifier(); } }, 1500);
+  /* rebond au passage de la souris (test 28/09) : la case sous le pointeur, par le calcul, pas par le survol (la couche est sous le contenu) */
+  var derniere = null;
+  document.addEventListener('mousemove', function (e) {
+    var cas = mm(parseFloat(lire('--qzq-case')) || 25);
+    var x = Math.floor(e.clientX / cas), y = Math.floor((e.clientY + window.scrollY) / cas), cle = x + ',' + y;
+    if (cle === derniere) return; derniere = cle;
+    var cols = Math.ceil(document.documentElement.clientWidth / cas);
+    var i = couche.children[y * cols + x];
+    if (!i || i.className.indexOf('plein') < 0) return;
+    i.classList.remove('rebond'); void i.offsetWidth; i.classList.add('rebond');
+    i.addEventListener('animationend', function fin() { i.classList.remove('rebond'); i.removeEventListener('animationend', fin); });
+  }, { passive: true });
   window.qzQuadrillageReposer = poser;
 })();
