@@ -12,8 +12,8 @@
   --qzt-encre:#10181f;
   --qzt-fond-2:#dedede;
   --qzt-encre-2:#1e2b35;
-  --qzt-nervure:var(--qzq-ligne,#000); /* la couleur de la nervure du quadrillage ; PAS var(--qzq-nervure) : ce jeton-la est une EPAISSEUR, et un box-shadow qui le recoit devient invalide en entier (mesure 28/09 : ombre = none) */
-  --qzt-relief:.55;
+  --qzt-nervure:var(--qzq-ligne,#000); /* 28/09 soir, fondateur : la nervure noire est RETIREE des boutons (« ca porte a confusion avec la demo ») ; jeton garde pour memoire. PAS var(--qzq-nervure) : ce jeton-la est une EPAISSEUR, et un box-shadow qui le recoit devient invalide en entier (mesure 28/09 : ombre = none) */
+  --qzt-relief:.28;                  /* 28/09 soir, fondateur : « trop de volume » — biseau divise par deux, ombre portee allegee */
   --qzt-h:44px;                       /* cible tactile minimale */
 }
 html.qz-tesselles-boutons .cta,
@@ -28,8 +28,7 @@ html.qz-tesselles-boutons .qb.qb-dispo-droite .qb-ctas .cta{
   /* le biseau des cases pleines (fond-quadrillage.css l.47) + la nervure autour + l ombre portée */
   box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief) * .9)),
              inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief)),
-             0 0 0 0.8mm var(--qzt-nervure),
-             0.35mm 0.5mm 1.2mm rgba(0,0,0,.7)!important;
+             0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;
   transform:none!important;
   transition:background-color .18s ease, box-shadow .12s ease, transform .12s ease!important;
 }
@@ -56,8 +55,7 @@ html.qz-tesselles-boutons .btn-studio:hover, html.qz-tesselles-boutons .btn-stud
   background:var(--qzt-fond-survol)!important; transform:translate(-0.3mm,-0.4mm)!important;
   box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief) * 1.1)),
              inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief)),
-             0 0 0 0.8mm var(--qzt-nervure),
-             1mm 1.2mm 2.2mm rgba(0,0,0,.8)!important;
+             0.5mm 0.7mm 1.4mm rgba(0,0,0,.45)!important;
 }
 html.qz-tesselles-boutons .cta.light:hover, html.qz-tesselles-boutons .cta.light:focus-visible,
 html.qz-tesselles-boutons .qb.qb-dispo-droite .qb-ctas .qb-cta2:hover, html.qz-tesselles-boutons .qb.qb-dispo-droite .qb-ctas .qb-cta2:focus-visible{ background:#ffffff!important; }
@@ -69,7 +67,6 @@ html.qz-tesselles-boutons .cta:active, html.qz-tesselles-boutons .btn-studio:act
   transform:translate(0.2mm,0.3mm)!important; background:var(--qzt-fond)!important;
   box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,calc(var(--qzt-relief) * .6)),
              inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief) * .7)),
-             0 0 0 0.8mm var(--qzt-nervure),
              0 0 0 rgba(0,0,0,0)!important;
 }
 html.qz-tesselles-boutons .cta:focus-visible, html.qz-tesselles-boutons .btn-studio:focus-visible{ outline:2px solid var(--qzt-fond-2); outline-offset:4px; }

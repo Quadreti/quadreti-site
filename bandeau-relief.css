@@ -359,17 +359,17 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
    La tesselle : meme matiere que les cases pleines du fond (biseau haut-gauche clair, bas-droite sombre, nervure), fond navy 2
    (--qb-tess-fond), icone en gris du site (10,09 mesure #dedede sur #1e2f45). Au survol : rebond + reflet ; a l appui : elle s enfonce.
    Le pop-up : un carre gris (#dedede) sur voile, icone, titre, une phrase, un lien s il existe ; fermeture = tesselle orange (encre dessus). */
-.qb-gestes{--qb-tess-fond:#1e2f45;--qb-tess-ico:#dedede;--qb-tess-nervure:#000;--qb-tess-taille:clamp(56px,4.6vw,72px)}
+.qb-gestes{--qb-tess-fond:#1e2f45;--qb-tess-ico:#dedede;--qb-tess-nervure:#000;--qb-tess-taille:44px} /* 28/09 soir, fondateur : « trop gros, plus gros que le CTA » — meme hauteur que les boutons-tesselles (44 px) */
 .qb-geste-tess{position:relative;display:grid;place-items:center;width:var(--qb-tess-taille);height:var(--qb-tess-taille);margin:0 auto;padding:0;border:0;border-radius:0;cursor:pointer;overflow:hidden;
   background:var(--qb-tess-fond);color:var(--qb-tess-ico);
-  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.55),0 0 0 0.8mm var(--qb-tess-nervure),0.35mm 0.5mm 1.2mm rgba(0,0,0,.7);
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.16),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.3),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35);
   transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .12s ease}
-.qb-geste-tess .qb-geste-icone{width:62%;height:62%;color:inherit}
+.qb-geste-tess .qb-geste-icone{width:68%;height:68%;color:inherit}
 .qb-gestes .qb-geste-tess .qb-geste-icone{color:var(--qb-tess-ico)!important;stroke:var(--qb-tess-ico)!important}
 .qb-geste-tess::after{content:'';position:absolute;inset:-10%;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.4) 47%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.1) 55%,transparent 64%);transform:translateX(-130%)}
-.qb-geste-tess:hover,.qb-geste-tess:focus-visible{transform:translate(-0.4mm,-0.5mm) scale(1.05);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.36),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.5),0 0 0 0.8mm var(--qb-tess-nervure),1.2mm 1.4mm 2.2mm rgba(0,0,0,.85)}
+.qb-geste-tess:hover,.qb-geste-tess:focus-visible{transform:translate(-0.4mm,-0.5mm) scale(1.05);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.22),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.3),0.5mm 0.7mm 1.4mm rgba(0,0,0,.45)}
 .qb-geste-tess:hover::after,.qb-geste-tess:focus-visible::after{animation:qzt-reflet .7s cubic-bezier(.4,0,.2,1) forwards}
-.qb-geste-tess:active{transform:translate(0.2mm,0.3mm);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.3),0 0 0 0.8mm var(--qb-tess-nervure)}
+.qb-geste-tess:active{transform:translate(0.2mm,0.3mm);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.3)}
 .qb-geste-tess:focus-visible{outline:2px solid var(--qz-terracotta,#d96c2f);outline-offset:4px}
 @keyframes qzt-reflet{0%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
 .qb-geste-changez .qb-geste-tess{--qb-tess-fond:var(--qz-terracotta,#d96c2f);--qb-tess-ico:#10181f} /* le geste Changez garde son orange : tesselle orange, icone a l encre (5,23) */
@@ -383,11 +383,11 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
 .qb-pop-carre h3{margin:0;font:700 clamp(18px,2vw,22px)/1.1 'Jura',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#1e2b35}
 .qb-pop-carre p{margin:0;font-size:15.5px;line-height:1.5;max-width:30ch;color:#10181f}
 .qb-pop-lien{font:700 12px/1 'Jura',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#10181f;background:var(--qz-terracotta,#d96c2f);text-decoration:none;padding:12px 18px;min-height:44px;display:inline-flex;align-items:center;
-  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.5),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.5),0 0 0 0.8mm #000}
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.28)}
 .qb-pop-lien:hover{background:#df824e}
 .qb-pop-fermer{position:absolute;top:-14px;right:-14px;width:44px;height:44px;border:0;border-radius:0;background:var(--qz-terracotta,#d96c2f);color:#10181f;font:700 26px/1 'Jura',sans-serif;cursor:pointer;
-  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.5),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.5),0 0 0 0.8mm #000,0.35mm 0.5mm 1.2mm rgba(0,0,0,.7)}
-.qb-pop-fermer:hover{background:#df824e}.qb-pop-fermer:active{box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.4),0 0 0 0.8mm #000}
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.28),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)}
+.qb-pop-fermer:hover{background:#df824e}.qb-pop-fermer:active{box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.4)}
 .qb-pop-fermer:focus-visible{outline:2px solid #dedede;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.qb-pop-carre{animation:none}.qb-geste-tess::after{display:none}.qb-geste-tess{transition:none}}
 
@@ -401,7 +401,7 @@ html.qz-barres-claires .qb-defile{background:#dedede!important;color:#1e2b35!imp
 .qb-cam-note{margin:0;font-size:12.5px;line-height:1.45;color:#dedede;text-align:center}
 .qb-cam-boutons{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .qb-cam-prendre,.qb-cam-annuler{font:700 12px/1 'Jura',sans-serif;letter-spacing:.08em;text-transform:uppercase;min-height:44px;padding:0 18px;border:0;border-radius:0;cursor:pointer;
-  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.5),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.5),0 0 0 0.8mm #000}
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.28)}
 .qb-cam-prendre{background:var(--qz-terracotta,#d96c2f);color:#10181f}.qb-cam-prendre:hover{background:#df824e}.qb-cam-prendre[disabled]{opacity:.45;cursor:default}
 .qb-cam-annuler{background:#dedede;color:#1e2b35}.qb-cam-annuler:hover{background:#fff}
 .qb-cam-prendre:focus-visible,.qb-cam-annuler:focus-visible{outline:2px solid #dedede;outline-offset:3px}
@@ -427,10 +427,10 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 .qb-vif-rail .qb-vif-palette{display:grid;grid-template-columns:repeat(3,9px);gap:2px;margin:0;justify-content:center}
 .qb-vif-rail .qb-vif-teinte{width:9px;height:9px}
 .qb-vif-rail .qb-vif-btn{width:32px;height:32px;padding:0;border:0;border-radius:0;display:grid;place-items:center;background:#1e2f45;color:#dedede;cursor:pointer;position:relative;overflow:hidden;
-  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.55),0 0 0 0.8mm #000,0.35mm 0.5mm 1.2mm rgba(0,0,0,.7);transition:transform .15s,background-color .15s}
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.16),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.3),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35);transition:transform .15s,background-color .15s}
 .qb-vif-rail .qb-vif-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .qb-vif-rail .qb-vif-btn:hover,.qb-vif-rail .qb-vif-btn:focus-visible{background:var(--qz-terracotta,#d96c2f);color:#10181f;transform:translate(-0.3mm,-0.4mm)}
-.qb-vif-rail .qb-vif-btn:active{transform:translate(0.2mm,0.3mm);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.3),0 0 0 0.8mm #000}
+.qb-vif-rail .qb-vif-btn:active{transform:translate(0.2mm,0.3mm);box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.4),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.3)}
 .qb-vif-rail .qb-vif-btn:focus-visible{outline:2px solid #dedede;outline-offset:3px}
 .qb-vif-rail .qb-vif-t{font:700 11px/1 'Jura',sans-serif;letter-spacing:.04em}
 .qb-vif-lib{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap} /* libelle pour les lecteurs d ecran, l info-bulle pour la souris */
@@ -438,3 +438,27 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 @media (max-width:900px){.qb.qb-dispo-droite .qb-vif{width:100%}}
 /* 28/09 soir : RAIL sur petit ecran -- sous la grille, en ligne (cette regle doit rester APRES le bloc RAIL : meme specificite, c est l ordre qui tranche ; mesure : grille tombee a 24 px quand elle etait avant) */
 @media (max-width:900px){.qb-vif-cadre{grid-template-columns:1fr;justify-content:stretch}.qb-vif-rail{flex-direction:row;flex-wrap:wrap;justify-content:center;width:auto}.qb-vif-rail .qb-vif-palette{grid-template-columns:repeat(9,9px);align-self:center}}
+/* ===== 28/09 soir : LE SALON EST LE FOND DE LA BANNIERE, derriere le mur interactif (fondateur). Au clic sur l icone canape, le mur
+   s efface et la composition se construit sur le mur du salon, a sa vraie place et a l echelle (position calculee par poserSalon), tesselle
+   par tesselle (49 tuiles, 45 ms d ecart). Ombre portee en bas a droite : lumiere haut-gauche. ===== */
+.qb-en-salon .qb-vif{opacity:0;pointer-events:none;transition:opacity .35s ease}
+.qb-salon-carreau{position:absolute;z-index:2;transform:translate(-50%,-50%);background:#000;pointer-events:none;
+  box-shadow:0.25mm 0.35mm 0.8mm rgba(0,0,0,.6),1.2mm 1.8mm 4mm rgba(0,0,0,.35)}
+.qb-salon-carreau[hidden]{display:none}
+.qb-salon-carreau i{position:absolute;display:block;background-repeat:no-repeat;box-shadow:inset .5px .5px 0 rgba(255,255,255,.28),inset -.5px -.5px 0 rgba(0,0,0,.5);opacity:0;animation:qb-salon-pose .45s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(.35s + var(--i,0) * 45ms)}
+@keyframes qb-salon-pose{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:none;opacity:1}} /* qb-vt-pose ne fixe pas l opacite a 100 % : avec forwards les tuiles retombaient a 0 */
+.qb-vif-rail .qb-vif-btn[aria-pressed="true"]{background:var(--qz-terracotta,#d96c2f);color:#10181f}
+@media (prefers-reduced-motion:reduce){.qb-salon-carreau i{animation:none;opacity:1}.qb-en-salon .qb-vif{transition:none}}
+/* 28/09 soir : la mention « App demo » sur le mur interactif (fondateur) : etiquette-tesselle orange, encre dessus, a cheval sur le coin haut gauche de la grille ; elle s efface avec la grille en mode salon */
+.qb-vif-etiquette{position:absolute;left:calc((100% - 32px - 10px) / 2);top:-12px;transform:translateX(-50%);z-index:3;font:700 10px/1 'Jura',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#10181f;background:var(--qz-terracotta,#d96c2f);padding:7px 9px;pointer-events:none;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.28),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)}
+.qb-en-salon .qb-vif-etiquette{opacity:0;transition:opacity .35s ease}
+@media (max-width:900px){.qb-vif-etiquette{left:50%}} /* petit ecran : le rail est SOUS la grille, le cadre a la largeur de la grille */
+/* 28/09 soir, fondateur : « laisse que l icone comme a l origine » — plus de tesselle sous les icones pedagogiques : l icone seule, a sa taille d origine (36 a 44 px), gris du site (regle de index.html du 18/09), fond transparent, sans biseau ni reflet. Le bouton reste (c est lui qui ouvre le pop-up), invisible. */
+.qb-gestes .qb-geste-tess{width:auto;height:auto;padding:0;background:transparent!important;box-shadow:none!important;overflow:visible}
+.qb-gestes .qb-geste-tess::after{display:none}
+.qb-gestes .qb-geste-tess .qb-geste-icone{width:clamp(36px,3vw,44px);height:clamp(36px,3vw,44px);color:#dedede!important;stroke:#dedede!important}
+.qb-gestes .qb-geste-tess:hover,.qb-gestes .qb-geste-tess:focus-visible{transform:translateY(-2px) scale(1.06);box-shadow:none!important}
+.qb-gestes .qb-geste-tess:focus-visible{outline:2px solid var(--qz-terracotta,#d96c2f);outline-offset:6px}
+/* 28/09 soir, fondateur : « le flechage Changez en orange » — l icone Changez (ses fleches circulaires) prend l orange de son libelle (#d96c2f, 4,23 sur le navy, seuil graphique 3 atteint) ; les trois autres restent grises. */
+.qb-gestes .qb-geste-changez .qb-geste-tess .qb-geste-icone{color:var(--qz-terracotta,#d96c2f)!important;stroke:var(--qz-terracotta,#d96c2f)!important}
+/* 28/09 soir : la photo du salon a EXACTEMENT le rapport du bandeau (2000 x 926, comme les visuels du diaporama) : cover = ajustement pile, decroches compris. */
