@@ -87,7 +87,8 @@
   /* le tracé de l onglet du menu, et son échelle réelle (l emboîtement en dépend) */
   function onglet() { var svg = document.querySelector('.qz-header svg.qz-onglet'), trait = svg && svg.querySelector('.qz-onglet-trait');
     if (!svg || !trait) return null; var vb = (svg.getAttribute('viewBox') || '').split(/\s+/).map(Number); var h = svg.getBoundingClientRect().height;
-    return { d: trait.getAttribute('d'), x0: vb[0], w: vb[2], pxu: h / vb[3] }; }
+    var pxu = (h > 0 && vb[3] > 0) ? h / vb[3] : 98 / 35; /* en-tete pas encore dessine (ecran de mot de passe, chargement) : echelle par defaut de l onglet, 98 px pour 35 unites -- mesure du 28/09 : sinon viewBox « Infinity » */
+    return { d: trait.getAttribute('d'), x0: vb[0] || 18, w: vb[2] || 480, pxu: pxu }; }
   function construire() {
     var W = document.documentElement.clientWidth, full = Math.floor(W / CASE), mobile = W < 700, off = Math.max(0, Math.floor((full - 12) / 2));
     var O = onglet(); if (!O) return;
