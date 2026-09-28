@@ -30,7 +30,7 @@ html body.qz-quadrille{
 /* ⚠ index.html pose déjà « html.qz-accueil body::before » : une couche FIXE navy opaque en z-index -2 (reste de la texture béton du 26/09).
    Elle recouvrirait la grille. Le même pseudo-élément devient ici la lèvre : fond transparent, au-dessus du contenu. */
 html body.qz-quadrille::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:1!important;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9!important; /* 28/09 soir, fondateur : la bande qui défile (z 5), les icônes (6), le liseré de l image (8) et les sections (2) passent SOUS la bordure ; la barre du haut (60) reste au-dessus */
   background:transparent!important;background-image:none!important;
   box-shadow:inset 0 0 0 var(--qzq-levre) color-mix(in srgb, var(--qzq-fond) 80%, #000),
     inset 0.6mm 0.6mm 0 rgba(255,255,255,calc(var(--qzq-prof)*.25)),

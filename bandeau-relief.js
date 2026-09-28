@@ -24,7 +24,19 @@
     /* 28/09, fondateur : LA BANNIERE EST LE MUR. vivant.actif = true remplace le diaporama par un mur 7×7 interactif (maquette
        SITE\DESIGN SYSTEME\mockup-banniere-mur-vivant.html) : au repos il vit tout seul (une case change de teinte, une photo se pose et se
        decoupe), au premier geste il devient celui du visiteur — clic = couleur suivante, photo deposee = decoupee en 2×2 ou 3×3. actif: false = diaporama. */
-    vivant: { actif: true, N: 7, pasCouleur: 900, pasPhoto: 6000, tailles: [1, 7] }, /* 28/09 soir, fondateur : une photo = UNE CASE ou LE CARREAU ENTIER, rien entre les deux */
+    vivant: { actif: true, N: 7, pasCouleur: 900, pasPhoto: 6000, tailles: [1, 7],
+      /* 28/09 soir, fondateur : SALON, MUR DE CARREAUX (bureau seulement ; téléphone : mur démo inchangé). Au repos, un mur de carreaux JOINTIFS
+         au-dessus du canapé, à l échelle, qui porte une image (portrait 21 x 21 cases = mur x9) ; une tesselle se déclipse toutes les « rythme » ms,
+         sur un carreau différent. La survoler, ou cliquer un carreau : CE carreau vient au premier plan, à la place du mur démo, avec les mêmes outils.
+         « Au mur » (le bouton salon) le remet en place, tesselle par tesselle. Joints du produit : 1 mm entre tesselles, 2 mm entre carreaux,
+         dessinés au pixel entier. Repères de la photo mesurés sur salon-navy-3000.webp (3000 x 1700). actif: false = mur démo d avant. */
+      salonMur: { actif: true, carreaux: [3, 3], image: '/img/mur-demo-couple.webp', cadrageY: .5, /* 29/09 : couple fictif (IA) en image cible */
+        modes: ['pixel', 'photo', 'mosaique'], pasMode: 4200, /* démo fixe : croissance dans le 1er mode, puis les suivants */
+        souvenirs: [{ src: '/img/mur-demo-souvenirs.webp?v=3', cote: 64, colonnes: 12, nombre: 174 }], /* planches de petites photos pour la Mosaïque (ajouter des planches ici) */
+        mosaique: { teinte: .78, voile: .28, division: 3 }, /* division : souvenirs par tesselle en largeur et en hauteur (1, 2 ou 3) */ /* double lecture : part de la couleur du couple posée sur chaque souvenir (teinte), puis voile pour la luminosité */ croissance: [[1, 1, 'collage'], [2, 2, 'photo'], [3, 3, 'mosaique']], pasCroissance: 4200, /* 29/09 : une taille, un usage — [colonnes, rangées, contenu] */
+        collage: { mot: 'NOUS', fonds: ['#D96C2F', '#E07A3C', '#E8925A', '#F0AC7C', '#F6C6A1', '#FADCC4'], fondFleche: '#FADCC4', /* 29/09, fondateur : « pas navy, des teintes d oranges » -- fonds des cases d icônes, du orange de marque au pêche clair */ icones: { planche: '/img/mur-demo-icones.webp?v=1', cote: 96, colonnes: 12, fleche: 2, coeur: 36, coeurs: [53, 90], /* 29/09, fondateur : « les cœurs, pas 3 fois les mêmes » -- deux cœurs différents autour du mot, aucun doublon dans la sélection */
+          choix: [38, 1, 41, 12, 39, 20, 44, 26, 46, 18, 47, 13, 48, 7, 51, 25, 57, 16, 59, 32, 62, 6, 63, 19, 40, 0, 54, 17, 56, 29, 37, 3] } }, /* icônes du fondateur (3 planches, détourées) : flèche, cœur, et la sélection d amour et de voyage posée entre les souvenirs */ /* 1 carreau : le mot (7 lettres au plus, sans accent) ; icones : { coeur: '/img/…', fleche: '/img/…' } (fondateur, à venir) — vide = icônes provisoires dessinées */ resolution: 2, /* résolution par tesselle (comme le Designer) : chaque tesselle imprimée porte r x r couleurs ; 1 = une couleur unie */ /* 28/09 soir, fondateur : l image remplit tout le mur, recalculée au nombre de tesselles ; à l arrivée le mur grandit (croissance), puis la tesselle qui bouge prend le relais */ rythme: 2000, canapeCm: 220, auDessusCm: 25, zoom: 1,
+        photo: { w: 3000, h: 1700, cx0: 567, cx1: 2508, dossier: 918, pied: 1440 } /* repères remesurés sur salon-navy-lampe-3000.webp (28/09 soir) */ } }, /* 28/09 soir, fondateur : une photo = UNE CASE ou LE CARREAU ENTIER, rien entre les deux */
     diaporama: { actif: true, duree: 2, fondu: .8, tenueFin: 58,
       /* 13/09 fondateur : duree PAR PHOTO, pour les seules photos qui en ont besoin. Les cinq du parcours numerique sont quasi
          identiques -- meme piece, meme personne, meme bureau ; seul l ecran change, et il est petit dans le cadre. L oeil doit le
@@ -40,7 +52,7 @@
     lum: .28, ombre: .6, grain: .08, relief: 4, txtRelief: 1,
     depart: 0, dg: .2, pause: .5, ordre: 'quatre', pace: .12, A: .9, H: 2, Rt: 1.3, E: 2.3, lat: 75,
     zoom: { actif: false, x: 0, y: 0, facteur: 1, aller: 1.8, tenue: 1.3 },
-    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez à volonté.', dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'ouverture', position: 'haut-bas', mode: 'aucun', /* 12/09 : 'clip' pour retrouver le clipsage lettre par lettre */ ln: .3, dn: .1,
+    textes: { l1: 'Composez.', l2: 'Imprimez.', l3: 'Clipsez.', l4: 'Changez a volonte', l4Lu: 'Changez à volonté.', /* 28/09 soir, fondateur : titre en Quadreti Modulaire comme la maquette ; la police n a pas d accents -> texte affiché sans accents, texte lu (lecteurs d écran) avec */ dispo: 'ligne', police1: 'Jura', taille1: 3, police2: 'Jura', taille2: 3, ecartT: .9, quand: 'ouverture', position: 'haut-bas', mode: 'aucun', /* 12/09 : 'clip' pour retrouver le clipsage lettre par lettre */ ln: .3, dn: .1,
       /* 11/09, disposition 'droite' (reference Pixel Corner) : accroche en capitales (baseline 1), gros titre (baseline 2), paragraphe, deux boutons */
       accroche: 1.15, titre: 4.6, /* tailles en cqw (bornees en px dans le CSS) */
       /* 18/09, fondateur : la deuxieme phrase retiree (« Imprimez, clipsez, changez de decor quand vous voulez. »).
@@ -52,7 +64,7 @@
        pause = respiration entre deux etapes ; pauseFin = tenue supplementaire du DERNIER visuel du mur avant de reboucler. */
     /* 12/09 fondateur : essai d une photo en arriere-plan du bandeau (IMAGE.png -> img/bandeau-fond-salon.jpg, 1920 px). Voile navy plus fort a gauche
        (lisibilite des textes) que sur le mur. image: null = fond navy uni. */
-    fond: { image: '/img/salon-mur-bleu.webp', voileGauche: 0, voileDroite: 0, position: 'center' }, /* 28/09 soir, fondateur : « nouvelle image salon grand format, cadeau » -- salon au MUR BLEU, mur vide, 1836 x 857 (rapport 2,142, le bandeau fait 2,160 : 1 % de recadrage). Voiles a 0 (retires sur demande). La composition se pose sur le mur, centree au-dessus du canape : centre (50,2 % ; 36,8 %), cote 14,65 % de la largeur (la taille du carreau de l ancienne photo, validee), entre le bas de l onglet (14 %) et le dossier du canape (59,5 %, mesure). */ /* 28/09 soir, fondateur : « recupere image salon sans cadre… celle qui avait les decroches… je l ai faite pour que le salon soit cadre correctement » — c est img/bandeau-hero-13.webp, le salon du diaporama (2000 x 926, LE RAPPORT EXACT DU BANDEAU, aspect-ratio 2000/926 dans index.html), dont le carreau a ete efface dans le navigateur (grain du mur repris a gauche et a droite, luminosite raccordee aux quatre bords). Cover = ajustement pile, decroches compris. La composition se pose a la place exacte de l ancien carreau : centre (49,63 % ; 28,56 %), cote 14,65 % de la largeur. */ /* 12/09 : essai abandonne (navy uni). 28/09 soir, fondateur : LE SALON REVIENT, « en bandeau derriere le mur interactif » — voile fort a gauche (texte), presque nul a droite ; position 55 % pour que le haut du canape reste visible en bas. La position verticale sert aussi au calcul de la place du carreau (poserSalon). */
+    fond: { image: '/img/salon-navy-lampe-3000.webp', /* 28/09 soir, fondateur : lampe tournée de 10° vers le mur (salon_lampe_plus_10deg_3000x1700) */ voileGauche: 0, voileDroite: 0, position: 'center' }, /* 28/09 soir : salon navy aux coussins orange (fondateur, 3000 px) ; en mode salonMur la taille et la position sont posées par le script */ /* 28/09 soir, fondateur : « nouvelle image salon grand format, cadeau » -- salon au MUR BLEU, mur vide, 1836 x 857 (rapport 2,142, le bandeau fait 2,160 : 1 % de recadrage). Voiles a 0 (retires sur demande). La composition se pose sur le mur, centree au-dessus du canape : centre (50,2 % ; 36,8 %), cote 14,65 % de la largeur (la taille du carreau de l ancienne photo, validee), entre le bas de l onglet (14 %) et le dossier du canape (59,5 %, mesure). */ /* 28/09 soir, fondateur : « recupere image salon sans cadre… celle qui avait les decroches… je l ai faite pour que le salon soit cadre correctement » — c est img/bandeau-hero-13.webp, le salon du diaporama (2000 x 926, LE RAPPORT EXACT DU BANDEAU, aspect-ratio 2000/926 dans index.html), dont le carreau a ete efface dans le navigateur (grain du mur repris a gauche et a droite, luminosite raccordee aux quatre bords). Cover = ajustement pile, decroches compris. La composition se pose a la place exacte de l ancien carreau : centre (49,63 % ; 28,56 %), cote 14,65 % de la largeur. */ /* 12/09 : essai abandonne (navy uni). 28/09 soir, fondateur : LE SALON REVIENT, « en bandeau derriere le mur interactif » — voile fort a gauche (texte), presque nul a droite ; position 55 % pour que le haut du canape reste visible en bas. La position verticale sert aussi au calcul de la place du carreau (poserSalon). */
     /* 12/09 fondateur : toutes les animations retirees sauf le visuel du mur -> actif: false (logo, textes, menu, icones fixes ; remettre true pour la sequence) */
     /* 12/09 : bords du bandeau dessines par le fondateur (BORD 1-2-3.svg). Lisere le long du bord libre en option : actif, couleur ('accent' = orange du panneau, ou un code), epaisseur en px. */
     bords: { lisere: { actif: true, couleur: 'accent', epaisseur: 3, reflet: { actif: false, mode: 'changement', duree: 7, voyage: 2.2, longueur: 6, decalage: .35, couleur: 'rgba(255,255,255,.75)' }, trace: { actif: false, duree: 1.4, decalage: .35 } } }, /* 12/09 fondateur : lisere fixe, pistes A/B/D testees puis coupees (actif:false), reglages conserves */ /* reflet.mode : 'boucle' (piste B, cycle = duree) ou 'changement' (piste D, un eclat a chaque changement de visuel, voyage en s) ; trace (piste A) : la ligne se dessine au chargement, duree et decalage entre bords en s */ /* reflet (12/09, piste B) : un eclat parcourt la ligne, cycle en s, tiret en % de la ligne, decalage entre bords en s */ /* 12/09 : essai lisere orange (fondateur), epaissi a 3 px */
@@ -255,7 +267,7 @@
     root.querySelector('.qb-para').innerHTML = (T.para || '').split(/(?<=\.)\s+/).map(function (ph) { return '<span class="qb-phrase">' + ph.replace(/</g, '&lt;') + '</span>'; }).join('');
   }
   var mur = root.querySelector('.qb-mur'); var style = document.createElement('style'); document.head.appendChild(style);
-  lettres(root.querySelector('.qb-l1'), T.dispo === 'ligne' ? [T.l1, T.l2, T.l3].filter(Boolean).join(' ') : T.l1); lettres(root.querySelector('.qb-l2'), T.l2); lettres(root.querySelector('.qb-l3'), T.l3); lettres(root.querySelector('.qb-l4'), T.l4);
+  lettres(root.querySelector('.qb-l1'), T.dispo === 'ligne' ? [T.l1, T.l2, T.l3].filter(Boolean).join(' ') : T.l1); lettres(root.querySelector('.qb-l2'), T.l2); lettres(root.querySelector('.qb-l3'), T.l3); lettres(root.querySelector('.qb-l4'), T.l4); (function () { var l4 = root.querySelector('.qb-l4'); if (l4 && T.l4Lu) { Array.prototype.forEach.call(l4.children, function (m) { m.setAttribute('aria-hidden', 'true'); }); var lu = document.createElement('span'); lu.textContent = T.l4Lu; lu.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap'; l4.appendChild(lu); } })();
   /* variables */
   var C = REGLAGES.couleurs; Object.keys(C).forEach(function (k) { R.setProperty('--' + k, C[k]); });
   var FD = REGLAGES.fond; if (FD && FD.image) { root.classList.add('qb-fond-photo'); R.setProperty('--fond-image', 'url("' + FD.image + '")'); R.setProperty('--voile-g', FD.voileGauche); R.setProperty('--voile-d', FD.voileDroite); R.setProperty('--fond-pos', FD.position || 'center'); }
@@ -298,9 +310,10 @@
        (environ 90 px), le bloc logo deborde de la barre dans la partie basse de l onglet, le menu reste centre dans la barre. */
     var MARGE = 16, BLOC = 66, BARRE = 58, DECROCHE = 22, logoRow = menu.querySelector('.qz-logorow'), naming = menu.querySelector('.qz-naming'); /* BLOC = cote du Q = hauteur des trois lignes ; BARRE = hauteur de la barre sous le menu (12/09, trait rouge du fondateur) ; DECROCHE = profondeur des decroches du bas */
     if (droite && large) {
-      menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px'; menu.style.paddingLeft = MARGE + 'px';
+      var mEg = window.qzMargeLogo ? window.qzMargeLogo(menu) : MARGE; /* 28/09 soir : même marge en haut, en bas et à gauche (commun-bandeau.js) */
+      menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px'; menu.style.paddingLeft = mEg + 'px';
       menu.style.height = BARRE + 'px'; R.setProperty('--onglet', (BLOC + 2 * MARGE) + 'px'); R.setProperty('--decroche-h', DECROCHE + 'px');
-      if (logoRow) { logoRow.style.marginTop = MARGE + 'px'; logoRow.style.alignSelf = 'flex-start'; }
+      if (logoRow) { logoRow.style.marginTop = mEg + 'px'; logoRow.style.alignSelf = 'flex-start'; }
       /* finition (fondateur) : le menu sur la ligne du naming -> centre du menu = centre de la premiere ligne du bloc */
       if (nav && naming && !enBurger) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
       else if (nav && enBurger) { nav.style.alignSelf = ''; nav.style.marginTop = ''; }
@@ -326,7 +339,7 @@
     if (droite && large) { var bande = document.querySelector('.qb-gestes'), defile = document.querySelector('.qb-defile'); var dispo = window.innerHeight - parseFloat(R.paddingTop) - Math.round(root.offsetWidth * .012) - (bande ? bande.offsetHeight : 0) - (defile ? defile.offsetHeight : 0) - 2; R.setProperty('--mur-max', Math.max(180, dispo) + 'px'); } else R.removeProperty('--mur-max');
   }
   poserBords(); window.addEventListener('load', poserBords); setTimeout(poserBords, 1500); window.addEventListener('resize', poserBords);
-
+
   /* 20/09 (soir) : LE LISERE EST REDESSINE SUR `BORD 2 PRIME 85`, la forme qui a servi a decouper les
      visuels. Il venait jusqu ici de `BANDEAU.svg`, le tout PREMIER fichier, dont la marche fait 12,6 mm
      quand celle des images en fait 6,92 : le trait passait 36 px au-dessus du bord de la photo, et les
@@ -561,13 +574,13 @@
     mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
     var grille = mur.querySelector('.qb-vif'), tuiles = grille.querySelectorAll('.qb-vt'), etat = mur.querySelector('.qb-vif-etat');
     var cs = getComputedStyle(mur), PAL = []; for (var k = 1; k <= 9; k++) { var v = cs.getPropertyValue('--qv-' + k).trim(); if (v) PAL.push(v); }
-    var cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1, taille = 1, couleurChoisie = null; /* 1 = une case, 7 = le carreau entier */
+    var sm = null, cases = [], photos = [], demo = false, tCouleur = null, tPhoto = null, iPhoto = 0, idPhoto = 1, taille = 1, couleurChoisie = null; /* 1 = une case, 7 = le carreau entier */
     var palette = mur.querySelector('.qb-vif-palette'), toast = mur.querySelector('.qb-vif-toast'), tToast = null;
     PAL.forEach(function (c, i) { var b = document.createElement('button'); b.type = 'button'; b.className = 'qb-vif-teinte'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false'); b.setAttribute('aria-label', 'teinte ' + (i + 1)); b.style.setProperty('--c', c); b.setAttribute('data-c', c); palette.appendChild(b); });
     palette.addEventListener('click', function (e) { var b = e.target.closest('.qb-vif-teinte'); if (!b) return; stopDemo(); var c = b.getAttribute('data-c'); couleurChoisie = (couleurChoisie === c) ? null : c; Array.prototype.forEach.call(palette.children, function (x) { x.setAttribute('aria-checked', x.getAttribute('data-c') === couleurChoisie ? 'true' : 'false'); }); etat.textContent = couleurChoisie ? 'cliquez une case pour la peindre' : 'a vous : cliquez une case, deposez une photo'; });
     function direToast(txt) { toast.textContent = txt; toast.classList.add('qb-on'); clearTimeout(tToast); tToast = setTimeout(function () { toast.classList.remove('qb-on'); }, 2200); }
     Array.prototype.forEach.call(tuiles, function (b, i) { var c = PAL[Math.floor(Math.random() * 7)]; b.style.setProperty('--c', c); cases.push({ el: b, couleur: c, photo: null }); });
-    function peindre(k, c) { var x = cases[k]; x.photo = null; x.couleur = c; x.el.className = 'qb-vt'; x.el.style.cssText = ''; x.el.style.setProperty('--c', c); }
+    function peindre(k, c) { var x = cases[k]; x.photo = null; x.sous = null; x.couleur = c; x.el.className = 'qb-vt'; x.el.style.cssText = ''; x.el.style.setProperty('--c', c); }
     function poserPhoto(src, r0, c0, n) { r0 = Math.max(0, Math.min(N - n, r0)); c0 = Math.max(0, Math.min(N - n, c0)); var pid = idPhoto++; photos.push({ id: pid, src: src, r0: r0, c0: c0, n: n });
       for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) { var k = (r0 + r) * N + (c0 + c), x = cases[k]; x.photo = { id: pid, r: r, c: c }; x.el.className = 'qb-vt qb-vt-photo qb-vt-pose'; x.el.style.cssText = ''; x.el.style.backgroundImage = 'url("' + src + '")'; }
       caler(); }
@@ -611,7 +624,7 @@
         carreauSalon.appendChild(i); }); }
     function ouvrirSalon() { stopDemo(); poserSalon(); carreauSalon.hidden = false; mur.classList.add('qb-en-salon'); root.classList.add('qb-en-salon'); btnSalon.setAttribute('aria-pressed', 'true'); btnSalon.title = 'Revenir au mur'; btnSalon.querySelector('.qb-vif-lib').textContent = 'Revenir au mur'; direToast('Votre composition, sur le mur du salon'); }
     function fermerSalon() { mur.classList.remove('qb-en-salon'); root.classList.remove('qb-en-salon'); carreauSalon.hidden = true; btnSalon.setAttribute('aria-pressed', 'false'); btnSalon.title = 'Afficher la composition dans un salon'; btnSalon.querySelector('.qb-vif-lib').textContent = 'Afficher dans le salon'; }
-    btnSalon.addEventListener('click', function () { if (mur.classList.contains('qb-en-salon')) fermerSalon(); else ouvrirSalon(); });
+    btnSalon.addEventListener('click', function () { if (sm) { sm.auMur(); return; } if (mur.classList.contains('qb-en-salon')) fermerSalon(); else ouvrirSalon(); });
     window.addEventListener('resize', function () { if (mur.classList.contains('qb-en-salon')) poserSalon(); });
     mur._vivantStopSalon = fermerSalon;
     /* ouvrir dans Designer : la composition est gardee dans le navigateur (cle quadreti-mur-banniere) ; Designer ne la lit PAS encore — brief a faire au fil Application (Designer) */
@@ -651,6 +664,182 @@
     /* meme prise que le diaporama : lancer() appelle diapo.demarrer(delai) au depart du mur */
     diapo = { demarrer: function (delai) { setTimeout(demarrerDemo, Math.max(0, delai) * 1000); } };
     if (lanceDeja) demarrerDemo(); /* reconstruction (bascule mobile/bureau) alors que le mur a deja ete lance : la demo repart tout de suite */
+    if (V.salonMur && V.salonMur.actif && window.innerWidth > 900) salonMur();
+    /* ===== 28/09 soir : SALON, MUR DE CARREAUX (voir REGLAGES.vivant.salonMur). Maquette d origine : SITE, DESIGN SYSTEME, generer-mockup-salon-carreaux.js ===== */
+    function salonMur() {
+      var S = V.salonMur, PH = S.photo, NC = S.carreaux[0], NR = S.carreaux[1], NB = NC * NR;
+      var murS = document.createElement('div'), voile = document.createElement('div'), invite = document.createElement('p'), echelle = document.createElement('p');
+      murS.className = 'qb-sm-mur'; murS.setAttribute('role', 'group'); murS.setAttribute('aria-label', 'Un mur de ' + NB + ' carreaux Quadreti au-dessus du canap\u00e9 : touchez la tesselle qui bouge, ou un carreau, pour le composer');
+      voile.className = 'qb-sm-voile'; invite.className = 'qb-sm-invite'; invite.textContent = 'Le mur est \u00e0 vous.'; echelle.className = 'qb-sm-echelle';
+      echelle.textContent = 'Mur de ' + NB + ' carreaux \u00b7 ' + (NC * 18.9).toFixed(1).replace('.', ',') + ' \u00d7 ' + (NR * 18.9).toFixed(1).replace('.', ',') + ' cm';
+      var modeLbl = document.createElement('p'); modeLbl.className = 'qb-sm-mode'; modeLbl.setAttribute('aria-live', 'polite');
+      [voile, murS, invite, echelle, modeLbl].forEach(function (e) { root.appendChild(e); });
+      root.classList.add('qb-sm', 'qb-sm-repos');
+      /* 28/09 soir, fondateur : le bouton fauteuil quitte le rail ; à sa place, « Exposez », cliquable, à cheval au milieu du bord bas du cadre (comme App démo en haut) */
+      btnSalon.hidden = true; btnSalon.style.display = 'none'; /* le style du rail bat l attribut hidden */ var cadreSM = mur.querySelector('.qb-vif-cadre'), btnExp = document.createElement('button'); btnExp.type = 'button'; btnExp.className = 'qb-sm-exposer'; btnExp.textContent = 'Exposez'; btnExp.title = 'Remettre le carreau au mur du salon'; if (cadreSM) cadreSM.appendChild(btnExp);
+      var etats = [], carr = [], ORIG = null, ouvert = null, actif = -1, tBouge = null, tSurvol = null, G = { pp: 11, j: 1 };
+      function construireCarreaux() { carr.forEach(function (d) { d.remove(); }); carr = []; etats = [];
+        murS.setAttribute('aria-label', 'Un mur de ' + NB + ' carreau' + (NB > 1 ? 'x' : '') + ' Quadreti au-dessus du canap\u00e9 : touchez la tesselle qui bouge, ou un carreau, pour le composer');
+        for (var nn = 0; nn < NB; nn++) (function (n) { var d = document.createElement('div'); d.className = 'qb-sm-c'; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Carreau ' + (n + 1) + ' : le composer');
+          for (var k = 0; k < N * N; k++) { var i = document.createElement('i'); i.style.setProperty('--k', k); d.appendChild(i); }
+          d.addEventListener('click', function () { ouvrir(n); }); d.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(n); } });
+          murS.appendChild(d); carr.push(d); })(nn); }
+      var etapes = (S.croissance && S.croissance.length) ? S.croissance : [[NC, NR]], enCroissance = false;
+      NC = etapes[0][0]; NR = etapes[0][1]; NB = NC * NR; construireCarreaux();
+      /* l image du mur : le portrait, relevé au centre de chaque case (moyenne 9 x 9 px) ; un mur plus petit en prend le centre */
+      var IMG = null, ORIG = null;
+      function echantillonner() { if (!IMG) { ORIG = null; return; } var RES = Math.max(1, S.resolution || 1), W = N * NC * RES, H = N * NR * RES, iw = IMG.naturalWidth, ih = IMG.naturalHeight, r = W / H, sw = iw, sh = iw / r; if (sh > ih) { sh = ih; sw = ih * r; }
+        var sx = (iw - sw) / 2, sy = (ih - sh) * (S.cadrageY == null ? .5 : S.cadrageY), src = document.createElement('canvas'), cw = Math.round(sw), ch = Math.round(sh); src.width = cw; src.height = ch; src.getContext('2d').drawImage(IMG, sx, sy, sw, sh, 0, 0, cw, ch);
+        while (cw > W * 2 || ch > H * 2) { var nw = Math.max(W, Math.round(cw / 2)), nh = Math.max(H, Math.round(ch / 2)), t = document.createElement('canvas'); t.width = nw; t.height = nh; var tg = t.getContext('2d'); tg.imageSmoothingQuality = 'high'; tg.drawImage(src, 0, 0, cw, ch, 0, 0, nw, nh); src = t; cw = nw; ch = nh; }
+        var f = document.createElement('canvas'); f.width = W; f.height = H; var fg = f.getContext('2d'); fg.imageSmoothingQuality = 'high'; fg.drawImage(src, 0, 0, cw, ch, 0, 0, W, H); var dd = fg.getImageData(0, 0, W, H).data; ORIG = [];
+        for (var y = 0; y < H; y++) { ORIG.push([]); for (var x = 0; x < W; x++) { var o = (y * W + x) * 4; ORIG[y].push('#' + [dd[o], dd[o + 1], dd[o + 2]].map(function (u) { return u.toString(16).padStart(2, '0'); }).join('')); } } }
+      function origine(gx, gy) { var R = Math.max(1, S.resolution || 1); if (!ORIG) return { couleur: PAL[1] }; if (R === 1) return { couleur: (ORIG[gy] && ORIG[gy][gx]) || PAL[1] };
+        var sous = [], t = [0, 0, 0]; for (var sy = 0; sy < R; sy++) for (var sx = 0; sx < R; sx++) { var h = (ORIG[gy * R + sy] && ORIG[gy * R + sy][gx * R + sx]) || PAL[1]; sous.push(h); for (var c = 0; c < 3; c++) t[c] += parseInt(h.substr(1 + 2 * c, 2), 16); }
+        return { couleur: '#' + t.map(function (v) { return Math.round(v / (R * R)).toString(16).padStart(2, '0'); }).join(''), sous: sous }; }
+      /* les r x r couleurs d une tesselle en CSS : un aplat par sous-case (dégradés « pleins » posés côte à côte) */
+      function fondSous(sous) { var R = Math.round(Math.sqrt(sous.length)), t = (100 / R) + '%'; return sous.map(function (h, q) { var x = q % R, y = Math.floor(q / R); return 'linear-gradient(' + h + ',' + h + ') ' + (R > 1 ? x * 100 / (R - 1) : 0) + '% ' + (R > 1 ? y * 100 / (R - 1) : 0) + '% / ' + t + ' ' + t + ' no-repeat'; }).join(','); }
+      /* LES MODES (29/09) : Pixel = initEtats (aplats) ; Photo et Mosaïque = une image du mur entier (TP px par tesselle), découpée carreau par
+         carreau et posée comme une photo 7 x 7 sur chaque carreau — la composition et « Exposez » la gèrent comme une photo déposée. */
+      var MODE = (S.croissance && S.croissance[0] && S.croissance[0][2]) || (S.modes && S.modes[0]) || 'pixel', TUILES = null, idMode = 50000, NOMS = { pixel: 'Pixel', photo: 'Photo', mosaique: 'Mosa\u00efque', collage: 'Collage' }, DESCR = { pixel: 'pixel couleur', photo: 'une photo en grand', mosaique: 'mosa\u00efque de souvenirs', collage: 'photo-collage' }, ICONES = {}, TP = 48;
+      function chargerSouvenirs(fin) { var lots = S.souvenirs || [], reste = lots.length, res = []; if (!reste) { fin(); return; }
+        lots.forEach(function (L) { var im2 = new Image(); im2.onload = function () { var p = document.createElement('canvas'); p.width = p.height = 6; var pg = p.getContext('2d');
+            for (var k = 0; k < L.nombre; k++) { var sx = (k % L.colonnes) * L.cote, sy = Math.floor(k / L.colonnes) * L.cote; pg.clearRect(0, 0, 6, 6); pg.drawImage(im2, sx, sy, L.cote, L.cote, 0, 0, 6, 6); var d = pg.getImageData(0, 0, 6, 6).data, r = 0, g = 0, b = 0;
+              for (var q = 0; q < d.length; q += 4) { r += d[q]; g += d[q + 1]; b += d[q + 2]; } r /= 36; g /= 36; b /= 36; res.push({ img: im2, sx: sx, sy: sy, s: L.cote, lum: .2126 * r + .7152 * g + .0722 * b }); }
+            if (--reste === 0) { TUILES = res.sort(function (a, c) { return a.lum - c.lum; }); fin(); } }; im2.onerror = function () { if (--reste === 0) { TUILES = res.length ? res : null; fin(); } }; im2.src = L.src; }); }
+      /* LE PHOTO-COLLAGE d un carreau (7 x 7 cases) : des souvenirs partout, la photo du couple au centre sur 3 x 3 cases, un mot écrit une lettre
+         par case (encre sur orange, charte), des cœurs et des flèches. Icônes : celles du fondateur si collage.icones les donne, sinon dessinées. */
+      function couvrir(g, im, sx, sy, sw, sh, x, y, w, h) { var r = w / h, cw = sw, ch = sw / r; if (ch > sh) { ch = sh; cw = sh * r; } g.drawImage(im, sx + (sw - cw) / 2, sy + (sh - ch) / 2, cw, ch, x, y, w, h); }
+      function icone(g, nom, x, y, t, sens) { var CO = S.collage || {}, I = CO.icones || {}, pl = ICONES.planche, k = typeof nom === 'number' ? nom : I[nom], FO = CO.fonds || ['#D96C2F'];
+        g.fillStyle = nom === 'fleche' ? (CO.fondFleche || FO[FO.length - 1]) : FO[((typeof k === 'number' ? k : 3) * 7 + Math.round(x / t) + Math.round(y / t) * 3) % FO.length]; g.fillRect(x, y, t, t);
+        if (pl && pl.complete && pl.naturalWidth && typeof k === 'number') { var sx = (k % I.colonnes) * I.cote, sy = Math.floor(k / I.colonnes) * I.cote; g.save(); if (sens) { g.translate(x + t, y); g.scale(-1, 1); x = 0; y = 0; } g.drawImage(pl, sx, sy, I.cote, I.cote, x + t * .1, y + t * .1, t * .8, t * .8); g.restore(); return; }
+        g.save(); g.translate(x + t / 2, y + t / 2); if (nom === 'coeur') { var k = t * .3; g.fillStyle = '#D96C2F'; g.beginPath(); g.moveTo(0, k * .95); g.bezierCurveTo(-k * 1.6, -k * .1, -k * .9, -k * 1.35, 0, -k * .45); g.bezierCurveTo(k * .9, -k * 1.35, k * 1.6, -k * .1, 0, k * .95); g.fill(); }
+        else { g.rotate(sens ? Math.PI : 0); g.strokeStyle = '#DEDEDE'; g.lineWidth = t * .09; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(-t * .26, 0); g.lineTo(t * .24, 0); g.moveTo(t * .06, -t * .18); g.lineTo(t * .25, 0); g.lineTo(t * .06, t * .18); g.stroke(); }
+        g.restore(); }
+      function dessinerCollage(g, ox, oy, t) { var C = S.collage || {}, mot = String(C.mot || 'NOUS').toUpperCase().slice(0, 7), L = mot.length, d0 = Math.floor((N - L) / 2), q = 0;
+        var Ic = (S.collage && S.collage.icones) || {}, choixI = Ic.choix || [], qi = 0, reserve = function (r, c) { return r === 0 || (r >= 2 && r <= 4 && c >= 1 && c <= 5); };
+        for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { if (choixI.length && !reserve(r, c) && (r * N + c) % 3 === 1) { icone(g, choixI[qi++ % choixI.length], ox + c * t, oy + r * t, t); continue; } if (TUILES && TUILES.length) { var T = TUILES[(r * 17 + c * 29 + 5) % TUILES.length]; couvrir(g, T.img, T.sx, T.sy, T.s, T.s, ox + c * t, oy + r * t, t, t); } else { g.fillStyle = '#27405C'; g.fillRect(ox + c * t, oy + r * t, t, t); } }
+        if (IMG) couvrir(g, IMG, 0, 0, IMG.naturalWidth, IMG.naturalHeight, ox + 2 * t, oy + 2 * t, 3 * t, 3 * t);
+        for (var l = 0; l < L; l++) { var x = ox + (d0 + l) * t; g.fillStyle = '#D96C2F'; g.fillRect(x, oy, t, t); g.fillStyle = '#10181F'; g.font = Math.round(t * .72) + "px 'Quadreti Modulaire', Jura, sans-serif"; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(mot[l], x + t / 2, oy + t * .54); }
+        var CC = (Ic.coeurs && Ic.coeurs.length) ? Ic.coeurs : ['coeur', 'coeur']; if (d0 > 0) icone(g, CC[0], ox + (d0 - 1) * t, oy, t); if (d0 + L < N) icone(g, CC[1 % CC.length], ox + (d0 + L) * t, oy, t);
+        icone(g, 'fleche', ox + 1 * t, oy + 3 * t, t, 0); icone(g, 'fleche', ox + 5 * t, oy + 3 * t, t, 1); if (!choixI.length) { icone(g, 'coeur', ox + 3 * t, oy + 6 * t, t); icone(g, 'coeur', ox + 6 * t, oy + 6 * t, t); icone(g, 'coeur', ox, oy + 6 * t, t); } }
+      (function () { var I = (S.collage && S.collage.icones) || {}; if (I.planche) { var im3 = new Image(); im3.onload = function () { if (ouvert === null && !enCroissance && MODE === 'collage') appliquerMode(MODE); }; im3.src = I.planche; ICONES.planche = im3; } if (document.fonts && document.fonts.load) document.fonts.load("40px 'Quadreti Modulaire'"); })();
+      function lumHex(h) { return .2126 * parseInt(h.substr(1, 2), 16) + .7152 * parseInt(h.substr(3, 2), 16) + .0722 * parseInt(h.substr(5, 2), 16); }
+      /* l image cible réduite à Wc x Hc couleurs (recadrage cover, réductions par moitiés) */
+      function grilleImage(Wc, Hc) { var iw = IMG.naturalWidth, ih = IMG.naturalHeight, r = Wc / Hc, sw = iw, sh = iw / r; if (sh > ih) { sh = ih; sw = ih * r; } var src = document.createElement('canvas'), cw = Math.round(sw), ch = Math.round(sh); src.width = cw; src.height = ch;
+        src.getContext('2d').drawImage(IMG, (iw - sw) / 2, (ih - sh) * (S.cadrageY == null ? .5 : S.cadrageY), sw, sh, 0, 0, cw, ch);
+        while (cw > Wc * 2 || ch > Hc * 2) { var nw = Math.max(Wc, Math.round(cw / 2)), nh = Math.max(Hc, Math.round(ch / 2)), t = document.createElement('canvas'); t.width = nw; t.height = nh; var tg = t.getContext('2d'); tg.imageSmoothingQuality = 'high'; tg.drawImage(src, 0, 0, cw, ch, 0, 0, nw, nh); src = t; cw = nw; ch = nh; }
+        var f = document.createElement('canvas'); f.width = Wc; f.height = Hc; var fg = f.getContext('2d'); fg.imageSmoothingQuality = 'high'; fg.drawImage(src, 0, 0, cw, ch, 0, 0, Wc, Hc); var dd = fg.getImageData(0, 0, Wc, Hc).data, out = [];
+        for (var q = 0; q < Wc * Hc; q++) out.push('#' + [dd[q * 4], dd[q * 4 + 1], dd[q * 4 + 2]].map(function (u) { return u.toString(16).padStart(2, '0'); }).join('')); return out; }
+      function imageMode(mode) { var D = Math.max(1, Math.round((S.mosaique && S.mosaique.division) || 1)), tp = mode === 'mosaique' ? Math.max(TP, D * 20) : TP; /* 29/09, fondateur : « splitter en 2 x 2 voire 3 x 3, ce sera beaucoup plus fin » */
+        var W = N * NC * tp, H = N * NR * tp, cv = document.createElement('canvas'); cv.width = W; cv.height = H; var g = cv.getContext('2d'); g.imageSmoothingQuality = 'high';
+        if (mode === 'collage') { for (var cr = 0; cr < NR; cr++) for (var cc = 0; cc < NC; cc++) dessinerCollage(g, cc * N * tp, cr * N * tp, tp); return cv; }
+        if (mode === 'photo') { var iw = IMG.naturalWidth, ih = IMG.naturalHeight, r = W / H, sw = iw, sh = iw / r; if (sh > ih) { sh = ih; sw = ih * r; } g.drawImage(IMG, (iw - sw) / 2, (ih - sh) * (S.cadrageY == null ? .5 : S.cadrageY), sw, sh, 0, 0, W, H); return cv; }
+        /* Mosaïque : pour chaque tesselle, un souvenir de luminosité voisine (6 candidats, jamais le même que le voisin de gauche ou du dessus),
+           posé puis teinté vers la couleur du couple à cet endroit ; tirage à graine fixe, le mur est le même à chaque visite */
+        /* division D : chaque tesselle porte D x D souvenirs ; la couleur cible de chaque souvenir vient de l image réduite à (7 NC D) x (7 NR D) */
+        var M = S.mosaique || {}, graine = 11, alea = function () { graine = (graine * 9301 + 49297) % 233280; return graine / 233280; }, choix = [], GW = N * NC * D, GH = N * NR * D, cibles = grilleImage(GW, GH), ps = tp / D;
+        for (var y = 0; y < GH; y++) for (var x = 0; x < GW; x++) { var cible = cibles[y * GW + x], L0 = lumHex(cible), lo = 0, hi = TUILES.length - 1;
+          while (lo < hi) { var m = (lo + hi) >> 1; if (TUILES[m].lum < L0) lo = m + 1; else hi = m; }
+          var a0 = Math.max(0, lo - 3), a1 = Math.min(TUILES.length, a0 + 6), gauche = x > 0 ? choix[y * GW + x - 1] : -1, haut = y > 0 ? choix[(y - 1) * GW + x] : -1, k2 = a0 + Math.floor(alea() * (a1 - a0));
+          for (var essai = 0; essai < 6 && (k2 === gauche || k2 === haut); essai++) k2 = a0 + Math.floor(alea() * (a1 - a0)); choix.push(k2);
+          var T = TUILES[k2], px = x * ps, py = y * ps; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(T.img, T.sx, T.sy, T.s, T.s, px, py, ps, ps);
+          g.globalCompositeOperation = 'color'; g.globalAlpha = M.teinte == null ? .78 : M.teinte; g.fillStyle = cible; g.fillRect(px, py, ps, ps);
+          g.globalCompositeOperation = 'source-over'; g.globalAlpha = M.voile == null ? .28 : M.voile; g.fillRect(px, py, ps, ps); }
+        g.globalAlpha = 1; return cv; }
+      function etatsDepuisImage(cv) { var C = cv.width / NC; /* taille d un carreau dans l image, quelle que soit la finesse */ for (var n2 = 0; n2 < NB; n2++) { var c0 = n2 % NC, r0 = Math.floor(n2 / NC), q = document.createElement('canvas'); q.width = q.height = C;
+          q.getContext('2d').drawImage(cv, c0 * C, r0 * C, C, C, 0, 0, C, C); var id = idMode++, src = q.toDataURL('image/webp', .86), cs2 = [];
+          for (var k = 0; k < N * N; k++) cs2.push({ photo: { id: id, r: Math.floor(k / N), c: k % N } }); etats[n2] = { cases: cs2, photos: [{ id: id, src: src, r0: 0, c0: 0, n: N }] }; } }
+      function appliquerMode(mode, vague) { MODE = mode; var m = mode; if (m !== 'pixel' && m !== 'collage' && (!IMG || (m === 'mosaique' && !TUILES))) m = 'pixel';
+        if (m === 'pixel') initEtats(); else etatsDepuisImage(imageMode(m)); calage(); modeLbl.textContent = NB + ' carreau' + (NB > 1 ? 'x' : '') + ' \u00b7 ' + (DESCR[m] || NOMS[m]); if (typeof libMode === 'function' && btnMode) libMode();
+        if (vague) { carr.forEach(function (d) { Array.prototype.forEach.call(d.children, function (i) { i.classList.remove('qb-sm-pose'); void i.offsetWidth; i.classList.add('qb-sm-pose'); }); });
+          setTimeout(function () { murS.querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); }, N * N * 22 + 480); } }
+      function initEtats() { for (var n = 0; n < NB; n++) { var c0 = n % NC, r0 = Math.floor(n / NC), cs2 = []; for (var k = 0; k < N * N; k++) cs2.push(origine(c0 * N + k % N, r0 * N + Math.floor(k / N))); etats[n] = { cases: cs2, photos: [] }; } }
+      /* une tesselle du mur : sa couleur, ou son morceau de photo (même découpe que la grille démo, au pas du mur) */
+      function habiller(i, x, ph) { var w = G.pp - G.j; if (x.photo && ph) { var px = ph.n * w + (ph.n - 1) * G.j; i.style.backgroundImage = 'url("' + ph.src + '")'; i.style.backgroundSize = px + 'px ' + px + 'px'; i.style.backgroundPosition = (-(x.photo.c * G.pp)) + 'px ' + (-(x.photo.r * G.pp)) + 'px'; i.style.backgroundColor = ''; }
+        else if (x.sous) { i.style.background = fondSous(x.sous); i.style.backgroundColor = x.couleur; }
+        else { i.style.background = ''; i.style.backgroundImage = ''; i.style.backgroundColor = x.couleur; } }
+      function peindreCarreau(n) { var e = etats[n]; Array.prototype.forEach.call(carr[n].children, function (i, k) { var x = e.cases[k], ph = null; if (x.photo) for (var q = 0; q < e.photos.length; q++) if (e.photos[q].id === x.photo.id) ph = e.photos[q]; habiller(i, x, ph); }); }
+      /* calage : la photo couvre le bandeau, le canapé au centre ; le mur à l échelle du canapé, AU PIXEL ENTIER */
+      function calage() { var rr = root.getBoundingClientRect(), W = rr.width, H = rr.height, sc = Math.max(W / PH.w, H / PH.h) * (S.zoom || 1), dw = PH.w * sc, dh = PH.h * sc;
+        var ox = Math.min(0, Math.max(W - dw, W * .6 - (PH.cx0 + PH.cx1) / 2 * sc)), oy = Math.min(0, Math.max(H - dh, H * .97 - PH.pied * sc));
+        root.style.backgroundSize = 'auto, ' + dw + 'px ' + dh + 'px'; root.style.backgroundPosition = '0 0, ' + ox + 'px ' + oy + 'px';
+        var pxcm = (PH.cx1 - PH.cx0) / (S.canapeCm || 220) * sc, pp = Math.max(2, Math.round(18.9 * pxcm / 7)), j = Math.max(1, Math.round(pp / 27)), j2 = 2 * j, TT = 7 * pp - j, PAS = TT + j2, LW = NC * PAS - j2, LH = NR * PAS - j2;
+        var bx = ox + (PH.cx0 + PH.cx1) / 2 * sc;
+        /* 28/09 soir, fondateur : « centre verticalement le tableau et le texte » -- le bloc (phrase « Le mur est à vous. », 14 px, le mur) est centré
+           entre le bas de la barre du haut et le haut du dossier du canapé (repère de la photo). Remplace l accrochage à 25 cm au-dessus du dossier. */
+        var tete = document.querySelector('.qz-header'), hautZone = tete ? Math.max(0, tete.getBoundingClientRect().bottom - rr.top) : 0, basZone = oy + PH.dossier * sc, ih = invite.offsetHeight || 20;
+        var X0 = Math.round(bx - LW / 2), Y0 = Math.round((hautZone + basZone) / 2 - LH / 2 + (14 + ih) / 2); G = { pp: pp, j: j };
+        murS.style.left = (X0 - j) + 'px'; murS.style.top = (Y0 - j) + 'px'; murS.style.width = (LW + 2 * j) + 'px'; murS.style.height = (LH + 2 * j) + 'px';
+        carr.forEach(function (d, n) { d.style.left = (j + (n % NC) * PAS) + 'px'; d.style.top = (j + Math.floor(n / NC) * PAS) + 'px'; d.style.width = d.style.height = TT + 'px'; d.style.setProperty('--w', (pp - j) + 'px'); d.style.setProperty('--j', j + 'px'); });
+        invite.style.left = echelle.style.left = modeLbl.style.left = (X0 + LW / 2) + 'px'; invite.style.top = Y0 + 'px'; echelle.style.top = modeLbl.style.top = (Y0 + LH + j) + 'px';
+        for (var n = 0; n < NB; n++) if (etats[n]) peindreCarreau(n); }
+      /* la tesselle qui bouge : toutes les « rythme » ms, sur un autre carreau ; la survoler ouvre CE carreau */
+      function bouger() { if (ouvert !== null) return; var libres = []; for (var n = 0; n < NB; n++) if (n !== actif || NB === 1) libres.push(n); actif = libres[Math.floor(Math.random() * libres.length)];
+        murS.querySelectorAll('.qb-sm-bouge').forEach(function (x) { x.classList.remove('qb-sm-bouge'); }); var i = carr[actif].children[Math.floor(Math.random() * N * N)]; void i.offsetWidth; i.classList.add('qb-sm-bouge');
+        var cible = actif; i.onmouseenter = function () { tSurvol = setTimeout(function () { if (i.classList.contains('qb-sm-bouge')) ouvrir(cible); }, 160); }; i.onmouseleave = function () { clearTimeout(tSurvol); }; }
+      function lancerBouge() { clearInterval(tBouge); bouger(); tBouge = setInterval(bouger, S.rythme || 2000); }
+      /* charger un carreau dans la grille démo (couleurs ET photos), et l en relire */
+      function charger(e) { photos = e.photos.map(function (p) { return { id: p.id, src: p.src, r0: p.r0, c0: p.c0, n: p.n }; }); photos.forEach(function (p) { if (p.id >= idPhoto) idPhoto = p.id + 1; });
+        e.cases.forEach(function (x, k) { if (x.photo) { var ph = null; for (var q = 0; q < photos.length; q++) if (photos[q].id === x.photo.id) ph = photos[q]; if (ph) { var c = cases[k]; c.photo = { id: ph.id, r: x.photo.r, c: x.photo.c }; c.el.className = 'qb-vt qb-vt-photo'; c.el.style.cssText = ''; c.el.style.backgroundImage = 'url("' + ph.src + '")'; return; } } peindre(k, x.couleur); if (x.sous) { cases[k].sous = x.sous; cases[k].el.style.background = fondSous(x.sous); } });
+        caler(); }
+      function relire() { return { cases: cases.map(function (x) { return x.photo ? { photo: { id: x.photo.id, r: x.photo.r, c: x.photo.c } } : (x.sous ? { couleur: x.couleur, sous: x.sous } : { couleur: x.couleur }); }), photos: photos.map(function (p) { return { id: p.id, src: p.src, r0: p.r0, c0: p.c0, n: p.n }; }) }; }
+      /* le carreau vient : la grille démo part de la place du carreau au mur et grandit jusqu à sa place (FLIP) */
+      function vol(depuis, duree) { var a = depuis.getBoundingClientRect(), b = grille.getBoundingClientRect(), k = a.width / b.width;
+        grille.style.transition = 'none'; grille.style.transformOrigin = '0 0'; grille.style.transform = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + k + ')'; void grille.offsetWidth;
+        grille.style.transition = 'transform ' + duree + 'ms cubic-bezier(.2,.8,.2,1)'; grille.style.transform = 'none'; setTimeout(function () { grille.style.transition = ''; }, duree + 30); }
+      function ouvrir(n) { if (ouvert !== null || enCroissance) return; clearTimeout(tSurvol); ouvert = n; instantane = JSON.stringify(etats[n]); murS.querySelectorAll('.qb-sm-bouge').forEach(function (x) { x.classList.remove('qb-sm-bouge'); });
+        charger(etats[n]); root.classList.remove('qb-sm-repos'); root.classList.add('qb-sm-compose'); carr[n].classList.add('qb-sm-parti'); centrerOutil();
+        etat.textContent = 'carreau ' + (n + 1) + ' : cliquez une case, d\u00e9posez une photo'; vol(carr[n], 600);
+        setTimeout(function () { var b = palette.querySelector('.qb-vif-teinte'); if (b) b.focus({ preventScroll: true }); }, 650); }
+      function auMur() { if (ouvert === null) return; var n = ouvert; etats[n] = relire(); if (JSON.stringify(etats[n]) !== instantane) modifies[n] = true; var a = grille.getBoundingClientRect(), b = carr[n].getBoundingClientRect(), k = b.width / a.width;
+        grille.style.transformOrigin = '0 0'; grille.style.transition = 'transform 420ms cubic-bezier(.4,0,.2,1)'; grille.style.transform = 'translate(' + (b.left - a.left) + 'px,' + (b.top - a.top) + 'px) scale(' + k + ')';
+        setTimeout(function () { root.classList.remove('qb-sm-compose'); root.classList.add('qb-sm-repos'); grille.style.transition = ''; grille.style.transform = ''; mur.style.transform = ''; peindreCarreau(n); carr[n].classList.remove('qb-sm-parti');
+          Array.prototype.forEach.call(carr[n].children, function (i) { i.classList.remove('qb-sm-pose'); void i.offsetWidth; i.classList.add('qb-sm-pose'); });
+          setTimeout(function () { carr[n].querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); ouvert = null; carr[n].focus({ preventScroll: true }); lancerBouge(); }, N * N * 22 + 480); }, 430); }
+      function clavier(e) { if (e.key === 'Escape' && ouvert !== null) auMur(); }
+      /* 28/09 soir, fondateur : « l outil étant masqué, ne pourrait-on pas plutôt le centrer dans le bandeau ? » -- à l ouverture, le mur démo (la grille
+         et sa boîte à outils) est déplacé pour que la GRILLE soit au centre du bandeau : au milieu en largeur, et en hauteur entre la barre du haut et
+         la bande des icônes. Au repos, il reste caché à sa place d origine. */
+      function centrerOutil() { mur.style.transform = ''; var g = grille.getBoundingClientRect(), rr = root.getBoundingClientRect(), tete = document.querySelector('.qz-header'), gestes = root.querySelector('.qb-gestes');
+        var haut = tete ? tete.getBoundingClientRect().bottom : rr.top, bas = gestes && gestes.getBoundingClientRect().height ? gestes.getBoundingClientRect().top : rr.bottom;
+        mur.style.transform = 'translate(' + Math.round(rr.left + rr.width / 2 - (g.left + g.width / 2)) + 'px,' + Math.round((haut + bas) / 2 - (g.top + g.height / 2)) + 'px)'; }
+      window.addEventListener('resize', function () { if (ouvert !== null) centrerOutil(); });
+      /* 29/09, fondateur (« on rajoute les modes pour tester ») : UN bouton « Mode » dans la boîte à outils, qui fait passer tout le mur au mode suivant
+         (Pixel, Photo, Mosaïque) ; les carreaux déjà retouchés gardent leurs retouches ; le carreau ouvert est rechargé s il n a pas été touché. */
+      var instantane = '', modifies = {}, btnMode = document.createElement('button'); btnMode.type = 'button'; btnMode.className = 'qb-vif-btn qb-vif-mode';
+      function libMode() { var nom = NOMS[MODE] || MODE; btnMode.innerHTML = '<span class="qb-vif-t">' + nom.slice(0, 3).toUpperCase() + '</span><span class="qb-vif-lib">Mode : ' + nom + '</span>'; btnMode.title = 'Mode : ' + nom + ' (cliquer pour changer)'; btnMode.setAttribute('aria-label', 'Mode du mur : ' + nom + '. Cliquer pour passer au suivant'); }
+      function changerMode() { var modes = S.modes && S.modes.length ? S.modes : ['pixel']; var suivant = modes[(modes.indexOf(MODE) + 1) % modes.length];
+        var courant = ouvert !== null ? relire() : null, ouvertTouche = ouvert !== null && JSON.stringify(courant) !== instantane, garde = etats.slice();
+        appliquerMode(suivant, false); for (var q = 0; q < NB; q++) if (modifies[q] && garde[q]) etats[q] = garde[q];
+        if (ouvert !== null) { if (ouvertTouche) etats[ouvert] = courant; else { charger(etats[ouvert]); instantane = JSON.stringify(etats[ouvert]); } }
+        calage(); libMode(); etat.textContent = 'mur en mode ' + (NOMS[MODE] || MODE); }
+      libMode(); btnMode.addEventListener('click', changerMode); var railSM = mur.querySelector('.qb-vif-rail'), designerSM = railSM && railSM.querySelector('.qb-vif-designer'); if (railSM) railSM.insertBefore(btnMode, designerSM || null);
+      voile.addEventListener('click', auMur); btnExp.addEventListener('click', auMur); document.addEventListener('keydown', clavier); window.addEventListener('resize', calage);
+      var stopAvant = mur._vivantStop; mur._vivantStop = function () { stopAvant(); clearInterval(tBouge); clearTimeout(tSurvol); document.removeEventListener('keydown', clavier); window.removeEventListener('resize', calage);
+        [voile, murS, invite, echelle, modeLbl, btnExp, btnMode].forEach(function (e) { e.remove(); }); btnSalon.hidden = false; btnSalon.style.display = ''; root.classList.remove('qb-sm', 'qb-sm-repos', 'qb-sm-compose'); root.style.backgroundSize = ''; root.style.backgroundPosition = ''; grille.style.transform = ''; mur.style.transform = ''; };
+      /* l image : chargée une fois ; en attendant (ou si elle manque), le mur prend la teinte navy */
+      initEtats(); calage();
+      var im = new Image(); im.onload = function () { IMG = im; if (ouvert === null && !enCroissance) { echantillonner(); appliquerMode(MODE); } }; im.src = S.image || S.portrait;
+      chargerSouvenirs(function () { if (ouvert === null && !enCroissance && (MODE === 'mosaique' || MODE === 'collage')) appliquerMode(MODE); });
+      modeLbl.textContent = 'Mode ' + NOMS[MODE];
+      /* LA CROISSANCE (28/09 soir, fondateur : « pour le waouh ») : à l arrivée, le mur passe d une étape à la suivante (réglage croissance) toutes les
+         pasCroissance ms ; à chaque étape l image est recalculée au nouveau nombre de tesselles et les tesselles se clipsent. Puis la tesselle qui bouge. */
+      function etape(nc, nr, mode) { NC = nc; NR = nr; NB = NC * NR; if (mode) MODE = mode; construireCarreaux(); echantillonner(); appliquerMode(MODE);
+        carr.forEach(function (d) { Array.prototype.forEach.call(d.children, function (i) { i.classList.add('qb-sm-pose'); }); });
+        setTimeout(function () { murS.querySelectorAll('.qb-sm-pose').forEach(function (i) { i.classList.remove('qb-sm-pose'); }); }, N * N * 22 + 480); }
+      function croissance() { var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var modes = S.modes && S.modes.length ? S.modes : ['pixel'];
+        var parTaille = etapes.some(function (e) { return e[2]; }); /* chaque taille a son contenu : la démo s arrête à la dernière taille */
+        if (reduit || etapes.length < 2) { var d0 = etapes[etapes.length - 1]; MODE = d0[2] || modes[modes.length - 1]; etape(d0[0], d0[1], d0[2]); lancerBouge(); return; }
+        /* la démo : croissance dans le premier mode, puis chaque mode suivant, une vague de tesselles à chaque changement ; le mur reste sur le dernier */
+        enCroissance = true; MODE = modes[0]; var i = 0, jm = 1;
+        (function suite() { etape(etapes[i][0], etapes[i][1], etapes[i][2]); i++; if (i < etapes.length) { setTimeout(suite, S.pasCroissance || 2600); return; }
+          if (parTaille) { setTimeout(function () { enCroissance = false; lancerBouge(); }, 1200); return; }
+          (function modeSuivant() { setTimeout(function () { if (jm < modes.length) { appliquerMode(modes[jm++], true); modeSuivant(); } else { enCroissance = false; lancerBouge(); } }, jm === 1 ? (S.pasCroissance || 2600) : (S.pasMode || 4200)); })(); })(); }
+      diapo = { demarrer: function (delai) { setTimeout(croissance, Math.max(0, delai) * 1000); } };
+      if (lanceDeja) { var dF = etapes[etapes.length - 1]; MODE = dF[2] || (S.modes && S.modes[S.modes.length - 1]) || 'pixel'; etape(dF[0], dF[1], dF[2]); lancerBouge(); } /* reconstruction (bascule bureau/mobile) : directement le mur final */
+      sm = { auMur: auMur, ouvrir: ouvrir };
+    }
     /* minutage des textes : comme le diaporama, le titre « Changez » arrive au premier changement du mur */
     var t0 = REGLAGES.depart + REGLAGES.dg + p; R.setProperty('--tc', t0.toFixed(2) + 's'); R.setProperty('--P', '60s');
     completPose = t0 + .8; tChangement = t0 + 2; R.setProperty('--t-changement', tChangement.toFixed(2) + 's');

@@ -467,3 +467,41 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 .qb-vif-invite{position:absolute;left:0;width:calc(100% - 42px);bottom:calc(100% + 36px);margin:0;text-align:center;font:700 clamp(14px,1.15vw,18px)/1.2 'Jura',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#dedede;text-shadow:0 1px 2px rgba(16,24,31,.75),0 1px 8px rgba(16,24,31,.85);pointer-events:none}
 .qb-en-salon .qb-vif-invite{opacity:0;transition:opacity .35s ease}
 @media (max-width:900px){.qb-vif-invite{width:100%}.qb-mur-vivant .qb-vif-cadre{margin-top:72px}} /* mobile : le mur suit les boutons de pres (9 px mesures) ; 72 px de marge font la place de la phrase, a 24 px des boutons */
+
+/* ===== 28/09 soir, fondateur : SALON, MUR DE CARREAUX (bandeau-relief.js, REGLAGES.vivant.salonMur ; bureau seulement) =====
+   Au repos : le mur de carreaux au-dessus du canapé, le mur démo et sa boîte à outils masqués. En composition : le salon se voile, le carreau
+   choisi vient à la place du mur démo avec les mêmes outils. Joints : fond noir du mur, 1 px entre tesselles, 2 px entre carreaux. */
+.qb-sm-mur{position:absolute;z-index:2; /* 28/09 soir, fondateur : plus de fond noir sous les carreaux — une tesselle ou un carreau retiré laisse voir le mur */opacity:0;animation:qb-sm-paraitre .8s ease forwards;animation-delay:var(--depart,0s)}
+@keyframes qb-sm-paraitre{to{opacity:1}}
+.qb-sm-c{position:absolute;display:grid;grid-template-columns:repeat(7,var(--w,10px));grid-template-rows:repeat(7,var(--w,10px));gap:var(--j,1px);cursor:pointer;filter:drop-shadow(-2px 3px 3px rgba(0,0,0,.55))} /* l ombre suit les tesselles : une place vide n en a pas */
+.qb-sm-c:focus-visible{outline:2px solid #DEDEDE;outline-offset:3px}
+.qb-sm-c i{position:relative;display:block;background-color:#1E2F45;background-repeat:no-repeat;box-shadow:inset .5px .5px 0 rgba(255,255,255,.28),inset -.5px -.5px 0 rgba(0,0,0,.5)}
+.qb-sm-c i.qb-sm-bouge{z-index:2;animation:qb-sm-declipse 2s cubic-bezier(.34,1.3,.64,1) both}
+.qb-sm-c i.qb-sm-bouge::after{content:'';position:absolute;inset:-140%} /* on vise un point qui bouge : zone de survol plus large que la tesselle */
+@keyframes qb-sm-declipse{0%,100%{transform:none}22%,58%{transform:translate(-14%,-34%) rotate(-9deg) scale(1.28);box-shadow:inset .5px .5px 0 rgba(255,255,255,.5),2px 4px 5px rgba(0,0,0,.75);filter:brightness(1.25)}}
+.qb-sm-c.qb-sm-parti i{opacity:0}
+.qb-sm-c i.qb-sm-pose{animation:qb-sm-pose .42s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--k) * 22ms)}
+@keyframes qb-sm-pose{0%{opacity:0;transform:scale(1.6)}60%{opacity:1;transform:scale(.94)}100%{opacity:1;transform:none}}
+.qb-sm-invite,.qb-sm-echelle{position:absolute;z-index:2;margin:0;white-space:nowrap;pointer-events:none;color:#DEDEDE;text-shadow:0 1px 2px rgba(16,24,31,.75),0 2px 14px rgba(16,24,31,.85);transition:opacity .3s}
+.qb-sm-invite{transform:translate(-50%,-100%);margin-top:-14px;font:600 clamp(14px,1.2vw,18px)/1 Jura,sans-serif;letter-spacing:.08em}
+.qb-sm-echelle{transform:translateX(-50%);margin-top:12px;font:600 11px/1 Jura,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#AAB2BA}
+.qb-sm-voile{position:absolute;inset:0;z-index:3;background:rgba(16,24,31,.55);opacity:0;pointer-events:none;transition:opacity .45s}
+.qb.qb-sm-compose .qb-sm-voile{opacity:1;pointer-events:auto}
+.qb.qb-sm-compose .qb-sm-invite,.qb.qb-sm-compose .qb-sm-echelle{opacity:0}
+.qb.qb-sm .qb-mur{z-index:4}
+.qb.qb-sm-repos .qb-vif-cadre,.qb.qb-sm-repos .qb-vif-etat{visibility:hidden;opacity:0;pointer-events:none}
+.qb.qb-sm-compose .qb-vif-rail{animation:qb-sm-rail .35s ease .3s both}
+@keyframes qb-sm-rail{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.qb-sm-mur,.qb-sm-c i.qb-sm-pose{animation:none;opacity:1}.qb-sm-c i.qb-sm-bouge{animation:none;outline:2px solid #FF9147}.qb.qb-sm-compose .qb-vif-rail{animation:none}}
+
+/* 28/09 soir, fondateur : « Exposez » remplace le bouton fauteuil — à cheval au milieu du bord bas du cadre, même dessin qu App démo en haut, mais cliquable */
+.qb-sm-exposer{position:absolute;left:calc((100% - 32px - 10px) / 2);bottom:-13px;transform:translateX(-50%);z-index:3;border:0;cursor:pointer;font:700 10px/1 'Jura',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#10181f;background:var(--qz-terracotta,#d96c2f);padding:8px 14px;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.28),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.3),0.35mm 0.5mm 1.2mm rgba(0,0,0,.5);transition:background-color .15s,transform .15s}
+.qb-sm-exposer:hover,.qb-sm-exposer:focus-visible{background:#df824e;transform:translateX(-50%) translateY(-1px)}
+.qb-sm-exposer:focus-visible{outline:2px solid #dedede;outline-offset:3px}
+
+/* 28/09 soir, fondateur : la mention d échelle est masquée quand le tableau est complet au mur (et elle l était déjà en composition) : elle ne s affiche plus */
+.qb-sm-echelle{display:none!important}
+
+/* 29/09 : le nom du mode en cours sous le mur (Pixel, Photo, Mosaïque), à la place de la mention d échelle ; caché en composition */
+.qb-sm-mode{position:absolute;z-index:2;transform:translateX(-50%);margin:12px 0 0;white-space:nowrap;pointer-events:none;font:600 11px/1 Jura,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#DEDEDE;text-shadow:0 1px 2px rgba(16,24,31,.75),0 2px 14px rgba(16,24,31,.85);transition:opacity .3s}
+.qb.qb-sm-compose .qb-sm-mode{opacity:0}

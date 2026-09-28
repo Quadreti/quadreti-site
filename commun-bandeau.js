@@ -25,7 +25,7 @@ var QZ_CSS = QZ_BASE ? './' : '/';
 /* 18/09 : numero de version sur les feuilles communes. GitHub Pages les sert en max-age=600 — dix minutes pendant
    lesquelles un depot reste invisible, et pendant lesquelles on croit qu il n a pas eu lieu. A BUMPER a chaque fois
    qu une feuille commune change : c est le prix d un rechargement fiable. */
-var QZ_VER = '?v=2026-09-28f'; /* 28/09 : logo QUADRETI en police propriétaire (série carrée), Q et I orange */
+var QZ_VER = '?v=2026-09-28h'; /* 28/09 : logo QUADRETI en police propriétaire (série carrée), Q et I orange */
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'logo-v5.css' + QZ_VER + '">');
 document.write('<link rel="stylesheet" href="' + QZ_CSS + 'entete-commun.css' + QZ_VER + '">'); /* 12/09 : en-tete commune (barre, onglet, bloc logo, menu visible) */
 
@@ -129,6 +129,11 @@ window.qzLogo14Suivre = function (bloc) {
   if (col && window.MutationObserver) new MutationObserver(function () { clearTimeout(bloc._qz14); bloc._qz14 = setTimeout(f, 30); }).observe(col, { childList: true, subtree: true, characterData: true });
 };
 /* LOGO14-FIN */
+/* 28/09 soir, fondateur : « centre le logo et la catégorie avec la même marge en haut, en bas et à gauche ». Marge = la moitié du gris qui reste
+   autour du bloc (bas de l onglet, à gauche, moins la hauteur réelle du bloc logo + catégorie), la même reprise à gauche. Remplace MARGE = 16,
+   qui datait du logo à trois lignes. Utilisé par commun-bandeau.js et bandeau-relief.js. */
+window.qzMargeLogo = function (menu) { var row = menu && menu.querySelector('.qz-logorow'), svg = menu && menu.querySelector('svg.qz-onglet'); if (!row || !svg) return 16;
+  var hb = row.getBoundingClientRect().height, gris = svg.getBoundingClientRect().bottom - menu.getBoundingClientRect().top; if (!hb || !gris || gris <= hb) return 16; return Math.max(8, Math.round((gris - hb) / 2)); };
 var QZ_BANDEAU_HTML = (
   '<header class="qz-header' + (qzApp ? ' qz-app' : '') + '">' +
     /* 12/09 : onglet de l en-tete = BORD 1 du fondateur (!BAZAR A MORAD\\ONGLET, + 10 mm de gris au-dessus), forme + ligne du bord libre en lisere */
@@ -324,8 +329,9 @@ window.qzEnteteInit = function(){
     var logoRow = menu.querySelector('.qz-logorow'), naming = menu.querySelector('.qz-naming, .qz-app-nom');
     menu.style.setProperty('--qz-onglet', (BLOC + 2 * MARGE) + 'px');
     if (large) {
-      menu.style.height = BARRE + 'px'; menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px'; menu.style.paddingLeft = MARGE + 'px';
-      if (logoRow) { logoRow.style.marginTop = MARGE + 'px'; logoRow.style.alignSelf = 'flex-start'; }
+      menu.style.height = BARRE + 'px'; menu.style.paddingTop = '0px'; menu.style.paddingBottom = '0px';
+      var mEg = window.qzMargeLogo ? window.qzMargeLogo(menu) : MARGE; menu.style.paddingLeft = mEg + 'px'; /* 28/09 soir, fondateur : logo + catégorie centrés dans le gris, même marge en haut, en bas et à gauche */
+      if (logoRow) { logoRow.style.marginTop = mEg + 'px'; logoRow.style.alignSelf = 'flex-start'; }
       /* 18/09 : pas de centrage du menu sur la ligne du naming en mode burger — le panneau n occupe plus de place,
          la mesure ne veut plus rien dire. */
       if (nav && naming && !document.documentElement.classList.contains('qz-menu-tiroir')) { nav.style.alignSelf = 'flex-start'; nav.style.marginTop = Math.max(0, Math.round(MARGE + naming.offsetHeight / 2 - nav.offsetHeight / 2)) + 'px'; }
@@ -893,3 +899,5 @@ document.write('<script>window.qzEnteteInit && window.qzEnteteInit();window.qzLo
   window.addEventListener('load', sansAccents);
   if (window.MutationObserver) document.addEventListener('DOMContentLoaded', function(){ var att; new MutationObserver(function(){ clearTimeout(att); att = setTimeout(sansAccents, 60); }).observe(document.body, { childList: true, subtree: true, characterData: true }); });
 })();
+/* 28/09 soir, fondateur : sous le logo de la barre, la catégorie s efface quand on descend dans la page et revient en haut (logo-v5.css, bloc qz-defile) */
+(function () { var h = document.documentElement, f = function () { h.classList.toggle('qz-defile', (window.scrollY || window.pageYOffset || 0) > 40); }; window.addEventListener('scroll', f, { passive: true }); f(); })();
