@@ -1,0 +1,50 @@
+/* QuadretI — PAGE D ENTRÉE (28/09). Généré par SITE\DESIGN SYSTEME\generer-entree-site.js — ne pas éditer à la main, relancer le générateur.
+   Voile posé par-dessus l accueil, une fois par visite. Jetons : --qze-fond (navy), --qze-orange, --qze-encre (Q et texte, charte : encre sur
+   l orange), --qze-gris, --qze-gris-2. Le voile n existe que sous html.qz-entree (posée par entree-site.js avant le premier rendu). */
+:root{--qze-fond:#1E2B35;--qze-orange:#D96C2F;--qze-encre:#10181F;--qze-gris:#DEDEDE;--qze-gris-2:#5A6672;--qze-bloc:calc(3 * var(--qzq-case,25mm) - var(--qzq-bord,1.65mm))}
+html.qz-entree{overflow:hidden}
+html.qz-entree body{overflow:hidden}
+.qze{position:fixed;inset:0;z-index:99990;background:var(--qze-fond);font-family:Jura,system-ui,sans-serif;color:var(--qze-gris);overflow:hidden}
+.qze[hidden]{display:none}
+.qze.qze-sort{animation:qze-voile .5s ease .9s forwards}
+@keyframes qze-voile{to{opacity:0;visibility:hidden}}
+/* le fond : les mêmes cases en creux que le site (fond-quadrillage.css), posées par entree-site.js */
+.qze .qz-quadrillage{position:absolute;inset:0;pointer-events:none}
+.qze .qz-quadrillage i{position:absolute;display:block;box-sizing:border-box;border-radius:0}
+.qze .qz-quadrillage i.creux{background:transparent;box-shadow:inset 0.9mm 0.9mm 1.8mm rgba(0,0,0,calc(var(--qzq-prof,.5)*.9)),inset -0.25mm -0.25mm 0.5mm rgba(255,255,255,calc(var(--qzq-prof,.5)*.12))}
+.qze-bloc{position:absolute;z-index:2;left:calc(var(--col,10) * var(--qzq-case,25mm) + var(--qzq-bord,1.65mm));top:calc(var(--row,5) * var(--qzq-case,25mm) + var(--qzq-bord,1.65mm))}
+.qze-logo9{display:grid;grid-template-columns:repeat(3,calc(var(--qzq-case,25mm) - var(--qzq-bord,1.65mm)));grid-auto-rows:calc(var(--qzq-case,25mm) - var(--qzq-bord,1.65mm));gap:var(--qzq-bord,1.65mm);border:0;padding:0;margin:0;background:transparent;cursor:pointer;position:relative;transition:transform .18s cubic-bezier(.34,1.56,.64,1);transform-origin:0 0}
+.qze-logo9:hover{transform:translate(-0.4mm,-0.5mm) scale(1.02)}
+.qze-logo9:active{transform:translate(0.2mm,0.3mm) scale(.985)}
+.qze-logo9:focus-visible{outline:3px solid var(--qze-gris);outline-offset:6px}
+.qze-t{position:relative;display:block;overflow:hidden;background:var(--t,var(--qze-orange));border-radius:0;
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.45),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.35),0.35mm 0.5mm 1.2mm rgba(0,0,0,.7);transition:box-shadow .18s;
+  animation:qze-pose .5s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--g) * .18s)}
+.qze-logo9:active .qze-t{box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(0,0,0,.18),inset -0.45mm -0.45mm 0.3mm rgba(255,255,255,.5),0 0 0 rgba(0,0,0,0)}
+.qze-t .qze-q{position:absolute;width:calc(var(--qze-bloc) * .84);height:calc(var(--qze-bloc) * .84);left:calc(var(--qze-bloc) * .08 - var(--dx) * var(--qzq-case,25mm));top:calc(var(--qze-bloc) * .08 - var(--dy) * var(--qzq-case,25mm));display:block;pointer-events:none}
+.qze-t .qze-q path{fill:var(--qze-encre)}
+.qze-t::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.75) 50%,rgba(255,255,255,.15) 56%,transparent 70%);transform:translateX(-130%);pointer-events:none;z-index:2;animation:qze-balaie 3s linear infinite;animation-delay:calc(var(--g) * .2s + 2.8s)}
+.qze-logo9:hover .qze-t::after{animation-duration:1.4s;animation-delay:calc(var(--g) * .08s)}
+@keyframes qze-pose{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:none;opacity:1}}
+@keyframes qze-balaie{0%{transform:translateX(-130%)}30%{transform:translateX(130%)}100%{transform:translateX(130%)}}
+/* « entrer » : ne s allume qu une fois la page chargée derrière (classe qze-prete) */
+.qze-entrer{position:absolute;left:0;width:var(--qze-bloc);top:calc(3 * var(--qzq-case,25mm) + 4px);text-align:center;font:600 11px/1 Jura,sans-serif;letter-spacing:.35em;text-transform:uppercase;color:var(--qze-gris-2);opacity:0;transition:opacity .6s ease;pointer-events:none}
+.qze.qze-prete .qze-entrer{opacity:1}
+/* le chargeur : 9 cases orange, phrase Jura sur 1-5, « quadreti » deux lettres par case sur 6-9 */
+.qze-chargeur{position:absolute;left:calc(-3 * var(--qzq-case,25mm));top:calc(4 * var(--qzq-case,25mm));display:flex;gap:var(--qzq-bord,1.65mm);list-style:none;margin:0;padding:0}
+.qze-chargeur li{width:calc(var(--qzq-case,25mm) - var(--qzq-bord,1.65mm));height:calc(var(--qzq-case,25mm) - var(--qzq-bord,1.65mm));background:var(--t);position:relative;overflow:hidden;
+  box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,.6),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,.25),0.35mm 0.5mm 1.2mm rgba(0,0,0,.6);
+  opacity:0;animation:qze-allume .45s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(var(--k) * .12s + 1.4s)}
+@keyframes qze-allume{0%{opacity:0;transform:scale(.6)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:none}}
+.qze-chargeur li .tx{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--qze-encre);pointer-events:none;white-space:nowrap}
+.qze-chargeur li .tx.phrase{left:calc(-1 * var(--k) * var(--qzq-case,25mm));width:calc(5 * var(--qzq-case,25mm) - var(--qzq-bord,1.65mm));font:600 calc(var(--qzq-case,25mm) * .30)/1 Jura,sans-serif;letter-spacing:.05em}
+.qze-chargeur li .tx.paire{display:block;position:absolute;left:0;width:100%;top:var(--top-q,0px);line-height:0;text-align:center;font:400 var(--taille-q,60px)/0 'Quadreti Modulaire',Jura,sans-serif;letter-spacing:.04em;transform:translateX(var(--dx-q,0px))}
+.qze-chargeur li::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.75) 50%,rgba(255,255,255,.15) 56%,transparent 70%);transform:translateX(-130%);animation:qze-balaie 3s linear infinite;animation-delay:calc(var(--k) * .16s + 2.8s);pointer-events:none}
+/* sortie : chargeur et mot s effacent, les 9 tesselles glissent vers la place du logo de la barre, puis le voile s efface */
+.qze.qze-sort .qze-chargeur,.qze.qze-sort .qze-entrer{animation:qze-sortie .5s ease forwards}
+@keyframes qze-sortie{to{opacity:0}}
+.qze.qze-sort .qze-logo9{transition:transform .9s cubic-bezier(.4,0,.2,1);transform:translate(var(--vx),var(--vy)) scale(var(--vs))}
+.qze.qze-sort .qze-t::after{animation:none}
+@media (prefers-reduced-motion:reduce){.qze-t,.qze-t::after,.qze-chargeur li,.qze-chargeur li::after{animation:none;opacity:1}.qze.qze-sort{animation-delay:0s}.qze.qze-sort .qze-logo9{transition:none}}
+/* petits écrans : le bloc se recentre par le script ; le chargeur passe SOUS le logo, centré sur lui, à 5 cases de large seulement (mobile : à affiner) */
+@media (max-width:640px){.qze-chargeur{left:calc(-1 * var(--qzq-case,25mm))}.qze-chargeur li:nth-child(n+6){display:none}}

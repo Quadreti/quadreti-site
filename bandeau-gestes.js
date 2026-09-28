@@ -14,10 +14,12 @@
            Imprimez : Une imprimante de salon suffit : imprimez sur papier ordinaire, decoupez.
            Clipsez  : Glissez le visuel dans l etui, pressez : la tesselle se clipse dans la grille.
            Changez  : Envie d autre chose ? Declipsez, remplacez, c est reparti. Sans colle, sans trace. */
-      { icone: 'composez', titre: 'Composez', texte: '' },
-      { icone: 'imprimez', titre: 'Imprimez', texte: '' },
-      { icone: 'clipsez', titre: 'Clipsez', texte: '' },
-      { icone: 'changez', titre: 'Changez', texte: '' }
+      /* 28/09, fondateur : chaque icone devient une TESSELLE CLIQUABLE qui ouvre un pop-up CARRE et court. Les quatre textes du 18/09
+         reprennent du service dans `pop` (texte : '' = rien sous l icone, comme avant). */
+      { icone: 'composez', titre: 'Composez', texte: '', pop: 'Sur téléphone ou ordinateur, composez votre visuel dans Quadreti Designer.', lien: { texte: 'Ouvrir Designer', href: 'https://designer.quadreti.fr' } },
+      { icone: 'imprimez', titre: 'Imprimez', texte: '', pop: 'Une imprimante de salon suffit : imprimez sur papier ordinaire, découpez.' },
+      { icone: 'clipsez', titre: 'Clipsez', texte: '', pop: 'Glissez le visuel dans l’étui, pressez : la tesselle se clipse dans la grille.', lien: { texte: 'Guide de montage', href: '/quadreti-guide-codification.html' } },
+      { icone: 'changez', titre: 'Changez', texte: '', pop: 'Envie d’autre chose ? Déclipsez, remplacez, c’est reparti. Sans colle, sans trace.' }
     ]
   };
   /* 19/09, fondateur — L ICONE CLIPSEZ : la ligne du carreau ne traverse plus le doigt, et le clipsage a son halo.
@@ -48,9 +50,23 @@
   var hero = document.getElementById('hero'); var qb = document.getElementById('qbBandeau'); if (!hero || !qb || qb.classList.contains('qb-repli')) return;
   var bande = document.createElement('div'); bande.className = 'qb-gestes qb-gestes-' + REGLAGES.variante;
   bande.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' + SYMBOLES + '</defs></svg><ul class="qb-gestes-liste">' +
-    REGLAGES.gestes.map(function (g, i) { return (i ? '<li class="qb-geste-fleche" aria-hidden="true"><svg><use href="#qg-fleche"></use></svg></li>' : '') + '<li class="qb-geste qb-geste-' + g.icone + '"><svg class="qb-geste-icone" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#qg-' + g.icone + '"></use></svg><h3>' + g.titre + '</h3>' + (g.texte ? '<p>' + g.texte + '</p>' : '') + '</li>'; }).join('') + '</ul>';
+    REGLAGES.gestes.map(function (g, i) { return (i ? '<li class="qb-geste-fleche" aria-hidden="true"><svg><use href="#qg-fleche"></use></svg></li>' : '') + '<li class="qb-geste qb-geste-' + g.icone + '"><button type="button" class="qb-geste-tess" data-geste="' + i + '" aria-haspopup="dialog" aria-label="' + g.titre + ' : en savoir plus"><svg class="qb-geste-icone" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#qg-' + g.icone + '"></use></svg></button><h3>' + g.titre + '</h3>' + (g.texte ? '<p>' + g.texte + '</p>' : '') + '</li>'; }).join('') + '</ul>';
   Array.prototype.forEach.call(bande.querySelectorAll('.qb-gestes-liste > li'), function (li, i) { li.style.setProperty('--i', i); });
   qb.insertAdjacentElement('afterend', bande);
+  /* 28/09 : POP-UP CARRE. Une seule boite pour les quatre gestes : icone, titre, une phrase, un lien s il y en a un. Fermeture par la
+     tesselle orange, la touche Echap ou un clic a cote ; le focus revient sur la tesselle qui l a ouvert. */
+  var pop = document.createElement('div'); pop.className = 'qb-pop'; pop.hidden = true; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-modal', 'true'); pop.setAttribute('aria-labelledby', 'qbPopTitre');
+  pop.innerHTML = '<div class="qb-pop-carre"><button type="button" class="qb-pop-fermer" aria-label="Fermer">&#215;</button><svg class="qb-pop-icone" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><use href="#qg-composez"></use></svg><h3 id="qbPopTitre"></h3><p></p><a class="qb-pop-lien" hidden></a></div>';
+  document.body.appendChild(pop);
+  var popOuvreur = null;
+  function fermerPop() { if (pop.hidden) return; pop.hidden = true; document.removeEventListener('keydown', popClavier); if (popOuvreur) popOuvreur.focus(); popOuvreur = null; }
+  function popClavier(e) { if (e.key === 'Escape') fermerPop(); }
+  function ouvrirPop(i, btn) { var g = REGLAGES.gestes[i]; if (!g) return; popOuvreur = btn;
+    pop.querySelector('.qb-pop-icone use').setAttribute('href', '#qg-' + g.icone); pop.querySelector('h3').textContent = g.titre; pop.querySelector('p').textContent = g.pop || '';
+    var a = pop.querySelector('.qb-pop-lien'); if (g.lien) { a.hidden = false; a.textContent = g.lien.texte; a.href = g.lien.href; if (/^https?:/.test(g.lien.href)) { a.target = '_blank'; a.rel = 'noopener'; } else { a.removeAttribute('target'); a.removeAttribute('rel'); } } else a.hidden = true;
+    pop.hidden = false; pop.querySelector('.qb-pop-fermer').focus(); document.addEventListener('keydown', popClavier); }
+  bande.addEventListener('click', function (e) { var b = e.target.closest('.qb-geste-tess'); if (b) ouvrirPop(+b.getAttribute('data-geste'), b); });
+  pop.addEventListener('click', function (e) { if (e.target === pop || e.target.closest('.qb-pop-fermer')) fermerPop(); });
   if (REGLAGES.defile && REGLAGES.defile.textes.length) {
     var defile = document.createElement('div'); defile.className = 'qb-defile'; defile.setAttribute('aria-hidden', 'true'); defile.style.setProperty('--qb-defile-duree', REGLAGES.defile.duree + 's');
     var piste = REGLAGES.defile.textes.map(function (t) { return '<span>' + t + '</span>'; }).join(''); defile.innerHTML = '<div class="qb-defile-fenetre"><div class="qb-defile-piste">' + piste + piste + '</div></div>'; /* deux fois : la piste defile d une moitie puis reboucle sans a-coup */

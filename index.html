@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 18/09 : qz-fond-sombre = le theme sombre du site. Ecrit EN DUR dans la balise, pas pose par un
      script : le fond ne doit pas dependre d un chargement. Les regles vivent dans commun.css et entete-commun.css. -->
-<html lang="fr" class="qz-fond-sombre qz-barres-claires"><!-- 28/09, fondateur : barre du haut, bandeau defilant et pied en gris #DEDEDE (qz-barres-claires), le reste de la page garde le theme sombre -->
+<html lang="fr" class="qz-fond-sombre qz-barres-claires qz-tesselles-boutons"><!-- 28/09, fondateur : barre du haut, bandeau defilant et pied en gris #DEDEDE (qz-barres-claires), le reste de la page garde le theme sombre -->
 <head>
 <meta charset="UTF-8">
 <!-- 12/09 : anti-flash de la sequence d accueil (bandeau-relief.js). Sur bureau, les textes animes (logo, menu, titre, boutons, icones)
@@ -40,11 +40,20 @@
 })();
 </script>
 <!-- GARDE-ACCES-FIN -->
+<!-- 28/09, fondateur : PAGE D ENTREE (« tu enchaines le spinner »). Voile pose par-dessus l accueil une fois par visite : logo en 9 tesselles,
+     chargeur 9 cases, sortie automatique 30 s, les tesselles glissent vers la place du logo de la barre. Fichiers generes par
+     SITE\DESIGN SYSTEME\generer-entree-site.js. Le logo de la barre et la banniere attendent l evenement qz-entree-fin.
+     Tant que le voile n est pas construit (DOMContentLoaded), rien de la page ne se montre (qz-entree-attente), sauf le garde-acces. -->
+<link rel="stylesheet" href="/entree-site.css?v=2026-09-28a">
+<style>html.qz-entree.qz-entree-attente body>*{visibility:hidden}</style>
+<script>document.documentElement.classList.add('qz-entree-attente');</script>
+<script src="/entree-site.js?v=2026-09-28a"></script>
+<script>if(!window.qzEntreeActive)document.documentElement.classList.remove('qz-entree-attente');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quadreti — Composez, imprimez, clipsez, changez à volonté.</title>
 <!-- 14/09 : la description suit la definition du fondateur — un multi-cadre, pas « un support creatif modulaire » qui ne dit rien a personne. -->
 <meta name="description" content="Un multi-cadre qui se clipse au mur : chaque tesselle est un mini cadre. Photos, compositions, logo, mosaïque — composez chez vous, imprimez, clipsez, changez à volonté.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' rx='46' fill='%23F5F5F5'/%3E%3Cg transform='translate%2836.50,36.50%29'%3E%3Crect x='0.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='0.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='59.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='118.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='0.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='59.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='118.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%232B353E'/%3E%3Crect x='177.00' y='177.00' width='50.00' height='50.00' rx='11.00' fill='%23E2725B'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="/img/favicon-tesselle.svg?v=2026-09-28" type="image/svg+xml"><!-- 28/09 : favicon = le Q sur sa tesselle orange (fondateur : « favicon le logo ») -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -330,11 +339,7 @@
   .story .txt p{ margin:12px 0; color:#3d4650; }
   .story .txt p b{ color:var(--charbon); }
   .story .txt .reinvente{ font-weight:700; color:var(--charbon); font-size:18px; }
-  .tessera{
-    display:grid; grid-template-columns:repeat(5, 1fr); gap:8px;
-    max-width:340px; margin:0 auto; background:var(--charbon); padding:10px; border-radius:14px;
-  }
-  .tessera i{ display:block; aspect-ratio:1; border-radius:4px; }
+  /* 28/09 : la mosaique .tessera (section Romains) est partie avec sa section. */
 
   /* ===== Comment ça marche ===== */
 /* ===== Les trois gestes, en bandes (14/09, demande du fondateur) =====
@@ -2064,9 +2069,10 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-28d"></script>
+<script src="/commun-bandeau.js?v=2026-09-28e"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-28e">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-28f">
+<link rel="stylesheet" href="/tesselle-bouton.css?v=2026-09-28a"><!-- 28/09, fondateur : les boutons deviennent des tesselles cliquables (composant, portee html.qz-tesselles-boutons) -->
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -2872,27 +2878,7 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 
 <!-- ============ 10. HISTOIRE ============
      14/09 : A propos — d ou vient l objet. En fin de page : c est le supplement d ame, pas l argument d achat. -->
-<section class="blk alt" id="histoire">
-  <div class="wrap story">
-    <div class="txt rv">
-      <div class="titre-carte rv">
-      <div class="eyebrow">À propos</div>
-      <!-- 14/09 : l ancien titre — « La mosaique pixel, revisitee » — definissait le produit comme une mosaique, alors que la page
-           vient d expliquer qu il affiche bien plus que ca. Ici on raconte d ou vient la TESSELLE, pas ce qu est le produit. -->
-      <h2>D'où vient la tesselle.</h2>
-      </div>
-      <p>Il y a deux mille ans, les mosaïstes romains posaient leurs <b>tesselles</b> une à une, scellées pour durer toute une vie. Une œuvre magnifique — et définitive.</p>
-      <p>Quadreti reprend la tesselle là où ils l'ont laissée : le même petit carré, la même patience heureuse du geste, le même plaisir de voir l'image naître pièce par pièce.</p>
-      <p class="reinvente">Ce que nous avons réinventé, c'est la façon de la poser : elle ne se colle pas, elle se clipse.</p>
-      <!-- 14/09 : la page ne disait nulle part QUI fait Quadreti. « Conception et fabrication francaises » passait en une ligne dans
-           le bandeau defilant, et c etait tout. Une section A propos qui ne le dit pas passe a cote de son role. -->
-      <p>Quadreti est conçu et fabriqué en France. La grille, les tesselles et les étuis sortent de notre atelier ; le reste — le visuel, le choix, l'envie du moment — sort de chez vous.</p>
-    </div>
-    <div class="rv">
-      <div class="tessera" id="tessera" aria-hidden="true"></div>
-    </div>
-  </div>
-</section>
+<!-- 28/09, fondateur : la section « D ou vient la tesselle » (les mosaistes romains) est RETIREE definitivement. Elle reste dans l historique git (avant le commit du 28/09). -->
 
 <!-- ============ FINALE ============ -->
 <section class="finale">
@@ -3055,28 +3041,13 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
   dots.forEach((d, i) => d.addEventListener('click', () => show(i)));
   if (!reduce) setInterval(() => show((cur + 1) % slides.length), 4000);
 
-  /* ---------- Tessera (storytelling) : mosaïque qui se remplit ---------- */
-  const tessera = document.getElementById('tessera');
-  const tessColors = ['#CBBD93','#E2725B','#F5F5F5','#CBBD93','#556B2F','#F5F5F5','#E2725B','#CBBD93','#F5F5F5'];
-  const tessCells = [];
-  for (let n = 0; n < 25; n++){
-    const i = document.createElement('i');
-    i.style.background = tessColors[n % tessColors.length];
-    i.style.opacity = 0;
-    i.style.transition = 'opacity .4s ease';
-    i.style.transitionDelay = (n * 45) + 'ms';
-    tessera.appendChild(i);
-    tessCells.push(i);
-  }
+  /* 28/09 : le bloc Tessera (section Romains) est retire avec sa section. */
 
   /* ---------- Apparition au scroll ---------- */
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting){
         e.target.classList.add('in');
-        if (e.target.querySelector && e.target.contains(tessera)){
-          tessCells.forEach(c => c.style.opacity = 1);
-        }
         io.unobserve(e.target);
       }
     });
@@ -3085,7 +3056,6 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 
   if (reduce){
     document.querySelectorAll('.rv').forEach(el => el.classList.add('in'));
-    tessCells.forEach(c => c.style.opacity = 1);
   }
 
   /* ---------- FAQ accordéon ---------- */
@@ -3308,8 +3278,8 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-28e"></script>
-<script src="/bandeau-gestes.js?v=2026-09-22e"></script>
+<script src="/bandeau-relief.js?v=2026-09-28f"></script>
+<script src="/bandeau-gestes.js?v=2026-09-28a"></script>
 <script src="/fond-quadrillage.js?v=2026-09-28c" defer></script>
 </body>
 </html>

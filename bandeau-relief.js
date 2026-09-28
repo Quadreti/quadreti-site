@@ -539,7 +539,7 @@
     mur.classList.remove('qb-vif-avous');
     var html = '<div class="qb-vif" role="group" aria-label="Mur Quadreti 7 par 7 : cliquez une tesselle pour changer sa couleur, deposez une photo pour la poser">';
     for (var i = 0; i < N * N; i++) html += '<button type="button" class="qb-vt" data-i="' + i + '" aria-label="tesselle ' + (Math.floor(i / N) + 1) + ',' + (i % N + 1) + '"></button>';
-    html += '</div><div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label><button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><span class="qb-vif-etat" aria-live="polite">demonstration</span></div>';
+    html += '</div><div class="qb-vif-outils"><label class="qb-vif-btn"><input type="file" accept="image/*" hidden>+ Photo</label><button type="button" class="qb-vif-btn qb-vif-camera" hidden>Me prendre en photo</button><button type="button" class="qb-vif-btn qb-vif-melanger">Melanger</button><span class="qb-vif-etat" aria-live="polite">demonstration</span></div>';
     mur.innerHTML = html; mur.classList.add('qb-mur-vivant'); mur.removeAttribute('aria-hidden'); style.textContent = '';
     var grille = mur.querySelector('.qb-vif'), tuiles = grille.querySelectorAll('.qb-vt'), etat = mur.querySelector('.qb-vif-etat');
     var cs = getComputedStyle(mur), PAL = []; for (var k = 1; k <= 9; k++) { var v = cs.getPropertyValue('--qv-' + k).trim(); if (v) PAL.push(v); }
@@ -555,7 +555,7 @@
     function demoPhoto() { if (!demo) return; photos = []; cases.forEach(function (x, k) { if (x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); var tailles = V.tailles || [2, 3], nn = tailles[Math.floor(Math.random() * tailles.length)]; poserPhoto(visuels[iPhoto++ % visuels.length], Math.floor(Math.random() * (N - nn + 1)), Math.floor(Math.random() * (N - nn + 1)), nn); }
     function stopDemo() { if (!demo) return; demo = false; clearInterval(tCouleur); clearInterval(tPhoto); etat.textContent = 'a vous : cliquez une case, deposez une photo'; mur.classList.add('qb-vif-avous'); }
     function demarrerDemo() { if (demo) return; demo = true; tCouleur = setInterval(demoPas, V.pasCouleur || 900); tPhoto = setInterval(demoPhoto, V.pasPhoto || 6000); setTimeout(demoPhoto, 1200); }
-    mur._vivantStop = function () { clearInterval(tCouleur); clearInterval(tPhoto); demo = false; window.removeEventListener('resize', caler); };
+    mur._vivantStop = function () { clearInterval(tCouleur); clearInterval(tPhoto); demo = false; window.removeEventListener('resize', caler); if (mur._vivantStopCam) mur._vivantStopCam(); };
     grille.addEventListener('click', function (e) { var b = e.target.closest('.qb-vt'); if (!b) return; stopDemo(); var k = +b.getAttribute('data-i'), x = cases[k]; var i = PAL.indexOf(x.couleur); peindre(k, PAL[(i + 1) % PAL.length]); });
     function lireFichier(f, r0, c0) { if (!f || !/^image\//.test(f.type)) return; stopDemo(); var u = URL.createObjectURL(f), im = new Image(); im.onload = function () { poserPhoto(u, r0, c0, 3); }; im.src = u; }
     mur.querySelector('input[type=file]').addEventListener('change', function (e) { lireFichier(e.target.files[0], 2, 2); e.target.value = ''; });
@@ -563,6 +563,38 @@
     grille.addEventListener('dragleave', function () { grille.classList.remove('qb-vif-survol'); });
     grille.addEventListener('drop', function (e) { e.preventDefault(); grille.classList.remove('qb-vif-survol'); var r = grille.getBoundingClientRect(), cw = grille.clientWidth / N; lireFichier(e.dataTransfer.files[0], Math.floor((e.clientY - r.top) / cw) - 1, Math.floor((e.clientX - r.left) / cw) - 1); });
     mur.querySelector('.qb-vif-melanger').addEventListener('click', function () { stopDemo(); cases.forEach(function (x, k) { if (!x.photo) peindre(k, PAL[Math.floor(Math.random() * 7)]); }); });
+    /* 28/09, fondateur : « se prendre en photo pour tester des le premier moment ». Camera de l appareil, ouverte SEULEMENT apres un clic,
+       apercu en miroir dans un cadre carre, la prise est decoupee en 3x3 au centre du mur comme une photo deposee. Tout reste dans le
+       navigateur : aucun envoi, aucun stockage — le flux est coupe des que la boite se ferme. Le bouton n existe que si la camera est
+       possible (HTTPS ou localhost, API presente). */
+    var btnCam = mur.querySelector('.qb-vif-camera');
+    if (btnCam && window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      btnCam.hidden = false;
+      var cam = null, flux = null;
+      function fermerCam() { if (flux) { flux.getTracks().forEach(function (t) { t.stop(); }); flux = null; } if (cam) { cam.remove(); cam = null; } document.removeEventListener('keydown', camClavier); btnCam.focus(); }
+      function camClavier(e) { if (e.key === 'Escape') fermerCam(); }
+      function ouvrirCam() {
+        stopDemo();
+        cam = document.createElement('div'); cam.className = 'qb-cam'; cam.setAttribute('role', 'dialog'); cam.setAttribute('aria-modal', 'true'); cam.setAttribute('aria-label', 'Me prendre en photo');
+        cam.innerHTML = '<div class="qb-cam-carre"><div class="qb-cam-cadre"><video autoplay playsinline muted></video><span class="qb-cam-attente">Ouverture de la caméra…</span></div>' +
+          '<p class="qb-cam-note">La photo reste sur votre appareil : rien n’est envoyé, rien n’est enregistré.</p>' +
+          '<div class="qb-cam-boutons"><button type="button" class="qb-cam-prendre" disabled>Prendre la photo</button><button type="button" class="qb-cam-annuler">Annuler</button></div></div>';
+        document.body.appendChild(cam); document.addEventListener('keydown', camClavier);
+        var video = cam.querySelector('video'), prendre = cam.querySelector('.qb-cam-prendre'), attente = cam.querySelector('.qb-cam-attente');
+        cam.querySelector('.qb-cam-annuler').addEventListener('click', fermerCam);
+        cam.addEventListener('click', function (e) { if (e.target === cam) fermerCam(); });
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false }).then(function (st) {
+          flux = st; video.srcObject = st; video.onloadedmetadata = function () { attente.hidden = true; prendre.disabled = false; prendre.focus(); };
+        }).catch(function () { attente.textContent = 'Caméra indisponible ou refusée.'; });
+        prendre.addEventListener('click', function () {
+          var w = video.videoWidth, h = video.videoHeight; if (!w || !h) return; var c = Math.min(w, h), cv = document.createElement('canvas'); cv.width = cv.height = c; var g = cv.getContext('2d');
+          g.translate(c, 0); g.scale(-1, 1); /* miroir, comme l apercu */ g.drawImage(video, (w - c) / 2, (h - c) / 2, c, c, 0, 0, c, c);
+          cv.toBlob(function (b) { if (!b) return; var u = URL.createObjectURL(b); fermerCam(); poserPhoto(u, 2, 2, 3); etat.textContent = 'vous voilà sur le mur'; }, 'image/jpeg', .92);
+        });
+      }
+      btnCam.addEventListener('click', ouvrirCam);
+      mur._vivantStopCam = fermerCam;
+    }
     /* meme prise que le diaporama : lancer() appelle diapo.demarrer(delai) au depart du mur */
     diapo = { demarrer: function (delai) { setTimeout(demarrerDemo, Math.max(0, delai) * 1000); } };
     if (lanceDeja) demarrerDemo(); /* reconstruction (bascule mobile/bureau) alors que le mur a deja ete lance : la demo repart tout de suite */
@@ -640,7 +672,7 @@
     /* 10/09, demande fondateur : le bandeau demarre quand l'animation du logo (commun-bandeau.js / logo-v5.css) est finie, puis 1 s de pause.
        Sans logo anime sur la page (deja joue dans la session, mouvement reduit...), depart 1 s apres le chargement. */
     var PAUSE_APRES_LOGO = 1000, lance = false;
-    var partir = function () { if (lance) return; lance = true; poserTrace(.3); document.documentElement.classList.remove('qb-attente', 'qb-attente-icones'); /* pas de sequence : tout visible */ setTimeout(lancer, PAUSE_APRES_LOGO); };
+    var partir = function () { if (lance) return; if (document.documentElement.classList.contains('qz-entree')) { window.addEventListener('qz-entree-fin', function () { setTimeout(partir, 80); }, { once: true }); return; } /* 28/09 : page d entree, le mur attend la fin du voile */ lance = true; poserTrace(.3); document.documentElement.classList.remove('qb-attente', 'qb-attente-icones'); /* pas de sequence : tout visible */ setTimeout(lancer, PAUSE_APRES_LOGO); };
     var row = document.getElementById('qzLogoRow');
     if (!row) { partir(); return; }
     var attendreFin = function () {

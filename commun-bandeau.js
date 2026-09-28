@@ -270,6 +270,8 @@ window.qzLogoV5Init = function(){
     if (row.classList.contains('qz-anime')) return;
     if (document.hidden) return;
     if (document.getElementById('qdtFormAcces')) return;
+    /* 28/09 : page d entree (entree-site.js) -- le logo ne joue qu une fois le voile parti, la ou les 9 tesselles viennent de se poser */
+    if (document.documentElement.classList.contains('qz-entree')) { window.addEventListener('qz-entree-fin', function () { setTimeout(lancer, 60); }, { once: true }); return; }
     row.classList.add('qz-anime');
     try { sessionStorage.setItem(cle, '1'); } catch (e) {}
   };
