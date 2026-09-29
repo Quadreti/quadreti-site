@@ -32,7 +32,7 @@ html body.qz-quadrille{
 html body.qz-quadrille::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9!important; /* 28/09 soir, fondateur : la bande qui défile (z 5), les icônes (6), le liseré de l image (8) et les sections (2) passent SOUS la bordure ; la barre du haut (60) reste au-dessus */
   background:transparent!important;background-image:none!important;
-  box-shadow:inset 0 0 0 var(--qzq-levre) color-mix(in srgb, var(--qzq-fond) 80%, #000),
+  box-shadow:inset 0 0 0 var(--qzq-levre) var(--qzq-fond), /* 30/09 soir, fondateur : « harmonise le cadre sur la charte » -- le navy de marque #1E2B35, comme le menu (était ce navy assombri de 20 %, #18222A, hors charte) */
     inset 0.6mm 0.6mm 0 rgba(255,255,255,calc(var(--qzq-prof)*.25)),
     inset -0.6mm -0.6mm 0 rgba(0,0,0,calc(var(--qzq-prof)*.6)),
     inset calc(var(--qzq-levre) + 0.5mm) calc(var(--qzq-levre) + 0.5mm) 0 rgba(0,0,0,calc(var(--qzq-prof)*.7)),

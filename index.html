@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 18/09 : qz-fond-sombre = le theme sombre du site. Ecrit EN DUR dans la balise, pas pose par un
      script : le fond ne doit pas dependre d un chargement. Les regles vivent dans commun.css et entete-commun.css. -->
-<html lang="fr" class="qz-fond-sombre qz-barres-claires qz-entete-sombre qz-tesselles-boutons"><!-- 28/09, fondateur : barre du haut, bandeau defilant et pied en gris #DEDEDE (qz-barres-claires), le reste de la page garde le theme sombre -->
+<html lang="fr" class="qz-fond-sombre qz-barres-claires qz-entete-sombre qz-pied-sombre qz-barre-fine qz-tesselles-boutons"><!-- 28/09, fondateur : barre du haut, bandeau defilant et pied en gris #DEDEDE (qz-barres-claires), le reste de la page garde le theme sombre -->
 <head>
 <meta charset="UTF-8">
 <!-- 12/09 : anti-flash de la sequence d accueil (bandeau-relief.js). Sur bureau, les textes animes (logo, menu, titre, boutons, icones)
@@ -44,11 +44,13 @@
      chargeur 9 cases, sortie automatique 30 s, les tesselles glissent vers la place du logo de la barre. Fichiers generes par
      SITE\DESIGN SYSTEME\generer-entree-site.js. Le logo de la barre et la banniere attendent l evenement qz-entree-fin.
      Tant que le voile n est pas construit (DOMContentLoaded), rien de la page ne se montre (qz-entree-attente), sauf le garde-acces. -->
-<link rel="stylesheet" href="/entree-site.css?v=2026-09-28d">
-<style>html.qz-entree.qz-entree-attente body>*{visibility:hidden}</style>
-<script>document.documentElement.classList.add('qz-entree-attente');</script>
-<script src="/entree-site.js?v=2026-09-28d"></script>
-<script>if(!window.qzEntreeActive)document.documentElement.classList.remove('qz-entree-attente');</script>
+<!-- 30/09, fondateur : « retire la pré-page, ça met la pagaille » -- la page d entrée est RETIRÉE de l accueil (les fichiers entree-site.css / .js restent dans le dépôt).
+     POUR LA REMETTRE : recoller ici les 5 lignes suivantes :
+     <link rel="stylesheet" href="/entree-site.css?v=2026-09-28d">
+     <style>html.qz-entree.qz-entree-attente body>*{visibility:hidden}</style>
+     <script>document.documentElement.classList.add('qz-entree-attente');</script>
+     <script src="/entree-site.js?v=2026-09-28d"></script>
+     <script>if(!window.qzEntreeActive)document.documentElement.classList.remove('qz-entree-attente');</script> -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quadreti — Composez, imprimez, clipsez, changez à volonté.</title>
 <!-- 14/09 : la description suit la definition du fondateur — un multi-cadre, pas « un support creatif modulaire » qui ne dit rien a personne. -->
@@ -1932,10 +1934,10 @@
     }
   }
 </style>
-<link rel="stylesheet" href="/commun.css?v=2026-09-28d">
+<link rel="stylesheet" href="/commun.css?v=2026-09-30b">
 <!-- FOND-QUADRILLAGE -- 28/09, fondateur : « on teste : retire les tesselles fantomes et remplace avec cet arriere-plan »
      (maquette SITE\DESIGN SYSTEME\mockup-quadrillage-fond.html, reglages choisis par lui). Accueil seulement. Script en fin de page. -->
-<link rel="stylesheet" href="/fond-quadrillage.css?v=2026-09-28d">
+<link rel="stylesheet" href="/fond-quadrillage.css?v=2026-09-30a">
 <link rel="stylesheet" href="/prisme-outils.css?v=2026-09-22e">
 <script>
 /* Le comparateur avant/apres (14/09). Le curseur natif porte toute la mecanique : on se contente de reporter sa valeur dans une
@@ -2016,7 +2018,7 @@ html.qz-accueil footer.qz-footer .qz-pied3,html.qz-accueil #qzNavPanel,html.qz-a
   background-repeat:no-repeat!important;background-position:center!important;background-attachment:fixed!important;
   background-blend-mode:normal!important}
 /* 28/09, BARRES CLAIRES : ces memes surfaces, quand l accueil porte qz-barres-claires, prennent le gris du site (plaques de l onglet, defilant, pied). */
-html.qz-accueil.qz-barres-claires .qb-defile,html.qz-accueil.qz-barres-claires .qz-pied-bord,html.qz-accueil.qz-barres-claires footer.qz-footer .qz-pied3,html.qz-accueil.qz-barres-claires .qz-tex-forme{background-color:#dedede!important;background-image:none!important}
+html.qz-accueil.qz-barres-claires .qb-defile,html.qz-accueil.qz-barres-claires:not(.qz-pied-sombre) .qz-pied-bord,html.qz-accueil.qz-barres-claires:not(.qz-pied-sombre) footer.qz-footer .qz-pied3,html.qz-accueil.qz-barres-claires .qz-tex-forme{background-color:#dedede!important;background-image:none!important}
 /* 28/09 soir, etape 1 de la refonte (maquette v4) : le MENU au gris voile #c7c9ca. La plaque texturee de l onglet est inseree juste avant le svg de l en-tete, donc DANS .qz-header : on ne vise qu elle (le bandeau defilant et le pied gardent #dedede jusqu a leur etape). */
 html.qz-accueil.qz-barres-claires:not(.qz-entete-sombre) .qz-header .qz-tex-forme{background-color:#c7c9ca!important}
 /* 28/09 soir, fondateur : « j ai craqué, le menu passe en navy et le texte du menu en DEDEDE » -- la BARRE DU HAUT de l accueil reprend le
@@ -2024,7 +2026,12 @@ html.qz-accueil.qz-barres-claires:not(.qz-entete-sombre) .qz-header .qz-tex-form
    POUR REVENIR AU GRIS : retirer qz-entete-sombre de la balise html. */
 html.qz-accueil.qz-entete-sombre .qz-header .qz-tex-forme{background-color:#1e2b35!important}
 html.qz-entete-sombre .qz-header #qzLogoRow .qz-cat{color:#dedede!important}
-html.qz-entete-sombre .qz-header{--qz-lisere-ep:1.5px} /* 28/09 soir, fondateur : « affine le liseré orangé du menu, harmonise » -- 1,5 px comme les liserés des bandes (il était retombé à 3 px en quittant le gris) */
+html.qz-entete-sombre .qz-header{--qz-lisere-ep:1.5px}
+/* 30/09, fondateur : « le bas de page en navy » -- même bascule que la barre du haut (classe qz-pied-sombre sur html) ; le pied prend la branche
+   sombre des règles communes (celle des autres pages). POUR REVENIR AU GRIS : retirer qz-pied-sombre de la balise html. */
+html.qz-accueil.qz-pied-sombre .qz-pied-bord{background-color:transparent!important;background-image:none!important} /* au-dessus de la courbe : decroches.js y prolonge la section du dessus, grille comprise (30/09) */
+html.qz-accueil.qz-pied-sombre .qz-pied-bord .qz-tex-forme,html.qz-accueil.qz-pied-sombre footer.qz-footer .qz-pied3,html.qz-accueil.qz-pied-sombre footer.qz-footer .qz-tex-forme{background-color:#1e2b35!important;background-image:none!important}
+html.qz-pied-sombre footer.qz-footer .qz-copy{border-top-color:rgba(222,222,222,.18)} /* le trait au-dessus du copyright, invisible sur le navy à 14 % d encre */ /* 28/09 soir, fondateur : « affine le liseré orangé du menu, harmonise » -- 1,5 px comme les liserés des bandes (il était retombé à 3 px en quittant le gris) */
 /* Les decroches sont des FORMES (chemins SVG remplis de navy) : un fond CSS ne s y applique pas. Le script plus bas pose sous chaque
    forme une plaque texturee (.qz-tex-forme) decoupee au meme dessin (masque), puis vide le remplissage du chemin. Le lisere du
    decroche, trace par un autre chemin, reste par-dessus, intact. */
@@ -2065,6 +2072,142 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
   if (window.ResizeObserver) document.addEventListener('DOMContentLoaded', function () { var ro = new ResizeObserver(plusTard); FORMES.forEach(function (sel) { var c = document.querySelector(sel); if (c && c.ownerSVGElement) ro.observe(c.ownerSVGElement); }); });
 })();
 </script>
+<!-- 30/09, fondateur : BARRE FINE et DÉCROCHÉS HARMONISÉS (accueil seulement). Barre du haut = bande navy de 14 px + onglet du logo à marge
+     égale ; la courbe est celle du décroché d origine (agrandie dans la barre, telle quelle ailleurs) ; bandes de section et pied : même courbe,
+     même marche de 40 px, alignée sur le bord de l onglet. POUR REVENIR À L ANCIEN DESSIN : retirer qz-barre-fine de la balise html. -->
+<style>
+@media (min-width:901px){html.qz-barre-fine .qz-header{justify-content:flex-start!important}} /* logo, Mon espace et menu côte à côte dans l onglet (30/09) */
+@media (min-width:901px){
+/* 30/09, fondateur : « Mon espace » devient un CARRÉ de 42 px à côté du menu, matière tesselle (version B ; couleur à revoir). Le mot reste pour les
+   lecteurs d écran (texte masqué, pas retiré) et apparaît dans une bulle au survol ou au focus. */
+html.qz-barre-fine .qz-header .qz-espace-barre{width:34px;height:34px;box-sizing:border-box;padding:0!important;border:0!important;font-size:0!important;line-height:0!important;color:transparent!important;overflow:visible;
+  background:var(--qzt-fond-2,#dedede) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e2b35' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8'/%3E%3C/svg%3E") center/18px 18px no-repeat!important;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief,.28) * .9)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief,.28)),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;position:relative}
+html.qz-barre-fine .qz-header .qz-espace-barre::after{content:'Mon espace';position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font:600 10px/1 Jura,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#dedede;background:#10181f;padding:6px 8px;opacity:0;pointer-events:none;transition:opacity .15s}
+html.qz-barre-fine .qz-header .qz-espace-barre:hover::after,html.qz-barre-fine .qz-header .qz-espace-barre:focus-visible::after{opacity:1}
+html.qz-barre-fine #qzLogoRow.qz-l14 .qz-logo14{width:192px} /* 30/09 : -20 % */
+html.qz-barre-fine #qzLogoRow.qz-l14 .qz-cat{font-size:9px;line-height:11.5px!important}
+html.qz-barre-fine .qz-header .qz-burger{width:34px!important;height:34px!important;background:var(--qzt-fond-2,#dedede)!important;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief,.28) * .9)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief,.28)),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;border:0!important}
+html.qz-barre-fine .qz-header .qz-burger span{background:var(--qzt-encre-2,#1e2b35)!important} /* les traits étaient crème #f2eedf, un jeton mort de la charte */
+}
+html.qz-barre-fine.qz-defile .qz-header #qzLogoRow.qz-l14 .qz-cat{opacity:1!important} /* 30/09, fondateur : « garde support » -- la catégorie reste affichée en permanence (elle s effaçait au défilement, logo-v5.css) */
+@media (min-width:901px){
+html.qz-barre-fine .qb-defile{display:none!important} /* 30/09 : la bande défilante monte dans la bande du haut */
+html.qz-barre-fine .qz-reassure{position:absolute;top:0;height:26px;overflow:hidden;pointer-events:none;display:flex;align-items:center;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent)}
+html.qz-barre-fine .qz-reassure-piste{display:flex;gap:64px;width:max-content;padding-right:64px;animation:qz-reassure var(--qz-reassure-duree,40s) linear infinite}
+html.qz-barre-fine .qz-reassure span{font:600 10px/1 Jura,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#dedede;white-space:nowrap}
+@keyframes qz-reassure{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){html.qz-barre-fine .qz-reassure-piste{animation:none}}
+/* 30/09 : le titre des bandes à la hauteur de lettres du mot QUADRETI (22 px de capitales), sur la ligne du logo */
+#refonte .r-bande .contenu.en-ligne h2{font-size:30px!important;line-height:1!important;position:relative;top:3.5px} /* capitales (22 px) centrées sur la ligne du logo : la boîte de ligne les place 3,5 px trop haut */
+}
+@media (min-width:901px){html.qz-barre-fine #qzLogoRow{margin-top:39px!important}} /* 30/09 : logo centré dans la boîte de l onglet = liseré (26) + 13 */
+@media (min-width:901px){
+html.qz-barre-fine .qb-lisere-image{display:none!important} /* 30/09 : l ancien liseré du bas (décroché de la bande défilante) retiré */
+html.qz-barre-fine .qz-prolonge-photo{display:block!important;position:absolute;left:0;z-index:1;pointer-events:none;background-repeat:no-repeat}
+}
+.qz-prolonge-photo{display:none}
+.qz-cadre-avancee{position:absolute;z-index:10;pointer-events:none;display:none;overflow:visible} /* au-dessus de la lèvre du cadre (z 9), sous la barre (60) */
+.qz-cadre-avancee path{fill:var(--qzq-fond,#1e2b35)} /* la couleur exacte de la lèvre : le navy de la charte */
+.qz-cadre-avancee.g{filter:drop-shadow(0.5mm 0.5mm 0 rgba(0,0,0,.35)) drop-shadow(2mm 2mm 3mm rgba(0,0,0,.25))} /* le relief de la lèvre : lumière en haut à gauche */
+.qz-cadre-avancee.d{filter:drop-shadow(-0.5mm -0.5mm 0 rgba(255,255,255,.09))}
+@media (min-width:901px){html.qz-barre-fine .qz-cadre-avancee{display:block}}
+.qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
+html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
+html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
+</style>
+<script>
+(function () {
+  var HB = 26; /* 30/09 : = la marge de l onglet (fondateur : marge égale partout, bande du haut comprise) ; était 14 */ // /* hauteur de la bande navy du haut (px) */
+  /* la courbe du décroché d origine, relevée à 1536 px (px, départ en bas à gauche, marche de 40,07 px) */
+  var C = [[446.22,98],['Q',447.27,97.92,448.41,97.75],['Q',449.68,97.55,450.85,97.30],['Q',452.24,96.96,453.35,96.63],['Q',454.78,96.18,455.86,95.76],['Q',457.19,95.20,458.33,94.64],['Q',459.37,94.11,460.36,93.52],['Q',461.50,92.79,462.45,92.09],['Q',463.14,91.59,463.84,90.92],['L',484.79,71.74],['Q',486.47,70.17,488.27,68.82],['Q',490.11,67.42,492.27,66.08],['Q',494.20,64.90,496.13,63.92],['Q',498.16,62.92,500.47,61.96],['Q',502.41,61.21,504.75,60.48],['Q',506.75,59.86,509.03,59.33],['Q',511.02,58.88,513.08,58.58],['Q',515.33,58.24,517.33,58.10],['Q',519.55,57.93,521.83,57.93]];
+  var MARCHE = 40.07, LARGE = 521.83 - 446.22;
+  function f(v) { return Math.round(v * 100) / 100; }
+  /* la courbe posée en (x0, yBas), agrandie de k : { aller : le tracé de gauche à droite (sans le M), retour : de droite à gauche, xFin, yHaut } */
+  /* le style du décroché : 'courbe' (le dessin du fondateur) ou 'angle' (angle droit aux coins arrondis, 30/09, pour comparer) ; ?decroche=angle|courbe dans l adresse, retenu pour la visite */
+  var STYLE = 'angle'; try { var q = /[?&]decroche=(angle|courbe)/.exec(location.search); if (q) sessionStorage.setItem('qzDecroche', q[1]); STYLE = sessionStorage.getItem('qzDecroche') || 'angle'; } catch (e) {} /* 30/09, fondateur : « crée-en une angle droit arrondi (onglet traditionnel) » -- l angle devient le style ; ?decroche=courbe pour revoir la courbe */
+  var RAYON = 12; /* rayon des coins de l angle droit (px) */
+  function courbe(x0, yBas, k) { var P; if (STYLE === 'angle') { var Hm = MARCHE * k, r = Math.min(RAYON * Math.max(1, k * .6), Hm / 2), xc = x0 + r; /* le coin bas s arrondit vers le haut, le coin haut vers la droite */
+      xc = x0; P = [['M', x0 - r, yBas], ['Q', xc, yBas, xc, yBas - r], ['L', xc, yBas - Hm + r], ['Q', xc, yBas - Hm, xc + r, yBas - Hm]]; /* 30/09 : x0 = le bord vertical (la marge se mesure jusqu à lui) */ } else
+    P = C.map(function (s, i) { if (i === 0) return ['M', x0, yBas]; var o = [s[0]]; for (var j = 1; j < s.length; j += 2) o.push(x0 + (s[j] - 446.22) * k, yBas - (98 - s[j + 1]) * k); return o; });
+    var fin = P[P.length - 1], aller = P.slice(1).map(function (s) { return s[0] + s.slice(1).map(f).join(' '); }).join(' '), retour = '';
+    for (var i = P.length - 1; i > 0; i--) { var s = P[i], pr = P[i - 1], px = pr[pr.length - 2], py = pr[pr.length - 1]; retour += s[0] === 'Q' ? ' Q' + f(s[1]) + ' ' + f(s[2]) + ' ' + f(px) + ' ' + f(py) : ' L' + f(px) + ' ' + f(py); }
+    return { aller: aller, retour: retour, xDebut: P[0][1], xFin: fin[fin.length - 2], yHaut: fin[fin.length - 1] }; }
+  /* le bord droit de l onglet du logo, en px depuis le bord gauche de la page : bord droit du logo + la marge du logo au bord gauche */
+  /* 30/09 (fondateur : « faire cohabiter logo + burger et Mon espace dans une même zone ») : les deux boutons suivent le logo, centrés sur sa hauteur ;
+     24 px après le logo et 24 px entre eux (le gap de la barre) */
+  function rangerBoutons() { var row = document.getElementById('qzLogoRow'), esp = document.querySelector('.qz-header .qz-espace-barre'), bur = document.querySelector('.qz-header .qz-burger'), tete = document.querySelector('.qz-header'); if (!row || !tete) return;
+    var rt = tete.getBoundingClientRect(), rl = row.getBoundingClientRect(), cy = rl.top - rt.top + rl.height / 2;
+    [esp, bur].forEach(function (e, i) { if (!e) return; e.style.alignSelf = 'flex-start'; if (i === 0) { e.style.marginLeft = '0px'; e.style.marginRight = '0px'; } /* l écart vient du gap de la barre : 24 px après le logo, 24 px entre les deux */ e.style.marginTop = (cy - e.getBoundingClientRect().height / 2).toFixed(2) + 'px'; }); }
+  /* le bord droit de l onglet : le dernier des trois (logo, Mon espace, menu) + la marge du logo au bord gauche ; le bas : celui du logo + la même marge */
+  function bordOnglet() { var row = document.getElementById('qzLogoRow'), svg = document.querySelector('.qz-header svg.qz-onglet'); if (!row || !svg) return null;
+    var rl = row.getBoundingClientRect(), rs = svg.getBoundingClientRect(); if (!rl.width) return null; var m = rl.left - rs.left, droite = rl.right;
+    ['.qz-header .qz-espace-barre', '.qz-header .qz-burger'].forEach(function (sel) { var e = document.querySelector(sel), r = e && e.getBoundingClientRect(); if (r && r.width) droite = Math.max(droite, r.right); });
+    return { x0: droite - rs.left + m, yBas: rl.bottom - rs.top + Math.max(0, rl.top - rs.top - HB), /* 30/09 : même écart sous le logo qu entre le liseré et le logo (logo centré dans sa boîte) */ cy: rl.top - rs.top + rl.height / 2, gauche: rs.left }; } /* cy : la ligne du logo (son milieu), pour y caler les titres des bandes */
+  function actif() { return document.documentElement.classList.contains('qz-barre-fine') && window.matchMedia && window.matchMedia('(min-width:901px)').matches; }
+  function masque(plaque, W, H, d) { if (!plaque || !plaque.classList || !plaque.classList.contains('qz-tex-forme')) return; var u = 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + f(W) + ' ' + f(H) + '" preserveAspectRatio="none"><path d="' + d + '"/></svg>') + '")'; plaque.style.maskImage = u; plaque.style.webkitMaskImage = u; }
+  function dessiner() {
+    if (!actif()) { window.qzBasBarre = null; ['.qz-header .qz-espace-barre', '.qz-header .qz-burger'].forEach(function (sel) { var e = document.querySelector(sel); if (e) { e.style.alignSelf = ''; e.style.marginLeft = ''; e.style.marginRight = ''; e.style.marginTop = ''; } }); return; } /* petit écran : les boutons reprennent leur place */
+    rangerBoutons();
+    var O = bordOnglet(), svg = document.querySelector('.qz-header svg.qz-onglet'); if (!O || !svg) return;
+    /* 30/09, fondateur : « fais l onglet à hauteur utile » -- la boîte de l onglet (et tout ce qui s appuie sur elle : menu déroulant, plaque) prend la hauteur de son contenu + la marge */
+    var tete0 = document.querySelector('.qz-header'); if (tete0) { var hu = Math.ceil(O.yBas * 10) / 10; if (tete0.style.getPropertyValue('--qz-onglet') !== hu + 'px') tete0.style.setProperty('--qz-onglet', hu + 'px'); }
+    var rs = svg.getBoundingClientRect(), W = rs.width, H = rs.height, YB = Math.min(H, O.yBas);
+    /* la barre du haut */
+    var c = courbe(O.x0, YB, (YB - HB) / MARCHE);
+    var trait = 'M0 ' + f(YB) + ' H' + f(c.xDebut) + ' ' + c.aller + ' H' + f(W), fond = 'M0 0 H' + f(W) + ' V' + HB + ' L' + f(c.xFin) + ' ' + HB + c.retour + ' L0 ' + f(YB) + ' Z';
+    svg.setAttribute('viewBox', '0 0 ' + f(W) + ' ' + f(H));
+    var pf = svg.querySelector('.qz-onglet-fond'), pt = svg.querySelector('.qz-onglet-trait'); if (pf) pf.setAttribute('d', fond); if (pt) pt.setAttribute('d', trait);
+    masque(svg.previousElementSibling, W, H, fond);
+    window.qzBasBarre = rs.top + (O ? O.yBas : HB); /* le bas de la bande de l onglet : le titre du bandeau y est posé (30/09 soir), le mur se centre dessous */
+    var rq = document.querySelector('.qz-header .qz-reassure'), tete1 = document.querySelector('.qz-header');
+    if (!rq && tete1) { var textes = Array.prototype.map.call(document.querySelectorAll('.qb-defile-piste span'), function (s) { return s.textContent; }); textes = textes.slice(0, Math.max(1, textes.length / 2)); if (!textes.length) textes = ['Conception et fabrication françaises', 'Livraison en point relais', 'Paiement sécurisé'];
+      rq = document.createElement('div'); rq.className = 'qz-reassure'; rq.setAttribute('aria-label', textes.join(' · ')); var suite = textes.map(function (t) { return '<span>' + t + '</span>'; }).join(''); rq.innerHTML = '<div class="qz-reassure-piste" aria-hidden="true">' + suite + suite + '</div>'; tete1.appendChild(rq); }
+    if (rq) { var gq = c.xFin + MARGE; rq.style.left = f(gq) + 'px'; rq.style.width = f(Math.max(0, W - gq - MARGE)) + 'px'; rq.style.height = HB + 'px'; var pq = rq.firstChild; if (pq && pq.offsetWidth) rq.style.setProperty('--qz-reassure-duree', (pq.offsetWidth / 2 / 30).toFixed(1) + 's'); }
+    /* le pied : même courbe, marche de sa propre hauteur (40 px), au bord de l onglet */
+    var ps = document.querySelector('footer.qz-footer .qz-pied-bord svg.qz-pied-svg');
+    var mbPied = Math.max(MARCHE, O.yBas - HB); if (ps && ps.parentElement) ps.parentElement.style.height = f(mbPied) + 'px'; /* 30/09, fondateur : le pied a la même hauteur d onglet que les bandes */
+    if (ps) { var rp = ps.getBoundingClientRect(), PW = rp.width, PH = rp.height; if (PW && PH) { var x0p = O.x0 + (rs.left - rp.left), cp = courbe(x0p, PH, PH / MARCHE);
+      var tp = 'M0 ' + f(PH) + ' H' + f(cp.xDebut) + ' ' + cp.aller + ' H' + f(PW), fp = tp + ' L' + f(PW) + ' ' + f(PH) + ' L0 ' + f(PH) + ' Z';
+      ps.setAttribute('viewBox', '0 0 ' + f(PW) + ' ' + f(PH)); var a = ps.querySelector('.qz-pied-fond'), b = ps.querySelector('.qz-pied-trait'); if (a) a.setAttribute('d', fp); if (b) b.setAttribute('d', tp); masque(ps.previousElementSibling, PW, PH, fp); } }
+  }
+  var t; function plusTard() { clearTimeout(t); t = setTimeout(dessiner, 90); }
+  /* 30/09 : la photo du bandeau se prolonge jusqu à la première bande (le vide laissé par le calage des sections sur la grille) */
+  function prolonger() { var bd = document.getElementById('qbBandeau'), rf = document.getElementById('refonte'), p = document.querySelector('.qz-prolonge-photo'); if (!bd || !rf) return;
+    if (!actif()) { if (p) p.style.height = '0px'; return; }
+    var rb = bd.getBoundingClientRect(), sy = window.scrollY || 0, bas = rb.bottom + sy, vide = rf.getBoundingClientRect().top + sy - bas; if (vide <= 0) { if (p) p.style.height = '0px'; return; }
+    var BOp = bordOnglet(), mbp = BOp ? Math.max(MARCHE, BOp.yBas - HB) : 0, vide2 = vide + mbp; /* 30/09 : jusqu au bas du creux de la première bande — le voile de l onglet se pose dessus */
+    if (Math.abs((window.qzProlonge || 0) - vide2) > .5) { window.qzProlonge = vide2; window.dispatchEvent(new Event('resize')); } vide = vide2;
+    if (!p) { p = document.createElement('div'); p.className = 'qz-prolonge-photo'; p.setAttribute('aria-hidden', 'true'); document.body.appendChild(p); }
+    var cs = getComputedStyle(bd), H = rb.height;
+    p.style.top = f(bas) + 'px'; p.style.height = f(vide) + 'px'; p.style.left = f(rb.left) + 'px'; p.style.width = f(rb.width) + 'px';
+    p.style.backgroundImage = cs.backgroundImage; p.style.backgroundSize = cs.backgroundSize; p.style.backgroundColor = cs.backgroundColor;
+    if (BOp) { var x0q = BOp.x0 + BOp.gauche - rb.left, cq = courbe(x0q, vide, mbp / MARCHE), yb = vide; /* vide = hauteur totale ici */
+      p.style.clipPath = "path('M0 0 H" + f(rb.width) + ' V' + f(yb - mbp) + ' H' + f(cq.xFin) + ' ' + cq.retour + ' H0 Z' + "')"; } else p.style.clipPath = '';
+    p.style.backgroundPosition = cs.backgroundPosition.split(',').map(function (c) { var v = c.trim().split(/ +/); return v[0] + ' ' + f((parseFloat(v[1]) || 0) - H) + 'px'; }).join(', '); }
+  /* 30/09 soir : le cadre avance à la hauteur de la pellicule (deux décrochés, gauche et droite) ; le film passe derrière */
+  var AV = { avance: 26, marge: 4, rayon: 12 }; /* avancée depuis le bord intérieur de la lèvre, marge au-dessus et au-dessous du film, coins (px) */
+  function avancees() { var film = document.querySelector('.qb-film'); var els = document.querySelectorAll('.qz-cadre-avancee');
+    if (!actif() || !film || !film.offsetHeight) { Array.prototype.forEach.call(els, function (e) { e.style.display = 'none'; }); return; }
+    var lev = parseFloat(getComputedStyle(document.body, '::before').boxShadow.match(/0px 0px 0px ([d.]+)px inset/) ? RegExp.$1 : 22.68) || 22.68;
+    var rf = film.getBoundingClientRect(), sy = window.scrollY || 0, r = AV.rayon, hh = rf.height + 2 * AV.marge + 2 * r, w = 1 + AV.avance, W = document.documentElement.clientWidth;
+    /* tracé local : x = 1 est le bord intérieur de la lèvre ; congé creux en haut et en bas, coins arrondis au bout de l avancée */
+    var d = 'M0 0 H1 V0 Q1 ' + r + ' ' + f(1 + r) + ' ' + r + ' H' + f(w - r) + ' Q' + f(w) + ' ' + r + ' ' + f(w) + ' ' + f(2 * r) + ' V' + f(hh - 2 * r) + ' Q' + f(w) + ' ' + f(hh - r) + ' ' + f(w - r) + ' ' + f(hh - r) + ' H' + f(1 + r) + ' Q1 ' + f(hh - r) + ' 1 ' + f(hh) + ' H0 Z';
+    ['g', 'd'].forEach(function (cote) { var s = document.querySelector('.qz-cadre-avancee.' + cote);
+      if (!s) { s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'qz-cadre-avancee ' + cote); s.setAttribute('aria-hidden', 'true'); s.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path')); document.body.appendChild(s); }
+      s.setAttribute('width', f(w)); s.setAttribute('height', f(hh)); s.setAttribute('viewBox', '0 0 ' + f(w) + ' ' + f(hh)); s.firstChild.setAttribute('d', d);
+      s.style.top = f(rf.top + sy - AV.marge - r) + 'px'; s.style.left = f(cote === 'g' ? lev - 1 : W - lev + 1 - w) + 'px'; s.style.transform = cote === 'd' ? 'scaleX(-1)' : ''; s.style.display = ''; }); }
+  setInterval(avancees, 1000); window.addEventListener('resize', function () { setTimeout(avancees, 250); });
+  setInterval(prolonger, 1000); window.addEventListener('resize', function () { setTimeout(prolonger, 200); });
+  var MARGE = 26; /* marge égale de l onglet autour de son contenu (px) */
+  document.addEventListener('DOMContentLoaded', function () { var orig = window.qzMargeLogo; if (orig && !orig.qzFine) { window.qzMargeLogo = function (menu) { return actif() ? MARGE : orig(menu); }; window.qzMargeLogo.qzFine = true; window.dispatchEvent(new Event('resize')); }
+    dessiner(); setTimeout(dessiner, 120); });
+  window.addEventListener('load', function () { dessiner(); setTimeout(dessiner, 300); }); window.addEventListener('resize', plusTard);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(plusTard);
+  /* pour les bandes de section (refonte-accueil.js) : la même courbe au bord de l onglet */
+  window.qzDecroche = { actif: actif, bordOnglet: bordOnglet, courbe: courbe, marche: MARCHE, large: LARGE, haut: HB, redessiner: dessiner };
+})();
+</script>
 <!-- TEXTURE-FOND-FIN -->
 </head>
 <body id="qz-top">
@@ -2087,11 +2230,11 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
      feuilles ne servait a rien : ce script-ci ECRIT les liens vers logo-v5.css et entete-commun.css, et tant qu il
      restait en cache il ecrivait l ANCIEN numero. Le fondateur l a constate sur le sous-menu, reste kraft alors que
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
-<script src="/commun-bandeau.js?v=2026-09-28h"></script>
+<script src="/commun-bandeau.js?v=2026-09-30a"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-29-loupe9">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-30-film10">
 <link rel="stylesheet" href="/tesselle-bouton.css?v=2026-09-28d">
-<link rel="stylesheet" href="/refonte-accueil.css?v=2026-09-28a"><!-- 28/09, fondateur : les boutons deviennent des tesselles cliquables (composant, portee html.qz-tesselles-boutons) -->
+<link rel="stylesheet" href="/refonte-accueil.css?v=2026-09-30k"><!-- 28/09, fondateur : les boutons deviennent des tesselles cliquables (composant, portee html.qz-tesselles-boutons) -->
 
 <!-- ============ HERO ============ -->
 <div class="hero" id="hero">
@@ -2930,7 +3073,7 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 </script>
 
 <!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
-<script src="/commun-pied.js?v=2026-09-28d"></script>
+<script src="/commun-pied.js?v=2026-09-30a"></script>
 
 <!-- ===== FOOTER COMMUN — FIN ===== -->
 
@@ -3299,11 +3442,24 @@ html.qz-accueil.qz-tex-formes .qz-onglet-fond,html.qz-accueil.qz-tex-formes .fin
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-29-cycle1"></script>
+<script src="/bandeau-relief.js?v=2026-09-30-final"></script>
 <script src="/bandeau-gestes.js?v=2026-09-28a"></script>
 <script>window.QZQ_PART=0; /* 28/09 soir : grille seule, les seules cases pleines sont les photos (maquette v4) */</script>
 <script src="/fond-quadrillage.js?v=2026-09-28d" defer></script>
-<script src="/refonte-accueil.js?v=2026-09-28b" defer></script>
-<script src="/decroches.js?v=2026-09-28h" defer></script> <!-- 28/09 soir : les cases coupées par un décroché prennent la couleur de ce qu elles touchent -->
+<script src="/refonte-accueil.js?v=2026-09-30-fine11" defer></script>
+<script src="/decroches.js?v=2026-09-30f" defer></script> <!-- 28/09 soir : les cases coupées par un décroché prennent la couleur de ce qu elles touchent -->
+<style>/* 30/09 soir, fondateur (maquette validée) : le titre, la phrase et les boutons du bandeau sur UNE ligne, dans la bande de l onglet (y 26 -> 89,4), à 26 px de l onglet et du cadre */
+@media (min-width:901px){
+html.qz-barre-fine #qbBandeau .qb-col{position:absolute!important;top:26px!important;left:401px!important;right:49px!important;height:63.42px!important;width:auto!important;max-width:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:22px!important;margin:0!important;padding:0!important;transform:none!important;z-index:7}
+html.qz-barre-fine #qbBandeau .qb-col .qb-textes{font-size:31.9px!important; /* fondateur (option 2) : capitales de 22,9 px = la hauteur du mot QUADRETI du logo (capitales à 0,719 em) */ position:relative;top:-4.2px; /* ses capitales sur celles du logo : 39 -> 61,9 */line-height:1!important;margin:0!important;white-space:nowrap}
+html.qz-barre-fine #qbBandeau .qb-col .qb-para{font-size:14px!important;line-height:1.2!important;margin:0!important;white-space:nowrap;position:relative;top:-1.2px} /* même ligne de base que le titre (62 px) */
+html.qz-barre-fine #qbBandeau .qb-col .qb-ctas{margin:0 0 0 auto!important;display:flex!important;gap:12px!important;flex-wrap:nowrap}
+html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2),html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2) .qb-l{color:#dedede!important} /* « À VOLONTÉ » en gris, « CHANGEZ » reste orange */
+html.qz-barre-fine #qbBandeau .qb-col .qb-para,html.qz-barre-fine #qbBandeau .qb-col .qb-para *{color:#dedede!important} /* la petite phrase en gris */
+html.qz-barre-fine .qz-header .qz-onglet-trait{stroke:#dedede!important}
+html.qz-barre-fine .qz-header svg.qz-onglet{clip-path:inset(0 var(--qzq-levre,6mm) 0 var(--qzq-levre,6mm))} /* fondateur : le liseré s arrête au bord intérieur du cadre, à gauche et à droite (il passait par-dessus) */ /* fondateur : le liseré du décroché de l onglet en gris (était orange) */
+html.qz-barre-fine #qbBandeau .qb-col .qb-ctas .qb-cta2{order:-1} /* fondateur : Galerie d abord, Ouvrir Designer au bout de la ligne */
+html.qz-barre-fine #qbBandeau .qb-col .cta{height:34px!important;min-height:0!important;font-size:11px!important;padding:0 16px!important;display:inline-flex!important;align-items:center!important}
+}</style>
 </body>
 </html>

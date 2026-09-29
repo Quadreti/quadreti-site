@@ -62,10 +62,19 @@ html.qz-refonte .blk-ancien{display:none!important}
   #refonte .r-bande h2{white-space:normal;font-size:18px}
 }
 /* ÉTAPE 4 — le pied de l accueil : gris voilé, liseré 1,5 px, réseaux en haut de la première colonne et logo en bas (script) */
-html.qz-refonte.qz-barres-claires footer.qz-footer .qz-pied3,
-html.qz-refonte.qz-barres-claires .qz-pied-bord .qz-tex-forme,
-html.qz-refonte.qz-barres-claires footer.qz-footer .qz-tex-forme,
+html.qz-refonte.qz-barres-claires:not(.qz-pied-sombre) footer.qz-footer .qz-pied3,
+html.qz-refonte.qz-barres-claires:not(.qz-pied-sombre) .qz-pied-bord .qz-tex-forme,
+html.qz-refonte.qz-barres-claires:not(.qz-pied-sombre) footer.qz-footer .qz-tex-forme,
 html.qz-refonte.qz-barres-claires .qb-defile{background-color:var(--qzr-clair)!important}
-html.qz-refonte.qz-barres-claires footer.qz-footer{--qz-lisere-ep:1.5px;--qz-pied-fond:var(--qzr-clair)}
+html.qz-refonte.qz-barres-claires:not(.qz-pied-sombre) footer.qz-footer{--qz-lisere-ep:1.5px;--qz-pied-fond:var(--qzr-clair)}
 html.qz-refonte .qz-basdepage.r-pied-col{display:flex;flex-direction:column;justify-content:space-between;gap:calc(var(--qzr-case) * .5)}
 html.qz-refonte .qz-basdepage.r-pied-col .qz-reseaux{margin-top:0}
+/* 30/09, fondateur : le logo descend au niveau de la dernière ligne des colonnes (« Mon Espace ») -- la colonne prend toute la hauteur de la rangée, les réseaux restent en haut ; et la ligne « composez. imprimez. clipsez. » sous le logo est retirée (reste « support créatif modulaire ») */
+html.qz-refonte footer.qz-footer .qz-basdepage.r-pied-col{align-self:stretch}
+html.qz-refonte footer.qz-footer .qz-basdepage.r-pied-col .qz-logorow{margin-bottom:2.8px} /* mesuré : la ligne de base de « support créatif modulaire » tombe alors sur celle de « Mon Espace » */
+html.qz-refonte footer.qz-footer .qz-basdepage .qz-pied-accroche{display:none!important}
+
+/* 30/09, fondateur : chapo et titre sur la même ligne, alignés sur le logo et les carrés du menu quand la bande est emboîtée dessous */
+#refonte .r-bande .contenu.en-ligne{flex-direction:row;align-items:baseline;justify-content:flex-start;align-content:center;flex-wrap:nowrap;gap:18px}
+#refonte .r-bande .contenu.en-ligne{align-items:center}
+#refonte .r-bande .contenu.en-ligne .eyebrow{margin:0}

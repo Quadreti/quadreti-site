@@ -37,6 +37,9 @@
     secs.forEach(function (sec, i) { if (i === 0) return; var svg = sec.querySelector('.r-bande svg'); if (!svg) return;
       var prec = secs[i - 1].querySelector('.sec-clair');
       out.push({ haut: prec ? '#' + secs[i - 1].id + ' .sec-clair' : 'page', bas: (function (s) { return function () { return s; }; })(svg) }); });
+    /* 30/09, fondateur : « il manque le tout dernier » -- le décroché du PIED, sous la dernière section (« Votre mur commence ici ») */
+    var der = secs[secs.length - 1], piedSvg = document.querySelector('footer.qz-footer .qz-pied-bord svg'), derClair = der && der.querySelector('.sec-clair');
+    if (piedSvg) out.push({ haut: derClair ? '#' + der.id + ' .sec-clair' : 'page', bas: function () { return piedSvg; } });
     return out;
   }
   var calque = null, dernier = '';
@@ -46,10 +49,18 @@
   function bordHaut(svg, path, x) {
     var r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal, kx = vb.width / r.width, ky = vb.height / r.height;
     var ux = vb.x + (x - r.left - window.scrollX) * kx, pt = svg.createSVGPoint(); pt.x = ux;
-    var lo = vb.y, hi = vb.y + vb.height; pt.y = hi - .01; if (!path.isPointInFill(pt)) return null;
+    var lo = vb.y, hi = vb.y + vb.height; pt.y = hi - .01; if (!path.isPointInFill(pt)) return (ux >= vb.x && ux <= vb.x + vb.width) ? r.bottom + window.scrollY : null; /* 30/09 : forme qui commence pile au bord bas du dessin (pied, côté gauche) : la bande commence là */
     for (var i = 0; i < 22; i++) { var m = (lo + hi) / 2; pt.y = m; if (path.isPointInFill(pt)) hi = m; else lo = m; }
     return r.top + window.scrollY + (hi - vb.y) / ky;
   }
+  /* 30/09 : le fond à reprendre dans un bouchon — couleur, grille et ORIGINE de la grille en px de page, pour que les lignes tombent pile dans le
+     prolongement de celles du dessus. Élément sans grille (bande défilante) : aplat uni, inchangé. */
+  function fondDe(el, cas) { var b = el || document.body, cs = getComputedStyle(b), img = cs.backgroundImage, r = b.getBoundingClientRect(), p;
+    if (!img || img === 'none') return { c: cs.backgroundColor, k: cs.backgroundColor }; /* élément sans grille (bande défilante) : aplat uni, comme validé le 28/09 (« DEDEDE pour uniformiser cette zone ») — 30/09, fondateur : la généralisation l avait écrasé */
+    p = cs.backgroundPosition.split(',')[0].trim().split(/\s+/).map(parseFloat);
+    return fond(cs.backgroundColor, img, cs.backgroundSize.split(',')[0].trim(), r.left + window.scrollX + (p[0] || 0), r.top + window.scrollY + (p[1] || 0), cas); }
+  function fond(c, img, size, ox, oy, cas) { ox = ((ox % cas) + cas) % cas; oy = ((oy % cas) + cas) % cas; /* une période suffit : la grille se répète à chaque case */
+    return { c: c, img: img, size: size, ox: ox, oy: oy, k: c + '|' + img + '|' + size + '|' + ox.toFixed(2) + '|' + oy.toFixed(2) }; }
   function poser() {
     if (!document.body.classList.contains('qz-quadrille')) return;
     var cas = mm(parseFloat(lire('--qzq-case')) || 25), bord = mm(0.25 + (parseFloat(lire('--qzq-nervure')) || .8) + 0.6);
@@ -62,7 +73,7 @@
       /* au-dessus : un élément (son bord bas, sa couleur) ; ou « page » : la grille du fond — le bord est le haut de la bande (sur une ligne de la grille),
          la couleur celle du fond de page, unie : les cases coupées disparaissent */
       var hr = h ? h.getBoundingClientRect() : null; if (h && !hr.height) return;
-      var yH = h ? hr.bottom + window.scrollY : svg.getBoundingClientRect().top + window.scrollY, couleurH = h ? getComputedStyle(h).backgroundColor : getComputedStyle(document.body).backgroundColor, couleurB = getComputedStyle(path).fill;
+      var yH = h ? hr.bottom + window.scrollY : svg.getBoundingClientRect().top + window.scrollY, fondH = fondDe(h, cas), couleurH = fondH.c, couleurB = getComputedStyle(path).fill;
       var bordEntre = function (x0, x1) { var mn = Infinity, mx = -Infinity; for (var i = Math.max(0, Math.floor(x0 / 2)); i <= Math.min(bords.length - 1, Math.ceil(x1 / 2)); i++) { var b = bords[i]; if (b == null) continue; mn = Math.min(mn, b); mx = Math.max(mx, b); } return [mn, mx]; };
       var yBasMax = -Infinity; bords.forEach(function (b) { if (b != null) yBasMax = Math.max(yBasMax, b); });
       if (!(yBasMax > yH)) return;
@@ -71,20 +82,20 @@
         if (cy1 <= yH + .5 || cy0 >= eb[1] - .5) continue; /* tolérance d un demi-pixel : une case qui finit à 0,01 px du bord n est pas coupée */                 /* entièrement sous la bande du dessus ou sous celle du dessous */
         var coupeHaut = cy0 < yH - .5, coupeBas = cy1 > eb[0] + .5;
         if (!coupeHaut && !coupeBas) continue;                    /* case entière : elle reste */
-        if (coupeHaut) rects.push({ x: x0, y: yH - 2, w: cas, h: cy1 - yH + bord + 2, c: couleurH }); /* 2 px glissés SOUS l élément du dessus : pas de jointure (fondateur : « retire le trait de démarcation qui longe le bandeau défilant ») */        /* touche le dessus : sa couleur, depuis le bord du dessus */
-        else { var yh0 = row * cas, colle = (h && Math.abs(yh0 - yH) < 1.5) ? 2 : 0; /* la case touche le bord de l élément du dessus : 2 px glissés dessous, pas de jointure */ rects.push({ x: x0, y: yh0 - colle, w: cas, h: eb[1] - yh0 + colle, c: (P.couleur === 'bas' ? couleurB : couleurH) }); } /* touche le dessous : jusqu au décroché (la bande recouvre le reste) ; couleur du DESSUS par défaut — fondateur : « DEDEDE pour uniformiser la zone, ce sera comme ça pour les prochaines » ; couleur: 'bas' pour l autre cas */
+        if (coupeHaut) rects.push({ x: x0, y: yH - 2, w: cas, h: cy1 - yH + bord + 2, c: couleurH, f: fondH }); /* 2 px glissés SOUS l élément du dessus : pas de jointure (fondateur : « retire le trait de démarcation qui longe le bandeau défilant ») */        /* touche le dessus : sa couleur, depuis le bord du dessus */
+        else { var yh0 = row * cas, colle = (h && Math.abs(yh0 - yH) < 1.5) ? 2 : 0; /* la case touche le bord de l élément du dessus : 2 px glissés dessous, pas de jointure */ rects.push({ x: x0, y: yh0 - colle, w: cas, h: eb[1] - yh0 + colle, c: (P.couleur === 'bas' ? couleurB : couleurH), f: (P.couleur === 'bas' ? null : fondH) }); } /* touche le dessous : jusqu au décroché (la bande recouvre le reste) ; couleur du DESSUS par défaut — fondateur : « DEDEDE pour uniformiser la zone, ce sera comme ça pour les prochaines » ; couleur: 'bas' pour l autre cas */
       }
     });
     /* aplats voisins de même hauteur et de même couleur : UN seul rectangle, au pixel entier (sinon l écran laisse une jointure visible entre eux) */
-    rects.sort(function (p, q) { return (p.c + p.y + p.h).localeCompare(q.c + q.y + q.h) || p.x - q.x; });
-    var fus = []; rects.forEach(function (r) { var d = fus[fus.length - 1]; if (d && d.c === r.c && Math.abs(d.y - r.y) < .01 && Math.abs(d.h - r.h) < .01 && r.x <= d.x + d.w + .01) { d.w = Math.max(d.w, r.x + r.w - d.x); } else fus.push({ x: r.x, y: r.y, w: r.w, h: r.h, c: r.c }); });
-    rects = fus.map(function (r) { var x0 = Math.floor(r.x), y0 = Math.floor(r.y); return { x: x0, y: y0, w: Math.min(W, Math.ceil(r.x + r.w)) - x0, /* jamais au-delà du bord droit */ h: Math.ceil(r.y + r.h) - y0, c: r.c }; });
-    var cle = JSON.stringify(rects.map(function (r) { return [Math.round(r.x), Math.round(r.y), Math.round(r.h), r.c]; }));
+    rects.forEach(function (r) { r.k = r.f ? r.f.k : r.c; }); rects.sort(function (p, q) { return (p.k + p.y + p.h).localeCompare(q.k + q.y + q.h) || p.x - q.x; });
+    var fus = []; rects.forEach(function (r) { var d = fus[fus.length - 1]; if (d && d.k === r.k && Math.abs(d.y - r.y) < .01 && Math.abs(d.h - r.h) < .01 && r.x <= d.x + d.w + .01) { d.w = Math.max(d.w, r.x + r.w - d.x); } else fus.push({ x: r.x, y: r.y, w: r.w, h: r.h, c: r.c, f: r.f, k: r.k }); });
+    rects = fus.map(function (r) { var x0 = Math.floor(r.x), y0 = Math.floor(r.y); return { x: x0, y: y0, w: Math.min(W, Math.ceil(r.x + r.w)) - x0, /* jamais au-delà du bord droit */ h: Math.ceil(r.y + r.h) - y0, c: r.c, f: r.f, k: r.k }; });
+    var cle = JSON.stringify(rects.map(function (r) { return [Math.round(r.x), Math.round(r.y), Math.round(r.h), r.k]; }));
     if (cle === dernier) return; dernier = cle;
     if (!calque) { calque = document.createElement('div'); calque.className = 'qz-decroches'; calque.setAttribute('aria-hidden', 'true'); calque.style.cssText = 'position:absolute;left:0;top:0;width:0;height:0;pointer-events:none';
       var ref = document.getElementById('refonte'); (ref && ref.parentNode ? ref.parentNode : document.body).insertBefore(calque, ref || document.body.firstChild); }
     var o = calque.getBoundingClientRect(), ox = o.left + window.scrollX, oy = o.top + window.scrollY; /* l origine du calque dans la page */
-    calque.innerHTML = rects.map(function (r) { return '<i style="position:absolute;display:block;left:' + (r.x - ox).toFixed(2) + 'px;top:' + (r.y - oy).toFixed(2) + 'px;width:' + r.w + 'px;height:' + r.h + 'px;background:' + r.c + '"></i>'; }).join('');
+    calque.innerHTML = rects.map(function (r) { return '<i style="position:absolute;display:block;left:' + (r.x - ox).toFixed(2) + 'px;top:' + (r.y - oy).toFixed(2) + 'px;width:' + r.w + 'px;height:' + r.h + 'px;background:' + r.c + (r.f && r.f.img && r.f.img !== 'none' ? ';background-image:' + r.f.img.replace(/"/g, "'") + ';background-size:' + r.f.size + ';background-repeat:repeat;background-position:' + (r.f.ox - r.x).toFixed(2) + 'px ' + (r.f.oy - r.y).toFixed(2) + 'px' : '') + '"></i>'; }).join('');
   }
   function planifier() { clearTimeout(planifier.t); planifier.t = setTimeout(poser, 80); }
   window.addEventListener('load', poser); window.addEventListener('resize', planifier);
