@@ -2144,13 +2144,14 @@ html.qz-barre-fine .qz-rideau i.d{right:0;background-image:url("/img/rideau-droi
 }
 @media (prefers-reduced-motion:reduce){.qz-rideau{display:none!important}}
 @media (min-width:901px){html.qz-barre-fine #qbBandeau .qb-col .qb-para{position:absolute!important;left:0;white-space:nowrap!important;line-height:1.2!important;font-size:12px!important} /* 12 px (fondateur) : 2 lignes, de l air sous le liseré */html.qz-barre-fine #qbBandeau .qb-col .qb-para .qb-phrase{white-space:nowrap!important} /* fondateur : la phrase repasse sur UNE ligne */html.qz-barre-fine #qbBandeau .qb-col p.qb-para.qb-para,html.qz-barre-fine #qbBandeau .qb-col p.qb-para .qb-phrase{font-size:13px!important}html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2){font-size:13px;position:relative}html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2),html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2) .qb-l{font-family:Jura,sans-serif!important;font-weight:400!important;text-transform:none!important} /* fondateur : « à volonté » en Jura, sans gras, en minuscules */ /* 30/09 nuit : phrase et « À VOLONTÉ » à 13 px ; « À VOLONTÉ » est remonté sur la ligne médiane par surtitre() */ /* plus fort que la règle du 30/09 en bas de page (14 px) */} /* 30/09 nuit : la phrase dans la place libre à gauche du titre, placée par surtitre() */
-.qz-btn-rideau{display:none}
+.qz-btn-rideau,.qz-btn-lumiere{display:none}
 @media (min-width:901px){
 /* 30/09 nuit, fondateur : le bouton RIDEAU, en miroir du bouton loupe (bas gauche, au-dessus du début du film, 13 px après le décroché gauche). Même carré que les commandes de la loupe. */
-html.qz-barre-fine .qz-btn-rideau{display:grid;place-items:center;position:absolute;z-index:11; /* au-dessus du rideau (8) et des décrochés (10) : il doit rester cliquable rideau fermé */width:24px;height:24px;padding:0;border:1px solid rgba(222,222,222,.28);background:rgba(16,24,31,.45);color:#dedede;cursor:pointer;opacity:.7;transform:translateY(-50%);transition:opacity .2s,border-color .2s}
-html.qz-barre-fine .qz-btn-rideau:hover,html.qz-barre-fine .qz-btn-rideau:focus-visible{opacity:1;border-color:#dedede}
-html.qz-barre-fine .qz-btn-rideau:focus-visible{outline:2px solid #dedede;outline-offset:2px}
-html.qz-barre-fine .qz-btn-rideau svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere){display:grid;place-items:center;position:absolute;z-index:11; /* au-dessus du rideau (8) et des décrochés (10) : il doit rester cliquable rideau fermé */width:24px;height:24px;padding:0;border:1px solid rgba(222,222,222,.28);background:rgba(16,24,31,.45);color:#dedede;cursor:pointer;opacity:.7;transform:translateY(-50%);transition:opacity .2s,border-color .2s}
+html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere):hover,html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere):focus-visible{opacity:1;border-color:#dedede}
+html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere):focus-visible{outline:2px solid #dedede;outline-offset:2px}
+html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere)[aria-pressed="true"]{opacity:1;color:var(--qz-encre,#10181f);background:var(--qz-terracotta,#d96c2f);border-color:var(--qz-terracotta,#d96c2f)}
+html.qz-barre-fine :is(.qz-btn-rideau,.qz-btn-lumiere) svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 /* refermer : les volets reviennent du bord vers le centre (2 s) ; rouvrir : l ouverture repart, sans l attente du chargement */
 html.qz-barre-fine.qz-rideau-clos .qz-rideau i{animation-duration:2s;animation-delay:0s;animation-play-state:running}
 html.qz-barre-fine.qz-rideau-clos .qz-rideau i.g{animation-name:qz-rideau-g-fermer}
@@ -2161,6 +2162,9 @@ html.qz-barre-fine.qz-rideau-rouvre .qz-rideau i{animation-delay:0s}
 }
 .qz-voile-bande{display:none}
 @media (min-width:901px){html.qz-barre-fine .qz-voile-bande{display:block;position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none;background:var(--qz-navy,#1e2b35)}} /* 30/09 nuit : la bande du titre en navy plein, sous l onglet et ses textes, au-dessus de la photo et de la lumière */
+.qz-coin-cadre{display:none}
+@media (min-width:901px){html.qz-barre-fine .qz-coin-cadre{display:block;position:fixed;z-index:59;pointer-events:none;overflow:visible}
+html.qz-barre-fine .qz-coin-cadre .f{fill:var(--qz-navy,#1e2b35)}html.qz-barre-fine .qz-coin-cadre .t{fill:none;stroke:var(--qz-lisere-cadre,#dedede);stroke-width:1.5px}} /* 30/09 nuit : les deux coins arrondis du cadre (12 px), au-dessus du rideau et des liserés, sous la barre */
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2204,7 +2208,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     var rs = svg.getBoundingClientRect(), W = rs.width, H = rs.height, YB = Math.min(H, O.yBas);
     /* la barre du haut */
     var c = courbe(O.x0, YB, (YB - HB) / MARCHE);
-    var trait = 'M0 ' + f(YB) + ' H' + f(c.xDebut) + ' ' + c.aller + ' H' + f(W), fond = 'M0 0 H' + f(W) + ' V' + HB + ' L' + f(c.xFin) + ' ' + HB + c.retour + ' L0 ' + f(YB) + ' Z';
+    var levT = LEVRE(), trait = 'M' + f(levT + EP / 2 + RAYON) + ' ' + f(YB) + ' H' + f(c.xDebut) + ' ' + c.aller + ' H' + f(W - levT - EP / 2 - RAYON), fond = /* 30/09 nuit : les deux bouts s arrêtent à RAYON du liseré du cadre : les coins arrondis (coinsCadre) prennent le relais */ 'M0 0 H' + f(W) + ' V' + HB + ' L' + f(c.xFin) + ' ' + HB + c.retour + ' L0 ' + f(YB) + ' Z';
     svg.setAttribute('viewBox', '0 0 ' + f(W) + ' ' + f(H));
     var pf = svg.querySelector('.qz-onglet-fond'), pt = svg.querySelector('.qz-onglet-trait'); if (pf) pf.setAttribute('d', fond); if (pt) pt.setAttribute('d', trait);
     masque(svg.previousElementSibling, W, H, fond);
@@ -2239,7 +2243,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
   /* 30/09 soir : le cadre avance à la hauteur de la pellicule (deux décrochés, gauche et droite) ; le film passe derrière */
   var EP = 1.5; /* épaisseur des liserés du cadre = celle de l onglet */
   function LEVRE() { var m = /0px 0px 0px ([d.]+)px inset/.exec(getComputedStyle(document.body, '::before').boxShadow || ''); return m ? parseFloat(m[1]) : 22.68; }
-  var AV = { avance: 26, marge: 4, rayon: 12 }; /* avancée depuis le bord intérieur de la lèvre, marge au-dessus et au-dessous du film, coins (px) */
+  var AV = { avance: 39, marge: 4, rayon: 12 }; window.qzAvanceCadre = AV.avance; /* 30/09 nuit, fondateur : décrochés élargis (26 -> 39 px) pour loger les boutons */ /* avancée depuis le bord intérieur de la lèvre, marge au-dessus et au-dessous du film, coins (px) */
   function avancees() { var film = document.querySelector('.qb-film'); var els = document.querySelectorAll('.qz-cadre-avancee');
     if (!actif() || !film || !film.offsetHeight) { Array.prototype.forEach.call(els, function (e) { e.style.display = 'none'; }); return; }
     var lev = parseFloat(getComputedStyle(document.body, '::before').boxShadow.match(/0px 0px 0px ([d.]+)px inset/) ? RegExp.$1 : 22.68) || 22.68;
@@ -2257,7 +2261,13 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
   function liseresCadre() { var O = bordOnglet(), W = document.documentElement.clientWidth, g = document.querySelector('.qz-cadre-lisere.g'), dr = document.querySelector('.qz-cadre-lisere.d');
     if (!actif() || !O) { if (g) g.style.display = 'none'; if (dr) dr.style.display = 'none'; return; }
     var lev = LEVRE(); if (!g) { g = document.createElement('div'); g.className = 'qz-cadre-lisere g'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); dr = document.createElement('div'); dr.className = 'qz-cadre-lisere d'; dr.setAttribute('aria-hidden', 'true'); document.body.appendChild(dr); }
-    g.style.display = dr.style.display = ''; g.style.left = f(lev) + 'px'; g.style.top = f(O.yBas - EP / 2) + 'px'; dr.style.left = f(W - lev - EP) + 'px'; dr.style.top = f(HB - EP / 2) + 'px'; }
+    g.style.display = dr.style.display = ''; g.style.left = f(lev) + 'px'; g.style.top = f(O.yBas + RAYON) + 'px'; dr.style.left = f(W - lev - EP) + 'px'; dr.style.top = f(HB + RAYON) + 'px'; coinsCadre(O, lev, W); } /* 30/09 nuit : ils partent sous les arrondis de 12 px */
+  function coinsCadre(O, lev, W) { var r = RAYON, e = EP / 2, s = 2, n2 = r + 2 * s;
+    [['g', lev + e - s, O.yBas - s, 'M0 0 H' + f(s + r) + ' A' + r + ' ' + r + ' 0 0 0 ' + s + ' ' + f(s + r) + ' L0 ' + f(s + r) + ' Z', 'M' + s + ' ' + f(s + r) + ' A' + r + ' ' + r + ' 0 0 1 ' + f(s + r) + ' ' + s],
+     ['d', W - lev - e - r - s, HB - s, 'M' + f(n2) + ' 0 V' + f(s + r) + ' H' + f(s + r) + ' A' + r + ' ' + r + ' 0 0 0 ' + s + ' ' + s + ' V0 Z', 'M' + s + ' ' + s + ' A' + r + ' ' + r + ' 0 0 1 ' + f(s + r) + ' ' + f(s + r)]].forEach(function (k) {
+      var el = document.querySelector('.qz-coin-cadre.' + k[0]); if (!el) { el = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); el.setAttribute('class', 'qz-coin-cadre ' + k[0]); el.setAttribute('aria-hidden', 'true'); el.innerHTML = '<path class="f"/><path class="t"/>'; document.body.appendChild(el); }
+      el.setAttribute('width', f(n2)); el.setAttribute('height', f(n2)); el.setAttribute('viewBox', '0 0 ' + f(n2) + ' ' + f(n2)); el.style.left = f(k[1]) + 'px'; el.style.top = f(k[2]) + 'px';
+      el.querySelector('.f').setAttribute('d', k[3]); el.querySelector('.t').setAttribute('d', k[4]); }); }
   /* le liseré vertical (fixe) s ouvre sur la hauteur du décroché du film (qui défile) et s ARRÊTE au liseré du pied : à gauche sur sa ligne
      basse, à droite sur sa ligne haute (fondateur, capture du pied) -- le miroir du haut, où il part du bas de l onglet à gauche et de la ligne haute à droite */
   function trouLiseres() { var ps = document.querySelector('footer.qz-footer .qz-pied-bord svg'), rp = ps && ps.getBoundingClientRect();
@@ -2321,8 +2331,17 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
         else { H.classList.remove('qz-rideau-rouvre'); H.classList.add('qz-rideau-clos'); if (bd.classList.contains('qb-lum-on')) bd.classList.add('qb-lum-off'); } /* rideau fermé : la lumière s éteint */
         maj(); });
       bd.appendChild(b); }
-    var rb = bd.getBoundingClientRect(), rf = film.getBoundingClientRect(), lev = LEVRE();
-    b.style.left = f(lev + AV.avance / 2 - 12 - rb.left) + 'px'; b.style.top = f(rf.top + rf.height / 2 - rb.top) + 'px'; } /* centré dans le décroché gauche (fondateur) */
+    /* 30/09 nuit, fondateur : le bouton LUMIÈRE (allume / éteint la lampe), sous le bouton rideau */
+    var bl = bd.querySelector('.qz-btn-lumiere');
+    if (!bl) { bl = document.createElement('button'); bl.type = 'button'; bl.className = 'qz-btn-lumiere';
+      bl.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg>';
+      bd.appendChild(bl);
+      bl.addEventListener('click', function () { var lum = bd.querySelector('.qb-lumiere'), allumee = bd.classList.contains('qb-lum-on') && !bd.classList.contains('qb-lum-off'); clearTimeout(b._tLum);
+        if (allumee) bd.classList.add('qb-lum-off');
+        else { bd.classList.remove('qb-lum-off'); bd.classList.add('qb-lum-on'); if (lum) { lum.style.animation = 'none'; void lum.offsetWidth; lum.style.animation = ''; } } }); }
+    var etat = bd.classList.contains('qb-lum-on') && !bd.classList.contains('qb-lum-off'); bl.setAttribute('aria-pressed', etat ? 'true' : 'false'); bl.setAttribute('aria-label', etat ? 'Éteindre la lumière' : 'Allumer la lumière'); bl.title = bl.getAttribute('aria-label');
+    var rb = bd.getBoundingClientRect(), rf = film.getBoundingClientRect(), lev = LEVRE(), cx = lev + AV.avance / 2 - 12 - rb.left, cy = rf.top + rf.height / 2 - rb.top;
+    b.style.left = bl.style.left = f(cx) + 'px'; b.style.top = f(cy - 16) + 'px'; bl.style.top = f(cy + 16) + 'px'; } /* centrés dans le décroché gauche, l un au-dessus de l autre (8 px entre les deux) */
   setInterval(boutonRideau, 1000); window.addEventListener('resize', function () { setTimeout(boutonRideau, 250); });
   setInterval(liseresCadre, 1000); window.addEventListener('resize', function () { setTimeout(liseresCadre, 250); }); document.addEventListener('DOMContentLoaded', function () { setTimeout(liseresCadre, 150); });
   setInterval(avancees, 1000); window.addEventListener('resize', function () { setTimeout(avancees, 250); });
@@ -3571,7 +3590,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-30-dec1"></script>
+<script src="/bandeau-relief.js?v=2026-09-30-dec3"></script>
 <script src="/bandeau-gestes.js?v=2026-09-28a"></script>
 <script>window.QZQ_PART=0; /* 28/09 soir : grille seule, les seules cases pleines sont les photos (maquette v4) */</script>
 <script src="/fond-quadrillage.js?v=2026-09-28d" defer></script>
