@@ -48,6 +48,7 @@
   /* le bord haut de la bande à l abscisse x (px de page) : on cherche, dans le tracé, le premier point rempli en descendant */
   function bordHaut(svg, path, x) {
     var r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal, kx = vb.width / r.width, ky = vb.height / r.height;
+    if (!r.width || !r.height || !isFinite(kx) || !isFinite(ky)) return null; /* 30/09 : page cachée ou pas encore mise en page (largeur 0) */
     var ux = vb.x + (x - r.left - window.scrollX) * kx, pt = svg.createSVGPoint(); pt.x = ux;
     var lo = vb.y, hi = vb.y + vb.height; pt.y = hi - .01; if (!path.isPointInFill(pt)) return (ux >= vb.x && ux <= vb.x + vb.width) ? r.bottom + window.scrollY : null; /* 30/09 : forme qui commence pile au bord bas du dessin (pied, côté gauche) : la bande commence là */
     for (var i = 0; i < 22; i++) { var m = (lo + hi) / 2; pt.y = m; if (path.isPointInFill(pt)) hi = m; else lo = m; }

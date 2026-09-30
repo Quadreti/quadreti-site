@@ -626,7 +626,7 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 
 /* 30/09 soir, fondateur : « une photo, un titre, ainsi de suite », repris : (1) le film défile de GAUCHE à DROITE ; (2) il est là et roule
    DÈS L OUVERTURE de la page ; (3) photo et titre ont la MÊME largeur (--film-l) ; (4) titre SANS cadre, en Jura. */
-.qb-film{--film-descente:16px;top:var(--film-descente); /* (5) descendu de quelques px : bas du film à 34 px du bas du bandeau au lieu de 50 */ --film-h:48px;--film-l:80px; /* 30/09 soir : rectangles réduits (étaient 96 x 58) */ --film-titre-fond:var(--film-cadre,#fff);--film-titre-texte:var(--qzr-navy,#1e2b35); /* titre : rectangle blanc, texte navy */opacity:1!important}
+.qb-film{--film-descente:16px;top:var(--film-descente); /* (5) descendu de quelques px : bas du film à 34 px du bas du bandeau au lieu de 50 */ --film-h:48px;--film-l:80px; /* 30/09 soir : rectangles réduits (étaient 96 x 58) */ --film-titre-fond:#dedede; /* 30/09 soir, fondateur : titres de la pellicule en gris DEDEDE (étaient blancs) */--film-titre-texte:var(--qzr-navy,#1e2b35); /* titre : rectangle blanc, texte navy */opacity:1!important}
 .qb-film .qb-film-cadre{width:var(--film-l)}
 .qb-film-carton{flex:none;display:flex;align-items:center;justify-content:center;width:var(--film-l);height:var(--film-h);box-sizing:border-box;background:var(--film-titre-fond)}
 .qb-film-carton span{font:600 9px/1 Jura,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--film-titre-texte);white-space:nowrap}
@@ -644,3 +644,27 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
 .qb-film::before{top:var(--film-bord)}.qb-film::after{bottom:var(--film-bord)}
 .qb-film .qb-film-suite{gap:var(--film-ecart);padding-right:var(--film-ecart)}
 .qb-film-carton span{font-size:8px}
+
+
+/* 30/09 soir, fondateur (« la lampe ne s allume pas, t as payé la facture ? ») : L ALLUMAGE du spot. Le bandeau montre la photo lampe ÉTEINTE ;
+   la photo lampe ALLUMÉE (même prise, identique au pixel hors lumière) est posée exactement par-dessus (.qb-lumiere, à la place et à la taille
+   de la photo, calée par le calage du salon) et s allume : elle attend le rideau (html.qz-rideau-go) puis --qb-lum-attente (fin du rideau :
+   2 s + 5 s), grésille trois fois et reste allumée. */
+.qb-lumiere{position:absolute;z-index:1;pointer-events:none;background-size:100% 100%;background-repeat:no-repeat;opacity:0;
+  animation:qb-lum-allume 3s ease-in-out 0s 1 forwards;animation-play-state:paused}
+.qb.qb-lum-on .qb-lumiere{animation-play-state:running} /* 30/09 soir : déclenchée par la fin de la croissance du mur (+ 1 s), plus par le rideau */
+@keyframes qb-lum-allume{0%{opacity:0}8%{opacity:.5}14%{opacity:.05}24%{opacity:.7}30%{opacity:.15}45%{opacity:.85}100%{opacity:1}} /* « avec calme » : deux grésillements doux, puis la lumière monte */
+@media (prefers-reduced-motion:reduce){.qb-lumiere{animation:none;opacity:1}}
+
+/* 30/09 soir, fondateur : LE CONFIGURATEUR du carreau (la grille 7 x 7 qui s ouvre au clic sur un carreau du mur)
+   (1) 15 % plus petit ; (a) cadre navy de la charte, angles droits (était noir, coins de 6 px) ; (b) boutons de contrôle centrés verticalement
+   sur la grille, en orange de marque avec l encre dessus, SAUF le bouton photo (« Me prendre en photo ») qui reste navy. */
+.qb.qb-dispo-droite .qb-vif{width:calc(min(calc(60cqw - 42px), var(--mur-max,38vh)) * .85)}
+.qb-vif{background:var(--qz-navy,#1e2b35);border-radius:0;--lisere-couleur:var(--qz-navy,#1e2b35);--qz-lisere-ep:1.5px} /* le cadre (anneau autour de la grille) en navy, plus en orange */
+.qb-vif-cadre{align-items:center}
+.qb-vif-rail .qb-vif-btn:not(.qb-vif-camera){background:var(--qz-terracotta,#d96c2f);color:var(--qz-encre,#10181f)}
+.qb-vif-rail .qb-vif-btn:not(.qb-vif-camera):hover,.qb-vif-rail .qb-vif-btn:not(.qb-vif-camera):focus-visible{background:var(--qz-orange-survol,#e8874c);color:var(--qz-encre,#10181f)}
+/* 30/09 soir, fondateur : configurateur ouvert -- « Le mur est à vous. » (la phrase du configurateur, .qb-vif-invite) passe SOUS le bouton
+   Exposez, avec un espacement suffisant : Exposez déborde de 13 px sous le cadre, la phrase commence 13 px plus bas. Elle tombait au-dessus de la
+   grille, sous le titre du bandeau. Même écriture que la phrase au-dessus du mur. */
+.qb-vif-invite{top:calc(100% + 13px + 13px);bottom:auto;font:600 clamp(14px,1.2vw,18px)/1 Jura,sans-serif;letter-spacing:.08em;text-transform:none}

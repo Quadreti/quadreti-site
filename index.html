@@ -2084,8 +2084,8 @@ html.qz-barre-fine .qz-header .qz-espace-barre{width:34px;height:34px;box-sizing
   background:var(--qzt-fond-2,#dedede) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e2b35' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8'/%3E%3C/svg%3E") center/18px 18px no-repeat!important;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief,.28) * .9)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief,.28)),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;position:relative}
 html.qz-barre-fine .qz-header .qz-espace-barre::after{content:'Mon espace';position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font:600 10px/1 Jura,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#dedede;background:#10181f;padding:6px 8px;opacity:0;pointer-events:none;transition:opacity .15s}
 html.qz-barre-fine .qz-header .qz-espace-barre:hover::after,html.qz-barre-fine .qz-header .qz-espace-barre:focus-visible::after{opacity:1}
-html.qz-barre-fine #qzLogoRow.qz-l14 .qz-logo14{width:192px} /* 30/09 : -20 % */
-html.qz-barre-fine #qzLogoRow.qz-l14 .qz-cat{font-size:9px;line-height:11.5px!important}
+html.qz-barre-fine #qzLogoRow.qz-l14 .qz-logo14{width:168px} /* 30/09 : -20 % ; 30/09 soir, fondateur : 168 px (QUADRETI 20 px de haut) pour grossir la catégorie */
+html.qz-barre-fine #qzLogoRow.qz-l14 .qz-cat{font-size:12px;line-height:14px!important;letter-spacing:.05em!important;padding-bottom:.3px} /* 0,3 px : le bloc logo garde 37,4 px, l onglet reste à 89,4 */ /* 30/09 soir : 9 -> 12 px, espacement réduit pour tenir sur la largeur du logo */
 html.qz-barre-fine .qz-header .qz-burger{width:34px!important;height:34px!important;background:var(--qzt-fond-2,#dedede)!important;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief,.28) * .9)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief,.28)),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;border:0!important}
 html.qz-barre-fine .qz-header .qz-burger span{background:var(--qzt-encre-2,#1e2b35)!important} /* les traits étaient crème #f2eedf, un jeton mort de la charte */
 }
@@ -2110,18 +2110,32 @@ html.qz-barre-fine .qz-prolonge-photo{display:block!important;position:absolute;
 .qz-cadre-avancee{position:absolute;z-index:10;pointer-events:none;display:none;overflow:visible} /* au-dessus de la lèvre du cadre (z 9), sous la barre (60) */
 .qz-cadre-avancee path{fill:var(--qzq-fond,#1e2b35)} /* la couleur exacte de la lèvre : le navy de la charte */
 .qz-cadre-avancee.g{filter:drop-shadow(0.5mm 0.5mm 0 rgba(0,0,0,.35)) drop-shadow(2mm 2mm 3mm rgba(0,0,0,.25))} /* le relief de la lèvre : lumière en haut à gauche */
-.qz-cadre-avancee.d{filter:drop-shadow(-0.5mm -0.5mm 0 rgba(255,255,255,.09))}
+.qz-cadre-avancee.d{filter:none} /* 30/09 soir, fondateur : « retire ce trait parasite gris vertical » -- le reflet, inversé par le miroir (scaleX(-1)), débordait sur le cadre */
 @media (min-width:901px){html.qz-barre-fine .qz-cadre-avancee{display:block}}
 .qz-cadre-avancee .qz-cadre-trait{fill:none;stroke:var(--qz-lisere-cadre,#dedede);stroke-width:var(--qz-lisere-ep-cadre,1.5px);stroke-linejoin:round} /* le liseré du cadre contourne le décroché */
 .qz-cadre-lisere{position:fixed;z-index:9;pointer-events:none;display:none;width:var(--qz-lisere-ep-cadre,1.5px);background:var(--qz-lisere-cadre,#dedede);bottom:0} /* au-dessus de la lèvre (même z, posé après), sous les décrochés (10) et la barre (60) */
 @media (min-width:901px){
 html.qz-barre-fine .qz-cadre-lisere{display:block}
 html.qz-barre-fine .qz-header .qz-espace-barre,html.qz-barre-fine .qz-header .qz-burger{border-radius:0!important} /* angles droits, comme Galerie et Ouvrir Designer */
-html.qz-barre-fine footer.qz-footer .qz-pied-bord svg{clip-path:inset(0 var(--qzq-levre,6mm) 0 var(--qzq-levre,6mm))} /* le liseré du pied s arrête au bord du cadre, comme celui du menu */
+html.qz-barre-fine footer.qz-footer .qz-pied-bord svg{clip-path:inset(0 var(--qzq-levre,6mm) 0 var(--qzq-levre,6mm))}
+html.qz-barre-fine footer.qz-footer{position:relative;z-index:10} /* 30/09 soir, fondateur : le pied au MÊME NIVEAU que la bordure du site -- il passe devant le cadre (9), son navy recouvre les bords et leur ombre ; accueil seulement (le cadre n existe que là) */ /* le liseré du pied s arrête au bord du cadre, comme celui du menu */
 }
-.qz-baseline-onglet{display:none}
-@media (min-width:901px){html.qz-barre-fine .qz-baseline-onglet{display:flex;justify-content:space-between;position:absolute;z-index:7;pointer-events:none;margin:0;
-  font:500 14px/1 Jura,sans-serif;letter-spacing:.04em;color:var(--qz-baseline-onglet,#dedede);white-space:nowrap}} /* 30/09 soir : la baseline sous l onglet (essai) */
+.qz-surtitre{display:none}
+@media (min-width:901px){html.qz-barre-fine .qz-surtitre{display:block;position:absolute;z-index:7;pointer-events:none;margin:0;white-space:nowrap;
+  font:600 12px/14px Jura,sans-serif;color:var(--qz-surtitre,#dedede)}} /* 30/09 soir, fondateur : « Composez. Imprimez. Clipsez. » AU-DESSUS du titre, en miroir de « support créatif modulaire » sous le logo (même police, étalée sur la largeur du titre) */
+.qz-rideau{display:none}
+@media (min-width:901px){
+/* le rideau : fermé à l arrivée, sous la bande du titre (89,4 px = bas de l onglet) jusqu à la fin de la photo, entre les bords du cadre ; au-dessus de la scène (photo, mur, film : z 8 et moins), sous le cadre (9), ses décrochés (10) et la barre (60). */
+html.qz-barre-fine .qz-rideau{display:block;position:absolute;z-index:8;pointer-events:none;overflow:hidden;left:var(--qzq-levre,6mm);right:var(--qzq-levre,6mm);top:var(--qz-rideau-haut,89.4px);height:calc(var(--qz-rideau-bas,100vh) - var(--qz-rideau-haut,89.4px))} /* fondateur : jusqu en bas de la scène, sous le film (haut de la 1re bande, posé par prolonger()) */
+html.qz-barre-fine .qz-rideau i{position:absolute;top:0;bottom:0;width:50%;background-color:var(--qzq-fond,#1e2b35);background-size:cover;background-repeat:no-repeat;
+  animation:var(--qz-rideau-duree,2s) cubic-bezier(.65,0,.35,1) var(--qz-rideau-attente,1s) 1 forwards;animation-play-state:paused}
+html.qz-barre-fine.qz-rideau-go .qz-rideau i{animation-play-state:running} /* fondateur : « 0,5 s c est léger le temps que la page se charge » -- le rideau attend la page ENTIÈRE (images comprises), puis 2 s (fondateur), puis s ouvre ; au plus tard 8 s après l arrivée */ /* 30/09 soir : le VRAI rideau, velours navy (SITE/PHOTO/rideau 2.png, 3000 x 1700, coupé au raccord central en deux volets) ; ancré au centre et en bas (l ourlet) */
+html.qz-barre-fine .qz-rideau i.g{left:0;background-image:url("/img/rideau-gauche.webp");background-position:right bottom;animation-name:qz-rideau-g}
+html.qz-barre-fine .qz-rideau i.d{right:0;background-image:url("/img/rideau-droit.webp");background-position:left bottom;animation-name:qz-rideau-d}
+@keyframes qz-rideau-g{to{transform:translateX(-101%);visibility:hidden}}
+@keyframes qz-rideau-d{to{transform:translateX(101%);visibility:hidden}}
+}
+@media (prefers-reduced-motion:reduce){.qz-rideau{display:none!important}}
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2188,6 +2202,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     var rb = bd.getBoundingClientRect(), sy = window.scrollY || 0, bas = rb.bottom + sy, vide = rf.getBoundingClientRect().top + sy - bas; if (vide <= 0) { if (p) p.style.height = '0px'; return; }
     var BOp = bordOnglet(), mbp = BOp ? Math.max(MARCHE, BOp.yBas - HB) : 0, vide2 = vide + mbp; /* 30/09 : jusqu au bas du creux de la première bande — le voile de l onglet se pose dessus */
     if (Math.abs((window.qzProlonge || 0) - vide2) > .5) { window.qzProlonge = vide2; window.dispatchEvent(new Event('resize')); } vide = vide2;
+    document.documentElement.style.setProperty('--qz-rideau-bas', f(bas + vide) + 'px'); /* fondateur : le rideau descend jusqu à la fin de la photo (bas du creux de la 1re bande) : il couvre toute la scène */
     if (!p) { p = document.createElement('div'); p.className = 'qz-prolonge-photo'; p.setAttribute('aria-hidden', 'true'); document.body.appendChild(p); }
     var cs = getComputedStyle(bd), H = rb.height;
     p.style.top = f(bas) + 'px'; p.style.height = f(vide) + 'px'; p.style.left = f(rb.left) + 'px'; p.style.width = f(rb.width) + 'px';
@@ -2217,20 +2232,34 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     if (!actif() || !O) { if (g) g.style.display = 'none'; if (dr) dr.style.display = 'none'; return; }
     var lev = LEVRE(); if (!g) { g = document.createElement('div'); g.className = 'qz-cadre-lisere g'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); dr = document.createElement('div'); dr.className = 'qz-cadre-lisere d'; dr.setAttribute('aria-hidden', 'true'); document.body.appendChild(dr); }
     g.style.display = dr.style.display = ''; g.style.left = f(lev) + 'px'; g.style.top = f(O.yBas - EP / 2) + 'px'; dr.style.left = f(W - lev - EP) + 'px'; dr.style.top = f(HB - EP / 2) + 'px'; }
-  function trouLiseres() { ['g', 'd'].forEach(function (c) { var l = document.querySelector('.qz-cadre-lisere.' + c), a = document.querySelector('.qz-cadre-avancee.' + c); if (!l) return;
-      var rl = l.getBoundingClientRect(), ra = a && a.style.display !== 'none' ? a.getBoundingClientRect() : null;
-      if (!ra || !ra.height || ra.bottom < rl.top || ra.top > rl.bottom) { l.style.webkitMaskImage = l.style.maskImage = ''; return; }
-      var y0 = f(ra.top - rl.top), y1 = f(ra.bottom - rl.top), m = 'linear-gradient(to bottom,#000 0,#000 ' + y0 + 'px,transparent ' + y0 + 'px,transparent ' + y1 + 'px,#000 ' + y1 + 'px)';
-      l.style.webkitMaskImage = l.style.maskImage = m; }); }
+  /* le liseré vertical (fixe) s ouvre sur la hauteur du décroché du film (qui défile) et s ARRÊTE au liseré du pied : à gauche sur sa ligne
+     basse, à droite sur sa ligne haute (fondateur, capture du pied) -- le miroir du haut, où il part du bas de l onglet à gauche et de la ligne haute à droite */
+  function trouLiseres() { var ps = document.querySelector('footer.qz-footer .qz-pied-bord svg'), rp = ps && ps.getBoundingClientRect();
+    ['g', 'd'].forEach(function (c) { var l = document.querySelector('.qz-cadre-lisere.' + c), a = document.querySelector('.qz-cadre-avancee.' + c); if (!l) return;
+      var rl = l.getBoundingClientRect(), trous = [], ra = a && a.style.display !== 'none' ? a.getBoundingClientRect() : null;
+      if (ra && ra.height && ra.bottom > rl.top && ra.top < rl.bottom) trous.push([ra.top - rl.top, ra.bottom - rl.top]);
+      if (rp && rp.height) { var yf = (c === 'g' ? rp.bottom - EP / 2 : rp.top + EP / 2) - rl.top; if (yf < rl.height) trous.push([Math.max(0, yf), rl.height + 1]); }
+      if (!trous.length) { l.style.webkitMaskImage = l.style.maskImage = ''; return; }
+      var st = [], y = 0; trous.sort(function (p, q) { return p[0] - q[0]; }).forEach(function (t) { st.push('#000 ' + f(y) + 'px', '#000 ' + f(t[0]) + 'px', 'transparent ' + f(t[0]) + 'px', 'transparent ' + f(t[1]) + 'px'); y = t[1]; });
+      st.push('#000 ' + f(y) + 'px'); l.style.webkitMaskImage = l.style.maskImage = 'linear-gradient(to bottom,' + st.join(',') + ')'; }); }
   var trouAtt = false; window.addEventListener('scroll', function () { if (trouAtt) return; trouAtt = true; requestAnimationFrame(function () { trouAtt = false; trouLiseres(); }); }, { passive: true });
-  setInterval(function () { liseresCadre(); avancees(); trouLiseres(); }, 1000);
-  function baselineOnglet() { var bd = document.getElementById('qbBandeau'), row = document.getElementById('qzLogoRow'), bur = document.querySelector('.qz-header .qz-burger'), O = bordOnglet(); if (!bd || !row || !bur || !O) return;
-    var p = bd.querySelector('.qz-baseline-onglet'); if (!p) { p = document.createElement('p'); p.className = 'qz-baseline-onglet'; p.innerHTML = '<span>Composez.</span><span>Imprimez.</span><span>Clipsez.</span>'; bd.appendChild(p); }
-    var logo = row.querySelector('.qz-logo14 .qz14-nom') || row, rb = bd.getBoundingClientRect(), gx = logo.getBoundingClientRect().left, dx = bur.getBoundingClientRect().right;
-    var cs = getComputedStyle(p), c = document.createElement('canvas').getContext('2d'); c.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; var m = c.measureText('C'), fs = parseFloat(cs.fontSize);
-    var hautCap = (fs - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent; /* du haut de la ligne au haut des capitales */
-    p.style.left = f(gx - rb.left) + 'px'; p.style.width = f(dx - gx) + 'px'; p.style.top = f(O.yBas + MARGE - hautCap - (rb.top + (window.scrollY || 0))) + 'px'; }
-  document.addEventListener('DOMContentLoaded', function () { setTimeout(baselineOnglet, 200); }); window.addEventListener('load', baselineOnglet); if (document.fonts && document.fonts.ready) document.fonts.ready.then(baselineOnglet);
+  setInterval(function () { liseresCadre(); avancees(); trouLiseres(); surtitre(); }, 1000);
+  /* 30/09 soir : le surtitre « Composez. Imprimez. Clipsez. » au-dessus du titre du bandeau — capitales en haut du bloc logo (39 px), étalé sur la largeur du titre */
+  function surtitre() { var bd = document.getElementById('qbBandeau'), t = bd && bd.querySelector('.qb-col .qb-textes'), logo = document.querySelector('#qzLogoRow .qz-logo14'); if (!t || !logo || !actif()) return;
+    var p = bd.querySelector('.qz-surtitre'); if (!p) { p = document.createElement('p'); p.className = 'qz-surtitre'; p.textContent = 'Composez. Imprimez. Clipsez.'; bd.appendChild(p); }
+    var cs = getComputedStyle(p), c = document.createElement('canvas').getContext('2d'); c.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    var txt = p.textContent, m = c.measureText(txt), mC = c.measureText('C'), rt = t.getBoundingClientRect(), rb = bd.getBoundingClientRect(), sy = window.scrollY || 0;
+    p.style.letterSpacing = '.05em';
+    /* fondateur : « l interlettrage de CHANGEZ À VOLONTÉ (entièrement) pour caler Composez… Clipsez. pile au C et à la fin du Z » -- le mot CHANGEZ
+       (encre du C au Z) prend la largeur du surtitre (encre, sans l espacement qui suit le dernier point) ; 6 intervalles dans CHANGEZ */
+    var mots = t.querySelectorAll('.qb-mot'), mot = mots[0], lettres = mot ? mot.querySelectorAll('.qb-l') : null; /* chaque lettre est une boîte (animation) dont l espacement est figé par une règle : on écarte les lettres par une MARGE à droite */
+    if (lettres && lettres.length > 1) { var lsS = parseFloat(getComputedStyle(p).letterSpacing) || 0, lsL = parseFloat(getComputedStyle(lettres[0]).letterSpacing) || 0, m0 = parseFloat(lettres[0].style.marginRight) || 0;
+      var larM = lettres[lettres.length - 1].getBoundingClientRect().right - lsL - lettres[0].getBoundingClientRect().left - (lettres.length - 1) * m0, larS = p.getBoundingClientRect().width - lsS, mg = (larS - larM) / (lettres.length - 1); /* CHANGEZ sans marge, du C au Z ; la marge comble l écart avec le surtitre */
+      if (Math.abs(mg - m0) > .05) { Array.prototype.forEach.call(mots, function (m2) { var ls2 = m2.querySelectorAll('.qb-l'); Array.prototype.forEach.call(ls2, function (l, k) { l.style.marginRight = k < ls2.length - 1 ? f(mg) + 'px' : ''; }); }); t.style.wordSpacing = f(mg) + 'px'; } p.style.marginRight = f(-lsS) + 'px'; } /* fondateur : « l interlettrage est trop important » -- celui de « support créatif modulaire », sans étirer sur la largeur du titre */
+    var lh = parseFloat(cs.lineHeight), hautCap = (lh - (mC.fontBoundingBoxAscent + mC.fontBoundingBoxDescent)) / 2 + mC.fontBoundingBoxAscent - mC.actualBoundingBoxAscent;
+    p.style.left = f(rt.left - rb.left) + 'px'; var tete = document.querySelector('.qz-header'), row = document.getElementById('qzLogoRow'), hautLogo = (tete ? tete.getBoundingClientRect().top : 0) + (row ? parseFloat(getComputedStyle(row).marginTop) || 0 : 0); /* la place du logo au repos (le logo, lui, arrive d en haut pendant son animation) */
+    p.style.top = f(hautLogo - hautCap - (rb.top + sy)) + 'px'; } /* capitales au haut du logo (39 px) : fondateur, « oublie interligne » */ /* le logo est dans la barre collante : on compte le haut du bandeau dans la page, pas dans la fenêtre */
+  document.addEventListener('DOMContentLoaded', function () { setTimeout(surtitre, 250); }); window.addEventListener('load', surtitre); if (document.fonts && document.fonts.ready) document.fonts.ready.then(surtitre); window.addEventListener('resize', function () { setTimeout(surtitre, 250); });
   setInterval(liseresCadre, 1000); window.addEventListener('resize', function () { setTimeout(liseresCadre, 250); }); document.addEventListener('DOMContentLoaded', function () { setTimeout(liseresCadre, 150); });
   setInterval(avancees, 1000); window.addEventListener('resize', function () { setTimeout(avancees, 250); });
   setInterval(prolonger, 1000); window.addEventListener('resize', function () { setTimeout(prolonger, 200); });
@@ -2246,6 +2275,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
 <!-- TEXTURE-FOND-FIN -->
 </head>
 <body id="qz-top">
+<div class="qz-rideau" aria-hidden="true"><i class="g"></i><i class="d"></i></div><script>/* 30/09 soir : le rideau part quand la page est chargée ; à la fin de son ouverture, il libère ceux qui l attendent (la croissance du mur, bandeau-relief.js) */(function(){var r=document.querySelector(".qz-rideau"),fini=false,att=[],parti=false;function ouvert(){if(fini)return;fini=true;att.splice(0).forEach(function(f){f(true);});}window.qzRideauAttendre=function(cb){var actif=r&&getComputedStyle(r).display!=="none";if(!actif||fini){cb(fini);return;}att.push(cb);};var go=function(){if(parti)return;parti=true;document.documentElement.classList.add("qz-rideau-go");var g=r&&r.querySelector("i");if(g)g.addEventListener("animationend",ouvert);setTimeout(ouvert,3600);};if(document.readyState==="complete")go();else window.addEventListener("load",go);setTimeout(go,8000);})();</script><!-- 30/09 soir, fondateur : le RIDEAU — deux volets qui s ouvrent du centre sur le bandeau (CSS pur, voir .qz-rideau) -->
 <div class="champ-tesselles-fond" id="champTessellesFond" aria-hidden="true"></div>
 <!-- ============================================================
   REGISTRE DES LIENS — adresses officielles arretees le 17/08/2026
@@ -2267,7 +2297,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
 <script src="/commun-bandeau.js?v=2026-09-30a"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-30-film10">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-30-conf5">
 <link rel="stylesheet" href="/tesselle-bouton.css?v=2026-09-28d">
 <link rel="stylesheet" href="/refonte-accueil.css?v=2026-09-30k"><!-- 28/09, fondateur : les boutons deviennent des tesselles cliquables (composant, portee html.qz-tesselles-boutons) -->
 
@@ -3477,17 +3507,17 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-30-final"></script>
+<script src="/bandeau-relief.js?v=2026-09-30-seq1"></script>
 <script src="/bandeau-gestes.js?v=2026-09-28a"></script>
 <script>window.QZQ_PART=0; /* 28/09 soir : grille seule, les seules cases pleines sont les photos (maquette v4) */</script>
 <script src="/fond-quadrillage.js?v=2026-09-28d" defer></script>
 <script src="/refonte-accueil.js?v=2026-09-30-fine11" defer></script>
-<script src="/decroches.js?v=2026-09-30f" defer></script> <!-- 28/09 soir : les cases coupées par un décroché prennent la couleur de ce qu elles touchent -->
+<script src="/decroches.js?v=2026-09-30g" defer></script> <!-- 28/09 soir : les cases coupées par un décroché prennent la couleur de ce qu elles touchent -->
 <style>/* 30/09 soir, fondateur (maquette validée) : le titre, la phrase et les boutons du bandeau sur UNE ligne, dans la bande de l onglet (y 26 -> 89,4), à 26 px de l onglet et du cadre */
 @media (min-width:901px){
 html.qz-barre-fine #qbBandeau .qb-col{position:absolute!important;top:26px!important;left:401px!important;right:49px!important;height:63.42px!important;width:auto!important;max-width:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:22px!important;margin:0!important;padding:0!important;transform:none!important;z-index:7}
-html.qz-barre-fine #qbBandeau .qb-col .qb-textes{font-size:31.9px!important; /* fondateur (option 2) : capitales de 22,9 px = la hauteur du mot QUADRETI du logo (capitales à 0,719 em) */ position:relative;top:-4.2px; /* ses capitales sur celles du logo : 39 -> 61,9 */line-height:1!important;margin:0!important;white-space:nowrap}
-html.qz-barre-fine #qbBandeau .qb-col .qb-para{font-size:14px!important;line-height:1.2!important;margin:0!important;white-space:nowrap;position:relative;top:-1.2px} /* même ligne de base que le titre (62 px) */
+html.qz-barre-fine #qbBandeau .qb-col .qb-textes{font-size:27.83px!important; /* 30/09 soir : capitales 20 px = QUADRETI réduit */ /* fondateur (option 2) : capitales de 22,9 px = la hauteur du mot QUADRETI du logo (capitales à 0,719 em) */ position:relative;top:8.9px; /* bloc titre en miroir du bloc logo : surtitre en haut (capitales 39 -> 45), 6,3 px, puis les capitales du titre 51,3 -> 74,2 = ligne de base de « support créatif modulaire » */line-height:1!important;margin:0!important;white-space:nowrap}
+html.qz-barre-fine #qbBandeau .qb-col .qb-para{font-size:14px!important;line-height:1.2!important;margin:0!important;white-space:nowrap;position:relative;top:10.4px} /* même ligne de base que le titre et la catégorie (73,6 px) */
 html.qz-barre-fine #qbBandeau .qb-col .qb-ctas{margin:0 0 0 auto!important;display:flex!important;gap:12px!important;flex-wrap:nowrap}
 html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2),html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2) .qb-l{color:#dedede!important} /* « À VOLONTÉ » en gris, « CHANGEZ » reste orange */
 html.qz-barre-fine #qbBandeau .qb-col .qb-para,html.qz-barre-fine #qbBandeau .qb-col .qb-para *{color:#dedede!important} /* la petite phrase en gris */
