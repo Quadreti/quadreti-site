@@ -2112,6 +2112,16 @@ html.qz-barre-fine .qz-prolonge-photo{display:block!important;position:absolute;
 .qz-cadre-avancee.g{filter:drop-shadow(0.5mm 0.5mm 0 rgba(0,0,0,.35)) drop-shadow(2mm 2mm 3mm rgba(0,0,0,.25))} /* le relief de la lèvre : lumière en haut à gauche */
 .qz-cadre-avancee.d{filter:drop-shadow(-0.5mm -0.5mm 0 rgba(255,255,255,.09))}
 @media (min-width:901px){html.qz-barre-fine .qz-cadre-avancee{display:block}}
+.qz-cadre-avancee .qz-cadre-trait{fill:none;stroke:var(--qz-lisere-cadre,#dedede);stroke-width:var(--qz-lisere-ep-cadre,1.5px);stroke-linejoin:round} /* le liseré du cadre contourne le décroché */
+.qz-cadre-lisere{position:fixed;z-index:9;pointer-events:none;display:none;width:var(--qz-lisere-ep-cadre,1.5px);background:var(--qz-lisere-cadre,#dedede);bottom:0} /* au-dessus de la lèvre (même z, posé après), sous les décrochés (10) et la barre (60) */
+@media (min-width:901px){
+html.qz-barre-fine .qz-cadre-lisere{display:block}
+html.qz-barre-fine .qz-header .qz-espace-barre,html.qz-barre-fine .qz-header .qz-burger{border-radius:0!important} /* angles droits, comme Galerie et Ouvrir Designer */
+html.qz-barre-fine footer.qz-footer .qz-pied-bord svg{clip-path:inset(0 var(--qzq-levre,6mm) 0 var(--qzq-levre,6mm))} /* le liseré du pied s arrête au bord du cadre, comme celui du menu */
+}
+.qz-baseline-onglet{display:none}
+@media (min-width:901px){html.qz-barre-fine .qz-baseline-onglet{display:flex;justify-content:space-between;position:absolute;z-index:7;pointer-events:none;margin:0;
+  font:500 14px/1 Jura,sans-serif;letter-spacing:.04em;color:var(--qz-baseline-onglet,#dedede);white-space:nowrap}} /* 30/09 soir : la baseline sous l onglet (essai) */
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2186,6 +2196,8 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
       p.style.clipPath = "path('M0 0 H" + f(rb.width) + ' V' + f(yb - mbp) + ' H' + f(cq.xFin) + ' ' + cq.retour + ' H0 Z' + "')"; } else p.style.clipPath = '';
     p.style.backgroundPosition = cs.backgroundPosition.split(',').map(function (c) { var v = c.trim().split(/ +/); return v[0] + ' ' + f((parseFloat(v[1]) || 0) - H) + 'px'; }).join(', '); }
   /* 30/09 soir : le cadre avance à la hauteur de la pellicule (deux décrochés, gauche et droite) ; le film passe derrière */
+  var EP = 1.5; /* épaisseur des liserés du cadre = celle de l onglet */
+  function LEVRE() { var m = /0px 0px 0px ([d.]+)px inset/.exec(getComputedStyle(document.body, '::before').boxShadow || ''); return m ? parseFloat(m[1]) : 22.68; }
   var AV = { avance: 26, marge: 4, rayon: 12 }; /* avancée depuis le bord intérieur de la lèvre, marge au-dessus et au-dessous du film, coins (px) */
   function avancees() { var film = document.querySelector('.qb-film'); var els = document.querySelectorAll('.qz-cadre-avancee');
     if (!actif() || !film || !film.offsetHeight) { Array.prototype.forEach.call(els, function (e) { e.style.display = 'none'; }); return; }
@@ -2195,8 +2207,31 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     var d = 'M0 0 H1 V0 Q1 ' + r + ' ' + f(1 + r) + ' ' + r + ' H' + f(w - r) + ' Q' + f(w) + ' ' + r + ' ' + f(w) + ' ' + f(2 * r) + ' V' + f(hh - 2 * r) + ' Q' + f(w) + ' ' + f(hh - r) + ' ' + f(w - r) + ' ' + f(hh - r) + ' H' + f(1 + r) + ' Q1 ' + f(hh - r) + ' 1 ' + f(hh) + ' H0 Z';
     ['g', 'd'].forEach(function (cote) { var s = document.querySelector('.qz-cadre-avancee.' + cote);
       if (!s) { s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'qz-cadre-avancee ' + cote); s.setAttribute('aria-hidden', 'true'); s.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path')); document.body.appendChild(s); }
-      s.setAttribute('width', f(w)); s.setAttribute('height', f(hh)); s.setAttribute('viewBox', '0 0 ' + f(w) + ' ' + f(hh)); s.firstChild.setAttribute('d', d);
+      var e = 1 + EP / 2, dt = 'M' + f(e) + ' 0 Q' + f(e) + ' ' + r + ' ' + f(e + r) + ' ' + r + ' H' + f(w - r) + ' Q' + f(w) + ' ' + r + ' ' + f(w) + ' ' + f(2 * r) + ' V' + f(hh - 2 * r) + ' Q' + f(w) + ' ' + f(hh - r) + ' ' + f(w - r) + ' ' + f(hh - r) + ' H' + f(e + r) + ' Q' + f(e) + ' ' + f(hh - r) + ' ' + f(e) + ' ' + f(hh);
+      if (!s.querySelector('.qz-cadre-trait')) { var tp = document.createElementNS('http://www.w3.org/2000/svg', 'path'); tp.setAttribute('class', 'qz-cadre-trait'); tp.setAttribute('vector-effect', 'non-scaling-stroke'); s.appendChild(tp); }
+      s.setAttribute('width', f(w)); s.setAttribute('height', f(hh)); s.setAttribute('viewBox', '0 0 ' + f(w) + ' ' + f(hh)); s.firstChild.setAttribute('d', d); s.querySelector('.qz-cadre-trait').setAttribute('d', dt);
       s.style.top = f(rf.top + sy - AV.marge - r) + 'px'; s.style.left = f(cote === 'g' ? lev - 1 : W - lev + 1 - w) + 'px'; s.style.transform = cote === 'd' ? 'scaleX(-1)' : ''; s.style.display = ''; }); }
+  /* les deux liserés du cadre : du coin de l onglet jusqu en bas de la fenêtre (le cadre est fixe, eux aussi) — à gauche depuis le bas de l onglet,
+     à droite depuis la ligne du haut ; ils se raccordent aux traits de l onglet, coupés au même bord */
+  function liseresCadre() { var O = bordOnglet(), W = document.documentElement.clientWidth, g = document.querySelector('.qz-cadre-lisere.g'), dr = document.querySelector('.qz-cadre-lisere.d');
+    if (!actif() || !O) { if (g) g.style.display = 'none'; if (dr) dr.style.display = 'none'; return; }
+    var lev = LEVRE(); if (!g) { g = document.createElement('div'); g.className = 'qz-cadre-lisere g'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); dr = document.createElement('div'); dr.className = 'qz-cadre-lisere d'; dr.setAttribute('aria-hidden', 'true'); document.body.appendChild(dr); }
+    g.style.display = dr.style.display = ''; g.style.left = f(lev) + 'px'; g.style.top = f(O.yBas - EP / 2) + 'px'; dr.style.left = f(W - lev - EP) + 'px'; dr.style.top = f(HB - EP / 2) + 'px'; }
+  function trouLiseres() { ['g', 'd'].forEach(function (c) { var l = document.querySelector('.qz-cadre-lisere.' + c), a = document.querySelector('.qz-cadre-avancee.' + c); if (!l) return;
+      var rl = l.getBoundingClientRect(), ra = a && a.style.display !== 'none' ? a.getBoundingClientRect() : null;
+      if (!ra || !ra.height || ra.bottom < rl.top || ra.top > rl.bottom) { l.style.webkitMaskImage = l.style.maskImage = ''; return; }
+      var y0 = f(ra.top - rl.top), y1 = f(ra.bottom - rl.top), m = 'linear-gradient(to bottom,#000 0,#000 ' + y0 + 'px,transparent ' + y0 + 'px,transparent ' + y1 + 'px,#000 ' + y1 + 'px)';
+      l.style.webkitMaskImage = l.style.maskImage = m; }); }
+  var trouAtt = false; window.addEventListener('scroll', function () { if (trouAtt) return; trouAtt = true; requestAnimationFrame(function () { trouAtt = false; trouLiseres(); }); }, { passive: true });
+  setInterval(function () { liseresCadre(); avancees(); trouLiseres(); }, 1000);
+  function baselineOnglet() { var bd = document.getElementById('qbBandeau'), row = document.getElementById('qzLogoRow'), bur = document.querySelector('.qz-header .qz-burger'), O = bordOnglet(); if (!bd || !row || !bur || !O) return;
+    var p = bd.querySelector('.qz-baseline-onglet'); if (!p) { p = document.createElement('p'); p.className = 'qz-baseline-onglet'; p.innerHTML = '<span>Composez.</span><span>Imprimez.</span><span>Clipsez.</span>'; bd.appendChild(p); }
+    var logo = row.querySelector('.qz-logo14 .qz14-nom') || row, rb = bd.getBoundingClientRect(), gx = logo.getBoundingClientRect().left, dx = bur.getBoundingClientRect().right;
+    var cs = getComputedStyle(p), c = document.createElement('canvas').getContext('2d'); c.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; var m = c.measureText('C'), fs = parseFloat(cs.fontSize);
+    var hautCap = (fs - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent; /* du haut de la ligne au haut des capitales */
+    p.style.left = f(gx - rb.left) + 'px'; p.style.width = f(dx - gx) + 'px'; p.style.top = f(O.yBas + MARGE - hautCap - (rb.top + (window.scrollY || 0))) + 'px'; }
+  document.addEventListener('DOMContentLoaded', function () { setTimeout(baselineOnglet, 200); }); window.addEventListener('load', baselineOnglet); if (document.fonts && document.fonts.ready) document.fonts.ready.then(baselineOnglet);
+  setInterval(liseresCadre, 1000); window.addEventListener('resize', function () { setTimeout(liseresCadre, 250); }); document.addEventListener('DOMContentLoaded', function () { setTimeout(liseresCadre, 150); });
   setInterval(avancees, 1000); window.addEventListener('resize', function () { setTimeout(avancees, 250); });
   setInterval(prolonger, 1000); window.addEventListener('resize', function () { setTimeout(prolonger, 200); });
   var MARGE = 26; /* marge égale de l onglet autour de son contenu (px) */
