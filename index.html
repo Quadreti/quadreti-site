@@ -2143,6 +2143,21 @@ html.qz-barre-fine .qz-rideau i.d{right:0;background-image:url("/img/rideau-droi
 }
 @media (prefers-reduced-motion:reduce){.qz-rideau{display:none!important}}
 @media (min-width:901px){html.qz-barre-fine #qbBandeau .qb-col .qb-para{position:absolute!important;left:0;white-space:nowrap!important;line-height:1.2!important;font-size:12px!important} /* 12 px (fondateur) : 2 lignes, de l air sous le liseré */html.qz-barre-fine #qbBandeau .qb-col .qb-para .qb-phrase{white-space:nowrap!important} /* fondateur : la phrase repasse sur UNE ligne */html.qz-barre-fine #qbBandeau .qb-col p.qb-para.qb-para,html.qz-barre-fine #qbBandeau .qb-col p.qb-para .qb-phrase{font-size:12px!important} /* plus fort que la règle du 30/09 en bas de page (14 px) */} /* 30/09 nuit : la phrase dans la place libre à gauche du titre, placée par surtitre() */
+.qz-btn-rideau{display:none}
+@media (min-width:901px){
+/* 30/09 nuit, fondateur : le bouton RIDEAU, en miroir du bouton loupe (bas gauche, au-dessus du début du film, 13 px après le décroché gauche). Même carré que les commandes de la loupe. */
+html.qz-barre-fine .qz-btn-rideau{display:grid;place-items:center;position:absolute;z-index:11; /* au-dessus du rideau (8) et des décrochés (10) : il doit rester cliquable rideau fermé */width:24px;height:24px;padding:0;border:1px solid rgba(222,222,222,.28);background:rgba(16,24,31,.45);color:#dedede;cursor:pointer;opacity:.7;transform:translateY(-50%);transition:opacity .2s,border-color .2s}
+html.qz-barre-fine .qz-btn-rideau:hover,html.qz-barre-fine .qz-btn-rideau:focus-visible{opacity:1;border-color:#dedede}
+html.qz-barre-fine .qz-btn-rideau:focus-visible{outline:2px solid #dedede;outline-offset:2px}
+html.qz-barre-fine .qz-btn-rideau svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* refermer : les volets reviennent du bord vers le centre (2 s) ; rouvrir : l ouverture repart, sans l attente du chargement */
+html.qz-barre-fine.qz-rideau-clos .qz-rideau i{animation-duration:2s;animation-delay:0s;animation-play-state:running}
+html.qz-barre-fine.qz-rideau-clos .qz-rideau i.g{animation-name:qz-rideau-g-fermer}
+html.qz-barre-fine.qz-rideau-clos .qz-rideau i.d{animation-name:qz-rideau-d-fermer}
+html.qz-barre-fine.qz-rideau-rouvre .qz-rideau i{animation-delay:0s}
+@keyframes qz-rideau-g-fermer{from{transform:translateX(-101%);visibility:visible}to{transform:none;visibility:visible}}
+@keyframes qz-rideau-d-fermer{from{transform:translateX(101%);visibility:visible}to{transform:none;visibility:visible}}
+}
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2280,6 +2295,23 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     p.style.left = f(rt.left - rb.left) + 'px'; var tete = document.querySelector('.qz-header'), row = document.getElementById('qzLogoRow'), hautLogo = (tete ? tete.getBoundingClientRect().top : 0) + (row ? parseFloat(getComputedStyle(row).marginTop) || 0 : 0); /* la place du logo au repos (le logo, lui, arrive d en haut pendant son animation) */
     p.style.top = f(hautLogo - hautCap - (rb.top + sy)) + 'px'; } /* capitales au haut du logo (39 px) : fondateur, « oublie interligne » */ /* le logo est dans la barre collante : on compte le haut du bandeau dans la page, pas dans la fenêtre */
   document.addEventListener('DOMContentLoaded', function () { setTimeout(surtitre, 250); }); window.addEventListener('load', surtitre); if (document.fonts && document.fonts.ready) document.fonts.ready.then(surtitre); window.addEventListener('resize', function () { setTimeout(surtitre, 250); });
+  /* 30/09 nuit : le bouton rideau, bas gauche du bandeau, en miroir du bouton loupe */
+  function boutonRideau() { var bd = document.getElementById('qbBandeau'), film = bd && bd.querySelector('.qb-film'), r = document.querySelector('.qz-rideau'); if (!bd || !film || !r || !actif()) return;
+    var b = bd.querySelector('.qz-btn-rideau');
+    if (!b) { b = document.createElement('button'); b.type = 'button'; b.className = 'qz-btn-rideau';
+      var ico = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18"/><path d="M5 3v18c2-3 3-8 4-18"/><path d="M19 3v18c-2-3-3-8-4-18"/></svg>';
+      var maj = function () { var clos = document.documentElement.classList.contains('qz-rideau-clos'); b.setAttribute('aria-label', clos ? 'Ouvrir le rideau' : 'Fermer le rideau'); b.title = clos ? 'Ouvrir le rideau' : 'Fermer le rideau'; b.setAttribute('aria-pressed', clos ? 'true' : 'false'); };
+      b.innerHTML = ico; maj();
+      b.addEventListener('click', function () { var H = document.documentElement, lum = bd.querySelector('.qb-lumiere'); clearTimeout(b._tLum);
+        if (H.classList.contains('qz-rideau-clos')) { H.classList.remove('qz-rideau-clos'); H.classList.add('qz-rideau-rouvre');
+          /* la lumière revient 1 s après la fin de l ouverture (2 s), avec son grésillement ; seulement si elle s était déjà allumée une fois */
+          if (bd.classList.contains('qb-lum-off')) b._tLum = setTimeout(function () { bd.classList.remove('qb-lum-off'); if (lum) { lum.style.animation = 'none'; void lum.offsetWidth; lum.style.animation = ''; } }, 2000 + 1000); }
+        else { H.classList.remove('qz-rideau-rouvre'); H.classList.add('qz-rideau-clos'); if (bd.classList.contains('qb-lum-on')) bd.classList.add('qb-lum-off'); } /* rideau fermé : la lumière s éteint */
+        maj(); });
+      bd.appendChild(b); }
+    var rb = bd.getBoundingClientRect(), rf = film.getBoundingClientRect(), lev = LEVRE();
+    b.style.left = f(lev + AV.avance / 2 - 12 - rb.left) + 'px'; b.style.top = f(rf.top + rf.height / 2 - rb.top) + 'px'; } /* centré dans le décroché gauche (fondateur) */
+  setInterval(boutonRideau, 1000); window.addEventListener('resize', function () { setTimeout(boutonRideau, 250); });
   setInterval(liseresCadre, 1000); window.addEventListener('resize', function () { setTimeout(liseresCadre, 250); }); document.addEventListener('DOMContentLoaded', function () { setTimeout(liseresCadre, 150); });
   setInterval(avancees, 1000); window.addEventListener('resize', function () { setTimeout(avancees, 250); });
   setInterval(prolonger, 1000); window.addEventListener('resize', function () { setTimeout(prolonger, 200); });
@@ -2317,7 +2349,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
      la regle grise etait deja en ligne. A BUMPER en meme temps que les feuilles. -->
 <script src="/commun-bandeau.js?v=2026-09-30a"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
-<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-30-loupe2">
+<link rel="stylesheet" href="/bandeau-relief.css?v=2026-09-30-dec2">
 <link rel="stylesheet" href="/tesselle-bouton.css?v=2026-09-28d">
 <link rel="stylesheet" href="/refonte-accueil.css?v=2026-09-30k"><!-- 28/09, fondateur : les boutons deviennent des tesselles cliquables (composant, portee html.qz-tesselles-boutons) -->
 
@@ -3527,7 +3559,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
 })();
 </script>
 
-<script src="/bandeau-relief.js?v=2026-09-30-loupe3"></script>
+<script src="/bandeau-relief.js?v=2026-09-30-dec1"></script>
 <script src="/bandeau-gestes.js?v=2026-09-28a"></script>
 <script>window.QZQ_PART=0; /* 28/09 soir : grille seule, les seules cases pleines sont les photos (maquette v4) */</script>
 <script src="/fond-quadrillage.js?v=2026-09-28d" defer></script>
