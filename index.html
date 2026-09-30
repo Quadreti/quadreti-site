@@ -2142,6 +2142,7 @@ html.qz-barre-fine .qz-rideau i.d{right:0;background-image:url("/img/rideau-droi
 @keyframes qz-rideau-d{to{transform:translateX(101%);visibility:hidden}}
 }
 @media (prefers-reduced-motion:reduce){.qz-rideau{display:none!important}}
+@media (min-width:901px){html.qz-barre-fine #qbBandeau .qb-col .qb-para{position:absolute!important;left:0;white-space:normal!important;line-height:1.2!important;font-size:12px!important} /* 12 px (fondateur) : 2 lignes, de l air sous le liseré */html.qz-barre-fine #qbBandeau .qb-col .qb-para .qb-phrase{white-space:normal!important}html.qz-barre-fine #qbBandeau .qb-col p.qb-para.qb-para,html.qz-barre-fine #qbBandeau .qb-col p.qb-para .qb-phrase{font-size:12px!important} /* plus fort que la règle du 30/09 en bas de page (14 px) */} /* 30/09 nuit : la phrase dans la place libre à gauche du titre, placée par surtitre() */
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2262,6 +2263,17 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     if (lettres && lettres.length > 1) { var lsS = parseFloat(getComputedStyle(p).letterSpacing) || 0, lsL = parseFloat(getComputedStyle(lettres[0]).letterSpacing) || 0, m0 = parseFloat(lettres[0].style.marginRight) || 0;
       var larM = lettres[lettres.length - 1].getBoundingClientRect().right - lsL - lettres[0].getBoundingClientRect().left - (lettres.length - 1) * m0, larS = p.getBoundingClientRect().width - lsS, mg = (larS - larM) / (lettres.length - 1); /* CHANGEZ sans marge, du C au Z ; la marge comble l écart avec le surtitre */
       if (Math.abs(mg - m0) > .05) { Array.prototype.forEach.call(mots, function (m2) { var ls2 = m2.querySelectorAll('.qb-l'); Array.prototype.forEach.call(ls2, function (l, k) { l.style.marginRight = k < ls2.length - 1 ? f(mg) + 'px' : ''; }); }); t.style.wordSpacing = f(mg) + 'px'; } p.style.marginRight = f(-lsS) + 'px'; } /* fondateur : « l interlettrage est trop important » -- celui de « support créatif modulaire », sans étirer sur la largeur du titre */
+    /* 30/09 nuit, fondateur : le bloc titre (surtitre + CHANGEZ À VOLONTÉ) se CENTRE sur l axe du mur (celui du canapé), à sa hauteur calée sur le
+       logo ; la phrase prend la place libre à gauche, entre l onglet et le titre, sur plusieurs lignes s il le faut, sa dernière ligne sur la ligne de base du titre. */
+    var murEl = bd.querySelector('.qb-sm-mur'); if (murEl && !bd.classList.contains('qb-sm-compose')) { var rmur = murEl.getBoundingClientRect(); if (rmur.width) window._qzAxeMur = rmur.left + rmur.width / 2; }
+    if (window._qzAxeMur != null) { var dec0 = parseFloat(t.style.left) || 0, rt1 = t.getBoundingClientRect(), nat = rt1.left - dec0; t.style.left = f(window._qzAxeMur - rt1.width / 2 - nat) + 'px'; }
+    rt = t.getBoundingClientRect();
+    var phr = bd.querySelector('.qb-col .qb-para'), colT = bd.querySelector('.qb-col');
+    if (phr && colT) { var rcol = colT.getBoundingClientRect(); phr.style.width = f(Math.max(80, rt.left - rcol.left - 22)) + 'px'; /* 22 px avant le titre : l écart de la ligne */
+      var cT = getComputedStyle(t), cP = getComputedStyle(phr), c3 = document.createElement('canvas').getContext('2d');
+      c3.font = cT.fontWeight + ' ' + cT.fontSize + ' ' + cT.fontFamily; var mT = c3.measureText('C'), lhT = parseFloat(cT.lineHeight) || rt.height, baseT = rt.top + (lhT - (mT.fontBoundingBoxAscent + mT.fontBoundingBoxDescent)) / 2 + mT.fontBoundingBoxAscent;
+      c3.font = cP.fontWeight + ' ' + cP.fontSize + ' ' + cP.fontFamily; var mP = c3.measureText('U'), lhP = parseFloat(cP.lineHeight), baseP = (lhP - (mP.fontBoundingBoxAscent + mP.fontBoundingBoxDescent)) / 2 + mP.fontBoundingBoxAscent;
+      var lignes = Math.max(1, Math.round(phr.getBoundingClientRect().height / lhP)); phr.style.top = f(baseT - (lignes - 1) * lhP - baseP - rcol.top) + 'px'; }
     var lh = parseFloat(cs.lineHeight), hautCap = (lh - (mC.fontBoundingBoxAscent + mC.fontBoundingBoxDescent)) / 2 + mC.fontBoundingBoxAscent - mC.actualBoundingBoxAscent;
     p.style.left = f(rt.left - rb.left) + 'px'; var tete = document.querySelector('.qz-header'), row = document.getElementById('qzLogoRow'), hautLogo = (tete ? tete.getBoundingClientRect().top : 0) + (row ? parseFloat(getComputedStyle(row).marginTop) || 0 : 0); /* la place du logo au repos (le logo, lui, arrive d en haut pendant son animation) */
     p.style.top = f(hautLogo - hautCap - (rb.top + sy)) + 'px'; } /* capitales au haut du logo (39 px) : fondateur, « oublie interligne » */ /* le logo est dans la barre collante : on compte le haut du bandeau dans la page, pas dans la fenêtre */
