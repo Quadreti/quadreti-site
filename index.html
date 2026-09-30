@@ -2094,6 +2094,7 @@ html.qz-barre-fine #qzLogoRow.qz-l14 .qz-logo14{width:168px} /* 30/09 : -20 % ; 
 html.qz-barre-fine #qzLogoRow.qz-l14 .qz-cat{font-size:12px;line-height:14px!important;letter-spacing:.05em!important;padding-bottom:.3px} /* 0,3 px : le bloc logo garde 37,4 px, l onglet reste à 89,4 */ /* 30/09 soir : 9 -> 12 px, espacement réduit pour tenir sur la largeur du logo */
 html.qz-barre-fine .qz-header .qz-burger{width:34px!important;height:34px!important;background:var(--qzt-fond-2,#dedede)!important;box-shadow:inset 0.45mm 0.45mm 0.3mm rgba(255,255,255,calc(var(--qzt-relief,.28) * .9)),inset -0.45mm -0.45mm 0.3mm rgba(0,0,0,var(--qzt-relief,.28)),0.2mm 0.3mm 0.6mm rgba(0,0,0,.35)!important;border:0!important}
 html.qz-barre-fine .qz-header .qz-burger span{background:var(--qzt-encre-2,#1e2b35)!important} /* les traits étaient crème #f2eedf, un jeton mort de la charte */
+html.qz-barre-fine .qz-header .qz-burger{background:var(--qz-terracotta,#d96c2f)!important}html.qz-barre-fine .qz-header .qz-burger span{background:var(--qz-encre,#10181f)!important} /* 30/09 nuit, fondateur : le bouton menu en orange de marque, traits à l encre */
 }
 html.qz-barre-fine.qz-defile .qz-header #qzLogoRow.qz-l14 .qz-cat{opacity:1!important} /* 30/09, fondateur : « garde support » -- la catégorie reste affichée en permanence (elle s effaçait au défilement, logo-v5.css) */
 @media (min-width:901px){
@@ -2142,7 +2143,7 @@ html.qz-barre-fine .qz-rideau i.d{right:0;background-image:url("/img/rideau-droi
 @keyframes qz-rideau-d{to{transform:translateX(101%);visibility:hidden}}
 }
 @media (prefers-reduced-motion:reduce){.qz-rideau{display:none!important}}
-@media (min-width:901px){html.qz-barre-fine #qbBandeau .qb-col .qb-para{position:absolute!important;left:0;white-space:nowrap!important;line-height:1.2!important;font-size:12px!important} /* 12 px (fondateur) : 2 lignes, de l air sous le liseré */html.qz-barre-fine #qbBandeau .qb-col .qb-para .qb-phrase{white-space:nowrap!important} /* fondateur : la phrase repasse sur UNE ligne */html.qz-barre-fine #qbBandeau .qb-col p.qb-para.qb-para,html.qz-barre-fine #qbBandeau .qb-col p.qb-para .qb-phrase{font-size:12px!important} /* plus fort que la règle du 30/09 en bas de page (14 px) */} /* 30/09 nuit : la phrase dans la place libre à gauche du titre, placée par surtitre() */
+@media (min-width:901px){html.qz-barre-fine #qbBandeau .qb-col .qb-para{position:absolute!important;left:0;white-space:nowrap!important;line-height:1.2!important;font-size:12px!important} /* 12 px (fondateur) : 2 lignes, de l air sous le liseré */html.qz-barre-fine #qbBandeau .qb-col .qb-para .qb-phrase{white-space:nowrap!important} /* fondateur : la phrase repasse sur UNE ligne */html.qz-barre-fine #qbBandeau .qb-col p.qb-para.qb-para,html.qz-barre-fine #qbBandeau .qb-col p.qb-para .qb-phrase{font-size:13px!important}html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2){font-size:13px;position:relative}html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2),html.qz-barre-fine #qbBandeau .qb-col .qb-textes .qb-mot:nth-of-type(n+2) .qb-l{font-family:Jura,sans-serif!important;font-weight:400!important;text-transform:none!important} /* fondateur : « à volonté » en Jura, sans gras, en minuscules */ /* 30/09 nuit : phrase et « À VOLONTÉ » à 13 px ; « À VOLONTÉ » est remonté sur la ligne médiane par surtitre() */ /* plus fort que la règle du 30/09 en bas de page (14 px) */} /* 30/09 nuit : la phrase dans la place libre à gauche du titre, placée par surtitre() */
 .qz-btn-rideau{display:none}
 @media (min-width:901px){
 /* 30/09 nuit, fondateur : le bouton RIDEAU, en miroir du bouton loupe (bas gauche, au-dessus du début du film, 13 px après le décroché gauche). Même carré que les commandes de la loupe. */
@@ -2158,6 +2159,8 @@ html.qz-barre-fine.qz-rideau-rouvre .qz-rideau i{animation-delay:0s}
 @keyframes qz-rideau-g-fermer{from{transform:translateX(-101%);visibility:visible}to{transform:none;visibility:visible}}
 @keyframes qz-rideau-d-fermer{from{transform:translateX(101%);visibility:visible}to{transform:none;visibility:visible}}
 }
+.qz-voile-bande{display:none}
+@media (min-width:901px){html.qz-barre-fine .qz-voile-bande{display:block;position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none;background:var(--qz-navy,#1e2b35)}} /* 30/09 nuit : la bande du titre en navy plein, sous l onglet et ses textes, au-dessus de la photo et de la lumière */
 .qz-reassure{display:none} /* hors grand écran : pas de bande de réassurance dans la barre */
 html.qz-barre-fine .qz-header{pointer-events:none} /* la barre ne fait plus que 14 px : le reste de sa boîte laisse passer les clics vers le bandeau */
 html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-barre-fine .qz-header #qzLogoRow,html.qz-barre-fine .qz-header nav,html.qz-barre-fine .qz-header [role="dialog"]{pointer-events:auto}
@@ -2205,6 +2208,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     svg.setAttribute('viewBox', '0 0 ' + f(W) + ' ' + f(H));
     var pf = svg.querySelector('.qz-onglet-fond'), pt = svg.querySelector('.qz-onglet-trait'); if (pf) pf.setAttribute('d', fond); if (pt) pt.setAttribute('d', trait);
     masque(svg.previousElementSibling, W, H, fond);
+    var bdV = document.getElementById('qbBandeau'); if (bdV && O) { var vb = bdV.querySelector('.qz-voile-bande'); if (!vb) { vb = document.createElement('div'); vb.className = 'qz-voile-bande'; vb.setAttribute('aria-hidden', 'true'); bdV.insertBefore(vb, bdV.firstChild); } vb.style.height = f(O.yBas) + 'px'; } /* le voile navy de la bande : du haut du bandeau jusqu au bas de l onglet (89,4 px) */
     window.qzBasBarre = rs.top + (O ? O.yBas : HB); /* le bas de la bande de l onglet : le titre du bandeau y est posé (30/09 soir), le mur se centre dessous */
     var rq = document.querySelector('.qz-header .qz-reassure'), tete1 = document.querySelector('.qz-header');
     if (!rq && tete1) { var textes = Array.prototype.map.call(document.querySelectorAll('.qb-defile-piste span'), function (s) { return s.textContent; }); textes = textes.slice(0, Math.max(1, textes.length / 2)); if (!textes.length) textes = ['Conception et fabrication françaises', 'Livraison en point relais', 'Paiement sécurisé'];
@@ -2277,7 +2281,7 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
     var mots = t.querySelectorAll('.qb-mot'), mot = mots[0], lettres = mot ? mot.querySelectorAll('.qb-l') : null; /* chaque lettre est une boîte (animation) dont l espacement est figé par une règle : on écarte les lettres par une MARGE à droite */
     if (lettres && lettres.length > 1) { var lsS = parseFloat(getComputedStyle(p).letterSpacing) || 0, lsL = parseFloat(getComputedStyle(lettres[0]).letterSpacing) || 0, m0 = parseFloat(lettres[0].style.marginRight) || 0;
       var larM = lettres[lettres.length - 1].getBoundingClientRect().right - lsL - lettres[0].getBoundingClientRect().left - (lettres.length - 1) * m0, larS = p.getBoundingClientRect().width - lsS, mg = (larS - larM) / (lettres.length - 1); /* CHANGEZ sans marge, du C au Z ; la marge comble l écart avec le surtitre */
-      if (Math.abs(mg - m0) > .05) { Array.prototype.forEach.call(mots, function (m2) { var ls2 = m2.querySelectorAll('.qb-l'); Array.prototype.forEach.call(ls2, function (l, k) { l.style.marginRight = k < ls2.length - 1 ? f(mg) + 'px' : ''; }); }); t.style.wordSpacing = f(mg) + 'px'; } p.style.marginRight = f(-lsS) + 'px'; } /* fondateur : « l interlettrage est trop important » -- celui de « support créatif modulaire », sans étirer sur la largeur du titre */
+      if (Math.abs(mg - m0) > .05) { [mot].forEach(function (m2) { var ls2 = m2.querySelectorAll('.qb-l'); Array.prototype.forEach.call(ls2, function (l, k) { l.style.marginRight = k < ls2.length - 1 ? f(mg) + 'px' : ''; }); }); t.style.wordSpacing = ''; } p.style.marginRight = f(-lsS) + 'px'; } /* fondateur : « l interlettrage est trop important » -- celui de « support créatif modulaire », sans étirer sur la largeur du titre */
     /* 30/09 nuit, fondateur : le bloc titre (surtitre + CHANGEZ À VOLONTÉ) se CENTRE sur l axe du mur (celui du canapé), à sa hauteur calée sur le
        logo ; la phrase prend la place libre à gauche, entre l onglet et le titre, sur plusieurs lignes s il le faut, sa dernière ligne sur la ligne de base du titre. */
     var murEl = bd.querySelector('.qb-sm-mur'); if (murEl && !bd.classList.contains('qb-sm-compose')) { var rmur = murEl.getBoundingClientRect(); if (rmur.width) window._qzAxeMur = rmur.left + rmur.width / 2; }
@@ -2286,11 +2290,19 @@ html.qz-barre-fine .qz-header a,html.qz-barre-fine .qz-header button,html.qz-bar
       t.style.left = f(dec0 + window._qzAxeMur - (xC + xZ) / 2) + 'px'; }
     rt = t.getBoundingClientRect();
     var phr = bd.querySelector('.qb-col .qb-para'), colT = bd.querySelector('.qb-col');
-    if (phr && colT) { var rcol = colT.getBoundingClientRect(); phr.style.width = 'auto'; /* une seule ligne (fondateur) ; elle loge dans la place libre à gauche du titre */
-      var cT = getComputedStyle(t), cP = getComputedStyle(phr), c3 = document.createElement('canvas').getContext('2d');
+    if (phr && colT) { var rcol = colT.getBoundingClientRect(); phr.style.width = 'auto';
+      /* 30/09 nuit, fondateur (ligne rouge) : la LIGNE MÉDIANE = le milieu du bloc logo au repos (haut de la barre + 39 px + moitié de sa hauteur) = milieu des carrés du menu */
+      var teteM = document.querySelector('.qz-header'), rowM = document.getElementById('qzLogoRow'), yM = (teteM ? teteM.getBoundingClientRect().top : 0) + (rowM ? (parseFloat(getComputedStyle(rowM).marginTop) || 0) + rowM.offsetHeight / 2 : 57.7);
+      var cT = getComputedStyle(t), c3 = document.createElement('canvas').getContext('2d');
       c3.font = cT.fontWeight + ' ' + cT.fontSize + ' ' + cT.fontFamily; var mT = c3.measureText('C'), lhT = parseFloat(cT.lineHeight) || rt.height, baseT = rt.top + (lhT - (mT.fontBoundingBoxAscent + mT.fontBoundingBoxDescent)) / 2 + mT.fontBoundingBoxAscent;
-      c3.font = cP.fontWeight + ' ' + cP.fontSize + ' ' + cP.fontFamily; var mP = c3.measureText('U'), lhP = parseFloat(cP.lineHeight), baseP = (lhP - (mP.fontBoundingBoxAscent + mP.fontBoundingBoxDescent)) / 2 + mP.fontBoundingBoxAscent;
-      var lignes = Math.max(1, Math.round(phr.getBoundingClientRect().height / lhP)); phr.style.top = f(baseT - (lignes - 1) * lhP - baseP - rcol.top) + 'px'; }
+      /* « À VOLONTÉ » (13 px) : le milieu de ses capitales sur la ligne médiane */
+      if (mots[1] && !mots[1]._accents) { mots[1]._accents = true; var la = mots[1].querySelector('.qb-l'); if (la && la.textContent === 'a') la.textContent = '\u00e0'; var lv = mots[2] ? mots[2].querySelectorAll('.qb-l') : []; if (lv.length && lv[lv.length - 1].textContent === 'e') lv[lv.length - 1].textContent = '\u00e9'; } /* À et É en Jura */
+      Array.prototype.forEach.call(mots, function (m2, k) { if (!k) return; var l1 = m2.querySelector('.qb-l') || m2, cm = getComputedStyle(l1), r1 = l1.getBoundingClientRect(); c3.font = cm.fontWeight + ' ' + cm.fontSize + ' ' + cm.fontFamily; var mV = c3.measureText('V'), lh1 = parseFloat(cm.lineHeight) || r1.height, milieu = r1.top + (lh1 - (mV.fontBoundingBoxAscent + mV.fontBoundingBoxDescent)) / 2 + mV.fontBoundingBoxAscent - mV.actualBoundingBoxAscent / 2; m2.style.top = f((parseFloat(m2.style.top) || 0) + yM - milieu) + 'px'; }); /* recalé sur sa propre mesure : le milieu de ses capitales sur la ligne médiane */
+      /* la phrase (13 px, une ligne) : centrée sur la ligne médiane, et centrée dans la place libre entre l onglet et le C de CHANGEZ */
+      var cP = getComputedStyle(phr.querySelector('.qb-phrase') || phr); c3.font = cP.fontWeight + ' ' + cP.fontSize + ' ' + cP.fontFamily; var mP = c3.measureText('U'), lhP = parseFloat(getComputedStyle(phr).lineHeight), baseP = (lhP - (mP.fontBoundingBoxAscent + mP.fontBoundingBoxDescent)) / 2 + mP.fontBoundingBoxAscent;
+      phr.style.top = f(yM - (baseP - mP.actualBoundingBoxAscent / 2) - rcol.top) + 'px';
+      var Ob = bordOnglet(), xOnglet = Ob ? Ob.x0 + Ob.gauche + RAYON : rcol.left, xCg = lettres && lettres.length ? lettres[0].getBoundingClientRect().left : rt.left, wP = phr.getBoundingClientRect().width;
+      phr.style.left = f((xOnglet + xCg) / 2 - wP / 2 - rcol.left) + 'px'; }
     var lh = parseFloat(cs.lineHeight), hautCap = (lh - (mC.fontBoundingBoxAscent + mC.fontBoundingBoxDescent)) / 2 + mC.fontBoundingBoxAscent - mC.actualBoundingBoxAscent;
     p.style.left = f(rt.left - rb.left) + 'px'; var tete = document.querySelector('.qz-header'), row = document.getElementById('qzLogoRow'), hautLogo = (tete ? tete.getBoundingClientRect().top : 0) + (row ? parseFloat(getComputedStyle(row).marginTop) || 0 : 0); /* la place du logo au repos (le logo, lui, arrive d en haut pendant son animation) */
     p.style.top = f(hautLogo - hautCap - (rb.top + sy)) + 'px'; } /* capitales au haut du logo (39 px) : fondateur, « oublie interligne » */ /* le logo est dans la barre collante : on compte le haut du bandeau dans la page, pas dans la fenêtre */
