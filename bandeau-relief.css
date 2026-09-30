@@ -668,3 +668,10 @@ a.qb-vif-btn{text-decoration:none;display:inline-block;line-height:1}
    Exposez, avec un espacement suffisant : Exposez déborde de 13 px sous le cadre, la phrase commence 13 px plus bas. Elle tombait au-dessus de la
    grille, sous le titre du bandeau. Même écriture que la phrase au-dessus du mur. */
 .qb-vif-invite{top:calc(100% + 13px + 13px);bottom:auto;font:600 clamp(14px,1.2vw,18px)/1 Jura,sans-serif;letter-spacing:.08em;text-transform:none}
+
+/* 30/09 nuit, fondateur : « 1 tesselle · 9 souvenirs » écrit en rond au-dessus du verre de la loupe (arc SVG), avec de l air ; même lettre qu avant */
+.qb-sm-loupe-lib.qb-sm-loupe-arc{transform:none;text-shadow:none;letter-spacing:0;font-size:0;line-height:0}
+.qb-sm-loupe-arc svg{display:block;overflow:visible}
+.qb-sm-loupe-arc text{font:600 10px Jura,sans-serif;letter-spacing:.16em;text-transform:uppercase;fill:#dedede;stroke:rgba(16,24,31,.7);stroke-width:3px;paint-order:stroke;stroke-linejoin:round}
+/* 30/09 nuit, fondateur : « Le mur est à vous. » au-dessus du mur, même police et même taille que l étiquette sous les carreaux (« 9 carreaux · mosaïque ») */
+.qb-sm-invite{font:600 11px/1 Jura,sans-serif;letter-spacing:.2em;text-transform:uppercase}

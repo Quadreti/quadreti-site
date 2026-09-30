@@ -799,7 +799,9 @@
         for (var YY = Y0 - 3; YY <= Y0 + 3; YY++) for (var XX = X0 - 3; XX <= X0 + 3; XX++) { if (XX < 0 || YY < 0 || XX >= W7 || YY >= H7) continue; if (modifies[Math.floor(YY / N) * NC + Math.floor(XX / N)]) continue;
           g.drawImage(rendreTesselle(XX, YY, tp), cx + dansVerre(XX), cy + dansVerre(YY), t, t); }
         var rf = g.createRadialGradient(cw * .32, ch * .26, 0, cw * .32, ch * .26, cw * .55); rf.addColorStop(0, 'rgba(255,255,255,.22)'); rf.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rf; g.fillRect(0, 0, cw, ch); g.restore();
-        var lib = loupe.lastChild; lib.textContent = '1 tesselle \u00b7 ' + (LOUPE.D * LOUPE.D) + ' souvenirs'; lib.style.left = (vxE + vw / 2) + 'px'; lib.style.top = (vy + vh + 12) + 'px';
+        var lib = loupe.lastChild, texteL = '1 tesselle \u00b7 ' + (LOUPE.D * LOUPE.D) + ' souvenirs', RL = Math.round(Math.max(vw, vh) / 2 + (LP.arcEcart || 24)), BL = RL + 14; /* 30/09 nuit, fondateur : le texte EN ROND autour du verre, pas trop collé (arcEcart px au-delà du verre) */
+        if (lib._arc !== texteL + RL) { lib._arc = texteL + RL; lib.classList.add('qb-sm-loupe-arc'); lib.innerHTML = '<svg width="' + 2 * BL + '" height="' + 2 * BL + '" viewBox="0 0 ' + 2 * BL + ' ' + 2 * BL + '" aria-hidden="true"><path id="qbLoupeArc" fill="none" d="M' + (BL - RL) + ' ' + BL + ' A' + RL + ' ' + RL + ' 0 0 1 ' + (BL + RL) + ' ' + BL + '"/><text><textPath href="#qbLoupeArc" startOffset="50%" text-anchor="middle">' + texteL + '</textPath></text></svg>'; }
+        lib.style.left = (vxE + vw / 2 - BL) + 'px'; lib.style.top = (vy + vh / 2 - BL) + 'px';
         loupe.classList.add('qb-sm-loupe-on'); }
       var ETAPES = ((LP.montage && LP.montage.dansLaLoupe !== false && LP.montage.etapes) || []).map(function (e) { var im = new Image(); im.decoding = 'async'; im.src = e[0]; return { img: im, legende: e[1] }; });
       function peindreEtape(k, a) { var E = ETAPES[k], P0 = ETAPES[k - 1], cv = loupe.firstChild, cw = parseFloat(cv.style.width), ch = parseFloat(cv.style.height); if (!E || !cw) return;
@@ -815,7 +817,11 @@
       murS.addEventListener('mouseleave', function () { if (etatL === 'pause' && stL) { figer(); return; } cacherLoupe(); relancerDemo(LP.reprise || 4000); });
       /* LE BALAYAGE : de gauche à droite sur une rangée, puis retour sur la suivante, en continu, tant que rien d autre ne se passe */
       var tDemo = null, rafL = 0, etatL = 'lecture', stL = null, ctrlL = null, geoL = null;
-      function placerCtrl() { if (!ctrlL || !geoL) return; var lbw = modeLbl.offsetWidth || 0; ctrlL.style.right = Math.round(geoL.W - (geoL.cx - lbw / 2 - 10)) + 'px'; ctrlL.style.top = Math.round(geoL.y + (modeLbl.offsetHeight || 11) / 2) + 'px'; } /* à gauche de l étiquette, 10 px avant, centrée sur sa ligne ; replacée quand le texte change */
+      function placerCtrl() { if (!ctrlL || !geoL) return; var film = root.querySelector('.qb-film'), rr = root.getBoundingClientRect(), rf = film && film.getBoundingClientRect();
+        if (rf && rf.height && window.matchMedia('(min-width: 901px)').matches) { /* 30/09 nuit, fondateur : en bas à droite, au-dessus du bout du film, 13 px avant le décroché du cadre (lèvre 6 mm + avancée 26 px) et 13 px au-dessus du film */
+          var mL = /0px 0px 0px ([\d.]+)px inset/.exec(getComputedStyle(document.body, '::before').boxShadow || ''), lev = mL ? parseFloat(mL[1]) : 22.68, W0 = document.documentElement.clientWidth;
+          ctrlL.style.right = Math.round(rr.right - (W0 - lev - 26 - 13)) + 'px'; ctrlL.style.top = Math.round(rf.top - rr.top - 13 - 12) + 'px'; return; }
+        var lbw = modeLbl.offsetWidth || 0; ctrlL.style.right = Math.round(geoL.W - (geoL.cx - lbw / 2 - 10)) + 'px'; ctrlL.style.top = Math.round(geoL.y + (modeLbl.offsetHeight || 11) / 2) + 'px'; } /* à gauche de l étiquette, 10 px avant, centrée sur sa ligne ; replacée quand le texte change */
       function arreterDemo() { clearTimeout(tDemo); tDemo = null; cancelAnimationFrame(rafL); rafL = 0; }
       function relancerDemo(delai) { arreterDemo(); if (etatL === 'lecture') tDemo = setTimeout(demoLoupe, delai || 0); }
       function demoLoupe() { arreterDemo(); if (!LOUPE || ouvert !== null || enCroissance || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
