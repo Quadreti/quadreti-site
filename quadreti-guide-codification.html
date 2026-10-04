@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<!-- 18/09 : qz-fond-sombre = le theme sombre partage ; les couleurs de ce guide sont dans pages-contenu.css.
+<!-- 04/10 : guide refait (convention de l app, sans quiz), voir le commentaire du corps de page.
+     18/09 : qz-fond-sombre = le theme sombre partage ; les couleurs de ce guide sont dans pages-contenu.css.
      La classe portee par le corps de page dit DE QUOI le guide parle : qz-guide-app pour la maquette de
      l application (ses panneaux suivent l app, donc navy 2), qz-guide-produit pour le produit physique (ses
      surfaces claires sont du papier et du plastique : elles restent claires). -->
@@ -38,753 +39,317 @@
 </script>
 <!-- GARDE-ACCES-FIN -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quadreti — Le repérage : chaque visuel connaît sa place</title>
+<title>Quadreti — La codification : chaque visuel connaît sa place</title>
+<meta name="description" content="Le code au dos de chaque visuel Quadreti : le carreau et la place de la tesselle, comment les lire, imprimer en recto-verso et retrouver la place de chaque visuel.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* 13/09 : la page suit l identite du site -- navy, gris du site, orange de marque, police Jura. Avant cette date elle vivait encore
-     dans le monde kraft, sous un en-tete et un pied deja passes au navy. Les jetons portent desormais leur ROLE et non une couleur :
-     c est ce qui permet de rechanger la palette un jour sans relire la page. */
-  :root{
-    --accent:#d96c2f;           /* orange de marque : ce qu on peut toucher, ce qui est choisi */
-    --accent-fonce:#c15f28;     /* le meme, au survol */
-    --accent-doux:#f7e2d5;
-    --second:#1e2b35;           /* navy : le second reperage */
-    --second-doux:#e6e9ec;
-    --gris:#dedede;             /* le gris du site */
-    --gris-doux:#f2f2f2;
-    --encre:#1e2b35;            /* le texte */
-    --encre-douce:#5a6672;      /* les mentions secondaires */
-    --encre-sur-accent:#10181f; /* le texte pose SUR l orange : le blanc n y donne que 3,42 de contraste, l encre 5,23 (mesure, formule WCAG) */
-    --fond:#dedede;             /* le fond de page */
-    --blanc:#ffffff;
-    --bord:#1e2b3526;
-    /* 13/09 : la couleur IMPRIMEE au dos de chaque visuel, celle que le client compare a l oeil. Ce n est PAS l orange d interface :
-       c est une caracteristique du produit, elle ne bouge que si l encre bouge. A confirmer par le fondateur. */
-    --code-imprime:#E2725B;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{
-    font-family:'Jura',sans-serif;
-    color:var(--encre);
-    background:var(--fond);
-    line-height:1.55;
-  }
-  h1,h2,h3,.qs{font-family:'Jura',sans-serif;font-weight:600;}
+/* ============================================================================
+   GUIDE DE LA CODIFICATION — 04/10/2026
+   Couleurs nommées par RÔLE (CLAUDE.md, renforcement du 28/08). Le fond, le texte et les cartes viennent de
+   pages-contenu.css (--qzc-*) ; ce guide n'ajoute que ses rôles propres. Les illustrations sont posées sur du
+   PAPIER (surface claire) : elles montrent le produit physique, comme la notice imprimée du kit.
+   ============================================================================ */
+body.qz-guide-codif{
+  --cdf-papier:#dedede;          /* le fond des illustrations : le gris du site */
+  --cdf-blanc:#ffffff;           /* une feuille, un visuel */
+  --cdf-encre:#1e2b35;           /* les traits sur le papier */
+  --cdf-gris-papier:#525e69;     /* un texte gris sur le papier : 4,93 sur #dedede, 6,64 sur blanc (mesuré ; le #5b6772 imprimé ne faisait que 4,30) */
+  --cdf-orange-papier:#9c4514;   /* un texte orange sur le papier : 6,41 sur blanc (mesuré) */
+  --cdf-orange:#d96c2f;          /* l'orange de marque : surfaces et traits, jamais du texte */
+  --cdf-teinte:#f7dccb;          /* la ligne et la colonne qu'on suit */
+  --cdf-fleche:#8a939b;          /* les flèches de geste, comme dans la notice */
+  --cdf-pointille:#9aa3ab;       /* la prédécoupe */
+  --cdf-carte:var(--qzc-carte, #33434f);
+  --cdf-texte:var(--qzc-texte, #dedede);
+  --cdf-second:var(--qzc-second, #b6c0c8);
+  --cdf-orange-ecrit:var(--qzc-orange-ecrit, #ff9147);  /* l'orange qui s'écrit sur le navy : 6,47 sur le fond, 4,57 sur une carte (mesuré) */
+  --cdf-encre-sur-orange:var(--qzc-encre, #10181f);
+  --cdf-rayon:12px;
+}
+.cdf{ max-width:1080px; margin:0 auto; padding-inline:20px; padding-block:40px 64px; font-family:Jura, system-ui, sans-serif; }
+.cdf-hero{ padding-block:8px 28px; }
+.cdf-surtitre{ margin:0 0 10px; color:var(--cdf-orange-ecrit); font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:14px; }
+.cdf-hero h1{ margin:0 0 12px; font-size:clamp(30px, 5vw, 46px); line-height:1.15; font-weight:600; text-wrap:balance; }
+.cdf-chapo{ margin:0; max-width:62ch; color:var(--cdf-second); font-size:18px; line-height:1.55; }
 
-  section.ecran{
-    background:var(--blanc);
-    border-radius:14px; /* chrome de page uniquement — jamais sur le produit */
-    margin:26px auto;
-    padding:38px 34px 34px;
-    max-width:760px;
-  }
-  @media(max-width:600px){section.ecran{padding:26px 18px;margin:18px 10px;border-radius:14px;}}
+.cdf-bloc{ margin-block:36px 0; }
+.cdf-bloc h2{ margin:0 0 14px; font-size:20px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px; }
+.cdf-tete{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px; margin:0 0 14px; }
+.cdf-tete h2{ margin:0; }
+.cdf-tete p{ margin:0; font-size:15px; color:var(--cdf-second); }
+.cdf-carte{ background:var(--cdf-carte); border-radius:var(--cdf-rayon); padding:24px; }
+.cdf-papier{ margin:0; background:var(--cdf-papier); border-radius:8px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.cdf-papier svg, .cdf-papier img{ display:block; width:100%; height:auto; }
+.cdf-papier figcaption{ margin-top:4px; color:var(--cdf-gris-papier); font-size:15px; }
+.cdf-orange{ color:var(--cdf-orange-ecrit) !important; }
 
-  .ecran-tag{
-    display:inline-block; font-size:12px; letter-spacing:.12em; text-transform:uppercase;
-    color:var(--second); font-weight:700; margin-bottom:10px; font-family:'Jura',sans-serif;
-  }
-  .ecran h2{font-size:26px; margin-bottom:12px; line-height:1.25;}
-  .ecran p.lead{color:var(--encre-douce); font-size:16.5px; max-width:58ch;}
+/* les classes de dessin : une couleur = un rôle */
+.p-blanc{ fill:var(--cdf-blanc); } .p-orange{ fill:var(--cdf-orange); } .p-encre{ fill:var(--cdf-encre); } .p-teinte{ fill:var(--cdf-teinte); } .p-fleche{ fill:var(--cdf-fleche); }
+.t-encre{ stroke:var(--cdf-encre); } .t-fleche{ stroke:var(--cdf-fleche); } .t-pointille{ stroke:var(--cdf-pointille); }
+.t-pale{ stroke:var(--cdf-encre); stroke-opacity:.18; } .t-clair{ stroke:var(--cdf-blanc); stroke-opacity:.3; }
+.x-gris{ fill:var(--cdf-gris-papier); } .x-orange{ fill:var(--cdf-orange-papier); } .x-encre{ fill:var(--cdf-encre); }
+.cdf svg text{ font-family:Jura, system-ui, sans-serif; }
 
-  /* ===== HERO ===== */
-  header.hero{
-    background:var(--gris-doux);
-    padding:56px 20px 66px;
-    text-align:center;
-  }
-  .hero .eyebrow{
-    font-size:13px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--second); font-weight:700; font-family:'Jura',sans-serif;
-  }
-  .hero h1{font-size:clamp(28px,5vw,40px); margin:14px auto 10px; max-width:20ch; line-height:1.2;}
-  .hero p{color:var(--encre-douce); max-width:46ch; margin:0 auto 34px; font-size:17px;}
+/* 1. le code au dos */
+.cdf-code{ display:grid; grid-template-columns:200px 1fr 1fr; gap:24px 32px; align-items:center; }
+.cdf-dos{ max-width:200px; }
+.cdf-def{ margin:0; display:grid; gap:18px; }
+.cdf-def div{ display:grid; grid-template-columns:72px 1fr; align-items:center; gap:14px; }
+.cdf-def dt{ font-size:44px; font-weight:600; line-height:1; }
+.cdf-def dt.cdf-b2{ color:var(--cdf-texte); } .cdf-def dt.cdf-d5{ color:var(--cdf-orange-ecrit); }
+.cdf-def dd{ margin:0; display:flex; flex-direction:column; gap:2px; font-size:18px; }
+.cdf-def dd b{ font-weight:600; font-size:20px; } .cdf-def dd span{ color:var(--cdf-second); }
+.cdf-regle{ list-style:none; margin:0; padding:0 0 0 28px; border-left:1px solid var(--qzc-filet, #dedede26); display:grid; gap:20px; }
+.cdf-regle li{ display:grid; grid-template-columns:44px 1fr; gap:14px; align-items:center; }
+.cdf-regle svg{ width:44px; height:44px; }
+.cdf-regle p{ margin:0; display:flex; flex-direction:column; gap:2px; }
+.cdf-regle b{ font-size:18px; font-weight:600; } .cdf-regle span{ color:var(--cdf-second); font-size:16px; }
+.cdf-note{ grid-column:1 / -1; margin:4px 0 0; color:var(--cdf-second); font-size:15px; }
 
-  /* Verso du visuel — ANGLES DROITS (représente le produit) */
-  .visuel-verso{
-    width:190px;height:190px;
-    background:var(--gris);
-    border:2px solid var(--encre);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    margin:0 auto;
-    box-shadow:0 14px 34px rgba(43,53,62,.14);
-    position:relative;
-  }
-  .visuel-verso{gap:4px;}
-  .visuel-verso .code-carreau{font-family:'Jura',sans-serif;font-weight:700;font-size:30px;color:var(--encre);letter-spacing:.04em;line-height:1;}
-  .visuel-verso .code-position{font-family:'Jura',sans-serif;font-weight:700;font-size:52px;color:var(--accent);line-height:1;letter-spacing:.04em;}
-  .visuel-verso .dot{color:var(--gris);font-size:22px;line-height:.6;}
-  .visuel-verso::after{
-    content:"dos du visuel (papier)";
-    position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
-    font-size:12.5px; color:var(--encre-douce); white-space:nowrap; letter-spacing:.04em;
-  }
+/* 2. la place / le carreau */
+.cdf-duo section{ display:flex; flex-direction:column; } .cdf-duo .cdf-carte{ flex:1; }
+.cdf-duo{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap:0 24px; }
+.cdf-lecture{ display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:20px; align-items:center; }
+.cdf-lecture .cdf-papier{ max-width:280px; }
+.cdf-explique p{ margin:0 0 8px; font-size:18px; line-height:1.4; }
+.cdf-gros{ font-size:56px !important; font-weight:600; line-height:1 !important; margin-block:6px 12px !important; }
+.cdf-petit{ color:var(--cdf-second); font-size:15px !important; }
 
-  /* ===== Légende couleurs (accessibilité) ===== */
-  .legende{
-    display:flex;justify-content:center;gap:26px;flex-wrap:wrap;
-    margin:46px auto 0;max-width:560px;
-  }
-  .legende .item{
-    display:flex;align-items:center;gap:10px;font-size:14.5px;
-    background:var(--blanc);padding:10px 16px;box-shadow:0 4px 12px rgba(43,53,62,.07);
-  }
-  .legende .sw{width:16px;height:16px;flex:0 0 16px;}
-  .legende .sw.c1{background:var(--encre);}
-  .legende .sw.c2{background:var(--code-imprime);}
-  .legende b{font-family:'Jura',sans-serif;}
+/* 3. recto-verso */
+.cdf-rv{ display:grid; grid-template-columns:minmax(0, 1.4fr) minmax(0, 1fr); gap:24px; align-items:center; }
+.cdf-titre-court{ font-size:22px !important; font-weight:600; }
 
-  /* ===== Glossaire ===== */
-  .glossaire{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 4px;}
-  @media(max-width:600px){.glossaire{grid-template-columns:1fr;}}
-  .mot{
-    background:var(--fond);
-    padding:18px 16px 16px;
-    display:flex;gap:14px;align-items:flex-start;
-  }
-  .mot .schema{flex:0 0 56px;height:56px;position:relative;}
-  .mot h3{font-size:16px;margin-bottom:4px;}
-  .mot p{font-size:13.5px;color:var(--encre-douce);}
-  /* mini-schémas produit — angles droits */
-  .sch-carreau{width:56px;height:56px;border:2px solid var(--encre);background:var(--gris-doux);
-    background-image:linear-gradient(var(--gris) 1px,transparent 1px),linear-gradient(90deg,var(--gris) 1px,transparent 1px);
-    background-size:8px 8px;}
-  .sch-tesselle{width:40px;height:40px;margin:8px;background:var(--gris);border:2px solid var(--encre);}
-  .sch-etui{width:40px;height:40px;margin:8px;background:var(--blanc);border:2px solid var(--encre);position:relative;}
-  .sch-etui::after{content:"";position:absolute;inset:5px;border:1.5px dashed var(--encre-douce);}
-  .sch-visuel{width:40px;height:40px;margin:8px;border:2px solid var(--encre);
-    background:linear-gradient(135deg,var(--accent) 0 33%,var(--gris) 33% 66%,var(--second) 66%);}
+/* 4. les gestes */
+.cdf-gestes{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; }
+.cdf-gestes li{ background:var(--cdf-carte); border-radius:var(--cdf-rayon); padding:16px 16px 20px; text-align:center; }
+.cdf-gestes .cdf-papier{ aspect-ratio:5 / 4; max-width:100%; }
+.cdf-gestes .cdf-papier img{ max-height:100%; object-fit:contain; }
+.cdf-gestes h3{ margin:14px 0 4px; font-size:18px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:10px; }
+.cdf-num{ display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--cdf-papier); color:var(--cdf-encre-sur-orange); font-size:15px; letter-spacing:0; }
+.cdf-gestes p{ margin:0; color:var(--cdf-second); font-size:15px; }
 
-  /* ===== Grille bataille navale — ANGLES DROITS ===== */
-  .bn-wrap{display:flex;justify-content:center;margin:30px 0 8px;}
-  .bn{
-    display:grid;
-    grid-template-columns:26px repeat(7,34px);
-    grid-template-rows:26px repeat(7,34px);
-    gap:3px;
-  }
-  @media(max-width:600px){
-    .bn{grid-template-columns:22px repeat(7,28px);grid-template-rows:22px repeat(7,28px);}
-  }
-  .bn .lbl{
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:13px;color:var(--encre);
-  }
-  .bn .cell{background:var(--gris-doux);cursor:pointer;transition:background .15s;}
-  .bn .cell:hover{background:#e6dfc9;}
-  .bn .cell.hit{background:var(--gris);position:relative;}
-  .bn .cell.hit::after{
-    content:attr(data-code);
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    color:var(--accent);font-family:'Jura',sans-serif;font-weight:700;font-size:13px;
-  }
-  .bn-caption{text-align:center;color:var(--encre-douce);font-size:14.5px;margin-top:14px;}
-  .bn-caption b{color:var(--encre);}
-  .bn-caption .t{color:var(--accent);font-weight:700;}
+.cdf-fin{ margin-top:44px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 24px; padding-top:28px; border-top:1px solid var(--qzc-filet, #dedede26); }
+.cdf-signature{ margin:0; font-size:clamp(26px, 4vw, 36px); font-weight:500; color:var(--cdf-orange-ecrit); }
+.cdf-bouton{ display:inline-block; padding:14px 26px; border-radius:8px; background:var(--cdf-orange); color:var(--cdf-encre-sur-orange); font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
+.cdf-bouton:hover{ filter:brightness(1.08); }
+.cdf-bouton:focus-visible{ outline:3px solid var(--cdf-texte); outline-offset:3px; }
 
-  /* ===== Décomposition du code (accessibilité) ===== */
-  .decompo{
-    display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
-    margin:26px 0 4px;
-  }
-  .decompo .bloc{
-    text-align:center;padding:16px 20px;background:var(--fond);
-    min-width:150px;display:flex;flex-direction:column;align-items:center;
-  }
-  .decompo .bloc small{margin-left:auto;margin-right:auto;}
-  .decompo .bloc .big{font-family:'Jura',sans-serif;font-weight:700;font-size:34px;line-height:1.1;letter-spacing:.05em;}
-  .decompo .bloc.b1 .big{color:var(--encre);}
-  .decompo .bloc.b2 .big{color:var(--code-imprime);}
-  .decompo .bloc small{display:block;margin-top:6px;font-size:12.5px;color:var(--encre-douce);max-width:16ch;}
-  .decompo .sep{font-size:26px;color:var(--gris);font-weight:700;}
-
-  /* ===== Du carreau au mur — la double lecture ===== */
-  .mur-detail-wrap{display:flex;justify-content:center;margin:30px 0 8px;}
-  .mur-detail{
-    display:grid;
-    grid-template-columns:24px repeat(2,minmax(120px,150px));
-    grid-template-rows:24px repeat(2,minmax(120px,150px));
-    gap:6px;
-  }
-  .mur-detail .axe{
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:14px;color:var(--encre);
-  }
-  .carreau-voisin{
-    background:var(--gris-doux);border:2px solid var(--encre);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:20px;color:var(--encre);
-  }
-  .carreau-focus{
-    background:var(--blanc);border:2.5px solid var(--accent);
-    padding:5px;position:relative;
-  }
-  .carreau-focus .tag-carreau{
-    position:absolute;top:-13px;left:50%;transform:translateX(-50%);
-    background:var(--encre);color:var(--blanc);
-    font-family:'Jura',sans-serif;font-weight:700;font-size:11px;
-    padding:2px 9px;letter-spacing:.05em;
-  }
-  .mini-bn{
-    display:grid;
-    grid-template-columns:10px repeat(7,1fr);
-    grid-template-rows:10px repeat(7,1fr);
-    gap:1.5px;height:100%;
-  }
-  .mini-bn .mlbl{
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:6.5px;color:var(--encre);
-  }
-  .mini-bn .mcell{background:var(--gris-doux);}
-  .mini-bn .mcell.mhit{
-    background:var(--gris);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--accent);font-family:'Jura',sans-serif;font-weight:700;font-size:7.5px;
-  }
-  .lecture{
-    display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;
-    margin:24px 0 4px;font-family:'Jura',sans-serif;font-weight:700;text-align:center;
-  }
-  .lecture > span{display:flex;flex-direction:column;align-items:center;}
-  .lecture .lsep{align-self:center;}
-  .lecture .lc{font-size:34px;color:var(--encre);}
-  .lecture .lsep{font-size:26px;color:var(--gris);}
-  .lecture .lt{font-size:34px;color:var(--accent);}
-  .lecture small{
-    display:block;font-family:'Jura',sans-serif;font-weight:400;font-size:12px;
-    color:var(--encre-douce);text-align:center;margin-top:2px;
-  }
-
-  .continuite{
-    display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;
-    margin:30px 0 6px;
-  }
-  .chip-app{
-    background:var(--encre);color:var(--blanc);
-    font-family:'Jura',sans-serif;font-weight:600;font-size:15px;
-    padding:10px 18px;
-    display:flex;align-items:center;gap:8px;
-  }
-  .chip-app .pin{width:9px;height:9px;background:var(--second);}
-  .chip-app small{display:block;font-size:10.5px;color:var(--gris);font-weight:400;letter-spacing:.08em;text-transform:uppercase;}
-  .fleche{font-size:22px;color:var(--gris);}
-  .visuel-mini{
-    width:96px;height:96px;background:var(--gris);
-    border:1.6px solid var(--encre);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-  }
-  .visuel-mini{gap:3px;}
-  .visuel-mini .c{font-family:'Jura',sans-serif;font-weight:700;font-size:15px;color:var(--encre);line-height:1;}
-  .visuel-mini .t{font-family:'Jura',sans-serif;font-weight:700;font-size:24px;color:var(--accent);line-height:1;}
-  .continuite-caption{text-align:center;color:var(--encre-douce);font-size:14.5px;max-width:54ch;margin:14px auto 0;}
-
-  /* ===== 3 gestes ===== */
-  .gestes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 4px;}
-  @media(max-width:600px){.gestes{grid-template-columns:1fr;}}
-  .geste{
-    background:var(--fond);
-    padding:20px 16px 18px;
-    text-align:center;
-  }
-  .geste .ico{
-    width:52px;height:52px;margin:0 auto 12px;
-    display:flex;align-items:center;justify-content:center;font-size:22px;
-    background:var(--blanc);border:1.5px solid var(--gris);
-  }
-  .geste h3{font-size:16px;margin-bottom:6px;}
-  .geste p{font-size:13.5px;color:var(--encre-douce);}
-  .geste .num{font-family:'Jura',sans-serif;font-weight:700;color:var(--second);font-size:12px;letter-spacing:.1em;display:block;margin-bottom:8px;}
-
-  /* ===== Quiz vrai/faux ===== */
-  .quiz{margin:26px 0 4px;}
-  .quiz .question{
-    background:var(--fond);
-    padding:20px 18px;
-    margin-bottom:12px;
-  }
-  .quiz .q-txt{font-size:15.5px;margin-bottom:12px;}
-  .quiz .q-txt .code-c{color:var(--encre);font-weight:700;font-family:'Jura',sans-serif;}
-  .quiz .q-txt .code-t{color:var(--code-imprime);font-weight:700;font-family:'Jura',sans-serif;}
-  .quiz .btns{display:flex;gap:10px;}
-  .quiz button{
-    font-family:'Jura',sans-serif;font-weight:600;font-size:14.5px;
-    padding:9px 22px;border:1.6px solid var(--encre);background:var(--blanc);
-    color:var(--encre);cursor:pointer;transition:transform .12s;
-  }
-  .quiz button:hover{transform:translateY(-2px);}
-  .quiz .feedback{
-    margin-top:10px;font-size:14px;font-weight:600;display:none;
-    padding:8px 12px;
-  }
-  .quiz .question.ok .feedback{display:block;background:#eef2e4;color:var(--second);animation:pop .3s ease;}
-  .quiz .question.ko .feedback{display:block;background:#faeae6;color:var(--accent-fonce);animation:shake .35s ease;}
-  @keyframes pop{0%{transform:scale(.92);opacity:0;}100%{transform:scale(1);opacity:1;}}
-  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-  @media(prefers-reduced-motion:reduce){.quiz .question.ok .feedback,.quiz .question.ko .feedback{animation:none;}}
-
-  /* ===== Mini-album ===== */
-  .album-scene{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;margin:30px 0 4px;}
-  .album-cover{
-    width:170px;height:210px;background:var(--encre);position:relative;
-    box-shadow:0 14px 30px rgba(43,53,62,.2);
-  }
-  .album-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:#37434e;}
-  .album-cover .titre{
-    position:absolute;left:30px;right:14px;top:26px;
-    color:var(--blanc);font-family:'Jura',sans-serif;font-weight:600;font-size:15px;line-height:1.3;
-  }
-  .album-cover .titre small{display:block;color:var(--gris);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-top:6px;font-weight:400;}
-  .album-cover .q{
-    position:absolute;left:30px;bottom:22px;width:26px;height:26px;
-    background:var(--accent);
-  }
-  .album-page{
-    width:210px;background:var(--blanc);border:1.5px solid var(--gris);
-    padding:14px 14px 10px;position:relative;
-    box-shadow:0 10px 24px rgba(43,53,62,.1);
-  }
-  .album-page .page-titre{
-    font-family:'Jura',sans-serif;font-weight:700;font-size:12.5px;margin-bottom:9px;
-    display:flex;justify-content:space-between;align-items:baseline;
-  }
-  .album-page .page-titre em{font-style:normal;color:var(--accent);}
-  .album-page .page-titre small{color:var(--encre-douce);font-weight:400;font-size:10.5px;}
-  .pochettes{
-    display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
-  }
-  .pochettes span{
-    aspect-ratio:1;background:var(--gris-doux);border:1px solid var(--gris);
-  }
-  .pochettes span.v1{background:var(--accent);}
-  .pochettes span.v2{background:var(--gris);}
-  .pochettes span.v3{background:var(--second);}
-  .pochettes span.vide{background:var(--fond);border-style:dashed;}
-  .album-page .rangee-lbl{
-    position:absolute;left:3px;top:44px;bottom:12px;width:9px;
-    display:flex;flex-direction:column;justify-content:space-around;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:6.5px;color:var(--encre-douce);text-align:center;
-  }
-  .onglets{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:22px 0 0;}
-  .onglet{
-    font-family:'Jura',sans-serif;font-weight:600;font-size:13px;
-    background:var(--fond);color:var(--encre);padding:7px 14px;
-    border-top:3px solid var(--gris);
-  }
-  .onglet.actif{background:var(--gris-doux);border-top-color:var(--accent);}
-  .album-caption{text-align:center;color:var(--encre-douce);font-size:14.5px;max-width:56ch;margin:16px auto 0;}
-
-  /* ===== Mur qui grandit — ANGLES DROITS ===== */
-  .murs{display:flex;align-items:flex-end;justify-content:center;gap:34px;flex-wrap:wrap;margin:30px 0 6px;}
-  .mur{text-align:center;}
-  .mur .grille1{
-    width:86px;height:86px;background:var(--gris-doux);border:2px solid var(--encre);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:17px;color:var(--accent);
-  }
-  .mur .grille4{
-    display:grid;grid-template-columns:repeat(2,64px);grid-template-rows:repeat(2,64px);gap:4px;
-  }
-  .mur .grille4 div{
-    background:var(--gris-doux);border:2px solid var(--encre);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:'Jura',sans-serif;font-weight:700;font-size:11px;color:var(--encre);
-  }
-  .mur .grille4 div em{font-style:normal;color:var(--accent);font-size:13px;}
-  .mur .cap{font-size:13px;color:var(--encre-douce);margin-top:10px;max-width:22ch;}
-  .mur .cap b{color:var(--encre);}
-
-  .cloture{
-    background:var(--encre);color:var(--blanc);
-    border-radius:14px;max-width:760px;margin:26px auto 50px;
-    padding:40px 34px;text-align:center;
-  }
-  @media(max-width:600px){.cloture{margin:18px 10px 40px;padding:30px 20px;}}
-  .cloture p.phrase{font-family:'Jura',sans-serif;font-weight:600;font-size:22px;max-width:28ch;margin:0 auto 8px;line-height:1.35;}
-  .cloture p.sub{color:var(--gris);font-size:15px;}
-
-  /* ===== Ticker bar (repris de l'accueil) ===== */
-  .ticker{
-    background:var(--encre);color:var(--gris);
-    overflow:hidden;white-space:nowrap;
-    font-family:'Jura',sans-serif;font-weight:600;
-    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-    padding:7px 0;
-  }
-  .ticker .track{display:inline-block;animation:tick 34s linear infinite;}
-  .ticker .track span{padding:0 26px;}
-  .ticker .track span::after{content:"·";margin-left:26px;color:var(--encre-douce);}
-  @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-  @media(prefers-reduced-motion:reduce){.ticker .track{animation:none;}}
-
-  /* ===== Nav (reprise de l'accueil) ===== */
-  .site-nav{
-    position:sticky;top:0;z-index:50;
-    background:var(--blanc);
-    border-bottom:1px solid #e5e1e1;
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:11px 24px;
-  }
-  .site-nav .brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
-  .site-nav .brand .bl{
-    font-family:'Jura',sans-serif;font-weight:600;font-size:11px;
-    color:var(--encre-douce);letter-spacing:.08em;text-transform:uppercase;
-    border-left:1px solid #e5e1e1;padding-left:11px;
-  }
-  .site-nav .links{display:flex;gap:19px;align-items:center;}
-  .site-nav .links a{
-    font-family:'Jura',sans-serif;font-weight:600;font-size:13.5px;
-    color:var(--encre);text-decoration:none;
-  }
-  .site-nav .links a:hover{color:var(--accent);}
-  .site-nav .links a.cta{background:var(--accent);color:var(--blanc);padding:9px 20px;border-radius:99px;}
-  .site-nav .links a.cta:hover{background:var(--accent-fonce);color:var(--blanc);}
-  /* Burger */
-  .burger{
-    display:none;background:none;border:none;cursor:pointer;
-    padding:8px;margin-left:4px;
-  }
-  .burger span{
-    display:block;width:22px;height:2px;background:var(--encre);
-    margin:4px 0;transition:transform .25s,opacity .2s;
-  }
-  .burger.on span:nth-child(1){transform:translateY(6px) rotate(45deg);}
-  .burger.on span:nth-child(2){opacity:0;}
-  .burger.on span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
-  .drawer{
-    display:none;
-    position:sticky;top:56px;z-index:49;
-    background:var(--blanc);border-bottom:1px solid #e5e1e1;
-    padding:6px 16px 14px;
-  }
-  .drawer.on{display:block;}
-  .drawer a{
-    display:block;padding:12px 2px;text-decoration:none;
-    font-family:'Jura',sans-serif;font-weight:600;font-size:15px;
-    color:var(--encre);border-bottom:1px solid #f0ece1;
-  }
-  .drawer a:last-child{border-bottom:none;}
-  .drawer a.cta{
-    background:var(--accent);color:var(--blanc);text-align:center;
-    margin-top:10px;padding:12px;border-radius:99px;
-  }
-  @media(max-width:860px){
-    .site-nav{padding:10px 16px;}
-    .site-nav .brand .bl{display:none;}
-    .site-nav .links{display:none;}
-    .site-nav .nav-qlogo{ grid-template-columns:repeat(4,6px); grid-auto-rows:6px; }
-    .burger{display:block;}
-  }
-
-  /* ===== Footer (design accueil : logo + copyright, sans menu) ===== */
-  .site-foot{background:var(--encre);color:var(--blanc);padding:44px 24px 34px;text-align:center;}
-  .site-foot img.logo{height:30px;display:block;margin:0 auto;}
-  .site-foot .foot-sign{
-    max-width:1000px;margin:22px auto 0;
-    color:#8a94a0;font-size:12.5px;
-  }
-  /* Logo en tesselles de l'en-tete — meme dessin que le pied de page : un seul logo,
-     dessine en CSS, plus aucune image PNG a maintenir (ni a telecharger). */
-  .nav-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
-  .nav-qlogo i{ display:block; border-radius:1.5px; background:var(--encre); }
-  .nav-qlogo i.empty{ visibility:hidden; }
-  .nav-qlogo i.tail{ background:var(--accent); }
-  /* Logo en tesselles du pied de page — meme dessin que l'en-tete, en clair sur charbon */
-  .foot-logo-row{ display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
-  .foot-qlogo{ display:grid; grid-template-columns:repeat(4,7px); grid-auto-rows:7px; gap:2px; }
-  .foot-qlogo i{ display:block; border-radius:1.5px; background:var(--fond); }
-  .foot-qlogo i.empty{ visibility:hidden; }
-  .foot-qlogo i.tail{ background:var(--accent); }
-  .foot-word{ font-weight:700; font-size:18px; color:var(--fond); }
+@media (max-width:820px){
+  .cdf-code{ grid-template-columns:1fr; justify-items:start; }
+  .cdf-regle{ padding:20px 0 0; border-left:0; border-top:1px solid var(--qzc-filet, #dedede26); }
+  .cdf-rv{ grid-template-columns:1fr; }
+}
+@media (max-width:520px){
+  .cdf-lecture{ grid-template-columns:1fr; }
+  .cdf-gros{ font-size:44px !important; }
+}
 </style>
+
 <link rel="stylesheet" href="/commun.css?v=2026-09-22e">
 <link rel="stylesheet" href="/pages-contenu.css?v=2026-09-22e">
 <script src="reglages-site.js?v=2026-09-22e" defer></script>
 </head>
-<body class="qz-guide qz-guide-produit">
+<body class="qz-guide qz-guide-codif">
 
 <!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
 <script src="/commun-bandeau.js?v=2026-09-22e"></script>
 <!-- ===== BANDEAU COMMUN — FIN ===== -->
 
-<div class="ticker" aria-hidden="true">
-  <div class="track"><span>Brevet déposé à l'INPI</span><span>Conception et fabrication françaises</span><span>Sans colle, sans détérioration</span><span>Une imprimante de salon suffit</span><span>Brevet déposé à l'INPI</span><span>Conception et fabrication françaises</span><span>Sans colle, sans détérioration</span><span>Une imprimante de salon suffit</span></div>
-</div>
+<!-- 04/10/2026 (fondateur) : ce guide remplace l'ancien, plus complet, plus clair, plus simple. Il reprend mot pour mot la
+     codification imprimée dans le kit (notice, moitié « codification ») et suit la convention de l'APP :
+     carreau = lettre de COLONNE + chiffre de ligne (B2) ; place dans le carreau = lettre de LIGNE + chiffre de colonne (D5).
+     Le jeu « vrai ou faux » de l'ancien guide est retiré (demande du fondateur). Les surfaces claires sont du papier. -->
+<main class="cdf">
 
-<!-- ═══════════ HERO ═══════════ -->
-<header class="hero" id="guideCodifHero">
-  <div class="eyebrow">Le repérage Quadreti</div>
-  <h1>Chaque visuel connaît sa place.</h1>
-  <p>Un code imprimé au dos de chaque visuel, le même que dans l'app. Vous montez, démontez, remontez — sans jamais deviner.</p>
-  <div class="visuel-verso">
-    <div class="code-carreau">B2</div>
-    <div class="dot">·</div>
-    <div class="code-position">D5</div>
-  </div>
-  <div class="legende">
-    <div class="item"><span class="sw c1"></span><span><b>1re ligne, foncée</b> — le carreau (quel cadre du mur)</span></div>
-    <div class="item"><span class="sw c2"></span><span><b>2e ligne, terracotta</b> — la place dans ce carreau</span></div>
-  </div>
-</header>
+  <header class="cdf-hero">
+    <p class="cdf-surtitre">La codification Quadreti</p>
+    <h1>Chaque visuel connaît sa place.</h1>
+    <p class="cdf-chapo">Un code imprimé au dos de chaque visuel, le même que dans l’app. Vous montez, démontez, remontez sans jamais deviner.</p>
+  </header>
 
-<!-- ═══════════ ÉCRAN 0 — GLOSSAIRE ═══════════ -->
-<section class="ecran" id="guideCodifGlossaire">
-  <span class="ecran-tag">Les quatre mots du mur</span>
-  <h2>Avant de commencer : qui est qui.</h2>
-  <p class="lead">Quatre mots suffisent pour tout comprendre. Les voici, une fois pour toutes.</p>
-  <div class="glossaire">
-    <div class="mot">
-      <div class="schema"><div class="sch-carreau"></div></div>
-      <div><h3>Le carreau</h3><p>La grille murale. Elle accueille 7 × 7 tesselles. Un mur peut compter un ou plusieurs carreaux.</p></div>
+  <!-- 1. LE CODE AU DOS -->
+  <section class="cdf-bloc" aria-labelledby="cdfCode">
+    <div class="cdf-tete"><h2 id="cdfCode">Le code au dos</h2><p>deux repères par visuel</p></div>
+    <div class="cdf-carte cdf-code">
+      <figure class="cdf-papier cdf-dos">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Dos d’un visuel : B2 en gris au-dessus, D5 en orange en dessous">
+          <rect class="p-blanc t-encre" x="20" y="20" width="160" height="160" stroke-width="3"/>
+          <text class="x-gris" x="100" y="92" text-anchor="middle" font-size="54" font-weight="600">B2</text>
+          <text class="x-orange" x="100" y="152" text-anchor="middle" font-size="54" font-weight="600">D5</text>
+        </svg>
+        <figcaption>dos du visuel</figcaption>
+      </figure>
+      <dl class="cdf-def">
+        <div><dt class="cdf-b2">B2</dt><dd><b>le carreau</b><span>sa place sur le mur</span></dd></div>
+        <div><dt class="cdf-d5">D5</dt><dd><b class="cdf-orange">la tesselle</b><span class="cdf-orange">sa place dans le carreau</span></dd></div>
+      </dl>
+      <ul class="cdf-regle">
+        <li>
+          <svg viewBox="0 0 50 50" aria-hidden="true"><rect class="p-orange" x="2" y="2" width="46" height="46"/></svg>
+          <p><b class="cdf-orange">Un seul carreau</b><span>lisez le code orange</span></p>
+        </li>
+        <li>
+          <svg viewBox="0 0 50 50" aria-hidden="true"><rect class="p-blanc t-encre" x="2" y="2" width="21" height="21" stroke-width="2"/><rect class="p-blanc t-encre" x="27" y="2" width="21" height="21" stroke-width="2"/><rect class="p-blanc t-encre" x="2" y="27" width="21" height="21" stroke-width="2"/><rect class="p-encre t-encre" x="27" y="27" width="21" height="21" stroke-width="2"/></svg>
+          <p><b>Plusieurs carreaux</b><span>le carreau d’abord, puis l’orange</span></p>
+        </li>
+      </ul>
+      <p class="cdf-note">La tesselle porte son code ; le carreau, lui, a un code virtuel, utile dès deux carreaux.</p>
     </div>
-    <div class="mot">
-      <div class="schema"><div class="sch-tesselle"></div></div>
-      <div><h3>La tesselle</h3><p>La pièce qui se clipse dans le carreau. C'est le support.</p></div>
-    </div>
-    <div class="mot">
-      <div class="schema"><div class="sch-etui"></div></div>
-      <div><h3>L'étui</h3><p>Il habille la tesselle et maintient le visuel. C'est lui qui rend le visuel changeable.</p></div>
-    </div>
-    <div class="mot">
-      <div class="schema"><div class="sch-visuel"></div></div>
-      <div><h3>Le visuel</h3><p>Le papier imprimé par vous : photo, couleur, motif. Le code de repérage est imprimé à son dos.</p></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══════════ ÉCRAN 1 ═══════════ -->
-<section class="ecran" id="guideCodifPrincipe">
-  <span class="ecran-tag">Le principe</span>
-  <h2>Une lettre, un chiffre. Rien d'autre.</h2>
-  <p class="lead">La lettre donne la ligne, le chiffre donne la colonne. Suivez la lettre, suivez le chiffre : là où ils se croisent, c'est la place.</p>
-  <div class="bn-wrap">
-    <div class="bn" id="bn">
-      <div class="lbl"></div>
-      <div class="lbl">A</div><div class="lbl">B</div><div class="lbl">C</div><div class="lbl">D</div><div class="lbl">E</div><div class="lbl">F</div><div class="lbl">G</div>
-      <!-- rangées générées en JS pour l'interaction -->
-    </div>
+  <!-- 2. LA PLACE / LE CARREAU -->
+  <div class="cdf-duo">
+    <section class="cdf-bloc" aria-labelledby="cdfPlace">
+      <h2 id="cdfPlace" class="cdf-orange">La place dans le carreau</h2>
+      <div class="cdf-carte cdf-lecture">
+        <figure class="cdf-papier">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Grille de 7 sur 7 : lettres A à G pour les lignes, chiffres 1 à 7 pour les colonnes ; la case ligne D, colonne 5 est en orange" id="cdfGrille"></svg>
+        </figure>
+        <div class="cdf-explique">
+          <p>ligne <b class="cdf-orange">D</b><br>colonne <b class="cdf-orange">5</b></p>
+          <p class="cdf-gros cdf-orange">D5</p>
+          <p class="cdf-petit">chiffres à l’horizontale,<br>lettres à la verticale</p>
+        </div>
+      </div>
+    </section>
+    <section class="cdf-bloc" aria-labelledby="cdfMur">
+      <h2 id="cdfMur">Le carreau sur le mur</h2>
+      <div class="cdf-carte cdf-lecture">
+        <figure class="cdf-papier">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Mur de 2 carreaux sur 2 : lettres A et B pour les colonnes, chiffres 1 et 2 pour les lignes ; le carreau colonne B, ligne 2 est en navy" id="cdfMurSvg"></svg>
+        </figure>
+        <div class="cdf-explique">
+          <p>colonne <b>B</b><br>ligne <b>2</b></p>
+          <p class="cdf-gros">B2</p>
+          <p class="cdf-petit">code virtuel,<br>si plusieurs carreaux</p>
+        </div>
+      </div>
+    </section>
   </div>
-  <p class="bn-caption">Colonne <b>D</b> + ligne <b>5</b> → la place <span class="t">D5</span>. La lettre se lit en haut, le chiffre sur le côté — le même sens de lecture pour les places et pour les carreaux. <em>Touchez une case pour voir son code.</em></p>
-  <div class="decompo">
-    <div class="bloc b1"><span class="big">B2</span><small>le carreau, en foncé</small></div>
-    <div class="sep">·</div>
-    <div class="bloc b2"><span class="big">D5</span><small>la place dans le carreau, en terracotta</small></div>
-  </div>
-</section>
 
-<!-- ═══════════ ÉCRAN 2 — DU CARREAU AU MUR ═══════════ -->
-<section class="ecran" id="guideCodifMur">
-  <span class="ecran-tag">Du carreau au mur : la double lecture</span>
-  <h2>Le mur est une grille de carreaux. Chaque carreau, une grille de places.</h2>
-  <p class="lead">Reprenez la grille que vous venez d'apprendre : la voici sur le mur, entourée de ses voisins. Le mur se lit exactement de la même façon — la lettre en haut, le chiffre sur le côté. Deux grilles, une seule logique.</p>
-  <div class="mur-detail-wrap">
-    <div class="mur-detail">
-      <div class="axe"></div><div class="axe">A</div><div class="axe">B</div>
-      <div class="axe">1</div>
-      <div class="carreau-voisin">A1</div>
-      <div class="carreau-voisin">B1</div>
-      <div class="axe">2</div>
-      <div class="carreau-voisin">A2</div>
-      <div class="carreau-focus">
-        <span class="tag-carreau">B2</span>
-        <div class="mini-bn" id="miniBn"></div>
+  <!-- 3. RECTO-VERSO -->
+  <section class="cdf-bloc" aria-labelledby="cdfImprimer">
+    <div class="cdf-tete"><h2 id="cdfImprimer">Imprimez en recto-verso</h2><p>les fichiers « couleur » et « codification » de l’app</p></div>
+    <div class="cdf-carte cdf-rv">
+      <figure class="cdf-papier">
+        <svg viewBox="0 0 470 300" role="img" aria-label="À gauche le recto, les visuels en couleur ; à droite le verso, les codes ; une flèche montre qu’on retourne la feuille" id="cdfRectoVerso"></svg>
+      </figure>
+      <div class="cdf-explique cdf-explique-large">
+        <p class="cdf-titre-court">Imprimez à 100 %</p>
+        <p>Le verso est inversé : une fois la feuille retournée, chaque code tombe derrière son visuel.</p>
+        <p class="cdf-petit">Feuille A : colonnes 1 à 4 — feuille B : colonnes 5 à 7.<br>Une seule feuille prédécoupée de 4 colonnes pour les deux.</p>
       </div>
     </div>
-  </div>
-  <div class="lecture">
-    <span><span class="lc">B2</span><small>colonne B, ligne 2<br>du mur</small></span>
-    <span class="lsep">·</span>
-    <span><span class="lt">D5</span><small>colonne D, ligne 5<br>dans le carreau</small></span>
-  </div>
-</section>
+  </section>
 
-<!-- ═══════════ ÉCRAN 3 ═══════════ -->
-<section class="ecran" id="guideCodifRepere">
-  <span class="ecran-tag">De l'app au dos du visuel</span>
-  <h2>Un seul repère, trois endroits.</h2>
-  <p class="lead">Le repère affiché dans l'app est imprimé au dos de chaque visuel — généré automatiquement avec votre fiche d'impression. Vous n'écrivez jamais rien.</p>
-  <div class="continuite">
-    <div class="chip-app"><span class="pin"></span><span><small>Dans l'app</small>Carreau B2</span></div>
-    <div class="fleche">→</div>
-    <div class="chip-app" style="background:var(--second);"><span class="pin" style="background:var(--gris);"></span><span><small>Sur la fiche</small>Volet — codification</span></div>
-    <div class="fleche">→</div>
-    <div class="visuel-mini"><span class="c">B2</span><span class="t">D5</span></div>
-  </div>
-  <p class="continuite-caption">Ce que vous voyez à l'écran, vous le retrouvez sur la fiche imprimée, puis au dos du visuel. Aucune traduction, aucune devinette.</p>
-</section>
+  <!-- 4. LES QUATRE GESTES -->
+  <section class="cdf-bloc" aria-labelledby="cdfGestes">
+    <div class="cdf-tete"><h2 id="cdfGestes">Retrouvez la place</h2><p>pour chaque visuel</p></div>
+    <ol class="cdf-gestes">
+      <li>
+        <figure class="cdf-papier">
+          <svg viewBox="0 0 200 160" role="img" aria-label="Le dos du visuel : B2 et D5">
+            <rect class="p-blanc t-encre" x="45" y="15" width="110" height="110" stroke-width="3"/>
+            <text class="x-gris" x="100" y="65" text-anchor="middle" font-size="36" font-weight="600">B2</text>
+            <text class="x-orange" x="100" y="108" text-anchor="middle" font-size="36" font-weight="600">D5</text>
+          </svg>
+        </figure>
+        <h3><span class="cdf-num">1</span>Repérez</h3>
+        <p>carreau B2 · place D5</p>
+      </li>
+      <li>
+        <figure class="cdf-papier">
+          <svg viewBox="0 0 200 160" role="img" aria-label="On retourne le visuel : le code passe derrière, la couleur devant">
+            <rect class="p-blanc t-encre" x="14" y="55" width="80" height="80" stroke-width="3"/>
+            <text class="x-gris" x="54" y="90" text-anchor="middle" font-size="24" font-weight="600">B2</text>
+            <text class="x-orange" x="54" y="121" text-anchor="middle" font-size="24" font-weight="600">D5</text>
+            <rect class="p-orange t-encre" x="106" y="55" width="80" height="80" stroke-width="3"/>
+            <path class="t-fleche" d="M58 46 Q100 6 140 40" fill="none" stroke-width="6" stroke-linecap="round"/>
+            <path class="p-fleche" d="M148 48 L128 44 L144 30 Z"/>
+          </svg>
+        </figure>
+        <h3><span class="cdf-num">2</span>Retournez</h3>
+        <p>face couleur devant</p>
+      </li>
+      <li>
+        <figure class="cdf-papier">
+          <img src="img/codification-enfilez-etui.png" width="285" height="145" alt="Le visuel posé sur la tesselle glisse dans l’étui par son ouverture" loading="lazy">
+        </figure>
+        <h3><span class="cdf-num">3</span>Enfilez l’étui</h3>
+        <p>visuel et tesselle ensemble</p>
+      </li>
+      <li>
+        <figure class="cdf-papier">
+          <svg viewBox="0 0 200 160" role="img" aria-label="Le carreau 7 sur 7 : la tesselle se clipse ligne D, colonne 5" id="cdfClips"></svg>
+        </figure>
+        <h3><span class="cdf-num">4</span>Clipsez</h3>
+        <p>dans le carreau B2</p>
+      </li>
+    </ol>
+  </section>
 
-<!-- ═══════════ ÉCRAN 3 ═══════════ -->
-<section class="ecran">
-  <span class="ecran-tag">Monter</span>
-  <h2>Trois gestes, toujours les mêmes.</h2>
-  <div class="gestes">
-    <div class="geste">
-      <span class="num">GESTE 1</span>
-      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--encre)" stroke-width="1.8"><ellipse cx="12" cy="12" rx="9" ry="5.5"/><circle cx="12" cy="12" r="2.4" fill="var(--accent)" stroke="none"/></svg></div>
-      <h3>Repérez</h3>
-      <p>Le code au dos du visuel : B2 · D5.</p>
-    </div>
-    <div class="geste">
-      <span class="num">GESTE 2</span>
-      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--encre)" stroke-width="1.8"><path d="M4 12a8 8 0 1 1 2.4 5.7"/><path d="M4 21v-5h5" stroke="var(--accent)"/></svg></div>
-      <h3>Retournez</h3>
-      <p>Le visuel face à vous, le code disparaît derrière.</p>
-    </div>
-    <div class="geste">
-      <span class="num">GESTE 3</span>
-      <div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--encre)" stroke-width="1.8"><rect x="5" y="5" width="14" height="14"/><path d="M12 2v6M9 5.5 12 8.5 15 5.5" stroke="var(--accent)"/></svg></div>
-      <h3>Clipsez</h3>
-      <p>Carreau B2, colonne D, ligne 5. Clic.</p>
-    </div>
-  </div>
-</section>
+  <section class="cdf-fin">
+    <p class="cdf-signature">Changez à volonté.</p>
+    <a class="cdf-bouton" href="https://designer.quadreti.fr/">Composer mon mur</a>
+  </section>
 
-<!-- ═══════════ ÉCRAN 4 — QUIZ ═══════════ -->
-<section class="ecran" id="guideCodifQuiz">
-  <span class="ecran-tag">À vous de jouer</span>
-  <h2>Vrai ou faux ?</h2>
-  <p class="lead">Trois questions pour vérifier — et vous verrez que c'est déjà acquis.</p>
-  <div class="quiz">
-    <div class="question" data-answer="vrai">
-      <p class="q-txt">Le code <span class="code-c">B2</span> · <span class="code-t">D5</span> signifie : carreau B2, colonne D, ligne 5.</p>
-      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
-      <div class="feedback"></div>
-    </div>
-    <div class="question" data-answer="faux">
-      <p class="q-txt">La partie <span class="code-t">terracotta</span> du code indique le carreau du mur.</p>
-      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
-      <div class="feedback"></div>
-    </div>
-    <div class="question" data-answer="vrai">
-      <p class="q-txt">Sur un mur d'un seul carreau, le code se réduit à la place : <span class="code-t">D5</span>.</p>
-      <div class="btns"><button data-v="vrai">Vrai</button><button data-v="faux">Faux</button></div>
-      <div class="feedback"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ ÉCRAN 5 — L'ALBUM ═══════════ -->
-<section class="ecran" id="guideCodifAlbum">
-  <span class="ecran-tag">Ranger, remonter… et y revenir à chaque occasion</span>
-  <h2>Une composition se range dans son album. Et revient.</h2>
-  <p class="lead">Déclipsez, glissez chaque visuel dans sa pochette — la page reprend la grille du carreau, chaque visuel garde sa place. Remonter le mur, c'est lire la page.</p>
-  <div class="album-scene">
-    <div class="album-cover">
-      <div class="titre">Mes compositions<small>Album Quadreti</small></div>
-      <div class="q"></div>
-    </div>
-    <div class="album-page">
-      <div class="page-titre"><span>« Noël » · carreau B2</span><small>7 × 7</small></div>
-      <div class="pochettes" id="pochettes"></div>
-    </div>
-  </div>
-  <div class="onglets">
-    <span class="onglet actif">Noël</span>
-    <span class="onglet">Anniversaire de Léa</span>
-    <span class="onglet">Été 2026</span>
-    <span class="onglet">Printemps</span>
-  </div>
-  <p class="album-caption">Noël se clipse en décembre, le printemps le remplacera en avril. Chaque occasion a sa page — les anniversaires, les saisons, les photos de famille — et retrouve son mur en quelques minutes.</p>
-</section>
-
-<!-- ═══════════ CLÔTURE ═══════════ -->
-<div class="cloture">
-  <p class="phrase">« Chaque visuel trouve sa place — son code au dos vous la montre. »</p>
-  <p class="sub">Ici, l'erreur n'existe pas. Il n'y a que des versions.</p>
-</div>
+</main>
 
 <script>
-  // Remplissage de la page d'album (pochettes 7×7, quelques visuels rangés)
-  (function(){
-    const p = document.getElementById('pochettes');
-    if(!p) return;
-    const variants = ['','v1','v2','v3','','v1','v2'];
-    for (let i = 0; i < 49; i++){
-      const s = document.createElement('span');
-      if (i > 41) s.className = 'vide'; // dernière rangée en cours de rangement
-      else s.className = variants[(i*3+Math.floor(i/7))%7] || '';
-      p.appendChild(s);
-    }
-  })();
+/* Les grilles sont dessinées ici plutôt qu'à la main : 49 cases, deux fois, plus le recto-verso. */
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(svg, nom, attrs, texte){ var e = document.createElementNS(NS, nom); for (var k in attrs) e.setAttribute(k, attrs[k]); if (texte != null) e.textContent = texte; svg.appendChild(e); return e; }
+  var L = 'ABCDEFG';
 
-  // Menu burger (mobile)
-  (function(){
-    const b = document.getElementById('burger');
-    const d = document.getElementById('drawer');
-    if(!b || !d) return;
-    b.addEventListener('click', function(){
-      const open = d.classList.toggle('on');
-      b.classList.toggle('on', open);
-      b.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    d.querySelectorAll('a').forEach(function(a){
-      a.addEventListener('click', function(){
-        d.classList.remove('on'); b.classList.remove('on');
-        b.setAttribute('aria-expanded','false');
-      });
-    });
-  })();
+  // La place dans le carreau : lettres = lignes (à gauche), chiffres = colonnes (en haut) — ligne D, colonne 5
+  var g = document.getElementById('cdfGrille');
+  if (g){ var c = 30, e = 4, x0 = 46, y0 = 46, G = 7 * c + 6 * e;
+    el(g, 'rect', { 'class': 'p-teinte', x: x0 - 2, y: y0 + 3 * (c + e) - 2, width: G + 4, height: c + 4 });
+    el(g, 'rect', { 'class': 'p-teinte', x: x0 + 4 * (c + e) - 2, y: y0 - 2, width: c + 4, height: G + 4 });
+    for (var i = 0; i < 7; i++) for (var j = 0; j < 7; j++){ var on = i === 3 && j === 4, teinte = i === 3 || j === 4;
+      el(g, 'rect', { 'class': (on ? 'p-orange' : teinte ? 'p-teinte' : 'p-blanc') + ' t-encre', x: x0 + j * (c + e), y: y0 + i * (c + e), width: c, height: c, 'stroke-width': 2 }); }
+    for (var j2 = 0; j2 < 7; j2++) el(g, 'text', { 'class': j2 === 4 ? 'x-orange' : 'x-gris', x: x0 + j2 * (c + e) + c / 2, y: y0 - 12, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 600 }, j2 + 1);
+    for (var i2 = 0; i2 < 7; i2++) el(g, 'text', { 'class': i2 === 3 ? 'x-orange' : 'x-gris', x: x0 - 14, y: y0 + i2 * (c + e) + c / 2 + 6, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 600 }, L[i2]);
+  }
 
-  // Mini-grille du carreau B2 (écran 2) — réplique du visuel écran 1
-  (function(){
-    const m = document.getElementById('miniBn');
-    if(!m) return;
-    const cols = ['A','B','C','D','E','F','G'];
-    m.appendChild(document.createElement('div')).className='mlbl';
-    cols.forEach(function(cl){ const d=document.createElement('div'); d.className='mlbl'; d.textContent=cl; m.appendChild(d); });
-    for (let r = 1; r <= 7; r++){
-      const lbl=document.createElement('div'); lbl.className='mlbl'; lbl.textContent=r; m.appendChild(lbl);
-      cols.forEach(function(cl){
-        const c=document.createElement('div');
-        c.className = (cl==='D' && r===5) ? 'mcell mhit' : 'mcell';
-        if (cl==='D' && r===5) c.textContent='D5';
-        m.appendChild(c);
-      });
-    }
-  })();
+  // Le carreau sur le mur : lettres = colonnes (en haut), chiffres = lignes (à gauche) — colonne B, ligne 2
+  var m = document.getElementById('cdfMurSvg');
+  if (m){ var q = 106, qe = 14, mx = 58, my = 58;
+    for (var a = 0; a < 2; a++) for (var b = 0; b < 2; b++){ var X = mx + b * (q + qe), Y = my + a * (q + qe), on2 = a === 1 && b === 1;
+      el(m, 'rect', { 'class': on2 ? 'p-encre' : 'p-blanc', x: X, y: Y, width: q, height: q });
+      var d = ''; for (var k = 1; k < 7; k++){ d += 'M' + (X + k * q / 7) + ' ' + (Y + 3) + 'V' + (Y + q - 3) + 'M' + (X + 3) + ' ' + (Y + k * q / 7) + 'H' + (X + q - 3); }
+      el(m, 'path', { 'class': on2 ? 't-clair' : 't-pale', d: d, 'stroke-width': 1.2, fill: 'none' });
+      el(m, 'rect', { 'class': 't-encre', x: X, y: Y, width: q, height: q, 'stroke-width': 3, fill: 'none' }); }
+    ['A', 'B'].forEach(function(t, b2){ el(m, 'text', { 'class': b2 === 1 ? 'x-encre' : 'x-gris', x: mx + b2 * (q + qe) + q / 2, y: my - 14, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 600 }, t); });
+    ['1', '2'].forEach(function(t, a2){ el(m, 'text', { 'class': a2 === 1 ? 'x-encre' : 'x-gris', x: mx - 16, y: my + a2 * (q + qe) + q / 2 + 7, 'text-anchor': 'end', 'font-size': 20, 'font-weight': 600 }, t); });
+  }
 
-  // Grille interactive écran 1 — convention unifiée : lettre = colonne, chiffre = ligne
-  (function(){
-    const bn = document.getElementById('bn');
-    const cols = ['A','B','C','D','E','F','G'];
-    for (let r = 1; r <= 7; r++){
-      const lbl = document.createElement('div');
-      lbl.className = 'lbl'; lbl.textContent = r;
-      bn.appendChild(lbl);
-      cols.forEach(function(colLetter){
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        const code = colLetter + r;
-        if (code === 'D5'){ cell.classList.add('hit'); cell.dataset.code = 'D5'; }
-        cell.addEventListener('click', function(){
-          bn.querySelectorAll('.cell.hit').forEach(function(x){ x.classList.remove('hit'); x.removeAttribute('data-code'); });
-          cell.classList.add('hit');
-          cell.dataset.code = code;
-        });
-        bn.appendChild(cell);
-      });
-    }
-  })();
+  // Recto-verso : la vraie feuille prédécoupée (4 colonnes x 7 lignes, cotes de DECOUPE X4.svg), feuille A = colonnes 1 à 4
+  var r = document.getElementById('cdfRectoVerso');
+  if (r){ var CO = ['NOONOON', 'OOOOOOO', 'OOOOBOO', 'OOOOOOO', 'NOOOOON', 'NNOOONN', 'NNNONNN'],
+      XS = [39.75, 74.75, 109.75, 144.75], YS = [30.34, 65.84, 100.94, 135.94, 171.24, 206.34, 240.64], sw = 190, sh = sw * 297 / 210, kk = sw / 210, sy = (300 - sh) / 2;
+    function feuille(fx, verso){ el(r, 'rect', { 'class': 'p-blanc t-encre', x: fx, y: sy, width: sw, height: sh, 'stroke-width': 2.5 });
+      for (var i = 0; i < 7; i++) for (var j = 0; j < 4; j++){ var X = fx + XS[j] * kk, Y = sy + YS[i] * kk, cc = 25.5 * kk;
+        if (!verso){ var t = CO[i][j]; if (t !== 'B') el(r, 'rect', { 'class': t === 'O' ? 'p-orange' : 'p-encre', x: X, y: Y, width: cc, height: cc }); }
+        el(r, 'rect', { 'class': 't-pointille', x: X, y: Y, width: cc, height: cc, fill: 'none', 'stroke-width': .8, 'stroke-dasharray': '2 1.6' });
+        if (verso){ el(r, 'text', { 'class': 'x-gris', x: X + cc / 2, y: Y + cc / 2 - 1, 'text-anchor': 'middle', 'font-size': 6.5, 'font-weight': 600 }, 'B2');
+          el(r, 'text', { 'class': 'x-orange', x: X + cc / 2, y: Y + cc / 2 + 7, 'text-anchor': 'middle', 'font-size': 6.5, 'font-weight': 600 }, L[i] + (4 - j)); } } }
+    feuille(20, false); feuille(260, true);
+    el(r, 'path', { 'class': 't-fleche', d: 'M218 128 Q235 92 252 128', fill: 'none', 'stroke-width': 5, 'stroke-linecap': 'round' });
+    el(r, 'path', { 'class': 'p-fleche', d: 'M256 140 L244 126 L259 122 Z' });
+  }
 
-  // Quiz vrai/faux
-  document.querySelectorAll('.quiz .question').forEach(function(q){
-    const answer = q.dataset.answer;
-    const fb = q.querySelector('.feedback');
-    q.querySelectorAll('button').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        q.classList.remove('ok','ko');
-        void q.offsetWidth; // relance l'animation
-        if (btn.dataset.v === answer){
-          q.classList.add('ok');
-          fb.textContent = 'Exact ! Vous avez tout compris.';
-        } else {
-          q.classList.add('ko');
-          fb.textContent = 'Presque ! Le foncé indique le carreau, le terracotta indique la place dans le carreau.';
-        }
-      });
-    });
-  });
+  // Clipsez : le carreau 7 x 7, la case D5 en orange
+  var cl = document.getElementById('cdfClips');
+  if (cl){ var c2 = 15, e2 = 2.5, gx = 58, gy = 22;
+    for (var i3 = 0; i3 < 7; i3++) for (var j3 = 0; j3 < 7; j3++) el(cl, 'rect', { 'class': (i3 === 3 && j3 === 4 ? 'p-orange' : 'p-blanc') + ' t-encre', x: gx + j3 * (c2 + e2), y: gy + i3 * (c2 + e2), width: c2, height: c2, 'stroke-width': 1.4 });
+    for (var j4 = 0; j4 < 7; j4++) el(cl, 'text', { 'class': j4 === 4 ? 'x-orange' : 'x-gris', x: gx + j4 * (c2 + e2) + c2 / 2, y: gy - 6, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 600 }, j4 + 1);
+    for (var i4 = 0; i4 < 7; i4++) el(cl, 'text', { 'class': i4 === 3 ? 'x-orange' : 'x-gris', x: gx - 7, y: gy + i4 * (c2 + e2) + c2 / 2 + 4, 'text-anchor': 'end', 'font-size': 10, 'font-weight': 600 }, L[i4]);
+  }
+})();
 </script>
 
 
