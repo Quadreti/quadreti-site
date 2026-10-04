@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!-- 04/10/2026 : page « Le montage en vidéo », cible du QR code de la notice imprimée (quadreti.fr/montage). -->
+<html lang="fr" class="qz-fond-sombre">
+<head>
+<meta charset="UTF-8">
+<!-- GARDE-ACCES-DEBUT -->
+<script>
+(function(){
+  var MDP = 'qua=dre22TI2008proJet+';
+  var CLE = 'quadretiAccesPreview';
+  if (localStorage.getItem(CLE) === '1') return;
+  document.documentElement.style.visibility = 'hidden';
+  document.addEventListener('DOMContentLoaded', function(){
+    var voile = document.createElement('div');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#1e2b35;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:sans-serif;color:#fff;padding:20px;text-align:center;';
+    voile.innerHTML = '<div style="font-size:15px;">Site en pr\u00e9paration \u2014 acc\u00e8s r\u00e9serv\u00e9</div>' +
+      '<form id="qdtFormAcces" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><input type="password" id="qdtMdp" placeholder="Mot de passe" autocomplete="off" style="padding:10px 14px;border-radius:8px;border:none;font-size:14px;min-width:200px;"><button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:var(--accent);color:var(--encre-sur-accent);font-weight:700;cursor:pointer;">Entrer</button></form>' +
+      '<div id="qdtErreur" style="color:#ffb4a6;font-size:12px;display:none;">Mot de passe incorrect.</div>';
+    document.body.appendChild(voile);
+    document.documentElement.style.visibility = 'visible';
+    document.getElementById('qdtMdp').focus();
+    document.getElementById('qdtFormAcces').addEventListener('submit', function(e){
+      e.preventDefault();
+      if (document.getElementById('qdtMdp').value === MDP){
+        try { localStorage.setItem(CLE, '1'); } catch(err){}
+        voile.remove();
+      } else {
+        document.getElementById('qdtErreur').style.display = 'block';
+        document.getElementById('qdtMdp').value = '';
+        document.getElementById('qdtMdp').focus();
+      }
+    });
+  });
+})();
+</script>
+<!-- GARDE-ACCES-FIN -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadreti — Le montage en vidéo</title>
+<meta name="description" content="La notice de montage Quadreti en vidéo : du visuel imprimé à la tesselle clipsée au mur, en dix étapes et quarante secondes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   LE MONTAGE EN VIDÉO — 04/10/2026. Page courte, cible du QR code imprimé sur la notice du kit (quadreti.fr/montage).
+   Couleurs par rôle, reprises de pages-contenu.css (--qzc-*). La vidéo est carrée : elle tient sur téléphone comme
+   sur ordinateur. Sans son, donc lecture automatique et en boucle, avec les commandes visibles.
+   ============================================================================ */
+body.qz-montage{
+  --mtg-carte:var(--qzc-carte, #33434f);
+  --mtg-texte:var(--qzc-texte, #dedede);
+  --mtg-second:var(--qzc-second, #b6c0c8);
+  --mtg-orange-ecrit:var(--qzc-orange-ecrit, #ff9147);
+  --mtg-orange:var(--qzc-orange, #d96c2f);
+  --mtg-encre-sur-orange:var(--qzc-encre, #10181f);
+  --mtg-filet:var(--qzc-filet, #dedede26);
+}
+.mtg{ max-width:760px; margin:0 auto; padding-inline:20px; padding-block:40px 64px; font-family:Jura, system-ui, sans-serif; }
+.mtg-surtitre{ margin:0 0 10px; color:var(--mtg-orange-ecrit); font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:14px; }
+.mtg h1{ margin:0 0 12px; font-size:clamp(30px, 6vw, 44px); line-height:1.15; font-weight:600; text-wrap:balance; }
+.mtg-chapo{ margin:0 0 24px; color:var(--mtg-second); font-size:18px; line-height:1.55; }
+.mtg-video{ display:block; width:100%; height:auto; aspect-ratio:1 / 1; border-radius:12px; background:#ffffff; }
+.mtg-etapes{ margin:20px 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:8px 10px; }
+.mtg-etapes li{ background:var(--mtg-carte); border-radius:8px; padding:8px 12px; font-size:15px; color:var(--mtg-texte); }
+.mtg-etapes b{ color:var(--mtg-orange-ecrit); font-weight:600; margin-right:6px; }
+.mtg-suite{ margin-top:36px; padding-top:24px; border-top:1px solid var(--mtg-filet); display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center; justify-content:space-between; }
+.mtg-suite p{ margin:0; color:var(--mtg-second); font-size:16px; }
+.mtg-suite a.mtg-lien{ color:var(--mtg-orange-ecrit); }
+.mtg-bouton{ display:inline-block; padding:14px 26px; border-radius:8px; background:var(--mtg-orange); color:var(--mtg-encre-sur-orange); font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
+.mtg-bouton:hover{ filter:brightness(1.08); }
+.mtg-bouton:focus-visible, .mtg-lien:focus-visible{ outline:3px solid var(--mtg-texte); outline-offset:3px; }
+</style>
+<link rel="stylesheet" href="/commun.css?v=2026-09-22e">
+<link rel="stylesheet" href="/pages-contenu.css?v=2026-09-22e">
+<script src="/reglages-site.js?v=2026-09-22e" defer></script>
+</head>
+<body class="qz-montage">
+
+<!-- ===== BANDEAU COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<script src="/commun-bandeau.js?v=2026-09-22e"></script>
+<!-- ===== BANDEAU COMMUN — FIN ===== -->
+
+<main class="mtg">
+  <p class="mtg-surtitre">Notice de montage</p>
+  <h1>Le montage en vidéo</h1>
+  <p class="mtg-chapo">Du visuel à l’exposition, les dix étapes de la notice en quarante secondes.</p>
+
+  <video class="mtg-video" src="/video/quadreti-montage-carre.mp4" poster="/video/quadreti-montage-affiche.jpg"
+         width="1080" height="1080" controls autoplay muted loop playsinline preload="metadata"
+         aria-label="Vidéo du montage, sans son : composez, imprimez, détachez, posez sur la tesselle, pliez l’étui, glissez dans l’étui, exposez, clipsez">
+  </video>
+
+  <ol class="mtg-etapes" aria-label="Les étapes">
+    <li><b>1</b>Composez</li><li><b>2</b>Imprimez</li><li><b>3</b>Détachez</li><li><b>4</b>Posez</li>
+    <li><b>5–7</b>Pliez l’étui</li><li><b>8</b>Glissez dans l’étui</li><li><b>9</b>Exposez</li><li><b>10</b>Clipsez</li>
+  </ol>
+
+  <div class="mtg-suite">
+    <p>Chaque visuel a sa place : <a class="mtg-lien" href="/quadreti-guide-codification.html">le guide de la codification</a>.</p>
+    <a class="mtg-bouton" href="https://designer.quadreti.fr/">Composer mon mur</a>
+  </div>
+</main>
+
+<!-- ===== FOOTER COMMUN (source : quadreti-bloc-commun_1.html) ===== -->
+<script src="/commun-pied.js?v=2026-09-22e"></script>
+<!-- ===== FOOTER COMMUN — FIN ===== -->
+</body>
+</html>
